@@ -1,0 +1,15 @@
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.associations": {
+    "*.yaml": "yaml",
+    "*.json": "jsonc",
+    "*.md": "markdown"
+  },
+  "editor.wordWrap": "on",
+  "markdown.preview.breaks": true,
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.formatOnSave": true
+  }
+}
