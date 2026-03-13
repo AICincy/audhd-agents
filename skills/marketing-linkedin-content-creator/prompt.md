@@ -2,11 +2,11 @@
 
 ## Goal
 
-Create LinkedIn content that positions Krass as a thought leader in AI/ML education, accessible design, and human-AI collaboration. Authentic voice, not corporate.
+Create LinkedIn content that positions Operator as a thought leader in AI/ML education, accessible design, and human-AI collaboration. Authentic voice, not corporate.
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Hook in first two lines (that is all that shows before "see more")
 - Short paragraphs (1-2 sentences max for LinkedIn readability)
 - Use line breaks for scannability

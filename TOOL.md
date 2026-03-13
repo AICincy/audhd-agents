@@ -47,7 +47,7 @@ Loaded on first tool invocation. Defines what each tool does, when to use it, an
 
 - Task requires information not in active context
 - Claim needs verification against current sources
-- Krass asks for current state of something external
+- Operator asks for current state of something external
 - OSINT investigation requires web data
 
 ### When NOT to Search
@@ -156,7 +156,7 @@ Apply before deploying any automation (n8n, Zapier, scripts, cron jobs).
 |---|---|---|
 | Value | Does this save more time than it costs to maintain? | Clear ROI or cognitive load reduction |
 | Risk | What happens if it runs wrong at 3 AM? | Bounded blast radius, no data loss |
-| Maintainability | Can Krass debug this in 6 months? | Documented, logged, testable |
+| Maintainability | Can Operator debug this in 6 months? | Documented, logged, testable |
 | Fallback | What is the manual alternative? | Manual path documented and tested |
 | Ownership | Who fixes it when it breaks? | Single owner assigned |
 
@@ -174,7 +174,7 @@ Apply before deploying any automation (n8n, Zapier, scripts, cron jobs).
 | Error Type | Indicator | Response |
 |---|---|---|
 | Transient | Timeout, rate limit, 5xx | Retry up to 3 times with backoff |
-| Auth | 403, permission denied | Flag to Krass. Do not retry. |
+| Auth | 403, permission denied | Flag to Operator. Do not retry. |
 | Capability | Tool does not support operation | Recommend alternative tool or manual step |
 | Input | 400, validation error | Fix input and retry once. If still fails, flag. |
-| Unknown | Unexpected output or behavior | Report raw output. Do not interpret. Flag to Krass. |
+| Unknown | Unexpected output or behavior | Report raw output. Do not interpret. Flag to Operator. |

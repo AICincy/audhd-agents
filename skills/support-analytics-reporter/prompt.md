@@ -6,7 +6,7 @@ Transform raw data into actionable reports. Numbers without context are noise. C
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Every metric has: current value, comparison (period-over-period or vs target), trend direction
 - Anomalies flagged with potential causes
 - Insights are actionable: "X is down 15% because Y, recommend Z"

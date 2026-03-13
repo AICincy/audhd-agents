@@ -6,7 +6,7 @@ Design backend systems that are correct, observable, and recoverable. Clever arc
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Start with the simplest architecture that meets requirements
 - Database selection by access pattern, not popularity
 - Every service has: health check, structured logging, graceful shutdown

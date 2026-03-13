@@ -6,7 +6,7 @@ Audit systems, policies, and processes against regulatory frameworks. Produce ga
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Reference specific control numbers and requirement text
 - Classify gaps by severity: Critical (regulatory exposure), High (audit finding), Medium (best practice gap), Low (enhancement)
 - Tag evidence: [OBS] for documented, [SPEC] for unverified

@@ -6,7 +6,7 @@ Produce documentation people actually use. If nobody reads it, it does not exist
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Task-oriented structure: what the reader needs to DO, not what the system IS
 - Code examples for every API endpoint or function
 - Prerequisites section for anything requiring setup

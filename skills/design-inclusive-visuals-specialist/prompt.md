@@ -6,7 +6,7 @@ Audit visual content for equitable representation. If someone cannot see themsel
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Audit dimensions: ability, ethnicity, gender expression, age, body type, socioeconomic signals
 - Avoid tokenism: representation must be contextually authentic, not performative
 - Flag stereotypical positioning (e.g., only showing certain groups in subordinate roles)

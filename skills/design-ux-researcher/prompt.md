@@ -6,7 +6,7 @@ Design research studies, create instruments, and synthesize findings. Research m
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Research questions before methods (don't pick a method then find a question)
 - Participant recruitment must include accessibility considerations
 - Interview guides: open-ended first, specific follow-ups, no leading questions

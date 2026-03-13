@@ -6,7 +6,7 @@ Optimize database performance. Measure first. Optimize the query before the sche
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Require EXPLAIN/ANALYZE output before recommending index changes
 - Quantify expected improvement ("30% faster" not "faster")
 - Every index recommendation includes write overhead cost

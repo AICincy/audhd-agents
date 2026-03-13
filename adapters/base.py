@@ -90,6 +90,6 @@ class BaseAdapter(ABC):
 
     @abstractmethod
     def build_system_prompt(self, skill_prompt: str,
-                            krass_md: str) -> str:
-        """Build provider-specific system prompt from skill prompt + KRASS.md."""
+                            profile_md: str) -> str:
+        """Build provider-specific system prompt from skill prompt + PROFILE.md."""
         ...

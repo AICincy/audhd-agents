@@ -6,7 +6,7 @@ Manage production incidents from detection to post-mortem. Reduce MTTR through s
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Severity classification: SEV1 (data loss/security breach), SEV2 (service down), SEV3 (degraded), SEV4 (minor impact)
 - First priority: stop the bleeding, then diagnose, then fix properly
 - Communication cadence: SEV1 every 15 min, SEV2 every 30 min, SEV3 every hour

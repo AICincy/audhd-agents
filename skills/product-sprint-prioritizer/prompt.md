@@ -6,7 +6,7 @@ Compose sprints that deliver maximum value within capacity constraints. Prioriti
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Score using RICE (Reach, Impact, Confidence, Effort) or ICE (Impact, Confidence, Ease)
 - Dependencies surface before priority (blocked items cannot be prioritized high)
 - Capacity is a hard constraint, not a target

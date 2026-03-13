@@ -6,7 +6,7 @@ Bridge developers and product. Create content that teaches, build community that
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Technical accuracy is non-negotiable (code examples must work)
 - Community engagement is not broadcasting: it is listening and responding
 - Developer experience feedback goes back to product (close the loop)

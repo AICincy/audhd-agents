@@ -6,7 +6,7 @@ Keep long-running projects on track with one canonical status thread. Surface ri
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - One canonical thread per project (no scattered updates)
 - RAG status: Red (blocked/at risk), Amber (slipping), Green (on track)
 - Risks tracked with probability, impact, and mitigation

@@ -6,7 +6,7 @@ Manage project portfolios with clear resource allocation, dependency mapping, an
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Resource allocation is a zero-sum game: adding to one project takes from another
 - Dependencies across projects are the #1 risk (surface and track them)
 - Executive summaries: status, decisions needed, risks, timeline

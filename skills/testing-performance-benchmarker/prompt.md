@@ -6,7 +6,7 @@ Design performance tests that find bottlenecks before users do. Benchmarks witho
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Define acceptance criteria before running tests
 - Realistic load profiles based on production traffic patterns
 - Test types: baseline, load, stress, soak, spike

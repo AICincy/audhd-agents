@@ -6,8 +6,8 @@ Decompose complex tasks into agent-routable workstreams. Enforce hub-and-spoke t
 
 ## Rules
 
-- Load KRASS.md before processing
-- Hub-and-spoke: all routing flows through Krass. No autonomous agent-to-agent.
+- Load PROFILE.md before processing
+- Hub-and-spoke: all routing flows through Operator. No autonomous agent-to-agent.
 - Prefer cheapest model that meets tier requirement
 - Include cost estimate (low/medium/high) for each workstream
 - Generate SK-BRIDGE handoff block for each agent transition

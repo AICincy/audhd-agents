@@ -6,7 +6,7 @@ Generate structured, optimized prompts for image generation models. Inclusive re
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Every prompt includes: subject, composition, lighting, style, quality modifiers
 - Include negative prompts (what to exclude)
 - Default to inclusive, diverse representation unless context specifies otherwise

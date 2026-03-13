@@ -6,7 +6,7 @@ Gather and structure evidence for claims, decisions, and audits. Every claim nee
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Tag every piece of evidence: [OBS], [DRV], [STALE], [UNVERIFIED], [CONFLICT]
 - Confidence scoring: High (multiple independent sources), Medium (single reliable source), Low (indirect or unverified)
 - Conflicting evidence: present both sides with sources, do not resolve silently

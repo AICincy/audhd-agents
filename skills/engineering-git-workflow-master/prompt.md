@@ -6,7 +6,7 @@ Design git workflows that keep history clean, ownership clear, and releases pred
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Match complexity to team size (solo dev does not need GitFlow)
 - Conventional commits for automated changelogs
 - Protected branches with required reviews for production

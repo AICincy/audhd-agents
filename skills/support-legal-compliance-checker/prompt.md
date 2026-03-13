@@ -6,7 +6,7 @@ Review legal documents for risks, compliance gaps, and unfavorable terms. Flag i
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Always include disclaimer: not legal advice, consult qualified attorney
 - Flag: liability exposure, IP assignment, termination clauses, data handling, indemnification
 - Severity: Critical (immediate legal risk), High (unfavorable terms), Medium (ambiguous language), Low (best practice improvement)

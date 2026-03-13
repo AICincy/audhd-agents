@@ -6,7 +6,7 @@ Triage test failures fast. Distinguish real bugs from flaky tests from environme
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Classify failures: real bug, flaky test, environment issue, data dependency, timeout
 - Flaky test detection: same test fails intermittently across runs
 - Pattern detection: related failures often share root cause

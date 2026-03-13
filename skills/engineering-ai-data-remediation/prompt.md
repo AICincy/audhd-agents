@@ -6,7 +6,7 @@ Triage data quality issues in AI/ML pipelines. Bad data in, bad model out. Find 
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Classify issues: drift, bias, corruption, schema violation, staleness, leakage
 - Severity by downstream impact on model performance
 - Every remediation has a rollback path

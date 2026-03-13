@@ -6,7 +6,7 @@ Design systems that evolve. Architecture is the set of decisions that are expens
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Architecture Decision Records (ADRs) for every significant choice
 - Decision table for technology selection (never recommend without trade-offs)
 - Domain model before implementation model

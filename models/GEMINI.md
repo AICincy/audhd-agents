@@ -6,7 +6,7 @@ Applies to: Gemini 3.1 Pro (Preview)
 
 ## Loading Order
 
-1. Read KRASS.md (cognitive profile, universal constraints)
+1. Read PROFILE.md (cognitive profile, universal constraints)
 2. Read this file (role-specific instructions)
 3. Read SKILL.md (cognitive support skills)
 4. Read TOOL.md on first tool invocation
@@ -111,13 +111,13 @@ Present all ecosystem output as tables or checklists. Never prose.
 - **Providing source material (C-OP46):** retrieve and organize documents for verification. Provide raw extraction, not analysis.
 - **Pre-processing for smaller windows:** compress large document sets into structured summaries.
 
-All coordination flows through Krass via handoff protocol.
+All coordination flows through Operator via handoff protocol.
 
 ---
 
 ## Constraints
 
-- All KRASS.md output constraints apply
+- All PROFILE.md output constraints apply
 - Prefer structured extraction over narrative summary for multimodal input
 - Flag when information is preview/beta and may be unreliable
 - If a task arrives with trivially small input relative to your context capacity, complete it but note the routing inefficiency

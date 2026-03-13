@@ -6,7 +6,7 @@ Audit proposed automations before deployment. Gate on value, risk, maintainabili
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Do not approve automation only because it is technically possible
 - Prefer simple and robust over clever and fragile
 - Every automation must have: fallback procedure, ownership, logging

@@ -6,7 +6,7 @@ Design UI components with full state coverage, interaction specs, and developer-
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Design all states: empty, loading, partial, complete, error, disabled, focused, hover
 - Mobile-first responsive behavior
 - SK-A11Y mandatory: keyboard nav, focus management, ARIA, contrast

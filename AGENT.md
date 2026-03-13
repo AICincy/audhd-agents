@@ -1,15 +1,15 @@
 # AGENT.md: Swarm Orchestration Protocol
 
-Reference document for Krass. Defines topology, routing, escalation, and inter-agent contracts.
+Reference document for Operator. Defines topology, routing, escalation, and inter-agent contracts.
 
 ---
 
 ## Topology
 
-Hub-and-spoke. Krass is the hub.
+Hub-and-spoke. Operator is the hub.
 
 - No autonomous agent-to-agent communication.
-- All routing flows through Krass explicitly.
+- All routing flows through Operator explicitly.
 - Exception: Codex may be sub-invoked for inline code generation within pre-authorized workflows.
 - Rationale: monotropic attention requires single-thread control. Autonomous handoffs create invisible state changes.
 
@@ -56,10 +56,10 @@ Automatic protection against runaway costs, cascading failures, and degraded ser
 
 | Breaker | Trigger | Action | Reset Condition |
 |---|---|---|---|
-| Cost ceiling | Estimated session cost exceeds threshold (set per task) | Halt new API calls. Present cost report to Krass. | Krass approves budget increase |
+| Cost ceiling | Estimated session cost exceeds threshold (set per task) | Halt new API calls. Present cost report to Operator. | Operator approves budget increase |
 | Error spike | 3+ consecutive failures from same model in 5 min | Route all traffic to fallback. Log failure pattern. | Primary model returns 3 consecutive successes |
 | Rate limit cascade | 2+ models rate-limited simultaneously | Queue non-urgent tasks. Process only T4-T5. | Any 2 models return to normal availability |
-| Anomaly detector | 500% traffic spike or repeated HTTP 402/429 | Immediately halt all automated calls. Alert Krass. | Manual Krass review |
+| Anomaly detector | 500% traffic spike or repeated HTTP 402/429 | Immediately halt all automated calls. Alert Operator. | Manual Operator review |
 
 ---
 
@@ -85,8 +85,8 @@ Every model interaction should be cost-aware.
 
 | Severity | Definition | Response Time | Escalation |
 |---|---|---|---|
-| SEV1: Critical | Data loss, security breach, production outage, wrong output sent externally | Immediate | Halt all work. Alert Krass. Full incident report. |
-| SEV2: High | Blocked workflow, incorrect output caught before delivery, repeated model failures | Within current session | Fallback model + flag for Krass review |
+| SEV1: Critical | Data loss, security breach, production outage, wrong output sent externally | Immediate | Halt all work. Alert Operator. Full incident report. |
+| SEV2: High | Blocked workflow, incorrect output caught before delivery, repeated model failures | Within current session | Fallback model + flag for Operator review |
 | SEV3: Medium | Degraded quality, slow responses, minor inaccuracies in non-critical output | Next available cycle | Log and fix. No immediate escalation. |
 | SEV4: Low | Style issues, suboptimal routing, minor tool errors that self-resolved | Batch with next update | Log only |
 
@@ -111,7 +111,7 @@ Every model interaction should be cost-aware.
 | 1 | Confidence below 0.6 or transient error | Retry same model, max 3 attempts |
 | 2 | 3 failed retries or capability gap | Route to fallback agent per matrix |
 | 3 | Fallback also fails or conflicting results | Multi-model consensus: C-OP46 + G-PRO + O-54 |
-| 4 | Consensus unresolved or human judgment required | Queue for Krass review (single-item presentation) |
+| 4 | Consensus unresolved or human judgment required | Queue for Operator review (single-item presentation) |
 
 ---
 
@@ -143,8 +143,8 @@ HANDOFF
 
 ### Handoff Rules
 
-1. Krass initiates all handoffs explicitly
-2. Receiving agent loads KRASS.md before processing
+1. Operator initiates all handoffs explicitly
+2. Receiving agent loads PROFILE.md before processing
 3. Receiving agent acknowledges constraints before output
 4. No agent modifies another agent's artifacts without approval
 5. State externalized in artifacts, never assumed from memory

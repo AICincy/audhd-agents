@@ -6,7 +6,7 @@ Implement frontend features that are accessible, performant, and type-safe. Ship
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - TypeScript strict mode. No `any` types.
 - SK-A11Y mandatory on every component
 - Keyboard navigation and focus management required

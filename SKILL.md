@@ -1,6 +1,6 @@
 # SKILL.md: Cognitive Support Skills
 
-Loaded after KRASS.md and model-specific file. Defines reusable cognitive support patterns that any agent can invoke.
+Loaded after PROFILE.md and model-specific file. Defines reusable cognitive support patterns that any agent can invoke.
 
 ---
 
@@ -34,7 +34,7 @@ These skills are not tasks. They are cognitive augmentation patterns designed fo
 
 - Task has 3 or more steps
 - Scope is ambiguous or multi-domain
-- Krass says "I need to..." followed by a complex goal
+- Operator says "I need to..." followed by a complex goal
 
 ### Output Format
 
@@ -76,7 +76,7 @@ Choose the format that best matches the state type:
 
 ### Rules
 
-- Externalize proactively. Do not wait for Krass to ask.
+- Externalize proactively. Do not wait for Operator to ask.
 - Update externalized state when new information arrives.
 - Previous externalization superseded by new one (no conflicting versions).
 
@@ -88,7 +88,7 @@ Choose the format that best matches the state type:
 
 - New session or conversation
 - Gap of 30+ minutes detected
-- Krass returns with "where was I" or similar
+- Operator returns with "where was I" or similar
 - Context switch detected (different topic than last message)
 
 ### Output Format
@@ -126,7 +126,7 @@ NEXT ACTION: [single step to resume]
 - Always present before executing irreversible action.
 - "Irreversible" explicitly labeled. Never implied.
 - Recommendation included only when one option clearly dominates.
-- If Krass has already decided, acknowledge and execute. Do not re-gate.
+- If Operator has already decided, acknowledge and execute. Do not re-gate.
 - **Cost-aware gating:** For model selection decisions, include estimated relative cost per option.
 - **Mathematical evaluation:** When comparing model outputs, use explicit scoring criteria (not subjective "this feels better"). Define rubric.
 
@@ -136,7 +136,7 @@ NEXT ACTION: [single step to resume]
 
 ### When to Activate
 
-- Krass signals low energy ("tired," "can't focus," "ugh," "brain fog")
+- Operator signals low energy ("tired," "can't focus," "ugh," "brain fog")
 - Task is important but not activating (low novelty, low urgency)
 - Executive function indicators: very short messages, long gaps, repeated restarts
 
@@ -152,7 +152,7 @@ AFTER THAT: [what becomes possible once this step is done]
 
 - One step only. Not "just these three small things."
 - Must be completable in under 5 minutes.
-- Must produce a visible artifact (something Krass can see as done).
+- Must produce a visible artifact (something Operator can see as done).
 - No motivational framing. No encouragement. Just the step.
 
 ---
@@ -217,7 +217,7 @@ RESUMING: [primary thread]
 
 ### When to Activate
 
-- Krass is moving work between agents
+- Operator is moving work between agents
 - Session ending with incomplete work
 - Handoff required per routing matrix
 
@@ -232,7 +232,7 @@ HANDOFF
   TASK_ID: [identifier]
   CONTEXT: [3 sentences max]
   ARTIFACTS: [list]
-  CONSTRAINTS: [inherited from KRASS.md + task-specific]
+  CONSTRAINTS: [inherited from PROFILE.md + task-specific]
   SUCCESS_TEST: [done criteria]
 ```
 
@@ -240,8 +240,8 @@ HANDOFF
 
 - All state must be in the handoff block. No assumed memory.
 - Artifacts referenced by name/location, not described in prose.
-- Constraints inherited from KRASS.md by default; only task-specific additions listed.
-- Receiving agent loads KRASS.md independently.
+- Constraints inherited from PROFILE.md by default; only task-specific additions listed.
+- Receiving agent loads PROFILE.md independently.
 
 ---
 
@@ -249,7 +249,7 @@ HANDOFF
 
 ### When to Activate
 
-- Krass has a long task queue and has not started
+- Operator has a long task queue and has not started
 - Low-energy signals detected (short messages, long gaps, restarts)
 - Important-but-low-interest task needs activation
 - Returning from a break and facing a wall of pending work

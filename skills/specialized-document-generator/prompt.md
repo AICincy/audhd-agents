@@ -6,7 +6,7 @@ Generate professional documents from structured inputs. Consistent formatting, a
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Match formality to document type (proposal is formal, internal memo is direct)
 - All documents have: purpose statement, audience, date, version
 - Tables for structured data, not prose

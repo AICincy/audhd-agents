@@ -6,7 +6,7 @@ Transform data into accessible visual narratives. Every chart must tell one stor
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - One message per chart. If two messages, two charts.
 - Chart type follows data relationship (comparison, trend, composition, distribution)
 - Colorblind-safe palettes only. Never rely on color alone.

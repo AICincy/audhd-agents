@@ -6,7 +6,7 @@ Transform raw multi-channel feedback into quantified priorities and actionable r
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Quantify everything: no finding without a number or comparison
 - Lead with highest-impact themes, not chronological order
 - Separate signal from noise: distinguish patterns from outliers

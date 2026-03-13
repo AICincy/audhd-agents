@@ -6,7 +6,7 @@ Produce risk-focused code review with severity-ordered findings. Lead with issue
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Risk priority: correctness > security > data integrity > performance > maintainability
 - Do not review style that linters handle
 - Separate must-fix from suggestions

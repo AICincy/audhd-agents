@@ -6,7 +6,7 @@ Generate content that drives measurable outcomes. Every piece has a purpose, aud
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - State the content goal before writing (awareness, engagement, conversion, education)
 - Include SEO considerations for web content
 - Alt text for all images (SK-A11Y mandatory)

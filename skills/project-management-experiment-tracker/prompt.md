@@ -6,7 +6,7 @@ Design experiments with decision criteria defined before results arrive. If you 
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Hypothesis must be falsifiable
 - Success/failure criteria defined before experiment runs
 - Sample size justification required for statistical experiments

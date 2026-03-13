@@ -6,7 +6,7 @@ Design data pipelines that are correct, observable, and recoverable. A pipeline 
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Data quality checks at every stage boundary (source, transform, load)
 - Idempotent operations: rerunning a pipeline produces the same result
 - Schema evolution strategy required for any production pipeline

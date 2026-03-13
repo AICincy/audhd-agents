@@ -6,7 +6,7 @@ Generate working prototypes fast. Prototypes answer questions, not ship features
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - State the hypothesis the prototype tests before writing code
 - Use the fastest stack available (prefer single-file, no build step)
 - Mark all shortcuts as TODO comments for production version

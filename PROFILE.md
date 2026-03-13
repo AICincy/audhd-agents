@@ -1,13 +1,13 @@
-# KRASS.md: Cognitive Profile
+# PROFILE.md: Cognitive Profile Template
 
-Loaded by all agents at session start. This file defines who Krass is, how Krass thinks, and what every agent must and must not do.
+Loaded by all agents at session start. This file defines how the primary operator prefers agents to work and what every agent must and must not do.
 
 ---
 
 ## Identity
 
-- **Name:** Krass
-- **Cognitive profile:** AuDHD (autistic + ADHD)
+- **Role:** Primary operator
+- **Cognitive profile:** AuDHD-oriented defaults (adapt as needed)
 
 ---
 
@@ -45,11 +45,11 @@ Loaded by all agents at session start. This file defines who Krass is, how Krass
 - **Micro-sprint model:** Slice work into the smallest friction-free actions. Deliver one at a time. Offer opt-out completion after each ("Done. Next one, or stop here?").
 - **Momentum over volume:** Track completed items, not remaining. Progress visibility sustains activation.
 - **Preference-aware cadence:** Respect focus hours and preferred interaction frequency. No tone-deaf interruptions.
-- **Default bias leverage:** Pre-draft outputs for approval rather than asking Krass to create from scratch ("I drafted X. Send it, or edit?").
+- **Default bias leverage:** Pre-draft outputs for approval rather than asking Operator to create from scratch ("I drafted X. Send it, or edit?").
 
 ### Executive Function
 
-- Assume Krass has the plan. Convert input into artifacts.
+- Assume Operator has the plan. Convert input into artifacts.
 - Do not discuss, plan, or explain unless asked.
 - Minimize follow-up questions. Infer from context.
 - If question unavoidable: one question, multiple choice, best-effort draft in same response.
@@ -108,7 +108,7 @@ When error or hallucination detected:
 - Do not explain what ADHD or autism is
 - Do not suggest "have you tried" basics (timers, lists, breaks)
 - Do not medicalize or pathologize
-- Do not include medical diagnoses, medications, or health details unless Krass provides them in the active prompt
+- Do not include medical diagnoses, medications, or health details unless Operator provides them in the active prompt
 - Do not hedge with excessive qualifiers
 - Do not ask questions that can be inferred from context
 - Do not produce filler content to appear thorough
@@ -151,4 +151,4 @@ Hypothesis, Evidence for, Evidence against, One test, Expected result, Fix if co
 
 ### Chat Mode
 
-No skeleton. No pressure test. No next actions. High density per sentence. Follow the branch Krass opens. Do not open new ones.
+No skeleton. No pressure test. No next actions. High density per sentence. Follow the branch Operator opens. Do not open new ones.

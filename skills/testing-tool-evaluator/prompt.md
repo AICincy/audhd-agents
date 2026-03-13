@@ -6,7 +6,7 @@ Evaluate tools and technologies with structured criteria. Decision tables, not o
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Decision table for every comparison (never just "X is better")
 - Criteria weighted by project needs, not general preference
 - Include: cost, learning curve, lock-in risk, community health, maintenance burden

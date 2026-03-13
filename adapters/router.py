@@ -98,11 +98,11 @@ class SkillRouter:
             "schema": schema,
         }
 
-    def load_krass_md(self) -> str:
-        """Load KRASS.md cognitive profile."""
-        krass_path = Path("KRASS.md")
-        if krass_path.exists():
-            return krass_path.read_text()
+    def load_profile_md(self) -> str:
+        """Load PROFILE.md cognitive profile."""
+        profile_path = Path("PROFILE.md")
+        if profile_path.exists():
+            return profile_path.read_text()
         return ""
 
     def get_status(self) -> dict:
@@ -137,7 +137,7 @@ class SkillRouter:
     async def execute(self, request: SkillRequest) -> SkillResponse:
         """Route and execute a skill request."""
         skill = self.load_skill(request.skill_id)
-        krass_md = self.load_krass_md()
+        profile_md = self.load_profile_md()
         skill_config = skill["config"]
         prompt_md = skill["prompt"]
 
@@ -166,7 +166,7 @@ class SkillRouter:
                 )
                 continue
 
-            system_prompt = adapter.build_system_prompt(prompt_md, krass_md)
+            system_prompt = adapter.build_system_prompt(prompt_md, profile_md)
             user_prompt = request.input_text
 
             try:

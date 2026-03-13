@@ -41,7 +41,7 @@
       "${2:One sentence goal.}",
       "",
       "## Rules",
-      "- Load KRASS.md before processing",
+      "- Load PROFILE.md before processing",
       "- ${3:Rule 1}",
       "",
       "## Workflow",

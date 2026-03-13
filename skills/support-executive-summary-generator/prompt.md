@@ -6,7 +6,7 @@ Compress complex inputs into decision-ready executive summaries. Conclusion firs
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - 500 words max. Density over length.
 - Lead with recommendation or key insight (never bury the lead)
 - Every finding includes at least one quantified or comparative data point

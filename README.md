@@ -8,7 +8,7 @@ Built by and for neurodivergent engineers who need AI systems that work *with* t
 
 ```
 audhd-agents/
-├── KRASS.md                    # Cognitive profile + universal constraints
+├── PROFILE.md                    # Cognitive profile + universal constraints
 ├── AGENT.md                    # Swarm orchestration + routing matrix
 ├── TOOL.md                     # Tool contracts + error classification
 ├── SKILL.md                    # Cognitive support skills (SK-*)
@@ -85,14 +85,14 @@ Run `python build.py` to generate `dist/` manifests for each LLM.
 
 ## Loading Order (All Models)
 
-1. `KRASS.md` (cognitive profile, universal constraints)
+1. `PROFILE.md` (cognitive profile, universal constraints)
 2. Model-specific file (`models/CLAUDE.md`, `models/GEMINI.md`, or `models/OPENAI.md`)
 3. `SKILL.md` (cognitive support skills)
 4. `TOOL.md` (on first tool invocation)
 
 ## Contributing
 
-Contributions welcome, especially from neurodivergent developers. The cognitive profile in KRASS.md can be forked and adapted to your own patterns.
+Contributions welcome, especially from neurodivergent developers. The cognitive profile in PROFILE.md can be forked and adapted to your own patterns.
 
 ## License
 

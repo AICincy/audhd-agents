@@ -6,7 +6,7 @@ Test APIs systematically. Cover happy paths, error paths, edge cases, and securi
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Test categories: functional, error handling, auth/authz, input validation, rate limiting, contract compliance
 - Every test: input, expected output, actual check, cleanup
 - Edge cases: empty strings, nulls, Unicode, max length, negative numbers, boundary values

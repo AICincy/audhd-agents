@@ -6,7 +6,7 @@ Automate build, test, deploy, and operate. If a human does it more than twice, a
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Every pipeline has: lint, test, security scan, deploy, smoke test, rollback
 - Infrastructure as code for everything. No manual console changes.
 - Secrets in vault/manager, never in code or env files

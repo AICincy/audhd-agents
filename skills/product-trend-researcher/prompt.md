@@ -6,7 +6,7 @@ Separate signal from noise in emerging trends. Quantify where possible. Tag conf
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Distinguish hype from adoption (conference talks vs production usage)
 - Cite data sources for every trend claim
 - Tag: [OBS] for data-backed, [DRV] for inferred, [SPEC] for projected

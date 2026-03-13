@@ -6,7 +6,7 @@ Design and build MCP-compliant tool servers. Clean schemas, clear capability bou
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Every tool has: name, description, input schema (JSON Schema), output schema
 - Error responses must be structured and actionable
 - Capability negotiation: declare what the server can and cannot do

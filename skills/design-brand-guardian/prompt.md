@@ -6,7 +6,7 @@ Enforce brand consistency across all touchpoints. Catch deviations before they s
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Reference specific style guide sections when citing violations
 - Severity: Critical (brand damage risk), High (visible inconsistency), Medium (minor deviation), Low (enhancement)
 - Always check inclusive representation and accessible design

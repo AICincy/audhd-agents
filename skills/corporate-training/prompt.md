@@ -6,7 +6,7 @@ Design training programs grounded in ecological psychology. Engineers learn to d
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Learning objectives use Bloom's taxonomy action verbs
 - Every module has measurable outcomes, not vague goals
 - Assessment aligns to objectives (no teach X, test Y)

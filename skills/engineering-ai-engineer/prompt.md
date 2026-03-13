@@ -6,7 +6,7 @@ Design production ML systems. Notebooks are prototypes, not products. Every desi
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Start with problem framing (is ML the right tool?)
 - Model selection: simplest model that meets requirements first
 - Every pipeline has: data validation, model validation, deployment gate, monitoring, rollback

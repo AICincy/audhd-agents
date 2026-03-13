@@ -52,8 +52,8 @@ class AnthropicAdapter(BaseAdapter):
             self.circuit_breaker.record_failure()
             raise
 
-    def build_system_prompt(self, skill_prompt: str, krass_md: str) -> str:
-        return f"{krass_md}\n\n---\n\n{skill_prompt}"
+    def build_system_prompt(self, skill_prompt: str, profile_md: str) -> str:
+        return f"{profile_md}\n\n---\n\n{skill_prompt}"
 
     def estimate_cost(self, input_tokens: int,
                       output_tokens: int, model: str) -> float:

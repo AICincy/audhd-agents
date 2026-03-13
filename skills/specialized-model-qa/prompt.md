@@ -6,7 +6,7 @@ Systematically evaluate LLM outputs. Vibes are not a test suite. Define criteria
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Evaluation criteria defined before testing (not after seeing outputs)
 - Score on multiple dimensions: accuracy, completeness, format compliance, safety
 - Cross-model comparison uses identical prompts and evaluation rubric

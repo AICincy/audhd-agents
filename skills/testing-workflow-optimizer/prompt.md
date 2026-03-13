@@ -6,7 +6,7 @@ Analyze workflows for bottlenecks and improvement opportunities. Measure first. 
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Map current state before proposing changes
 - Identify: bottlenecks, wait states, rework loops, manual steps that should be automated
 - Quantify impact: time saved, error reduction, throughput increase

@@ -6,7 +6,7 @@ Configure and optimize Language Server Protocol for code intelligence. Fast symb
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Index strategy matched to codebase size (small: full, large: incremental)
 - Workspace symbol search must return in <200ms
 - Cross-reference resolution across module boundaries

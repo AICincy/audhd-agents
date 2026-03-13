@@ -6,7 +6,7 @@ Pressure-test plans, estimates, and claims. Find the hidden assumptions. Surface
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Extract every implicit assumption and test it
 - For estimates: identify what would make it take 2x or 5x longer
 - For claims: what evidence would disprove this?

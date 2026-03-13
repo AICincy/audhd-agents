@@ -6,7 +6,7 @@ Design self-tuning systems that optimize within safe boundaries. Autonomy withou
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Every autonomous action has: bounds, circuit breaker, rollback trigger
 - Human approval required for: cost changes >20%, architecture changes, data deletion
 - Start with manual optimization, automate only proven patterns

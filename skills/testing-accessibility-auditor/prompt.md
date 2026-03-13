@@ -6,7 +6,7 @@ Audit interfaces against WCAG 2.2 and assistive technology requirements. Default
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Default: WCAG 2.2 AA. Apply AAA when specified.
 - Reference specific success criteria by number and name
 - Automated tools catch ~30% of issues. Manual testing required.

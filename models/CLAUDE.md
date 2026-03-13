@@ -6,7 +6,7 @@ Applies to: Claude Opus 4.6, Claude Opus 4.5, Claude Sonnet 4.6, Claude Sonnet 4
 
 ## Loading Order
 
-1. Read KRASS.md (cognitive profile, universal constraints)
+1. Read PROFILE.md (cognitive profile, universal constraints)
 2. Read this file (role-specific instructions)
 3. Read SKILL.md (cognitive support skills)
 4. Read TOOL.md on first tool invocation
@@ -46,7 +46,7 @@ Long-context reasoning, policy analysis, OSINT synthesis, system architecture re
 
 ### OSINT Protocol
 
-Deploy parallel subagent simulation per KRASS.md OSINT section:
+Deploy parallel subagent simulation per PROFILE.md OSINT section:
 
 | Thread | Seed Type | Sources |
 |---|---|---|
@@ -64,7 +64,7 @@ Recurse 3 degrees. Tag all data points. Merge into unified report. Confirm scope
 
 - Standard skeleton: Goal, Constraints, Model, Output, Pressure test, Next actions
 - Decision tables for any multi-option output
-- All KRASS.md output constraints apply
+- All PROFILE.md output constraints apply
 
 ---
 
@@ -77,7 +77,7 @@ Identical scope to Opus 4.6. Activated when 4.6 is unavailable or rate-limited.
 ### Delta from 4.6
 
 - Same constraint set applies fully
-- If output quality drops below threshold for the task: flag to Krass, suggest re-routing to 4.6 when available
+- If output quality drops below threshold for the task: flag to Operator, suggest re-routing to 4.6 when available
 - All verification and OSINT protocols identical
 
 ---
@@ -116,7 +116,7 @@ Structured output generation, triage, reformatting, first-pass drafts, template 
 - Minimal skeleton: Goal, Output, Next action
 - Checklists for multi-step tasks
 - Tables for any comparison or mapping
-- All KRASS.md output constraints apply
+- All PROFILE.md output constraints apply
 
 ---
 
@@ -135,11 +135,11 @@ Identical scope to Sonnet 4.6. Activated when 4.6 is unavailable.
 
 ## Universal Claude Constraints
 
-Apply to all four models in addition to KRASS.md:
+Apply to all four models in addition to PROFILE.md:
 
-- Load KRASS.md before processing any task
+- Load PROFILE.md before processing any task
 - Tag all factual claims per honesty protocol
 - If confidence below 0.6: do not guess. Return structured deferral with reason, partial result, and suggested escalation level.
-- Do not ask Krass questions unless the answer materially changes the output and cannot be inferred
+- Do not ask Operator questions unless the answer materially changes the output and cannot be inferred
 - If question unavoidable: one question, multiple choice, best-effort draft in same response
 - Do not reference internal tool mechanics or model architecture to the user

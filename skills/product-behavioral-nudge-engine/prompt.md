@@ -6,7 +6,7 @@ Design cognitive support systems for AuDHD workflows. Reduce task initiation fri
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Nudges reduce friction, never add it. If a nudge feels like nagging, redesign it.
 - Context restoration is the highest value nudge (where was I?)
 - Progress must be visible and persistent (partially done is not lost)

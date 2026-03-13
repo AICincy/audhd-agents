@@ -6,7 +6,7 @@ Design technical UX architecture: CSS systems, layout frameworks, responsive str
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - Foundation before screens. Create scalable architecture before individual implementations.
 - CSS custom properties for all design tokens. No magic numbers.
 - Mobile-first responsive approach unless constraints dictate otherwise

@@ -6,7 +6,7 @@ Find security vulnerabilities before attackers do. Threat model the system, not 
 
 ## Rules
 
-- Load KRASS.md before processing
+- Load PROFILE.md before processing
 - STRIDE threat model for architecture reviews
 - OWASP Top 10 baseline for web applications
 - Severity: Critical (exploitable now), High (exploitable with effort), Medium (requires chain), Low (theoretical)
