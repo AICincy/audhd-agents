@@ -1,5 +1,5 @@
 # Provider configuration for audhd-agents
-# Model routing, cost tiers, and capability mapping
+# Model routing and capability mapping
 
 providers:
   anthropic:
@@ -12,8 +12,6 @@ providers:
         tier: T1
         context_window: 200000
         max_output: 32000
-        cost_per_1k_input: 0.015
-        cost_per_1k_output: 0.075
         strengths:
           - complex-reasoning
           - code-generation
@@ -25,8 +23,6 @@ providers:
         tier: T1
         context_window: 200000
         max_output: 32000
-        cost_per_1k_input: 0.015
-        cost_per_1k_output: 0.075
         strengths:
           - complex-reasoning
           - code-generation
@@ -37,8 +33,6 @@ providers:
         tier: T2
         context_window: 200000
         max_output: 16000
-        cost_per_1k_input: 0.003
-        cost_per_1k_output: 0.015
         strengths:
           - fast-execution
           - code-generation
@@ -49,8 +43,6 @@ providers:
         tier: T2
         context_window: 200000
         max_output: 16000
-        cost_per_1k_input: 0.003
-        cost_per_1k_output: 0.015
         strengths:
           - fast-execution
           - code-generation
@@ -66,8 +58,6 @@ providers:
         tier: T1
         context_window: 128000
         max_output: 16384
-        cost_per_1k_input: 0.010
-        cost_per_1k_output: 0.030
         strengths:
           - creative-writing
           - content-generation
@@ -78,8 +68,6 @@ providers:
         tier: T2
         context_window: 128000
         max_output: 16384
-        cost_per_1k_input: 0.005
-        cost_per_1k_output: 0.015
         strengths:
           - general-purpose
           - content-generation
@@ -90,8 +78,6 @@ providers:
         tier: T1
         context_window: 128000
         max_output: 16384
-        cost_per_1k_input: 0.020
-        cost_per_1k_output: 0.060
         strengths:
           - deep-reasoning
           - complex-analysis
@@ -101,8 +87,6 @@ providers:
         tier: T2
         context_window: 128000
         max_output: 16384
-        cost_per_1k_input: 0.005
-        cost_per_1k_output: 0.015
         strengths:
           - code-generation
           - code-review
@@ -113,8 +97,6 @@ providers:
         tier: T2
         context_window: 128000
         max_output: 16384
-        cost_per_1k_input: 0.008
-        cost_per_1k_output: 0.024
         strengths:
           - general-purpose
           - overflow
@@ -125,8 +107,6 @@ providers:
         tier: T3
         context_window: 128000
         max_output: 65536
-        cost_per_1k_input: 0.001
-        cost_per_1k_output: 0.004
         strengths:
           - reasoning-chains
           - math
@@ -143,8 +123,6 @@ providers:
         tier: T1
         context_window: 2000000
         max_output: 65536
-        cost_per_1k_input: 0.00125
-        cost_per_1k_output: 0.005
         strengths:
           - massive-context
           - multimodal
@@ -164,14 +142,6 @@ alias_map:
   O-MAX: openai/gpt-max
   O-O4M: openai/o4-mini
   G-PRO: google/gemini-3.1-pro
-
-# Cost guardrails
-cost:
-  tracking: true
-  max_per_request: 1.00
-  max_per_day: 50.00
-  alert_threshold: 0.80
-  log_file: logs/cost.jsonl
 
 # Circuit breakers (applied to all provider adapters)
 circuit_breaker:

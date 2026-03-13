@@ -1,4 +1,4 @@
-"""Skill-to-model router with failover, cost tracking, and dotenv loading."""
+"""Skill-to-model router with failover and dotenv loading."""
 
 import os
 import yaml
@@ -40,9 +40,6 @@ class SkillRouter:
         self.adapters = {}
         self._init_adapters()
         self.alias_map = self.config.get("alias_map", {})
-        self.cost_config = self.config.get("cost", {})
-        self.daily_cost = 0.0
-        self.daily_cost_date = time.strftime("%Y-%m-%d")
 
     def _init_adapters(self):
         """Initialize provider adapters from config with circuit breaker settings."""
@@ -108,22 +105,6 @@ class SkillRouter:
             return krass_path.read_text()
         return ""
 
-    def _check_cost_budget(self, estimated_cost: float = 0.0) -> bool:
-        """Check if request is within cost budget."""
-        today = time.strftime("%Y-%m-%d")
-        if today != self.daily_cost_date:
-            self.daily_cost = 0.0
-            self.daily_cost_date = today
-
-        max_per_request = self.cost_config.get("max_per_request", 1.00)
-        max_per_day = self.cost_config.get("max_per_day", 50.00)
-
-        if estimated_cost > max_per_request:
-            return False
-        if self.daily_cost + estimated_cost > max_per_day:
-            return False
-        return True
-
     def get_status(self) -> dict:
         """Return adapter connectivity status for diagnostics.
 
@@ -155,13 +136,6 @@ class SkillRouter:
 
     async def execute(self, request: SkillRequest) -> SkillResponse:
         """Route and execute a skill request."""
-        # Pre-flight: check daily budget has headroom
-        if not self._check_cost_budget(0.0):
-            raise RuntimeError(
-                f"Daily cost budget exhausted: ${self.daily_cost:.2f} / "
-                f"${self.cost_config.get('max_per_day', 50.00):.2f}"
-            )
-
         skill = self.load_skill(request.skill_id)
         krass_md = self.load_krass_md()
         skill_config = skill["config"]
@@ -203,37 +177,6 @@ class SkillRouter:
                     **request.options,
                 )
 
-                cost = adapter.estimate_cost(
-                    result["input_tokens"],
-                    result["output_tokens"],
-                    model_id,
-                )
-                self.daily_cost += cost
-
-                # Post-flight: warn if per-request cost exceeded
-                max_req = self.cost_config.get("max_per_request", 1.00)
-                if cost > max_req:
-                    import sys
-                    print(
-                        f"COST WARNING: {request.skill_id} on {model_id} "
-                        f"cost ${cost:.4f} (limit ${max_req:.2f})",
-                        file=sys.stderr,
-                    )
-
-                # Log cost
-                record = CostRecord(
-                    timestamp=time.strftime("%Y-%m-%dT%H:%M:%SZ"),
-                    skill_id=request.skill_id,
-                    model=model_id,
-                    provider=provider_name,
-                    input_tokens=result["input_tokens"],
-                    output_tokens=result["output_tokens"],
-                    cost=cost,
-                    latency_ms=result["latency_ms"],
-                )
-                log_file = self.cost_config.get("log_file", "logs/cost.jsonl")
-                adapter.log_cost(record, log_file)
-
                 return SkillResponse(
                     output=(
                         json.loads(result["content"])
@@ -244,7 +187,6 @@ class SkillRouter:
                     provider=provider_name,
                     input_tokens=result["input_tokens"],
                     output_tokens=result["output_tokens"],
-                    cost=cost,
                     latency_ms=result["latency_ms"],
                 )
 

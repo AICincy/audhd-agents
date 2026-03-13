@@ -24,21 +24,19 @@ class SkillResponse:
     provider: str
     input_tokens: int = 0
     output_tokens: int = 0
-    cost: float = 0.0
     latency_ms: int = 0
     cached: bool = False
 
 
 @dataclass
 class CostRecord:
-    """Cost tracking record."""
+    """Cost tracking record (optional logging only)."""
     timestamp: str
     skill_id: str
     model: str
     provider: str
     input_tokens: int
     output_tokens: int
-    cost: float
     latency_ms: int
 
 
@@ -95,16 +93,3 @@ class BaseAdapter(ABC):
                             krass_md: str) -> str:
         """Build provider-specific system prompt from skill prompt + KRASS.md."""
         ...
-
-    @abstractmethod
-    def estimate_cost(self, input_tokens: int,
-                      output_tokens: int, model: str) -> float:
-        """Estimate cost for a request."""
-        ...
-
-    def log_cost(self, record: CostRecord, log_file: str = "logs/cost.jsonl"):
-        """Append cost record to JSONL log."""
-        import os
-        os.makedirs(os.path.dirname(log_file), exist_ok=True)
-        with open(log_file, "a") as f:
-            f.write(json.dumps(record.__dict__) + "\n")
