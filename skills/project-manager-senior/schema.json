@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Project portfolio or planning challenge"
+    },
+    "scope": {
+      "type": "string",
+      "description": "Management scope",
+      "enum": ["single-project", "portfolio", "program"]
+    }
+  },
+  "required": ["input_text"]
+}

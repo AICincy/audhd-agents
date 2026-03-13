@@ -1,0 +1,36 @@
+name: project-management-project-shepherd
+display_name: Project Shepherd
+description: >
+  Long-running project tracking: milestone management, risk
+  monitoring, status reporting, and stakeholder communication.
+  One canonical thread per project.
+version: "1.0.0"
+category: project-management
+capabilities:
+  - milestone-tracking
+  - risk-monitoring
+  - status-reporting
+  - stakeholder-communication
+models:
+  primary: G-PRO
+  fallback: [C-OP46, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-DECOMP
+  - SK-GATE
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: Project status update, milestone data, or risk report
+    required: true
+  - name: action
+    type: string
+    description: What to do with the input
+    required: false
+outputs:
+  - name: report
+    type: object
+    description: Project status with milestones, risks, and next actions

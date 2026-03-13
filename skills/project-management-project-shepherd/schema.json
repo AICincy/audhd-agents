@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Project status, milestone data, or risk report"
+    },
+    "action": {
+      "type": "string",
+      "description": "Action to perform",
+      "enum": ["status-update", "risk-review", "milestone-check", "stakeholder-report"]
+    }
+  },
+  "required": ["input_text"]
+}

@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Status report for audhd-agents repo build",
+    "input": {
+      "input_text": "audhd-agents project: 30 of 51 skills pushed to GitHub. Protocol files and scaffold complete. Remaining: 21 skills, API/OAuth integration, build.py testing. Timeline: targeting completion this week.",
+      "action": "status-update"
+    }
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Document requirements or source data"
+    },
+    "doc_type": {
+      "type": "string",
+      "description": "Document type",
+      "enum": ["proposal", "report", "specification", "memo", "letter", "policy", "sow"]
+    }
+  },
+  "required": ["input_text"]
+}

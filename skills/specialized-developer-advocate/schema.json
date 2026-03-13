@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "DevRel initiative or content need"
+    },
+    "channel": {
+      "type": "string",
+      "description": "Distribution channel",
+      "enum": ["blog", "youtube", "conference", "workshop", "discord", "github", "newsletter"]
+    }
+  },
+  "required": ["input_text"]
+}

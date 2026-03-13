@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Workshop for cloud engineers on AI agent design",
+    "input": {
+      "input_text": "Design a 90-minute workshop: 'Building AI Agents That Work With Human Cognition.' Target: intermediate cloud engineers. Hands-on component with real agent framework.",
+      "channel": "workshop"
+    }
+  }
+]

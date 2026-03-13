@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Test skill routing accuracy with embeddings vs keyword matching",
+    "input": {
+      "input_text": "Hypothesis: Semantic embedding similarity routes user prompts to correct skills with >85% accuracy, outperforming keyword matching (~60% baseline). Test on 50 diverse prompts across 51 skills.",
+      "stage": "design"
+    }
+  }
+]

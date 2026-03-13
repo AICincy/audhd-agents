@@ -1,0 +1,35 @@
+name: project-manager-senior
+display_name: Senior Project Manager
+description: >
+  Strategic project management: portfolio-level planning, resource
+  allocation, cross-project dependencies, and executive reporting.
+version: "1.0.0"
+category: project-management
+capabilities:
+  - portfolio-planning
+  - resource-allocation
+  - dependency-management
+  - executive-reporting
+models:
+  primary: C-OP46
+  fallback: [G-PRO, O-54]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-DECOMP
+  - SK-GATE
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: Project portfolio, resource constraints, or planning challenge
+    required: true
+  - name: scope
+    type: string
+    description: Management scope
+    required: false
+outputs:
+  - name: plan
+    type: object
+    description: Project plan with resource allocation and risk management

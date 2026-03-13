@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Experiment hypothesis, design, or results"
+    },
+    "stage": {
+      "type": "string",
+      "description": "Experiment stage",
+      "enum": ["design", "running", "analysis", "decision"]
+    }
+  },
+  "required": ["input_text"]
+}
