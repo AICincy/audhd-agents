@@ -1,0 +1,18 @@
+name: transform
+description: Convert between formats, structures, and representations
+inputs:
+  - source_data
+  - target_format
+outputs:
+  - transformed_data
+skills:
+  primary:
+    - engineering-ai-data-remediation
+    - engineering-data-engineer
+    - lsp-index-engineer
+  secondary:
+    - engineering-technical-writer
+    - support-executive-summary-generator
+    - design-visual-storyteller
+    - marketing-linkedin-content-creator
+    - specialized-document-generator

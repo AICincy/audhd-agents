@@ -1,0 +1,22 @@
+name: audit
+description: Check compliance, security, accessibility, and governance
+inputs:
+  - artifact
+  - standards
+  - policy
+outputs:
+  - violations
+  - risk_score
+  - remediation_steps
+skills:
+  primary:
+    - compliance-auditor
+    - automation-governance
+    - engineering-security-engineer
+    - testing-accessibility-auditor
+    - support-legal-compliance-checker
+  secondary:
+    - engineering-ai-data-remediation
+    - design-brand-guardian
+    - testing-reality-checker
+    - testing-evidence-collector

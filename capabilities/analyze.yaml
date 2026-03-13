@@ -1,0 +1,21 @@
+name: analyze
+description: Examine inputs for patterns, risks, anomalies, and structure
+inputs:
+  - raw_information
+  - code
+  - data
+outputs:
+  - findings
+  - risk_assessment
+  - patterns
+skills:
+  primary:
+    - engineering-code-reviewer
+    - engineering-incident-response-commander
+    - product-behavioral-nudge-engine
+    - testing-test-results-analyzer
+  secondary:
+    - engineering-autonomous-optimization
+    - engineering-database-optimizer
+    - product-sprint-prioritizer
+    - design-ux-architect

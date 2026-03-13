@@ -1,0 +1,22 @@
+name: evaluate
+description: Assess quality, correctness, and performance against criteria
+inputs:
+  - artifact
+  - criteria
+  - baseline
+outputs:
+  - assessment
+  - score
+  - gaps
+skills:
+  primary:
+    - testing-api-tester
+    - testing-performance-benchmarker
+    - testing-reality-checker
+    - testing-tool-evaluator
+    - specialized-model-qa
+    - project-management-experiment-tracker
+    - design-brand-guardian
+  secondary:
+    - automation-governance
+    - compliance-auditor

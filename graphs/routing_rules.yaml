@@ -1,0 +1,51 @@
+# Routing rules: map natural language intents to capability chain entry points
+# The router matches user input against triggers to select the starting capability
+
+rules:
+  - trigger: ["research", "find out", "investigate", "look into", "what is"]
+    start_capability: research
+    default_chain: research_to_report
+
+  - trigger: ["review", "check", "audit", "inspect"]
+    start_capability: analyze
+    default_chain: code_review_pipeline
+
+  - trigger: ["summarize", "condense", "tldr", "brief"]
+    start_capability: synthesize
+    default_chain: null
+
+  - trigger: ["build", "create", "generate", "write", "draft", "code"]
+    start_capability: generate
+    default_chain: build_and_validate
+
+  - trigger: ["plan", "architect", "design", "structure", "roadmap"]
+    start_capability: plan
+    default_chain: build_and_validate
+
+  - trigger: ["convert", "transform", "migrate", "reformat"]
+    start_capability: transform
+    default_chain: null
+
+  - trigger: ["test", "benchmark", "evaluate", "measure", "compare"]
+    start_capability: evaluate
+    default_chain: null
+
+  - trigger: ["compliance", "security", "accessibility", "legal", "governance"]
+    start_capability: audit
+    default_chain: security_pipeline
+
+  - trigger: ["optimize", "improve", "speed up", "reduce", "tune"]
+    start_capability: optimize
+    default_chain: null
+
+  - trigger: ["coordinate", "orchestrate", "delegate", "run workflow"]
+    start_capability: orchestrate
+    default_chain: null
+
+  - trigger: ["feedback", "user feedback", "customer feedback"]
+    start_capability: research
+    default_chain: feedback_loop
+
+  - trigger: ["content", "article", "blog", "post", "linkedin"]
+    start_capability: research
+    default_chain: content_pipeline

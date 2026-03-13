@@ -1,0 +1,17 @@
+name: synthesize
+description: Merge multiple inputs into coherent unified output
+inputs:
+  - findings
+  - raw_information
+  - data
+outputs:
+  - summary
+  - report
+  - synthesis
+skills:
+  primary:
+    - product-feedback-synthesizer
+    - support-analytics-reporter
+    - support-executive-summary-generator
+  secondary:
+    - testing-test-results-analyzer

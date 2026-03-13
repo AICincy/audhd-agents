@@ -1,0 +1,32 @@
+name: generate
+description: Produce new artifacts including code, text, designs, and configs
+inputs:
+  - requirements
+  - context
+  - plan
+outputs:
+  - artifact
+  - code
+  - content
+  - design
+skills:
+  primary:
+    - engineering-rapid-prototyper
+    - engineering-frontend-developer
+    - engineering-devops-automator
+    - engineering-git-workflow-master
+    - engineering-ai-engineer
+    - engineering-technical-writer
+    - corporate-training
+    - design-image-prompt-engineer
+    - design-inclusive-visuals-specialist
+    - design-ui-designer
+    - design-visual-storyteller
+    - marketing-content-creator
+    - marketing-linkedin-content-creator
+    - specialized-developer-advocate
+    - specialized-document-generator
+    - specialized-mcp-builder
+  secondary:
+    - product-behavioral-nudge-engine
+    - engineering-backend-architect

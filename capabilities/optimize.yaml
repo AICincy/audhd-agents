@@ -1,0 +1,17 @@
+name: optimize
+description: Improve performance, efficiency, and resource usage
+inputs:
+  - artifact
+  - metrics
+  - bottlenecks
+outputs:
+  - optimized_artifact
+  - performance_delta
+  - recommendations
+skills:
+  primary:
+    - engineering-autonomous-optimization
+    - engineering-database-optimizer
+    - testing-workflow-optimizer
+  secondary:
+    - engineering-devops-automator

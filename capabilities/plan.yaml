@@ -1,0 +1,22 @@
+name: plan
+description: Create structured sequences, architectures, and roadmaps
+inputs:
+  - goal
+  - constraints
+  - findings
+outputs:
+  - plan
+  - architecture
+  - roadmap
+skills:
+  primary:
+    - engineering-software-architect
+    - engineering-backend-architect
+    - product-sprint-prioritizer
+    - project-management-project-shepherd
+    - project-manager-senior
+    - design-ux-architect
+  secondary:
+    - engineering-ai-engineer
+    - corporate-training
+    - engineering-rapid-prototyper

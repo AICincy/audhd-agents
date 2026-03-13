@@ -1,0 +1,16 @@
+name: orchestrate
+description: Coordinate multiple skills, agents, and workflows
+inputs:
+  - task
+  - available_skills
+  - constraints
+outputs:
+  - execution_plan
+  - delegated_tasks
+  - merged_result
+skills:
+  primary:
+    - agents-orchestrator
+  secondary:
+    - project-management-project-shepherd
+    - project-manager-senior

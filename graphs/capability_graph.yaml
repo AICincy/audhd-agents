@@ -1,0 +1,95 @@
+# Capability Graph: defines data-flow edges between capabilities
+# Edges represent what each capability produces and what consumes it
+# The planner traverses this graph to compose multi-skill workflows
+
+nodes:
+  research:
+    requires: []
+    produces: [raw_information, sources]
+    description: Entry point for information gathering
+
+  analyze:
+    requires: [raw_information, code, data]
+    produces: [findings, risk_assessment, patterns]
+    description: Pattern and risk detection
+
+  synthesize:
+    requires: [findings, raw_information]
+    produces: [summary, report, synthesis]
+    description: Merge multiple inputs into coherent output
+
+  plan:
+    requires: [findings, goal, constraints]
+    produces: [plan, architecture, roadmap]
+    description: Structured sequencing and architecture
+
+  generate:
+    requires: [plan, requirements, context]
+    produces: [artifact, code, content, design]
+    description: Create new artifacts
+
+  transform:
+    requires: [source_data, target_format]
+    produces: [transformed_data]
+    description: Format and structure conversion
+
+  evaluate:
+    requires: [artifact, criteria]
+    produces: [assessment, score, gaps]
+    description: Quality and correctness assessment
+
+  audit:
+    requires: [artifact, standards]
+    produces: [violations, risk_score, remediation_steps]
+    description: Compliance and governance checks
+
+  optimize:
+    requires: [artifact, metrics, bottlenecks]
+    produces: [optimized_artifact, performance_delta]
+    description: Performance and efficiency improvement
+
+  orchestrate:
+    requires: [task, available_skills]
+    produces: [execution_plan, merged_result]
+    description: Multi-skill coordination (meta-capability)
+
+# Common chains (planner uses these as templates)
+chains:
+  research_to_report:
+    - research
+    - analyze
+    - synthesize
+    description: Gather info, find patterns, produce report
+
+  build_and_validate:
+    - plan
+    - generate
+    - evaluate
+    - optimize
+    description: Design, build, test, improve
+
+  code_review_pipeline:
+    - analyze
+    - audit
+    - evaluate
+    description: Review code for bugs, compliance, quality
+
+  content_pipeline:
+    - research
+    - plan
+    - generate
+    - evaluate
+    description: Research topic, plan structure, write, review
+
+  security_pipeline:
+    - audit
+    - analyze
+    - generate
+    description: Audit for vulnerabilities, analyze risk, generate fixes
+
+  feedback_loop:
+    - research
+    - synthesize
+    - analyze
+    - plan
+    description: Collect feedback, merge, find patterns, prioritize

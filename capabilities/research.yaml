@@ -1,0 +1,17 @@
+name: research
+description: Gather, discover, and trace information from sources
+inputs:
+  - query
+  - scope
+outputs:
+  - raw_information
+  - sources
+skills:
+  primary:
+    - design-ux-researcher
+    - product-trend-researcher
+    - testing-evidence-collector
+  secondary:
+    - testing-tool-evaluator
+    - marketing-content-creator
+    - specialized-developer-advocate
