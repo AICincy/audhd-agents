@@ -1,6 +1,8 @@
 # AUDHD Cognitive Swarm Protocol
 
-Multi-agent orchestration system for AuDHD cognition. Hub-and-spoke topology with 9 models, skill-based cognitive augmentation, and LLM-specific deployment adapters.
+Multi-agent orchestration system designed for AuDHD cognition. Hub-and-spoke topology with 9 models, skill-based cognitive augmentation, and LLM-specific deployment adapters.
+
+Built by and for neurodivergent engineers who need AI systems that work *with* their cognitive architecture instead of against it.
 
 ## Architecture
 
@@ -24,9 +26,11 @@ audhd-agents/
 ├── graphs/                     # Capability chaining (Beta Pro)
 ├── agents/                     # Agent compositions (Beta Pro)
 ├── adapters/
-│   ├── openai/                 # ChatGPT adapter
-│   ├── anthropic/              # Claude adapter
-│   └── gemini/                 # Gemini adapter
+│   ├── config.yaml             # Provider config + model routing
+│   ├── router.py               # Skill-to-model router with failover
+│   ├── anthropic_adapter.py    # Claude adapter
+│   ├── openai_adapter.py       # OpenAI adapter
+│   └── google_adapter.py       # Gemini adapter
 ├── runtime/                    # Router, planner, executor (Beta Pro)
 ├── dist/                       # Generated per-LLM manifests
 ├── .vscode/                    # VS Code configuration
@@ -47,6 +51,16 @@ audhd-agents/
 | O-CDX | Codex | Code Automator |
 | O-MAX | Max | Generalist Overflow |
 
+## Cognitive Design Principles
+
+This system is built around AuDHD cognitive patterns:
+
+- **Monotropism:** Single-thread control. No autonomous agent-to-agent chatter.
+- **Pattern compression:** Verdict first, supporting structure second.
+- **Asymmetric working memory:** Maps over turn-by-turn. Full system view before sequencing.
+- **Interest-based activation:** Micro-sprints, momentum tracking, smallest-possible first actions.
+- **Executive function offload:** Agents infer and execute. Questions are a last resort.
+
 ## Skill System (AIO)
 
 Each skill is a canonical definition that builds to all 3 LLM formats:
@@ -56,15 +70,18 @@ Each skill is a canonical definition that builds to all 3 LLM formats:
 - **schema.json**: Function/tool schema for input validation
 - **examples.json**: Test invocations for validation
 
+51 skills across engineering, design, testing, project management, marketing, and specialized domains.
+
 Run `python build.py` to generate `dist/` manifests for each LLM.
 
 ## Setup
 
 1. Clone this repo
 2. Open in VS Code (recommended extensions auto-suggested)
-3. `pip install -r requirements.txt`
-4. `python build.py` to generate LLM-specific files in `dist/`
-5. Deploy generated manifests to respective platforms
+3. `cp .env.example .env` and fill in your API keys
+4. `pip install -r requirements.txt`
+5. `python build.py` to generate LLM-specific files in `dist/`
+6. Deploy generated manifests to respective platforms
 
 ## Loading Order (All Models)
 
@@ -73,6 +90,10 @@ Run `python build.py` to generate `dist/` manifests for each LLM.
 3. `SKILL.md` (cognitive support skills)
 4. `TOOL.md` (on first tool invocation)
 
+## Contributing
+
+Contributions welcome, especially from neurodivergent developers. The cognitive profile in KRASS.md can be forked and adapted to your own patterns.
+
 ## License
 
-Private. All rights reserved.
+MIT. See [LICENSE](LICENSE).
