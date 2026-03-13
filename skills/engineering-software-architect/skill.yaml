@@ -1,0 +1,36 @@
+name: engineering-software-architect
+display_name: Software Architect
+description: >
+  System-level architecture: domain modeling, integration patterns,
+  technology selection, and evolutionary architecture. Build for
+  change, not for permanence.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - system-architecture
+  - domain-modeling
+  - integration-patterns
+  - technology-selection
+models:
+  primary: C-OP46
+  fallback: [O-CDX, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-DECOMP
+  - SK-GATE
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: System requirements, domain model, or architecture decision
+    required: true
+  - name: constraints
+    type: string
+    description: Technical or organizational constraints
+    required: false
+outputs:
+  - name: architecture
+    type: object
+    description: Architecture decision with rationale and trade-offs

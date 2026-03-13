@@ -1,0 +1,9 @@
+[
+  {
+    "description": "LSP setup for audhd-agents Python monorepo",
+    "input": {
+      "input_text": "Python monorepo with 51 skill directories, each containing .yaml, .md, .json files plus generated Python adapters. Need fast go-to-definition across skill boundaries and YAML schema validation.",
+      "language": "python"
+    }
+  }
+]

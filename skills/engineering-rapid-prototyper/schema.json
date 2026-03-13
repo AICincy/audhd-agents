@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Idea or hypothesis to prototype"
+    },
+    "time_box": {
+      "type": "string",
+      "description": "Time constraint",
+      "enum": ["30min", "1hr", "2hr", "4hr", "1day"]
+    }
+  },
+  "required": ["input_text"]
+}

@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Codebase structure or LSP requirements"
+    },
+    "language": {
+      "type": "string",
+      "description": "Primary language",
+      "enum": ["python", "typescript", "go", "rust", "java", "multi"]
+    }
+  },
+  "required": ["input_text"]
+}

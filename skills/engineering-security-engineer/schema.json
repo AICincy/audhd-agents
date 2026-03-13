@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Code, architecture, or system to assess"
+    },
+    "scope": {
+      "type": "string",
+      "description": "Assessment scope",
+      "enum": ["threat-model", "code-review", "config-audit", "penetration-test", "full"]
+    }
+  },
+  "required": ["input_text"]
+}

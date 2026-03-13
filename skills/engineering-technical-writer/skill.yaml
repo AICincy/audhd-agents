@@ -1,0 +1,38 @@
+name: engineering-technical-writer
+display_name: Technical Writer
+description: >
+  Technical documentation: API docs, architecture docs, runbooks,
+  and developer guides. Documentation is a user interface.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - api-documentation
+  - architecture-docs
+  - runbooks
+  - developer-guides
+models:
+  primary: C-OP46
+  fallback: [O-54, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-A11Y
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: Code, architecture, or system to document
+    required: true
+  - name: doc_type
+    type: string
+    description: Documentation type
+    required: false
+  - name: audience
+    type: string
+    description: Target reader
+    required: false
+outputs:
+  - name: documentation
+    type: object
+    description: Formatted documentation with structure and content

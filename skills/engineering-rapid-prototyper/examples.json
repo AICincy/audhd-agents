@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Prototype skill routing with semantic similarity",
+    "input": {
+      "input_text": "Test whether cosine similarity on skill descriptions can route user prompts to the correct skill with >80% accuracy across 20 test cases.",
+      "time_box": "2hr"
+    }
+  }
+]

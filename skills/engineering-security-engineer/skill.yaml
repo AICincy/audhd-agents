@@ -1,0 +1,35 @@
+name: engineering-security-engineer
+display_name: Security Engineer
+description: >
+  Application security: threat modeling, vulnerability assessment,
+  secure code review, and security architecture. Defense in depth.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - threat-modeling
+  - vulnerability-assessment
+  - secure-code-review
+  - security-architecture
+models:
+  primary: C-OP46
+  fallback: [O-CDX, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-GATE
+  - SK-VERIFY
+  - SK-CODEREVIEW
+inputs:
+  - name: input_text
+    type: string
+    description: Code, architecture, or system to assess for security
+    required: true
+  - name: scope
+    type: string
+    description: Assessment scope
+    required: false
+outputs:
+  - name: assessment
+    type: object
+    description: Security findings with threat model and remediation

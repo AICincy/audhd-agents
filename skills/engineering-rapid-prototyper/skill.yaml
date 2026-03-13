@@ -1,0 +1,33 @@
+name: engineering-rapid-prototyper
+display_name: Rapid Prototyper
+description: >
+  Fast prototype generation: MVPs, proof-of-concepts, and throwaway
+  code for validation. Speed over polish, learning over shipping.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - prototype-generation
+  - mvp-design
+  - validation-experiments
+models:
+  primary: C-SN46
+  fallback: [C-OP46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-sonnet-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-DECOMP
+  - SK-GATE
+inputs:
+  - name: input_text
+    type: string
+    description: Idea, hypothesis, or feature to prototype
+    required: true
+  - name: time_box
+    type: string
+    description: Time constraint for prototype
+    required: false
+outputs:
+  - name: prototype
+    type: object
+    description: Runnable prototype with validation criteria
