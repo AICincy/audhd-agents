@@ -86,18 +86,33 @@ def build_anthropic(skill: dict) -> dict:
     }
 
 
+def _convert_gemini_property(val: dict) -> dict:
+    """Recursively convert a JSON Schema property to Gemini format."""
+    prop = {
+        "type": val.get("type", "STRING").upper(),
+        "description": val.get("description", ""),
+    }
+    if "enum" in val:
+        prop["enum"] = val["enum"]
+    # Recurse into object properties
+    if val.get("type") == "object" and "properties" in val:
+        prop["properties"] = {}
+        for k, v in val["properties"].items():
+            prop["properties"][k] = _convert_gemini_property(v)
+        if "required" in val:
+            prop["required"] = val["required"]
+    # Handle array items
+    if val.get("type") == "array" and "items" in val:
+        prop["items"] = _convert_gemini_property(val["items"])
+    return prop
+
+
 def build_gemini(skill: dict) -> dict:
-    """Generate Gemini function declaration."""
+    """Generate Gemini function declaration with recursive schema."""
     schema = skill.get("schema", {})
     properties = {}
     for key, val in schema.get("properties", {}).items():
-        prop = {
-            "type": val.get("type", "STRING").upper(),
-            "description": val.get("description", ""),
-        }
-        if "enum" in val:
-            prop["enum"] = val["enum"]
-        properties[key] = prop
+        properties[key] = _convert_gemini_property(val)
 
     return {
         "name": skill["name"],
@@ -125,6 +140,24 @@ def build_skill(skill_dir: Path, adapters: list) -> dict:
         builder = BUILDERS[adapter]
         results[adapter] = builder(skill)
     return results
+
+
+def write_manifests(adapters: list):
+    """Aggregate per-skill JSONs into manifest.json per adapter."""
+    for adapter in adapters:
+        adapter_dir = DIST_DIR / adapter
+        if not adapter_dir.exists():
+            continue
+        tools = []
+        for f in sorted(adapter_dir.glob("*.json")):
+            if f.name == "manifest.json":
+                continue
+            with open(f) as fh:
+                tools.append(json.load(fh))
+        manifest_path = adapter_dir / "manifest.json"
+        with open(manifest_path, "w") as fh:
+            json.dump({"tools": tools, "count": len(tools)}, fh, indent=2)
+        print(f"  Manifest: {manifest_path} ({len(tools)} tools)")
 
 
 def main():
@@ -177,6 +210,10 @@ def main():
         except Exception as e:
             errors.append((skill_dir.name, str(e)))
             print(f"  FAIL {skill_dir.name}: {e}")
+
+    # Generate aggregated manifests
+    print()
+    write_manifests(adapters)
 
     print(f"\nBuilt: {built} | Errors: {len(errors)} | Adapters: {', '.join(adapters)}")
     if errors:
