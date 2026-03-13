@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Git workflow for audhd-agents monorepo",
+    "input": {
+      "input_text": "Design git workflow for audhd-agents repo: solo developer with AI agent commits, 51 skill directories, need clean history for skill-level changes.",
+      "team_size": "solo"
+    }
+  }
+]

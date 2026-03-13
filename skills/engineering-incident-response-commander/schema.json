@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Incident details, error logs, or alert"
+    },
+    "severity": {
+      "type": "string",
+      "description": "Initial severity",
+      "enum": ["SEV1", "SEV2", "SEV3", "SEV4"]
+    }
+  },
+  "required": ["input_text"]
+}

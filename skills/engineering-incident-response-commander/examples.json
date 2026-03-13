@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Certification exam platform returning 503s",
+    "input": {
+      "input_text": "Alert: certification exam platform returning 503 for 12 minutes. 340 users affected mid-exam. Database connection pool exhausted. Last deploy: 2 hours ago (config change to connection limits).",
+      "severity": "SEV2"
+    }
+  }
+]

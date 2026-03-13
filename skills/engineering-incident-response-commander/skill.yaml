@@ -1,0 +1,36 @@
+name: engineering-incident-response-commander
+display_name: Incident Response Commander
+description: >
+  Production incident management: triage, communication, resolution,
+  and post-mortem. Structured severity classification with 3 AM
+  decision support.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - incident-triage
+  - severity-classification
+  - communication-templates
+  - post-mortem
+models:
+  primary: C-OP46
+  fallback: [C-SN46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-GATE
+  - SK-VERIFY
+  - SK-DECOMP
+inputs:
+  - name: input_text
+    type: string
+    description: Incident details, error logs, or monitoring alert
+    required: true
+  - name: severity
+    type: string
+    description: Initial severity assessment
+    required: false
+outputs:
+  - name: response
+    type: object
+    description: Incident response plan with triage, communication, and resolution

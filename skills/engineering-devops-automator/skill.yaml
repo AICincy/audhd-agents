@@ -1,0 +1,35 @@
+name: engineering-devops-automator
+display_name: DevOps Automator
+description: >
+  CI/CD pipeline design, infrastructure as code, deployment automation,
+  and operational tooling. GitHub Actions, Terraform, Docker, GCP.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - ci-cd-design
+  - infrastructure-as-code
+  - deployment-automation
+  - container-orchestration
+models:
+  primary: C-OP46
+  fallback: [C-SN46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-GATE
+  - SK-VERIFY
+  - SK-CODEREVIEW
+inputs:
+  - name: input_text
+    type: string
+    description: DevOps requirements, existing pipeline, or operational problem
+    required: true
+  - name: platform
+    type: string
+    description: Target platform
+    required: false
+outputs:
+  - name: pipeline
+    type: object
+    description: CI/CD pipeline with IaC and deployment specs

@@ -1,0 +1,9 @@
+[
+  {
+    "description": "CI/CD for Devvit app with staging and production",
+    "input": {
+      "input_text": "Set up CI/CD for Reddit Devvit app: lint, test, build, deploy to staging on PR merge, deploy to production on release tag. Need rollback capability.",
+      "platform": "gcp"
+    }
+  }
+]

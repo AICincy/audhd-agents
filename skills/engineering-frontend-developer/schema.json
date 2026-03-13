@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Feature requirements or code to improve"
+    },
+    "framework": {
+      "type": "string",
+      "description": "Frontend framework",
+      "enum": ["react", "next", "vue", "svelte", "devvit-blocks", "vanilla"]
+    }
+  },
+  "required": ["input_text"]
+}

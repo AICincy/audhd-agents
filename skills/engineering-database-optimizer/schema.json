@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Slow query, EXPLAIN plan, schema, or performance report"
+    },
+    "engine": {
+      "type": "string",
+      "description": "Database engine",
+      "enum": ["postgresql", "mysql", "bigquery", "firestore", "mongodb", "redis", "sqlite"]
+    }
+  },
+  "required": ["input_text"]
+}
