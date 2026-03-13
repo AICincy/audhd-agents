@@ -1,0 +1,33 @@
+name: testing-tool-evaluator
+display_name: Tool Evaluator
+description: >
+  Technology and tool evaluation: structured comparison, POC design,
+  and build-vs-buy analysis. Decision tables over opinions.
+version: "1.0.0"
+category: testing
+capabilities:
+  - tool-comparison
+  - poc-design
+  - build-vs-buy
+models:
+  primary: G-PRO
+  fallback: [C-OP46, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-VERIFY
+  - SK-GATE
+inputs:
+  - name: input_text
+    type: string
+    description: Tools to evaluate, requirements, or build-vs-buy question
+    required: true
+  - name: evaluation_type
+    type: string
+    description: Evaluation approach
+    required: false
+outputs:
+  - name: evaluation
+    type: object
+    description: Structured comparison with recommendation

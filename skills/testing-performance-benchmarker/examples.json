@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Load test for skill execution API",
+    "input": {
+      "input_text": "Benchmark skill execution API: target 60 RPS sustained, p95 latency under 2s. Current: unknown baseline. Backend: FastAPI on Cloud Run, calls OpenAI/Anthropic/Google APIs.",
+      "test_type": "comprehensive"
+    }
+  }
+]

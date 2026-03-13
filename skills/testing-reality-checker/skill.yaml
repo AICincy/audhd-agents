@@ -1,0 +1,29 @@
+name: testing-reality-checker
+display_name: Reality Checker
+description: >
+  Assumption validation and feasibility assessment. Pressure-test
+  plans, estimates, and claims before committing resources.
+version: "1.0.0"
+category: testing
+capabilities:
+  - assumption-validation
+  - feasibility-assessment
+  - estimate-verification
+models:
+  primary: C-OP46
+  fallback: [G-PRO, O-54]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-VERIFY
+  - SK-GATE
+inputs:
+  - name: input_text
+    type: string
+    description: Plan, estimate, claim, or proposal to reality-check
+    required: true
+outputs:
+  - name: check
+    type: object
+    description: Reality check with assumptions tested and risks surfaced

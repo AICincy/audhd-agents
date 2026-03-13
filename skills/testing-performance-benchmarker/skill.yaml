@@ -1,0 +1,35 @@
+name: testing-performance-benchmarker
+display_name: Performance Benchmarker
+description: >
+  Performance testing design: load profiles, benchmark suites,
+  bottleneck identification, and capacity planning. Measure before
+  optimizing.
+version: "1.0.0"
+category: testing
+capabilities:
+  - load-testing
+  - benchmark-design
+  - bottleneck-detection
+  - capacity-planning
+models:
+  primary: C-SN46
+  fallback: [C-OP46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-sonnet-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-VERIFY
+  - SK-GATE
+inputs:
+  - name: input_text
+    type: string
+    description: System to benchmark, performance requirements, or existing metrics
+    required: true
+  - name: test_type
+    type: string
+    description: Performance test type
+    required: false
+outputs:
+  - name: benchmark
+    type: object
+    description: Benchmark plan with profiles and acceptance criteria

@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Test results or CI output"
+    },
+    "focus": {
+      "type": "string",
+      "description": "Analysis focus",
+      "enum": ["failure-triage", "flaky-detection", "coverage", "trend", "full"]
+    }
+  },
+  "required": ["input_text"]
+}

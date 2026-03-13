@@ -1,0 +1,8 @@
+[
+  {
+    "description": "Reality check: ship 51 skills in one week as solo dev",
+    "input": {
+      "input_text": "Plan: Push all 51 skills to GitHub repo with full AIO format (4 files each = 204 files), wire up build.py, test adapters for 3 LLM providers, and deploy API. Timeline: 1 week. Team: solo."
+    }
+  }
+]

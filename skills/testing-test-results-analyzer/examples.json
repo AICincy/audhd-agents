@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Triage CI failures after skill adapter refactor",
+    "input": {
+      "input_text": "CI run: 48 passed, 3 failed. Failures: test_claude_adapter_timeout (intermittent, passed on retry), test_gemini_schema_validation (TypeError: expected dict got list), test_openai_cost_tracking (AssertionError: 0.003 != 0.002).",
+      "focus": "failure-triage"
+    }
+  }
+]

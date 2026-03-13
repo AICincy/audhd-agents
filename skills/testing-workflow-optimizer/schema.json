@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Workflow description or efficiency concern"
+    }
+  },
+  "required": ["input_text"]
+}
