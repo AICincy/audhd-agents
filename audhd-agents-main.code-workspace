@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.yaml": "yaml",
+			"*.json": "jsonc",
+			"*.md": "markdown"
+		},
+		"chatgpt.followUpQueueMode": "steer"
+	}
+}
