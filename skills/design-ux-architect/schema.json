@@ -3,7 +3,7 @@
   "properties": {
     "input_text": {
       "type": "string",
-      "description": "Design requirements, wireframe description, or existing CSS to evaluate"
+      "description": "Design requirements, wireframe, existing CSS, or layout spec"
     },
     "platform": {
       "type": "string",

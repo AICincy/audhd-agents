@@ -1,16 +1,16 @@
 [
   {
-    "description": "Devvit app layout system",
+    "description": "Design token system for Devvit app",
     "input": {
-      "input_text": "Design a responsive layout system for a Devvit Reddit app with card grid, sidebar navigation, and modal overlays. Must work on mobile and desktop.",
+      "input_text": "Need a design token system for a Reddit Devvit app with dark mode support, mobile-responsive layout, and WCAG AA compliance",
       "platform": "devvit",
       "css_approach": "vanilla"
     }
   },
   {
-    "description": "Dashboard layout with accessibility",
+    "description": "Dashboard layout architecture",
     "input": {
-      "input_text": "Multi-panel dashboard: left nav, main content area with 3-column card grid, right sidebar for filters. Must support keyboard navigation and screen readers.",
+      "input_text": "Multi-panel dashboard: sidebar nav, main content area with 3-column grid, collapsible panels. Must work 320px to 2560px.",
       "platform": "web",
       "css_approach": "tailwind"
     }

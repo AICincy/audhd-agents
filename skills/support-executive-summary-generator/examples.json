@@ -1,0 +1,20 @@
+[
+  {
+    "description": "Quarterly certification program review for VP",
+    "input": {
+      "input_text": "[Q4 2025 certification data: 12,400 enrollments (+18% QoQ), 8,200 completions (66% rate, down from 72%), 3 new pathways launched, NPS 47 (down from 52), top complaint: exam scheduling delays (340 tickets)]",
+      "audience": "VP of Cloud Education",
+      "decision": "Whether to invest in exam infrastructure vs new pathway development in Q1",
+      "framework": "scqa"
+    }
+  },
+  {
+    "description": "Incident post-mortem summary for leadership",
+    "input": {
+      "input_text": "[Production outage: 4.5 hours downtime, 2,300 users affected, root cause was unvalidated config change, no data loss, recovery via rollback]",
+      "audience": "Engineering leadership",
+      "decision": "Approve proposed guardrails for config deployment pipeline",
+      "framework": "pyramid"
+    }
+  }
+]

@@ -1,20 +1,20 @@
 [
   {
-    "description": "Quarterly certification feedback analysis",
+    "description": "Analyze Q4 support tickets for certification platform",
     "input": {
-      "input_text": "[Survey data: 847 responses from Q4 Google Cloud certification candidates. Top complaints: lab environment loading times (312 mentions), unclear exam objectives (198 mentions), insufficient practice questions (156 mentions). Positive: mentor support (423 mentions), content quality (389 mentions).]",
-      "source": "survey",
-      "time_period": "Q4 2025",
+      "input_text": "[Collection of 200 support tickets from Google Cloud certification users covering login issues, exam scheduling, certificate delivery delays, and content accuracy complaints]",
+      "source": "support-tickets",
+      "time_range": "Q4 2025",
       "depth": "standard"
     }
   },
   {
-    "description": "Quick scan of support tickets",
+    "description": "Quick read on app store reviews",
     "input": {
-      "input_text": "[43 support tickets this week. Authentication errors: 18. Course enrollment bugs: 12. Payment processing: 8. Feature requests: 5.]",
-      "source": "support-tickets",
-      "time_period": "last 7 days",
-      "depth": "quick-scan"
+      "input_text": "[50 recent app store reviews, mix of 1-star and 5-star]",
+      "source": "app-reviews",
+      "time_range": "last 30 days",
+      "depth": "quick"
     }
   }
 ]
