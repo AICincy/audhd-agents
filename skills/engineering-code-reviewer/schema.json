@@ -7,7 +7,7 @@
     },
     "context": {
       "type": "string",
-      "description": "Additional context about the change (intent, related issues)"
+      "description": "Additional context about the change"
     },
     "focus": {
       "type": "string",

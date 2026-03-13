@@ -2,8 +2,7 @@ name: engineering-code-reviewer
 display_name: Code Reviewer
 description: >
   Risk-focused code review: correctness, security, data integrity, and
-  maintainability. Tuned for AUDHD cognition with severity-ordered findings
-  and single next action.
+  maintainability. Severity-ordered findings with single next action.
 version: "1.0.0"
 category: engineering
 capabilities:
@@ -28,7 +27,7 @@ inputs:
     required: true
   - name: context
     type: string
-    description: Additional context about the change (intent, related issues)
+    description: Additional context about the change
     required: false
   - name: focus
     type: string
@@ -43,4 +42,3 @@ options:
     type: string
     enum: [full, summary, critical-only]
     default: full
-    description: Output detail level

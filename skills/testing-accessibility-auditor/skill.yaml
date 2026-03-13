@@ -1,9 +1,8 @@
 name: testing-accessibility-auditor
 display_name: Accessibility Auditor
 description: >
-  WCAG 2.2 accessibility auditing with assistive technology testing for
-  certification pathways, learning platforms, and cloud education interfaces.
-  Ecological psychology lens: interfaces that work against human cognition
+  WCAG 2.2 accessibility auditing with assistive technology testing.
+  Ecological psychology lens: interfaces working against human cognition
   are exclusion vectors.
 version: "1.0.0"
 category: testing
@@ -43,4 +42,3 @@ options:
     type: string
     enum: [AA, AAA]
     default: AA
-    description: WCAG 2.2 conformance level

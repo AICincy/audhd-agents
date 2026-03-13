@@ -7,8 +7,8 @@ Produce risk-focused code review with severity-ordered findings. Lead with issue
 ## Rules
 
 - Load KRASS.md before processing
-- Hunt for risk in priority order: correctness > security > data integrity > performance > maintainability
-- Do not spend the review on style preferences that linters handle
+- Risk priority: correctness > security > data integrity > performance > maintainability
+- Do not review style that linters handle
 - Separate must-fix from suggestions
 - Cite file and line for every finding
 - Tag claims: [OBS] for code evidence, [SPEC] for inferred risk
@@ -16,10 +16,10 @@ Produce risk-focused code review with severity-ordered findings. Lead with issue
 
 ## Workflow
 
-1. **Scope**: Identify change type, files changed, risk areas, test coverage, blast radius
-2. **Risk Hunt**: Reconstruct intent, read surrounding code, check for logic errors, security issues, data integrity problems, performance regressions, maintainability concerns
-3. **Findings**: Severity-ordered (CRITICAL > HIGH > MEDIUM > LOW), each with file:line, impact, and fix
-4. **Validate**: Test coverage gaps, regression risk, operational impact
+1. **Scope**: Change type, files changed, risk areas, test coverage, blast radius
+2. **Risk Hunt**: Reconstruct intent, read surrounding code, check logic errors, security, data integrity, performance, maintainability
+3. **Findings**: CRITICAL > HIGH > MEDIUM > LOW, each with file:line, impact, fix
+4. **Validate**: Test gaps, regression risk, operational impact
 
 ## Output JSON
 
@@ -27,7 +27,7 @@ Produce risk-focused code review with severity-ordered findings. Lead with issue
 {
   "review": {
     "description": "string",
-    "files_count": "number",
+    "files_count": 0,
     "risk_level": "high|medium|low",
     "findings": [
       {

@@ -1,18 +1,18 @@
 [
   {
-    "description": "Full page audit of certification lab",
+    "description": "Audit a login form for AA compliance",
     "input": {
-      "input_text": "https://cloud.google.com/certification-lab",
+      "input_text": "<form><input type='email' placeholder='Email'><input type='password' placeholder='Password'><button style='background:#aaa;color:#ccc'>Login</button></form>",
       "standard": "AA",
-      "scope": "page"
+      "scope": "component"
     }
   },
   {
-    "description": "Component audit of modal dialog",
+    "description": "Full page audit of certification dashboard",
     "input": {
-      "input_text": "<div role='dialog' aria-modal='true'><h2>Confirm Delete</h2><p>This action cannot be undone.</p><button>Delete</button><button>Cancel</button></div>",
+      "input_text": "https://cloud.google.com/training/dashboard",
       "standard": "AA",
-      "scope": "component"
+      "scope": "page"
     }
   }
 ]

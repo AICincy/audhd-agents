@@ -13,7 +13,7 @@
     "scope": {
       "type": "string",
       "description": "Audit scope",
-      "enum": ["page", "component", "user-journey", "application"]
+      "enum": ["page", "component", "journey", "application"]
     }
   },
   "required": ["input_text"]
