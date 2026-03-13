@@ -1,0 +1,18 @@
+[
+  {
+    "description": "Full page audit of certification lab",
+    "input": {
+      "input_text": "https://cloud.google.com/certification-lab",
+      "standard": "AA",
+      "scope": "page"
+    }
+  },
+  {
+    "description": "Component audit of modal dialog",
+    "input": {
+      "input_text": "<div role='dialog' aria-modal='true'><h2>Confirm Delete</h2><p>This action cannot be undone.</p><button>Delete</button><button>Cancel</button></div>",
+      "standard": "AA",
+      "scope": "component"
+    }
+  }
+]

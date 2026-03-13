@@ -1,0 +1,18 @@
+[
+  {
+    "description": "Devvit app layout system",
+    "input": {
+      "input_text": "Design a responsive layout system for a Devvit Reddit app with card grid, sidebar navigation, and modal overlays. Must work on mobile and desktop.",
+      "platform": "devvit",
+      "css_approach": "vanilla"
+    }
+  },
+  {
+    "description": "Dashboard layout with accessibility",
+    "input": {
+      "input_text": "Multi-panel dashboard: left nav, main content area with 3-column card grid, right sidebar for filters. Must support keyboard navigation and screen readers.",
+      "platform": "web",
+      "css_approach": "tailwind"
+    }
+  }
+]

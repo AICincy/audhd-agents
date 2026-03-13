@@ -1,0 +1,47 @@
+name: design-ux-architect
+display_name: UX Architect
+description: >
+  Technical UX architecture: CSS systems, layout frameworks, and developer-ready
+  implementation foundations. Tuned for Devvit development, responsive design,
+  and accessibility-first approach.
+version: "1.0.0"
+category: design
+capabilities:
+  - css-architecture
+  - layout-systems
+  - responsive-design
+  - design-tokens
+models:
+  primary: O-CDX
+  fallback: [C-OP46, C-SN46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-A11Y
+  - SK-GATE
+  - SK-DECOMP
+  - SK-CODEREVIEW
+inputs:
+  - name: input_text
+    type: string
+    description: Design requirements, wireframe description, or existing CSS to evaluate
+    required: true
+  - name: platform
+    type: string
+    description: Target platform
+    required: false
+  - name: css_approach
+    type: string
+    description: CSS methodology
+    required: false
+outputs:
+  - name: system
+    type: object
+    description: CSS architecture with tokens, layout, and handoff spec
+options:
+  platform:
+    type: string
+    enum: [web, devvit, mobile-web, cross-platform]
+    default: web
+    description: Target platform

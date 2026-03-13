@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Code diff, PR URL, or file contents to review"
+    },
+    "context": {
+      "type": "string",
+      "description": "Additional context about the change (intent, related issues)"
+    },
+    "focus": {
+      "type": "string",
+      "description": "Specific review focus area",
+      "enum": ["security", "performance", "correctness", "data-integrity", "all"]
+    },
+    "format": {
+      "type": "string",
+      "description": "Output detail level",
+      "enum": ["full", "summary", "critical-only"]
+    }
+  },
+  "required": ["input_text"]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "description": "Quarterly certification feedback analysis",
+    "input": {
+      "input_text": "[Survey data: 847 responses from Q4 Google Cloud certification candidates. Top complaints: lab environment loading times (312 mentions), unclear exam objectives (198 mentions), insufficient practice questions (156 mentions). Positive: mentor support (423 mentions), content quality (389 mentions).]",
+      "source": "survey",
+      "time_period": "Q4 2025",
+      "depth": "standard"
+    }
+  },
+  {
+    "description": "Quick scan of support tickets",
+    "input": {
+      "input_text": "[43 support tickets this week. Authentication errors: 18. Course enrollment bugs: 12. Payment processing: 8. Feature requests: 5.]",
+      "source": "support-tickets",
+      "time_period": "last 7 days",
+      "depth": "quick-scan"
+    }
+  }
+]

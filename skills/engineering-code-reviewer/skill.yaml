@@ -1,0 +1,46 @@
+name: engineering-code-reviewer
+display_name: Code Reviewer
+description: >
+  Risk-focused code review: correctness, security, data integrity, and
+  maintainability. Tuned for AUDHD cognition with severity-ordered findings
+  and single next action.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - code-analysis
+  - security-review
+  - risk-assessment
+models:
+  primary: C-OP46
+  fallback: [O-CDX, C-SN46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-CODEREVIEW
+  - SK-GATE
+  - SK-VERIFY
+  - SK-DECOMP
+inputs:
+  - name: input_text
+    type: string
+    description: Code diff, PR URL, or file contents to review
+    required: true
+  - name: context
+    type: string
+    description: Additional context about the change (intent, related issues)
+    required: false
+  - name: focus
+    type: string
+    description: Specific review focus area
+    required: false
+outputs:
+  - name: review
+    type: object
+    description: Structured review with severity-ordered findings
+options:
+  format:
+    type: string
+    enum: [full, summary, critical-only]
+    default: full
+    description: Output detail level

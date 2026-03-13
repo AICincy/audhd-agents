@@ -1,0 +1,46 @@
+name: testing-accessibility-auditor
+display_name: Accessibility Auditor
+description: >
+  WCAG 2.2 accessibility auditing with assistive technology testing for
+  certification pathways, learning platforms, and cloud education interfaces.
+  Ecological psychology lens: interfaces that work against human cognition
+  are exclusion vectors.
+version: "1.0.0"
+category: testing
+capabilities:
+  - accessibility-audit
+  - wcag-compliance
+  - assistive-tech-testing
+models:
+  primary: C-OP46
+  fallback: [O-54, G-PRO, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-A11Y
+  - SK-GATE
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: URL, component markup, design spec, or screenshot to audit
+    required: true
+  - name: standard
+    type: string
+    description: Target WCAG conformance level
+    required: false
+  - name: scope
+    type: string
+    description: Full page, component, user journey, or application
+    required: false
+outputs:
+  - name: audit
+    type: object
+    description: WCAG findings with severity, remediation, and POUR summary
+options:
+  standard:
+    type: string
+    enum: [AA, AAA]
+    default: AA
+    description: WCAG 2.2 conformance level

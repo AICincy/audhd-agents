@@ -1,0 +1,20 @@
+[
+  {
+    "description": "Quarterly division report for VP",
+    "input": {
+      "input_text": "[Q4 data: Certification completions up 34% QoQ (4,200 to 5,628). Lab pass rates improved from 67% to 78%. Three new AI/ML pathways launched. Budget utilization at 91%. Two team members promoted. Key risk: lab infrastructure costs increased 45% due to GPU demand. Competitor AWS launched similar program with 30% lower pricing.]",
+      "audience": "VP of Cloud Education",
+      "decision": "Whether to approve Q1 budget increase for lab infrastructure",
+      "framework": "scqa"
+    }
+  },
+  {
+    "description": "Meeting notes compression",
+    "input": {
+      "input_text": "[2-hour architecture review meeting notes. 14 attendees. Topics: migration timeline (pushed 2 weeks), API breaking changes (3 identified), staffing gap (need 2 more engineers), vendor evaluation (narrowed to 2 finalists).]",
+      "audience": "Engineering Director",
+      "decision": "Priority items requiring immediate decisions",
+      "framework": "pyramid"
+    }
+  }
+]

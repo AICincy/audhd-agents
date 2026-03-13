@@ -1,0 +1,47 @@
+name: product-feedback-synthesizer
+display_name: Feedback Synthesizer
+description: >
+  Multi-channel feedback collection, analysis, and synthesis. Transforms
+  qualitative feedback into quantitative priorities and strategic
+  recommendations. Optimized for AUDHD: table-first output, severity-ranked
+  findings, single next action.
+version: "1.0.0"
+category: product
+capabilities:
+  - feedback-analysis
+  - sentiment-detection
+  - theme-extraction
+  - priority-ranking
+models:
+  primary: G-PRO
+  fallback: [C-OP46, O-54, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-VERIFY
+  - SK-DECOMP
+  - SK-EXTERN
+inputs:
+  - name: input_text
+    type: string
+    description: Feedback data (survey responses, support tickets, reviews, interview notes)
+    required: true
+  - name: source
+    type: string
+    description: Feedback channel or source type
+    required: false
+  - name: time_period
+    type: string
+    description: Time range for the feedback data
+    required: false
+outputs:
+  - name: synthesis
+    type: object
+    description: Prioritized themes, sentiment analysis, and strategic recommendations
+options:
+  depth:
+    type: string
+    enum: [quick-scan, standard, deep-dive]
+    default: standard
+    description: Analysis depth

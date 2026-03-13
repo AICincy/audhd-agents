@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Feedback data (survey responses, support tickets, reviews, interview notes)"
+    },
+    "source": {
+      "type": "string",
+      "description": "Feedback channel",
+      "enum": ["survey", "support-tickets", "app-reviews", "interviews", "social", "mixed"]
+    },
+    "time_period": {
+      "type": "string",
+      "description": "Time range (e.g. 'Q4 2025', 'last 30 days')"
+    },
+    "depth": {
+      "type": "string",
+      "description": "Analysis depth",
+      "enum": ["quick-scan", "standard", "deep-dive"]
+    }
+  },
+  "required": ["input_text"]
+}
