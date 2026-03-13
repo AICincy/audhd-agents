@@ -1,0 +1,36 @@
+name: product-behavioral-nudge-engine
+display_name: Behavioral Nudge Engine
+description: >
+  Cognitive support system design: task initiation nudges, context
+  restoration, progress persistence, and attention management for
+  AuDHD workflows.
+version: "1.0.0"
+category: product
+capabilities:
+  - nudge-design
+  - cognitive-support
+  - attention-management
+  - progress-persistence
+models:
+  primary: C-OP46
+  fallback: [O-54, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-NUDGE
+  - SK-A11Y
+  - SK-GATE
+inputs:
+  - name: input_text
+    type: string
+    description: Workflow, task, or cognitive challenge to design nudges for
+    required: true
+  - name: context
+    type: string
+    description: User context and cognitive state
+    required: false
+outputs:
+  - name: nudges
+    type: object
+    description: Nudge system with triggers, messages, and escalation

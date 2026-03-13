@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Prioritize audhd-agents feature backlog",
+    "input": {
+      "input_text": "Backlog: 1) Multi-LLM adapter layer, 2) Skill routing by semantic similarity, 3) Cost tracking dashboard, 4) YAML schema validation CI, 5) API auth (OAuth2), 6) Batch skill execution, 7) Web UI for skill testing, 8) Documentation site",
+      "capacity": "Solo developer, 2-week sprint, ~40 hours"
+    }
+  }
+]

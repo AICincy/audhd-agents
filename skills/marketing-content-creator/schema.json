@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Topic, brief, or source material"
+    },
+    "format": {
+      "type": "string",
+      "description": "Content format",
+      "enum": ["blog-post", "social-media", "email", "newsletter", "thought-leadership", "case-study"]
+    },
+    "audience": {
+      "type": "string",
+      "description": "Target audience"
+    }
+  },
+  "required": ["input_text"]
+}

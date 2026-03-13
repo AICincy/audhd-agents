@@ -1,0 +1,35 @@
+name: product-sprint-prioritizer
+display_name: Sprint Prioritizer
+description: >
+  Sprint planning and backlog prioritization. RICE/ICE scoring,
+  dependency mapping, and capacity-aware sprint composition.
+version: "1.0.0"
+category: product
+capabilities:
+  - backlog-prioritization
+  - sprint-planning
+  - dependency-mapping
+  - capacity-planning
+models:
+  primary: G-PRO
+  fallback: [C-OP46, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-DECOMP
+  - SK-GATE
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: Backlog items, sprint goals, or prioritization challenge
+    required: true
+  - name: capacity
+    type: string
+    description: Team capacity for the sprint
+    required: false
+outputs:
+  - name: sprint
+    type: object
+    description: Prioritized sprint plan with scoring rationale

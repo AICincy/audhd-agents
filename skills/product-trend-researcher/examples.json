@@ -1,0 +1,9 @@
+[
+  {
+    "description": "AI agent framework landscape analysis",
+    "input": {
+      "input_text": "Research current state of AI agent frameworks: LangChain, CrewAI, AutoGen, custom implementations. Focus on production adoption, not demo-ware.",
+      "timeframe": "6-months"
+    }
+  }
+]

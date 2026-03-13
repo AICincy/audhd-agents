@@ -1,0 +1,10 @@
+[
+  {
+    "description": "Blog post on AI certification trends",
+    "input": {
+      "input_text": "Write about the shift from traditional IT certifications to AI/ML certifications in cloud education. Key data: 40% increase in AI cert enrollment, declining interest in legacy infra certs.",
+      "format": "blog-post",
+      "audience": "Cloud engineers considering career pivot to AI"
+    }
+  }
+]

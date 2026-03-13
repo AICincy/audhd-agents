@@ -1,0 +1,33 @@
+name: product-trend-researcher
+display_name: Trend Researcher
+description: >
+  Market and technology trend research. Structured analysis of
+  emerging patterns with signal vs noise filtering.
+version: "1.0.0"
+category: product
+capabilities:
+  - trend-analysis
+  - market-research
+  - signal-detection
+models:
+  primary: G-PRO
+  fallback: [C-OP46, O-54]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-VERIFY
+  - SK-EXTERN
+inputs:
+  - name: input_text
+    type: string
+    description: Domain, technology, or market to research
+    required: true
+  - name: timeframe
+    type: string
+    description: Research timeframe
+    required: false
+outputs:
+  - name: research
+    type: object
+    description: Trend analysis with signals, implications, and confidence

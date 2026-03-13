@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Backlog items or prioritization challenge"
+    },
+    "capacity": {
+      "type": "string",
+      "description": "Team capacity (story points, hours, etc.)"
+    }
+  },
+  "required": ["input_text"]
+}

@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Workflow or cognitive challenge to design nudges for"
+    },
+    "context": {
+      "type": "string",
+      "description": "User context and cognitive state"
+    }
+  },
+  "required": ["input_text"]
+}

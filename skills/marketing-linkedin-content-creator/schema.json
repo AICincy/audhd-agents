@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Topic or insight to share"
+    },
+    "post_type": {
+      "type": "string",
+      "description": "Post format",
+      "enum": ["insight", "story", "hot-take", "how-to", "announcement", "question"]
+    }
+  },
+  "required": ["input_text"]
+}

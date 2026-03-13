@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Domain or technology to research"
+    },
+    "timeframe": {
+      "type": "string",
+      "description": "Research timeframe",
+      "enum": ["3-months", "6-months", "1-year", "3-years"]
+    }
+  },
+  "required": ["input_text"]
+}

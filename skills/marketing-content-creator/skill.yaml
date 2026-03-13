@@ -1,0 +1,38 @@
+name: marketing-content-creator
+display_name: Content Creator
+description: >
+  Multi-format content generation: blog posts, social media, email
+  campaigns, and thought leadership. Brand-consistent, accessible,
+  and measurable.
+version: "1.0.0"
+category: marketing
+capabilities:
+  - content-generation
+  - seo-optimization
+  - multi-format-adaptation
+models:
+  primary: O-54
+  fallback: [C-SN46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-sonnet-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-A11Y
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: Topic, brief, or source material to create content from
+    required: true
+  - name: format
+    type: string
+    description: Content format
+    required: false
+  - name: audience
+    type: string
+    description: Target audience
+    required: false
+outputs:
+  - name: content
+    type: object
+    description: Formatted content with metadata and distribution notes
