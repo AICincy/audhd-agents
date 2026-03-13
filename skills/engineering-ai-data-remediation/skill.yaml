@@ -1,0 +1,36 @@
+name: engineering-ai-data-remediation
+display_name: AI Data Remediation
+description: >
+  Data quality triage for AI/ML pipelines. Detect drift, bias,
+  corruption, and schema violations. Produce remediation plans
+  with rollback paths.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - data-quality-audit
+  - bias-detection
+  - drift-analysis
+  - schema-validation
+models:
+  primary: C-OP46
+  fallback: [G-PRO, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-VERIFY
+  - SK-GATE
+  - SK-DECOMP
+inputs:
+  - name: input_text
+    type: string
+    description: Dataset description, schema, sample data, or data quality report
+    required: true
+  - name: pipeline
+    type: string
+    description: Pipeline context
+    required: false
+outputs:
+  - name: remediation
+    type: object
+    description: Data quality findings with remediation plan

@@ -1,0 +1,40 @@
+name: engineering-ai-engineer
+display_name: AI Engineer
+description: >
+  End-to-end AI/ML system design: model selection, pipeline architecture,
+  deployment strategy, and monitoring. Production-grade, not notebook-grade.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - model-selection
+  - pipeline-design
+  - ml-deployment
+  - monitoring-setup
+models:
+  primary: C-OP46
+  fallback: [O-CDX, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-DECOMP
+  - SK-GATE
+  - SK-VERIFY
+  - SK-CODEREVIEW
+inputs:
+  - name: input_text
+    type: string
+    description: ML problem statement, requirements, or existing system to improve
+    required: true
+  - name: stage
+    type: string
+    description: Project stage
+    required: false
+  - name: infra
+    type: string
+    description: Infrastructure constraints
+    required: false
+outputs:
+  - name: design
+    type: object
+    description: ML system design with model selection, pipeline, and deployment plan

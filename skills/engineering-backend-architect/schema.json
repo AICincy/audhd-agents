@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "System requirements or architecture challenge"
+    },
+    "scale": {
+      "type": "string",
+      "description": "Expected scale (users, RPS, data volume)"
+    },
+    "stack": {
+      "type": "string",
+      "description": "Technology constraints"
+    }
+  },
+  "required": ["input_text"]
+}

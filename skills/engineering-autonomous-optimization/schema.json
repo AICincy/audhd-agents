@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "System to optimize or optimization requirements"
+    },
+    "objective": {
+      "type": "string",
+      "description": "Optimization objective",
+      "enum": ["cost", "latency", "throughput", "accuracy", "availability", "multi-objective"]
+    }
+  },
+  "required": ["input_text"]
+}

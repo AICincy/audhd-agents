@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Audit training data for certification recommendation model",
+    "input": {
+      "input_text": "Training dataset: 50K user records with certification history, job role, experience level. 12% null values in job_role. Class imbalance: 80% associate-level, 15% professional, 5% expert.",
+      "pipeline": "training"
+    }
+  }
+]

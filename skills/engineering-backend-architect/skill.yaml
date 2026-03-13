@@ -1,0 +1,40 @@
+name: engineering-backend-architect
+display_name: Backend Architect
+description: >
+  Backend system architecture: API design, database selection,
+  service decomposition, and scalability planning. Production-first.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - api-design
+  - database-selection
+  - service-architecture
+  - scalability-planning
+models:
+  primary: C-OP46
+  fallback: [O-CDX, G-PRO, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-DECOMP
+  - SK-GATE
+  - SK-CODEREVIEW
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: System requirements, existing architecture, or scaling challenge
+    required: true
+  - name: scale
+    type: string
+    description: Expected scale
+    required: false
+  - name: stack
+    type: string
+    description: Technology constraints
+    required: false
+outputs:
+  - name: architecture
+    type: object
+    description: System architecture with components, data flow, and deployment spec

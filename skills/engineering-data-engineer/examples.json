@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Certification analytics pipeline",
+    "input": {
+      "input_text": "Build analytics pipeline: ingest certification exam results (CSV daily dump), user activity logs (streaming), and course completion events. Need daily dashboard refresh and real-time completion alerts.",
+      "platform": "bigquery"
+    }
+  }
+]

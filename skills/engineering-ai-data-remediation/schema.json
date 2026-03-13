@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Dataset description, schema, sample data, or quality report"
+    },
+    "pipeline": {
+      "type": "string",
+      "description": "Pipeline context (training, inference, ETL)"
+    }
+  },
+  "required": ["input_text"]
+}

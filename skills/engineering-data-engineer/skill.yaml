@@ -1,0 +1,35 @@
+name: engineering-data-engineer
+display_name: Data Engineer
+description: >
+  Data pipeline design: ETL/ELT, data modeling, warehouse architecture,
+  and data quality frameworks. Batch and streaming.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - pipeline-design
+  - data-modeling
+  - warehouse-architecture
+  - data-quality
+models:
+  primary: G-PRO
+  fallback: [C-OP46, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-DECOMP
+  - SK-GATE
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: Data requirements, source descriptions, or existing pipeline to improve
+    required: true
+  - name: platform
+    type: string
+    description: Data platform
+    required: false
+outputs:
+  - name: pipeline
+    type: object
+    description: Pipeline architecture with data model and quality checks

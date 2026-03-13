@@ -1,0 +1,10 @@
+[
+  {
+    "description": "Design certification recommendation engine",
+    "input": {
+      "input_text": "Build a recommendation system that suggests next certification path based on user's current certs, job role, and career goals. 50K active users, real-time serving required.",
+      "stage": "design",
+      "infra": "GCP (Vertex AI, BigQuery, Cloud Run)"
+    }
+  }
+]
