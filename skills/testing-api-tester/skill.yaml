@@ -1,0 +1,35 @@
+name: testing-api-tester
+display_name: API Tester
+description: >
+  API testing: endpoint validation, contract testing, load testing
+  design, and error scenario coverage. Test the API you have, not
+  the API you documented.
+version: "1.0.0"
+category: testing
+capabilities:
+  - endpoint-testing
+  - contract-testing
+  - error-scenario-coverage
+  - load-test-design
+models:
+  primary: C-SN46
+  fallback: [C-OP46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-sonnet-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-VERIFY
+  - SK-CODEREVIEW
+inputs:
+  - name: input_text
+    type: string
+    description: API spec, endpoint description, or existing tests to improve
+    required: true
+  - name: test_type
+    type: string
+    description: Testing focus
+    required: false
+outputs:
+  - name: tests
+    type: object
+    description: Test suite with cases and expected results

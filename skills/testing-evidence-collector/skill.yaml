@@ -1,0 +1,34 @@
+name: testing-evidence-collector
+display_name: Evidence Collector
+description: >
+  Structured evidence gathering for claims, decisions, and audits.
+  Source tracking, confidence scoring, and conflict resolution.
+version: "1.0.0"
+category: testing
+capabilities:
+  - evidence-gathering
+  - source-tracking
+  - confidence-scoring
+  - conflict-resolution
+models:
+  primary: C-OP46
+  fallback: [G-PRO, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-VERIFY
+  - SK-GATE
+inputs:
+  - name: input_text
+    type: string
+    description: Claim to verify, decision to support, or audit to evidence
+    required: true
+  - name: scope
+    type: string
+    description: Evidence gathering scope
+    required: false
+outputs:
+  - name: evidence
+    type: object
+    description: Evidence dossier with sources and confidence

@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Test suite for skill execution API",
+    "input": {
+      "input_text": "POST /api/v1/skills/{skill_id}/execute - JSON body: {input_text: string, options?: object, model_override?: string}. Returns: {output: object, model_used: string, cost: number}. Auth: Bearer token. Rate: 60/min.",
+      "test_type": "comprehensive"
+    }
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "MCP server requirements or tool definitions"
+    },
+    "transport": {
+      "type": "string",
+      "description": "MCP transport",
+      "enum": ["stdio", "sse", "http"]
+    }
+  },
+  "required": ["input_text"]
+}

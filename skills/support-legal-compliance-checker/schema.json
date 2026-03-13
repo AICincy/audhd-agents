@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Legal document or policy to review"
+    },
+    "check_type": {
+      "type": "string",
+      "description": "Type of check",
+      "enum": ["contract", "tos", "privacy-policy", "employment", "nda", "sow"]
+    }
+  },
+  "required": ["input_text"]
+}

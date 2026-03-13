@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Monthly certification metrics report",
+    "input": {
+      "input_text": "March 2026 data: 3,100 enrollments (vs 2,800 Feb), 2,050 completions (66%), 890 exam attempts, 71% pass rate, NPS 48, support tickets: 145 (up from 120). Top ticket category: exam scheduling (38%).",
+      "report_type": "monthly"
+    }
+  }
+]

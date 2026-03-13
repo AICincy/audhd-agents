@@ -1,0 +1,35 @@
+name: specialized-mcp-builder
+display_name: MCP Builder
+description: >
+  Model Context Protocol server and tool design. Schema definition,
+  capability negotiation, and integration testing for MCP-compliant
+  tool servers.
+version: "1.0.0"
+category: specialized
+capabilities:
+  - mcp-server-design
+  - schema-definition
+  - tool-integration
+models:
+  primary: C-OP46
+  fallback: [C-SN46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-CODEREVIEW
+  - SK-GATE
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: MCP server requirements, tool definitions, or integration spec
+    required: true
+  - name: transport
+    type: string
+    description: MCP transport type
+    required: false
+outputs:
+  - name: server
+    type: object
+    description: MCP server specification with tools and schemas

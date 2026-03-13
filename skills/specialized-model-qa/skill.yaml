@@ -1,0 +1,35 @@
+name: specialized-model-qa
+display_name: Model QA
+description: >
+  LLM output quality assurance: prompt testing, output validation,
+  regression detection, and model comparison. Systematic evaluation
+  across providers.
+version: "1.0.0"
+category: specialized
+capabilities:
+  - prompt-testing
+  - output-validation
+  - model-comparison
+  - regression-detection
+models:
+  primary: C-OP46
+  fallback: [G-PRO, O-54]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-VERIFY
+  - SK-GATE
+inputs:
+  - name: input_text
+    type: string
+    description: Prompt, output pair, or test suite to evaluate
+    required: true
+  - name: evaluation_type
+    type: string
+    description: Type of QA evaluation
+    required: false
+outputs:
+  - name: evaluation
+    type: object
+    description: QA results with scores and recommendations

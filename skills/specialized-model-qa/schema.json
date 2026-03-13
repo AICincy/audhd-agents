@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Prompt, output, or test suite to evaluate"
+    },
+    "evaluation_type": {
+      "type": "string",
+      "description": "QA evaluation type",
+      "enum": ["single-output", "model-comparison", "regression-test", "prompt-optimization"]
+    }
+  },
+  "required": ["input_text"]
+}

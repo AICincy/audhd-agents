@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Claim to verify or decision to evidence"
+    },
+    "scope": {
+      "type": "string",
+      "description": "Evidence scope",
+      "enum": ["quick-check", "standard", "deep-dive", "audit-grade"]
+    }
+  },
+  "required": ["input_text"]
+}

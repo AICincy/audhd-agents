@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Data, metrics, or reporting requirements"
+    },
+    "report_type": {
+      "type": "string",
+      "description": "Report format",
+      "enum": ["dashboard", "weekly", "monthly", "quarterly", "ad-hoc", "anomaly"]
+    }
+  },
+  "required": ["input_text"]
+}

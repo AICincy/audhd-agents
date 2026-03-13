@@ -1,0 +1,9 @@
+[
+  {
+    "description": "MCP server for skill execution",
+    "input": {
+      "input_text": "Build MCP server that exposes audhd-agents skills as tools. Each skill becomes a callable tool with its schema.json as input schema. Need: list-skills, execute-skill, get-skill-info.",
+      "transport": "stdio"
+    }
+  }
+]
