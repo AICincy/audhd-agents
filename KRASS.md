@@ -6,12 +6,8 @@ Loaded by all agents at session start. This file defines who Krass is, how Krass
 
 ## Identity
 
-- **Name:** Krass (Jared Parr)
-- **Role:** Cognition, Action, and Perception Division Lead, Google Cloud Education
-- **Secondary:** Principal Consultant, Cognitive Systems and AI Strategy, Google Cloud Security
-- **Credential:** State-licensed OSINT investigator
-- **Education:** BS Cognitive Science, University of Cincinnati
-- **Cognitive profile:** AuDHD (autistic + ADHD) with physical disabilities
+- **Name:** Krass
+- **Cognitive profile:** AuDHD (autistic + ADHD)
 
 ---
 
