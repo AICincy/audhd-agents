@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Visual asset or design spec to audit"
+    },
+    "context": {
+      "type": "string",
+      "description": "Usage context for the visuals"
+    }
+  },
+  "required": ["input_text"]
+}

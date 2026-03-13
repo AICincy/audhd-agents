@@ -1,0 +1,39 @@
+name: design-ui-designer
+display_name: UI Designer
+description: >
+  Component-level UI design: interaction patterns, state management,
+  responsive behavior, and developer handoff specs. Devvit-aware.
+version: "1.0.0"
+category: design
+capabilities:
+  - component-design
+  - interaction-patterns
+  - responsive-design
+  - developer-handoff
+models:
+  primary: C-OP46
+  fallback: [O-CDX, C-SN46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-A11Y
+  - SK-CODEREVIEW
+  - SK-DECOMP
+inputs:
+  - name: input_text
+    type: string
+    description: Component requirements, wireframe, or existing UI to improve
+    required: true
+  - name: platform
+    type: string
+    description: Target platform
+    required: false
+  - name: framework
+    type: string
+    description: UI framework
+    required: false
+outputs:
+  - name: component
+    type: object
+    description: Component spec with states, interactions, and handoff details

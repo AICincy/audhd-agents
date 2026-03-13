@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Component requirements or UI to improve"
+    },
+    "platform": {
+      "type": "string",
+      "description": "Target platform",
+      "enum": ["web", "devvit", "mobile-web", "react-native"]
+    },
+    "framework": {
+      "type": "string",
+      "description": "UI framework",
+      "enum": ["react", "vue", "svelte", "vanilla", "devvit-blocks"]
+    }
+  },
+  "required": ["input_text"]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Scene description, concept, or reference"
+    },
+    "model": {
+      "type": "string",
+      "description": "Target image model",
+      "enum": ["dall-e-3", "midjourney", "stable-diffusion", "flux", "ideogram"]
+    },
+    "style": {
+      "type": "string",
+      "description": "Visual style"
+    }
+  },
+  "required": ["input_text"]
+}

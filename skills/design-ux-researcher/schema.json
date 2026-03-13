@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Research question, raw data, or study requirements"
+    },
+    "method": {
+      "type": "string",
+      "description": "Research method",
+      "enum": ["interviews", "survey", "usability-test", "diary-study", "card-sort", "a-b-test"]
+    },
+    "participants": {
+      "type": "string",
+      "description": "Target participant profile"
+    }
+  },
+  "required": ["input_text"]
+}

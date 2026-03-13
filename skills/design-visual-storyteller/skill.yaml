@@ -1,0 +1,37 @@
+name: design-visual-storyteller
+display_name: Visual Storyteller
+description: >
+  Data visualization and narrative design. Transforms complex data
+  into clear visual stories with accessible chart specifications.
+version: "1.0.0"
+category: design
+capabilities:
+  - data-visualization
+  - narrative-design
+  - chart-specification
+models:
+  primary: O-54
+  fallback: [C-SN46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-sonnet-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-A11Y
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: Data set, key message, or visualization requirements
+    required: true
+  - name: audience
+    type: string
+    description: Target audience
+    required: false
+  - name: format
+    type: string
+    description: Output format
+    required: false
+outputs:
+  - name: visualization
+    type: object
+    description: Chart specs with narrative structure and a11y annotations

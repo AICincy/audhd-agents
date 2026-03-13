@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Data, key message, or visualization requirements"
+    },
+    "audience": {
+      "type": "string",
+      "description": "Target audience"
+    },
+    "format": {
+      "type": "string",
+      "description": "Output format",
+      "enum": ["vega-lite", "mermaid", "d3-spec", "description-only", "slides"]
+    }
+  },
+  "required": ["input_text"]
+}

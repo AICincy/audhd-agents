@@ -1,0 +1,10 @@
+[
+  {
+    "description": "Hero image for cloud certification landing page",
+    "input": {
+      "input_text": "Professional hero image for Google Cloud AI certification page. Diverse group of engineers collaborating around holographic data visualizations.",
+      "model": "dall-e-3",
+      "style": "clean corporate, warm lighting, photorealistic"
+    }
+  }
+]

@@ -1,0 +1,38 @@
+name: design-image-prompt-engineer
+display_name: Image Prompt Engineer
+description: >
+  Structured prompt generation for image models (DALL-E, Midjourney,
+  Stable Diffusion). Inclusive representation and brand consistency
+  enforced by default.
+version: "1.0.0"
+category: design
+capabilities:
+  - image-prompt-generation
+  - style-transfer
+  - prompt-optimization
+models:
+  primary: O-54
+  fallback: [C-SN46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-sonnet-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-A11Y
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: Scene description, concept, or reference image to generate prompts for
+    required: true
+  - name: model
+    type: string
+    description: Target image generation model
+    required: false
+  - name: style
+    type: string
+    description: Visual style direction
+    required: false
+outputs:
+  - name: prompts
+    type: object
+    description: Optimized prompts with negative prompts and parameter recommendations

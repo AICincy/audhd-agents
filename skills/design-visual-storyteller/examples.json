@@ -1,0 +1,10 @@
+[
+  {
+    "description": "Certification completion trends for quarterly review",
+    "input": {
+      "input_text": "Q1-Q4 2025 certification data: Q1 6200 completions, Q2 7100, Q3 7800, Q4 8200. Completion rate declining: 78%, 74%, 70%, 66%. Need to show volume up but quality down.",
+      "audience": "VP of Cloud Education",
+      "format": "vega-lite"
+    }
+  }
+]

@@ -1,0 +1,39 @@
+name: design-ux-researcher
+display_name: UX Researcher
+description: >
+  User research design, analysis, and synthesis. Interview guides,
+  survey design, usability testing protocols, and insight extraction.
+version: "1.0.0"
+category: design
+capabilities:
+  - research-design
+  - interview-guides
+  - usability-testing
+  - insight-synthesis
+models:
+  primary: C-OP46
+  fallback: [O-54, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-A11Y
+  - SK-VERIFY
+  - SK-DECOMP
+inputs:
+  - name: input_text
+    type: string
+    description: Research question, raw data, or study design requirements
+    required: true
+  - name: method
+    type: string
+    description: Research method
+    required: false
+  - name: participants
+    type: string
+    description: Target participant profile
+    required: false
+outputs:
+  - name: research
+    type: object
+    description: Research plan, instruments, or synthesized findings
