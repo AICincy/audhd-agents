@@ -13,7 +13,7 @@ from .base import BaseAdapter
 
 
 class OpenAIAdapter(BaseAdapter):
-    """Adapter for OpenAI models (GPT-5.x, Codex, Max)."""
+    """Adapter for OpenAI models (GPT-5.x, GPT-5 Codex, GPT Max, o4-mini)."""
 
     def __init__(self, api_key: Optional[str] = None, config: dict = None):
         api_key = api_key or os.getenv("OPENAI_API_KEY")
@@ -38,7 +38,7 @@ class OpenAIAdapter(BaseAdapter):
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},
                 ],
-                "max_tokens": kwargs.get("max_tokens", 16384),
+                "max_completion_tokens": kwargs.get("max_tokens", 16384),
                 "temperature": kwargs.get("temperature", 0.0),
             }
             if kwargs.get("response_format"):

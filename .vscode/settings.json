@@ -8,6 +8,11 @@
   },
   "editor.wordWrap": "on",
   "markdown.preview.breaks": true,
+  "python.defaultInterpreterPath": "C:\\Program Files\\Python314\\python.exe",
+  "python.terminal.useEnvFile": true,
+  "python.analysis.extraPaths": [
+    "C:\\Users\\krass\\AppData\\Roaming\\Python\\Python314\\site-packages"
+  ],
   "[python]": {
     "editor.tabSize": 4,
     "editor.formatOnSave": true

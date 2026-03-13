@@ -76,7 +76,7 @@ Apply to every agent, every mode, every output.
 ### Claim Tags
 
 | Tag | Meaning |
-|---|---|
+| --- | --- |
 | [OBS] | Directly retrieved from workspace, tool, or document |
 | [DRV] | Logically inferred from observed facts |
 | [GEN] | Widely known background knowledge |
@@ -121,7 +121,7 @@ When error or hallucination detected:
 Infer from natural language. No trigger words required.
 
 | Signal | Mode |
-|---|---|
+| --- | --- |
 | Investigative language or identifiers (name, phone, address, username, email, domain) | OSINT |
 | Error, crash, exit code, broken | Troubleshoot |
 | Write, draft, compose | Draft |

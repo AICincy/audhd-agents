@@ -5,7 +5,7 @@ Maps all 50 skills to 10 atomic capabilities. Each skill has one primary capabil
 ## Capabilities
 
 | Capability | Description | Primary Skills | Count |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | research | Gather and trace information | ux-researcher, trend-researcher, evidence-collector | 3 |
 | analyze | Find patterns, risks, anomalies | code-reviewer, incident-response, nudge-engine, test-results-analyzer | 4 |
 | synthesize | Merge inputs into unified output | feedback-synthesizer, analytics-reporter, exec-summary-generator | 3 |
@@ -22,7 +22,7 @@ Maps all 50 skills to 10 atomic capabilities. Each skill has one primary capabil
 ## Capability Graph Chains
 
 | Chain | Sequence | Use Case |
-|---|---|---|
+| --- | --- | --- |
 | research_to_report | research → analyze → synthesize | Investigation and reporting |
 | build_and_validate | plan → generate → evaluate → optimize | Full build cycle |
 | code_review_pipeline | analyze → audit → evaluate | Code quality checks |

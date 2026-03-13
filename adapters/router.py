@@ -24,7 +24,9 @@ class SkillRouter:
     def __init__(self, config_path: str = "adapters/config.yaml"):
         # Load .env file into os.environ
         if load_dotenv:
-            load_dotenv()
+            # Prefer the repo-local .env over inherited shell state so key updates
+            # take effect deterministically in VS Code terminals and scripts.
+            load_dotenv(override=True)
         else:
             import sys
             print(
@@ -38,6 +40,7 @@ class SkillRouter:
             self.config = yaml.safe_load(f)
 
         self.adapters = {}
+        self.adapter_init_errors = {}
         self._init_adapters()
         self.alias_map = self.config.get("alias_map", {})
 
@@ -69,11 +72,14 @@ class SkillRouter:
 
         if "google" in providers:
             cfg = providers["google"]
-            key = os.getenv(cfg.get("env_key", "GOOGLE_API_KEY"))
-            if key:
-                self.adapters["google"] = GoogleAdapter(
-                    api_key=key, config=cfg
-                )
+            if GoogleAdapter.has_configuration(cfg):
+                adapter = GoogleAdapter(config=cfg)
+                if adapter.client:
+                    self.adapters["google"] = adapter
+                else:
+                    self.adapter_init_errors["google"] = (
+                        adapter.init_error or "Google adapter initialization failed"
+                    )
 
     def resolve_alias(self, alias: str) -> tuple:
         """Resolve model alias to (provider, model_id)."""
@@ -116,21 +122,39 @@ class SkillRouter:
         for name, adapter in self.adapters.items():
             key_preview = adapter.api_key[:8] + "..." if adapter.api_key else None
             status[name] = {
-                "connected": bool(adapter.api_key),
+                "connected": bool(getattr(adapter, "client", None)),
                 "key_prefix": key_preview,
                 "circuit_breaker": adapter.circuit_breaker.state,
                 "models": list(adapter.config.get("models", {}).keys()),
             }
+            if getattr(adapter, "backend", None):
+                status[name]["backend"] = adapter.backend
+            if getattr(adapter, "auth_mode", None):
+                status[name]["auth_mode"] = adapter.auth_mode
+            if getattr(adapter, "project", None):
+                status[name]["project"] = adapter.project
+            if getattr(adapter, "location", None):
+                status[name]["location"] = adapter.location
+            if getattr(adapter, "init_error", None):
+                status[name]["error"] = adapter.init_error
         # Report providers configured but missing keys
         for provider in self.config.get("providers", {}):
             if provider not in status:
                 env_key = self.config["providers"][provider].get("env_key", "")
+                error = self.adapter_init_errors.get(provider)
+                if not error and provider == "google":
+                    error = (
+                        "Set GOOGLE_API_KEY for Gemini Developer API, or "
+                        "set VERTEX_API_KEY / GOOGLE_GENAI_USE_VERTEXAI for Vertex AI"
+                    )
+                elif not error:
+                    error = f"API key not found. Set {env_key} in .env"
                 status[provider] = {
                     "connected": False,
                     "key_prefix": None,
                     "circuit_breaker": "n/a",
                     "models": [],
-                    "error": f"API key not found. Set {env_key} in .env",
+                    "error": error,
                 }
         return status
 

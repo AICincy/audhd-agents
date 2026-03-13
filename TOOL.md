@@ -7,7 +7,7 @@ Loaded on first tool invocation. Defines what each tool does, when to use it, an
 ## Tool Categories
 
 | Category | Tools | Primary Models |
-|---|---|---|
+| --- | --- | --- |
 | Search and Research | Web search, workspace search, document retrieval | G-PRO, C-OP46 |
 | Code Execution | Code interpreter, script runner, environment tools | O-CDX |
 | Document Operations | Read, write, edit, create pages and databases | C-SN46, C-OP46 |
@@ -58,7 +58,7 @@ Loaded on first tool invocation. Defines what each tool does, when to use it, an
 
 ### Search Output Format
 
-```
+```text
 QUERY: [what was searched]
 SOURCES: [number found]
 TOP FINDINGS:
@@ -81,7 +81,7 @@ GAPS: [what search did not resolve]
 
 ### Post-execution Format
 
-```
+```text
 EXECUTED: [script description]
 RESULT: [output summary]
 SIDE EFFECTS: [files created, state changed, none]
@@ -115,7 +115,7 @@ VALIDATION: [how to verify result]
 ## Platform-Specific Tool Availability
 
 | Platform | Available Tools | Notes |
-|---|---|---|
+| --- | --- | --- |
 | Claude (Anthropic) | Web search, code execution (artifacts), document analysis | Extended thinking available for Opus |
 | Gemini (Google) | Google Search, code execution, Google Workspace, multimodal | Search grounding built-in |
 | ChatGPT (OpenAI) | Web browsing, code interpreter, DALL-E, file analysis | Canvas for iterative editing |
@@ -153,7 +153,7 @@ Apply before deploying any automation (n8n, Zapier, scripts, cron jobs).
 ### Pre-deployment Audit
 
 | Check | Question | Pass Criteria |
-|---|---|---|
+| --- | --- | --- |
 | Value | Does this save more time than it costs to maintain? | Clear ROI or cognitive load reduction |
 | Risk | What happens if it runs wrong at 3 AM? | Bounded blast radius, no data loss |
 | Maintainability | Can Operator debug this in 6 months? | Documented, logged, testable |
@@ -172,7 +172,7 @@ Apply before deploying any automation (n8n, Zapier, scripts, cron jobs).
 ## Error Classification
 
 | Error Type | Indicator | Response |
-|---|---|---|
+| --- | --- | --- |
 | Transient | Timeout, rate limit, 5xx | Retry up to 3 times with backoff |
 | Auth | 403, permission denied | Flag to Operator. Do not retry. |
 | Capability | Tool does not support operation | Recommend alternative tool or manual step |

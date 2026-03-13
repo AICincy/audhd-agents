@@ -13,9 +13,9 @@ capabilities:
 models:
   primary: C-OP46
   fallback: [C-SN46, G-PRO]
-  openai: gpt-5.4
-  anthropic: claude-opus-4.6
-  gemini: gemini-3.1-pro
+  openai: gpt-5.3-codex
+  anthropic: claude-opus-4-6
+  gemini: gemini-2.5-pro
 sk_hooks:
   - SK-GATE
   - SK-VERIFY

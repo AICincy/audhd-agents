@@ -55,41 +55,41 @@ nodes:
 
 # Common chains (planner uses these as templates)
 chains:
+  # Gather info, find patterns, produce report
   research_to_report:
     - research
     - analyze
     - synthesize
-    description: Gather info, find patterns, produce report
 
+  # Design, build, test, improve
   build_and_validate:
     - plan
     - generate
     - evaluate
     - optimize
-    description: Design, build, test, improve
 
+  # Review code for bugs, compliance, quality
   code_review_pipeline:
     - analyze
     - audit
     - evaluate
-    description: Review code for bugs, compliance, quality
 
+  # Research topic, plan structure, write, review
   content_pipeline:
     - research
     - plan
     - generate
     - evaluate
-    description: Research topic, plan structure, write, review
 
+  # Audit for vulnerabilities, analyze risk, generate fixes
   security_pipeline:
     - audit
     - analyze
     - generate
-    description: Audit for vulnerabilities, analyze risk, generate fixes
 
+  # Collect feedback, merge, find patterns, prioritize
   feedback_loop:
     - research
     - synthesize
     - analyze
     - plan
-    description: Collect feedback, merge, find patterns, prioritize

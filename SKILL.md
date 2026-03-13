@@ -13,7 +13,7 @@ These skills are not tasks. They are cognitive augmentation patterns designed fo
 ## Skill Registry
 
 | Skill ID | Name | Trigger | Function |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | SK-DECOMP | Task Decomposition | Task has 3+ steps or ambiguous scope | Break into numbered subtasks with done criteria |
 | SK-EXTERN | State Externalization | Implicit state detected in conversation | Convert to explicit table, checklist, or state diagram |
 | SK-RESUME | Where Was I | Return after 30+ min gap or new session | Present last context, current state, single next action |
@@ -30,15 +30,15 @@ These skills are not tasks. They are cognitive augmentation patterns designed fo
 
 ## SK-DECOMP: Task Decomposition
 
-### When to Activate
+### SK-DECOMP When to Activate
 
 - Task has 3 or more steps
 - Scope is ambiguous or multi-domain
 - Operator says "I need to..." followed by a complex goal
 
-### Output Format
+### SK-DECOMP Output Format
 
-```
+```text
 GOAL: [one sentence]
 SUBTASKS:
 1. [subtask] > DONE WHEN: [criteria]
@@ -48,7 +48,7 @@ DEPENDENCIES: [which must complete before which]
 FIRST ACTION: [single next step]
 ```
 
-### Rules
+### SK-DECOMP Rules
 
 - Max 7 subtasks (cognitive load limit). If more needed, group into phases.
 - Each subtask must have a concrete done criterion, not "completed" or "finished"
@@ -59,13 +59,13 @@ FIRST ACTION: [single next step]
 
 ## SK-EXTERN: State Externalization
 
-### When to Activate
+### SK-EXTERN When to Activate
 
 - Conversation contains implicit state ("we decided," "the plan is," "remember that")
 - Multiple options discussed without clear resolution
 - Task state lives only in conversation history
 
-### Output Format
+### SK-EXTERN Output Format
 
 Choose the format that best matches the state type:
 
@@ -74,7 +74,7 @@ Choose the format that best matches the state type:
 - **Information state:** Table with Claim, Source, Confidence, Tag
 - **Process state:** State diagram as numbered steps with current position marked
 
-### Rules
+### SK-EXTERN Rules
 
 - Externalize proactively. Do not wait for Operator to ask.
 - Update externalized state when new information arrives.
@@ -84,22 +84,22 @@ Choose the format that best matches the state type:
 
 ## SK-RESUME: Where Was I
 
-### When to Activate
+### SK-RESUME When to Activate
 
 - New session or conversation
 - Gap of 30+ minutes detected
 - Operator returns with "where was I" or similar
 - Context switch detected (different topic than last message)
 
-### Output Format
+### SK-RESUME Output Format
 
-```
+```text
 LAST CONTEXT: [what we were working on]
 CURRENT STATE: [what is done, what is pending]
 NEXT ACTION: [single step to resume]
 ```
 
-### Rules
+### SK-RESUME Rules
 
 - Maximum 3 sentences for last context.
 - Current state as checklist if multi-step.
@@ -109,19 +109,21 @@ NEXT ACTION: [single step to resume]
 
 ## SK-GATE: Decision Gate
 
-### When to Activate
+### SK-GATE When to Activate
 
 - Action is irreversible (delete, publish, send, deploy)
 - Decision has significant downstream consequences
 - Multiple valid paths exist with meaningfully different outcomes
 
-### Output Format
+### SK-GATE Output Format
 
-| Option | Outcome | Revert Path | Risk | Recommendation |
-|---|---|---|---|---|
-| [option A] | [what happens] | [how to undo, or "irreversible"] | [what could go wrong] | [if applicable] |
+- `Option`: the path being considered
+- `Outcome`: what happens if chosen
+- `Revert Path`: how to undo it, or `irreversible`
+- `Risk`: what could go wrong
+- `Recommendation`: include only when one option clearly dominates
 
-### Rules
+### SK-GATE Rules
 
 - Always present before executing irreversible action.
 - "Irreversible" explicitly labeled. Never implied.
@@ -134,21 +136,21 @@ NEXT ACTION: [single step to resume]
 
 ## SK-MICRO: Micro-Step
 
-### When to Activate
+### SK-MICRO When to Activate
 
 - Operator signals low energy ("tired," "can't focus," "ugh," "brain fog")
 - Task is important but not activating (low novelty, low urgency)
 - Executive function indicators: very short messages, long gaps, repeated restarts
 
-### Output Format
+### SK-MICRO Output Format
 
-```
+```text
 SMALLEST NEXT STEP: [one action, under 5 minutes]
 WHY THIS ONE: [why this specific step moves the needle]
 AFTER THAT: [what becomes possible once this step is done]
 ```
 
-### Rules
+### SK-MICRO Rules
 
 - One step only. Not "just these three small things."
 - Must be completable in under 5 minutes.
@@ -159,15 +161,15 @@ AFTER THAT: [what becomes possible once this step is done]
 
 ## SK-ANCHOR: Thread Anchor
 
-### When to Activate
+### SK-ANCHOR When to Activate
 
 - Conversation has touched 3+ topics
 - Current topic is drifting from stated objective
 - New information arrives that could derail focus
 
-### Output Format
+### SK-ANCHOR Output Format
 
-```
+```text
 PRIMARY THREAD: [current objective]
 PARKING LOT:
 - [deferred item 1]
@@ -175,7 +177,7 @@ PARKING LOT:
 RESUMING: [primary thread]
 ```
 
-### Rules
+### SK-ANCHOR Rules
 
 - Parking lot items are preserved, not dismissed.
 - Anchor restates objective without re-explaining it.
@@ -185,7 +187,7 @@ RESUMING: [primary thread]
 
 ## SK-VERIFY: Claim Verification
 
-### When to Activate
+### SK-VERIFY When to Activate
 
 - Any factual claim in structured output
 - Claims about dates, numbers, names, policies, regulations
@@ -205,7 +207,7 @@ RESUMING: [primary thread]
 - **Discrimination testing:** For any model evaluated on user-facing output, check for demographic bias in outputs. Flag if bias testing was not performed.
 - **Calibration check:** Stated confidence levels should roughly match observed accuracy. If a model says 90% confident but is wrong 30% of the time, flag calibration failure.
 
-### Rules
+### SK-VERIFY Rules
 
 - In structured output: always tag
 - In chat mode: flag speculation in natural language, skip formal tags
@@ -215,17 +217,17 @@ RESUMING: [primary thread]
 
 ## SK-BRIDGE: Context Bridge
 
-### When to Activate
+### SK-BRIDGE When to Activate
 
-- Operator is moving work between agents
+- Operator or orchestrator is moving work between agents
 - Session ending with incomplete work
 - Handoff required per routing matrix
 
-### Output Format
+### SK-BRIDGE Output Format
 
 Uses AGENT.md handoff format:
 
-```
+```text
 HANDOFF
   FROM: [current model]
   TO: [target model]
@@ -236,7 +238,7 @@ HANDOFF
   SUCCESS_TEST: [done criteria]
 ```
 
-### Rules
+### SK-BRIDGE Rules
 
 - All state must be in the handoff block. No assumed memory.
 - Artifacts referenced by name/location, not described in prose.
@@ -247,23 +249,23 @@ HANDOFF
 
 ## SK-NUDGE: Behavioral Nudge
 
-### When to Activate
+### SK-NUDGE When to Activate
 
 - Operator has a long task queue and has not started
 - Low-energy signals detected (short messages, long gaps, restarts)
 - Important-but-low-interest task needs activation
 - Returning from a break and facing a wall of pending work
 
-### Output Format
+### SK-NUDGE Output Format
 
-```
+```text
 RIGHT NOW: [single action, under 5 min]
 WHY THIS ONE: [why it is the highest-leverage micro-step]
 AFTER THAT: [what unlocks once this is done]
 OPT OUT: "Done. Next one, or stop here?"
 ```
 
-### Rules
+### SK-NUDGE Rules
 
 - Show 1 item, not the full queue. Never dump 50 pending tasks.
 - Frame as micro-sprint: smallest friction-free action.
@@ -277,7 +279,7 @@ OPT OUT: "Done. Next one, or stop here?"
 
 ## SK-A11Y: Accessibility Gate
 
-### When to Activate
+### SK-A11Y When to Activate
 
 - Any UI component, interface design, or visual output
 - Content intended for public consumption or external stakeholders
@@ -285,9 +287,9 @@ OPT OUT: "Done. Next one, or stop here?"
 - Devvit app development or review
 - Training materials or certification content (Google Cloud Education)
 
-### Output Format
+### SK-A11Y Output Format
 
-```
+```text
 A11Y CHECK:
 1. [WCAG criterion number + name] - [pass/fail/needs-review]
    Issue: [what fails]
@@ -302,7 +304,7 @@ POUR SUMMARY:
 ASSISTIVE TECH: [screen reader, keyboard-only, switch access notes]
 ```
 
-### Rules
+### SK-A11Y Rules
 
 - Default standard: WCAG 2.2 AA. Apply AAA when specified.
 - Always reference specific success criteria by number and name.
@@ -315,7 +317,7 @@ ASSISTIVE TECH: [screen reader, keyboard-only, switch access notes]
 
 ## SK-CODEREVIEW: Code Review
 
-### When to Activate
+### SK-CODEREVIEW When to Activate
 
 - PR, diff, or patch presented for review
 - "Review this," "check this code," "what's wrong with this"
@@ -329,9 +331,9 @@ ASSISTIVE TECH: [screen reader, keyboard-only, switch access notes]
 3. **Prioritize findings:** lead with issues that break behavior, lose data, create vulnerabilities, or block release. Separate must-fix from suggestions.
 4. **Write actionable feedback:** cite file and line. Explain why and what scenario triggers it. Suggest a fix when clear enough.
 
-### Output Format
+### SK-CODEREVIEW Output Format
 
-```
+```text
 FINDINGS (ordered by severity):
 
 1. [SEVERITY] file:line - [issue]
@@ -350,7 +352,7 @@ SUMMARY: [1-2 sentences]
 
 Severity levels: CRITICAL (blocks release), HIGH (must fix before merge), MEDIUM (should fix), LOW (suggestion/nit).
 
-### Rules
+### SK-CODEREVIEW Rules
 
 - Do not spend the review on style preferences that linters handle.
 - Do not invent risks without pointing to the code path or scenario.

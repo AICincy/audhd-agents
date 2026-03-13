@@ -6,35 +6,38 @@ Reference document for Operator. Defines topology, routing, escalation, and inte
 
 ## Topology
 
-Hub-and-spoke. Operator is the hub.
+Hub-and-spoke with orchestrator-managed autonomous handoffs. Operator remains the control surface.
 
-- No autonomous agent-to-agent communication.
-- All routing flows through Operator explicitly.
+- Autonomous handoffs are allowed when routing is pre-authorized by the active workflow or routing matrix.
+- Every handoff must carry explicit state: goal, constraints, partial results, evidence, and next action.
+- No opaque peer-to-peer state changes outside orchestrator-managed routing.
 - Exception: Codex may be sub-invoked for inline code generation within pre-authorized workflows.
-- Rationale: monotropic attention requires single-thread control. Autonomous handoffs create invisible state changes.
+- Rationale: monotropic attention requires single-thread visibility, not manual relay. Handoffs should feel seamless while state remains explicit.
 
 ---
 
 ## Agent Registry
 
 | ID | Model | Role | Primary Domain |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | C-OP46 | Claude Opus 4.6 | Deep Analyst (Primary) | Complex analysis, OSINT, legal, architecture, T5 verification |
 | C-OP45 | Claude Opus 4.5 | Deep Analyst (Fallback) | Same scope as C-OP46 |
 | C-SN46 | Claude Sonnet 4.6 | Rapid Executor (Primary) | Structured output, triage, drafts, reformatting |
 | C-SN45 | Claude Sonnet 4.5 | Rapid Executor (Fallback) | Same scope as C-SN46 |
-| G-PRO | Gemini 3.1 Pro (Preview) | Knowledge Integrator | Research, multimodal, Google ecosystem, search grounding |
-| O-54 | ChatGPT 5.4 | Ideation Engine (Primary) | Creative, stakeholder comms, accessibility review |
-| O-53 | ChatGPT 5.3 | Ideation Engine (Fallback) | Same scope as O-54 |
-| O-CDX | Codex | Code Automator | Scripts, pipelines, automation, environment scaffolding |
-| O-MAX | Max | Generalist Overflow | Parallel capacity, second opinions, bulk processing |
+| G-PRO | Gemini 2.5 Pro | Knowledge Integrator | Research, multimodal, Google ecosystem, search grounding |
+| O-54 | GPT-5.4 | Ideation Engine (Primary) | Creative, stakeholder comms, accessibility review |
+| O-53 | GPT-5.3 | Ideation Engine (Fallback) | Same scope as O-54 |
+| O-54P | GPT-5.4 Pro | Deep Planner | Architecture, audit synthesis, escalation review, cross-skill planning |
+| O-CDX | GPT-5.3 Codex | Code Automator | Scripts, pipelines, automation, environment scaffolding |
+| O-O4M | o4-mini | Rapid Verifier | Benchmarks, structured checks, scorecards, numeric sanity checks |
+| O-MAX | GPT Max | Generalist Overflow | Parallel capacity, second opinions, bulk processing |
 
 ---
 
 ## Routing Matrix
 
 | Domain | T1-T2 | T3 | T4-T5 | Fallback |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Analysis | C-SN46 | C-OP46 | C-OP46 | C-OP45 then C-SN45 |
 | Code | O-CDX | O-CDX | O-CDX + C-OP46 review | O-54 |
 | Research | G-PRO | G-PRO | G-PRO + C-OP46 verify | C-OP45 |
@@ -55,7 +58,7 @@ Fallback activates on: API error, rate limit, confidence below 0.6, or explicit 
 Automatic protection against runaway costs, cascading failures, and degraded service.
 
 | Breaker | Trigger | Action | Reset Condition |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Cost ceiling | Estimated session cost exceeds threshold (set per task) | Halt new API calls. Present cost report to Operator. | Operator approves budget increase |
 | Error spike | 3+ consecutive failures from same model in 5 min | Route all traffic to fallback. Log failure pattern. | Primary model returns 3 consecutive successes |
 | Rate limit cascade | 2+ models rate-limited simultaneously | Queue non-urgent tasks. Process only T4-T5. | Any 2 models return to normal availability |
@@ -68,11 +71,14 @@ Automatic protection against runaway costs, cascading failures, and degraded ser
 Every model interaction should be cost-aware.
 
 | Model | Tier | Relative Cost | When to Prefer |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | C-SN46 / C-SN45 | Budget | $ | T1-T2, triage, formatting, quick drafts |
 | G-PRO | Mid | $$ | Research, search grounding, multimodal |
-| O-54 / O-53 / O-MAX | Mid | $$ | Creative, stakeholder comms, overflow |
+| O-O4M | Budget | $ | Benchmarks, scorecards, structured validation, fast quantitative checks |
+| O-54 / O-53 | Mid | $$ | Creative, stakeholder comms, ideation, accessibility review |
 | O-CDX | Mid | $$ | Code generation, scripting, automation |
+| O-MAX | Mid | $$ | Broad coordination, overflow, cross-domain synthesis |
+| O-54P | Premium | $$$ | Architecture, audit synthesis, planning, escalations |
 | C-OP46 / C-OP45 | Premium | $$$ | T3+ analysis, OSINT, architecture, verification |
 
 **Rule:** Always prefer the cheapest model that meets the tier requirement. Do not route T1 tasks to Opus.
@@ -84,7 +90,7 @@ Every model interaction should be cost-aware.
 ## Incident Severity Classification
 
 | Severity | Definition | Response Time | Escalation |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | SEV1: Critical | Data loss, security breach, production outage, wrong output sent externally | Immediate | Halt all work. Alert Operator. Full incident report. |
 | SEV2: High | Blocked workflow, incorrect output caught before delivery, repeated model failures | Within current session | Fallback model + flag for Operator review |
 | SEV3: Medium | Degraded quality, slow responses, minor inaccuracies in non-critical output | Next available cycle | Log and fix. No immediate escalation. |
@@ -95,7 +101,7 @@ Every model interaction should be cost-aware.
 ## Task Classification (T1-T5)
 
 | Tier | Complexity | Verification |
-|---|---|---|
+| --- | --- | --- |
 | T1 Trivial | Status check, yes/no, format conversion | None |
 | T2 Standard | Summarize, template, simple fix, short draft | None |
 | T3 Complex | Multi-step analysis, code module, research synthesis | Optional |
@@ -107,7 +113,7 @@ Every model interaction should be cost-aware.
 ## Escalation Protocol
 
 | Level | Trigger | Action |
-|---|---|---|
+| --- | --- | --- |
 | 1 | Confidence below 0.6 or transient error | Retry same model, max 3 attempts |
 | 2 | 3 failed retries or capability gap | Route to fallback agent per matrix |
 | 3 | Fallback also fails or conflicting results | Multi-model consensus: C-OP46 + G-PRO + O-54 |
@@ -118,7 +124,7 @@ Every model interaction should be cost-aware.
 ## Energy-Adaptive Routing
 
 | Energy | Max Tier | Model Pool | Behavior |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | High | T5 | All 9 | Normal operation |
 | Medium | T4 | All 9, prefer fast models for T1-T2 | Standard |
 | Low | T2 | Sonnet + Gemini only | Micro-steps. Single next action. |
@@ -130,7 +136,7 @@ No tasks lost during downgrade. Deferred items queue for next high-energy window
 
 ## Handoff Format
 
-```
+```text
 HANDOFF
   FROM: [completing model]
   TO: [receiving model]
@@ -143,7 +149,7 @@ HANDOFF
 
 ### Handoff Rules
 
-1. Operator initiates all handoffs explicitly
+1. Operator or the orchestrator may initiate handoffs when routing is pre-authorized
 2. Receiving agent loads PROFILE.md before processing
 3. Receiving agent acknowledges constraints before output
 4. No agent modifies another agent's artifacts without approval
@@ -154,7 +160,7 @@ HANDOFF
 ## Inter-Agent Contracts (AuDHD Architectural Constraints)
 
 | Contract | Specification |
-|---|---|
+| --- | --- |
 | One active thread | System presents exactly one result at a time. No parallel notifications. |
 | No unsolicited decisions | Never present "Would you like to..." prompts. Infer or defer. |
 | Predictable structure | Every result follows same template: summary, details, next step. |

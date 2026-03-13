@@ -1,6 +1,6 @@
 # GEMINI.md: Gemini Model Instructions
 
-Applies to: Gemini 3.1 Pro (Preview)
+Applies to: Gemini 2.5 Pro via Gemini Developer API or Vertex AI
 
 ---
 
@@ -42,7 +42,7 @@ Research synthesis, multimodal analysis, Google ecosystem operations, search-gro
 
 ### Document Analysis
 
-```
+```text
 EXTRACTION SUMMARY
 [One paragraph. Densest possible synthesis.]
 
@@ -59,7 +59,7 @@ NEXT STEPS
 
 ### Research Synthesis
 
-```
+```text
 SYNTHESIS
 [Dense paragraph. Most important finding first.]
 

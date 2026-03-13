@@ -1,12 +1,12 @@
 # AUDHD Cognitive Swarm Protocol
 
-Multi-agent orchestration system designed for AuDHD cognition. Hub-and-spoke topology with 9 models, skill-based cognitive augmentation, and LLM-specific deployment adapters.
+Multi-agent orchestration system designed for AuDHD cognition. Orchestrator-managed topology with 11 models, skill-based cognitive augmentation, and LLM-specific deployment adapters.
 
 Built by and for neurodivergent engineers who need AI systems that work *with* their cognitive architecture instead of against it.
 
 ## Architecture
 
-```
+```text
 audhd-agents/
 ├── PROFILE.md                    # Cognitive profile + universal constraints
 ├── AGENT.md                    # Swarm orchestration + routing matrix
@@ -14,8 +14,8 @@ audhd-agents/
 ├── SKILL.md                    # Cognitive support skills (SK-*)
 ├── models/
 │   ├── CLAUDE.md               # Claude Opus/Sonnet instructions
-│   ├── GEMINI.md               # Gemini Pro instructions
-│   └── OPENAI.md               # ChatGPT/Codex/Max instructions
+│   ├── GEMINI.md               # Gemini 2.5 Pro / Vertex instructions
+│   └── OPENAI.md               # GPT-5 / Codex / Max instructions
 ├── capabilities/               # Atomic capability definitions (Beta Pro)
 ├── skills/                     # AIO canonical skill definitions
 │   └── {skill-name}/
@@ -30,32 +30,34 @@ audhd-agents/
 │   ├── router.py               # Skill-to-model router with failover
 │   ├── anthropic_adapter.py    # Claude adapter
 │   ├── openai_adapter.py       # OpenAI adapter
-│   └── google_adapter.py       # Gemini adapter
+│   └── google_adapter.py       # Gemini / Vertex adapter
 ├── runtime/                    # Router, planner, executor (Beta Pro)
 ├── dist/                       # Generated per-LLM manifests
 ├── .vscode/                    # VS Code configuration
 └── build.py                    # Master build script
 ```
 
-## Models (9)
+## Models (11)
 
 | ID | Model | Role |
-|---|---|---|
+| --- | --- | --- |
 | C-OP46 | Claude Opus 4.6 | Deep Analyst (Primary) |
 | C-OP45 | Claude Opus 4.5 | Deep Analyst (Fallback) |
 | C-SN46 | Claude Sonnet 4.6 | Rapid Executor (Primary) |
 | C-SN45 | Claude Sonnet 4.5 | Rapid Executor (Fallback) |
-| G-PRO | Gemini 3.1 Pro (Preview) | Knowledge Integrator |
-| O-54 | ChatGPT 5.4 | Ideation Engine (Primary) |
-| O-53 | ChatGPT 5.3 | Ideation Engine (Fallback) |
-| O-CDX | Codex | Code Automator |
-| O-MAX | Max | Generalist Overflow |
+| G-PRO | Gemini 2.5 Pro | Knowledge Integrator |
+| O-54 | GPT-5.4 | Ideation Engine (Primary) |
+| O-53 | GPT-5.3 | Ideation Engine (Fallback) |
+| O-54P | GPT-5.4 Pro | Deep Planner |
+| O-CDX | GPT-5.3 Codex | Code Automator |
+| O-O4M | o4-mini | Rapid Verifier |
+| O-MAX | GPT Max | Generalist Overflow |
 
 ## Cognitive Design Principles
 
 This system is built around AuDHD cognitive patterns:
 
-- **Monotropism:** Single-thread control. No autonomous agent-to-agent chatter.
+- **Monotropism:** Single-thread control at the user boundary. Autonomous handoffs are allowed only through orchestrator-managed state relay.
 - **Pattern compression:** Verdict first, supporting structure second.
 - **Asymmetric working memory:** Maps over turn-by-turn. Full system view before sequencing.
 - **Interest-based activation:** Micro-sprints, momentum tracking, smallest-possible first actions.
@@ -82,6 +84,12 @@ Run `python build.py` to generate `dist/` manifests for each LLM.
 4. `pip install -r requirements.txt`
 5. `python build.py` to generate LLM-specific files in `dist/`
 6. Deploy generated manifests to respective platforms
+
+For Google, the repo supports both:
+
+- Gemini Developer API via `GOOGLE_API_KEY`
+- Vertex AI Express Mode via `GOOGLE_GENAI_USE_VERTEXAI=true` and `VERTEX_API_KEY`
+- Vertex AI standard auth via `GOOGLE_GENAI_USE_VERTEXAI=true` plus `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, and either `GOOGLE_APPLICATION_CREDENTIALS`, `VERTEX_SERVICE_ACCOUNT_FILE`, or inline `VERTEX_SERVICE_ACCOUNT`
 
 ## Loading Order (All Models)
 

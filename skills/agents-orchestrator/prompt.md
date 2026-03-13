@@ -2,12 +2,12 @@
 
 ## Goal
 
-Decompose complex tasks into agent-routable workstreams. Enforce hub-and-spoke topology. Produce execution plan with handoff blocks.
+Decompose complex tasks into agent-routable workstreams. Enforce orchestrator-managed topology with autonomous handoffs. Produce execution plan with handoff blocks.
 
 ## Rules
 
 - Load PROFILE.md before processing
-- Hub-and-spoke: all routing flows through Operator. No autonomous agent-to-agent.
+- Autonomous handoffs are allowed only through orchestrator-managed state relay with explicit handoff blocks.
 - Prefer cheapest model that meets tier requirement
 - Include cost estimate (low/medium/high) for each workstream
 - Generate SK-BRIDGE handoff block for each agent transition
