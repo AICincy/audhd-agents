@@ -1,4 +1,4 @@
-"""Skill-to-model router with failover and cost tracking."""
+"""Skill-to-model router with failover, cost tracking, and dotenv loading."""
 
 import os
 import yaml
@@ -6,7 +6,11 @@ import json
 import time
 from pathlib import Path
 from typing import Optional
-from dataclasses import asdict
+
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = None
 
 from .base import SkillRequest, SkillResponse, CostRecord
 from .anthropic_adapter import AnthropicAdapter
@@ -18,6 +22,18 @@ class SkillRouter:
     """Routes skill requests to the appropriate LLM provider."""
 
     def __init__(self, config_path: str = "adapters/config.yaml"):
+        # Load .env file into os.environ
+        if load_dotenv:
+            load_dotenv()
+        else:
+            import sys
+            print(
+                "Warning: python-dotenv not installed. "
+                "Environment variables must be set manually. "
+                "Run: pip install python-dotenv",
+                file=sys.stderr,
+            )
+
         with open(config_path) as f:
             self.config = yaml.safe_load(f)
 
@@ -29,8 +45,14 @@ class SkillRouter:
         self.daily_cost_date = time.strftime("%Y-%m-%d")
 
     def _init_adapters(self):
-        """Initialize provider adapters from config."""
+        """Initialize provider adapters from config with circuit breaker settings."""
         providers = self.config.get("providers", {})
+        cb_cfg = self.config.get("circuit_breaker", {})
+
+        # Merge top-level circuit breaker config into each provider
+        for cfg in providers.values():
+            cfg.setdefault("failure_threshold", cb_cfg.get("failure_threshold", 3))
+            cfg.setdefault("recovery_timeout", cb_cfg.get("recovery_timeout", 60))
 
         if "anthropic" in providers:
             cfg = providers["anthropic"]
@@ -86,7 +108,7 @@ class SkillRouter:
             return krass_path.read_text()
         return ""
 
-    def _check_cost_budget(self, estimated_cost: float) -> bool:
+    def _check_cost_budget(self, estimated_cost: float = 0.0) -> bool:
         """Check if request is within cost budget."""
         today = time.strftime("%Y-%m-%d")
         if today != self.daily_cost_date:
@@ -102,8 +124,44 @@ class SkillRouter:
             return False
         return True
 
+    def get_status(self) -> dict:
+        """Return adapter connectivity status for diagnostics.
+
+        Usage:
+            router = SkillRouter()
+            print(json.dumps(router.get_status(), indent=2))
+        """
+        status = {}
+        for name, adapter in self.adapters.items():
+            key_preview = adapter.api_key[:8] + "..." if adapter.api_key else None
+            status[name] = {
+                "connected": bool(adapter.api_key),
+                "key_prefix": key_preview,
+                "circuit_breaker": adapter.circuit_breaker.state,
+                "models": list(adapter.config.get("models", {}).keys()),
+            }
+        # Report providers configured but missing keys
+        for provider in self.config.get("providers", {}):
+            if provider not in status:
+                env_key = self.config["providers"][provider].get("env_key", "")
+                status[provider] = {
+                    "connected": False,
+                    "key_prefix": None,
+                    "circuit_breaker": "n/a",
+                    "models": [],
+                    "error": f"API key not found. Set {env_key} in .env",
+                }
+        return status
+
     async def execute(self, request: SkillRequest) -> SkillResponse:
         """Route and execute a skill request."""
+        # Pre-flight: check daily budget has headroom
+        if not self._check_cost_budget(0.0):
+            raise RuntimeError(
+                f"Daily cost budget exhausted: ${self.daily_cost:.2f} / "
+                f"${self.cost_config.get('max_per_day', 50.00):.2f}"
+            )
+
         skill = self.load_skill(request.skill_id)
         krass_md = self.load_krass_md()
         skill_config = skill["config"]
@@ -121,10 +179,17 @@ class SkillRouter:
         for alias in model_chain:
             provider_name, model_id = self.resolve_alias(alias)
             if provider_name not in self.adapters:
+                last_error = RuntimeError(
+                    f"Provider '{provider_name}' not available for alias '{alias}'. "
+                    f"Check API key in .env"
+                )
                 continue
 
             adapter = self.adapters[provider_name]
             if not adapter.circuit_breaker.can_execute():
+                last_error = RuntimeError(
+                    f"Circuit breaker open for {provider_name}"
+                )
                 continue
 
             system_prompt = adapter.build_system_prompt(prompt_md, krass_md)
@@ -145,6 +210,16 @@ class SkillRouter:
                 )
                 self.daily_cost += cost
 
+                # Post-flight: warn if per-request cost exceeded
+                max_req = self.cost_config.get("max_per_request", 1.00)
+                if cost > max_req:
+                    import sys
+                    print(
+                        f"COST WARNING: {request.skill_id} on {model_id} "
+                        f"cost ${cost:.4f} (limit ${max_req:.2f})",
+                        file=sys.stderr,
+                    )
+
                 # Log cost
                 record = CostRecord(
                     timestamp=time.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -160,7 +235,11 @@ class SkillRouter:
                 adapter.log_cost(record, log_file)
 
                 return SkillResponse(
-                    output=json.loads(result["content"]) if result["content"].strip().startswith("{") else {"raw": result["content"]},
+                    output=(
+                        json.loads(result["content"])
+                        if result["content"].strip().startswith("{")
+                        else {"raw": result["content"]}
+                    ),
                     model_used=model_id,
                     provider=provider_name,
                     input_tokens=result["input_tokens"],

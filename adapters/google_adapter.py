@@ -1,4 +1,4 @@
-"""Google (Gemini) adapter."""
+"""Google (Gemini) adapter with native async."""
 
 import os
 import time
@@ -24,9 +24,9 @@ class GoogleAdapter(BaseAdapter):
     async def execute(self, model: str, system_prompt: str,
                       user_prompt: str, **kwargs) -> dict:
         if not genai:
-            raise RuntimeError("google-generativeai package not installed")
+            raise RuntimeError("google-generativeai package not installed. Run: pip install google-generativeai")
         if not self.circuit_breaker.can_execute():
-            raise RuntimeError(f"Circuit breaker open for Google")
+            raise RuntimeError("Circuit breaker open for Google")
 
         start = time.time()
         try:
@@ -38,7 +38,7 @@ class GoogleAdapter(BaseAdapter):
                     max_output_tokens=kwargs.get("max_tokens", 65536),
                 ),
             )
-            response = gen_model.generate_content(user_prompt)
+            response = await gen_model.generate_content_async(user_prompt)
             self.circuit_breaker.record_success()
             latency = int((time.time() - start) * 1000)
 

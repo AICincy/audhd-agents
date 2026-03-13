@@ -1,4 +1,4 @@
-"""Anthropic (Claude) adapter."""
+"""Anthropic (Claude) adapter with async client."""
 
 import os
 import time
@@ -13,26 +13,26 @@ from .base import BaseAdapter
 
 
 class AnthropicAdapter(BaseAdapter):
-    """Adapter for Anthropic Claude models."""
+    """Adapter for Anthropic Claude models (Opus, Sonnet)."""
 
     def __init__(self, api_key: Optional[str] = None, config: dict = None):
         api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
         super().__init__(api_key=api_key, config=config or {})
         if anthropic:
-            self.client = anthropic.Anthropic(api_key=self.api_key)
+            self.client = anthropic.AsyncAnthropic(api_key=self.api_key)
         else:
             self.client = None
 
     async def execute(self, model: str, system_prompt: str,
                       user_prompt: str, **kwargs) -> dict:
         if not self.client:
-            raise RuntimeError("anthropic package not installed")
+            raise RuntimeError("anthropic package not installed. Run: pip install anthropic")
         if not self.circuit_breaker.can_execute():
-            raise RuntimeError(f"Circuit breaker open for Anthropic")
+            raise RuntimeError("Circuit breaker open for Anthropic")
 
         start = time.time()
         try:
-            response = self.client.messages.create(
+            response = await self.client.messages.create(
                 model=model,
                 max_tokens=kwargs.get("max_tokens", 16000),
                 system=system_prompt,

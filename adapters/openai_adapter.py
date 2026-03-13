@@ -1,47 +1,50 @@
-"""OpenAI adapter."""
+"""OpenAI adapter with async client."""
 
 import os
 import time
 from typing import Optional
 
 try:
-    from openai import OpenAI
+    from openai import AsyncOpenAI
 except ImportError:
-    OpenAI = None
+    AsyncOpenAI = None
 
 from .base import BaseAdapter
 
 
 class OpenAIAdapter(BaseAdapter):
-    """Adapter for OpenAI models."""
+    """Adapter for OpenAI models (GPT-5.x, Codex, Max)."""
 
     def __init__(self, api_key: Optional[str] = None, config: dict = None):
         api_key = api_key or os.getenv("OPENAI_API_KEY")
         super().__init__(api_key=api_key, config=config or {})
-        if OpenAI:
-            self.client = OpenAI(api_key=self.api_key)
+        if AsyncOpenAI:
+            self.client = AsyncOpenAI(api_key=self.api_key)
         else:
             self.client = None
 
     async def execute(self, model: str, system_prompt: str,
                       user_prompt: str, **kwargs) -> dict:
         if not self.client:
-            raise RuntimeError("openai package not installed")
+            raise RuntimeError("openai package not installed. Run: pip install openai")
         if not self.circuit_breaker.can_execute():
-            raise RuntimeError(f"Circuit breaker open for OpenAI")
+            raise RuntimeError("Circuit breaker open for OpenAI")
 
         start = time.time()
         try:
-            response = self.client.chat.completions.create(
-                model=model,
-                messages=[
+            create_kwargs = {
+                "model": model,
+                "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},
                 ],
-                max_tokens=kwargs.get("max_tokens", 16384),
-                temperature=kwargs.get("temperature", 0.0),
-                response_format=kwargs.get("response_format"),
-            )
+                "max_tokens": kwargs.get("max_tokens", 16384),
+                "temperature": kwargs.get("temperature", 0.0),
+            }
+            if kwargs.get("response_format"):
+                create_kwargs["response_format"] = kwargs["response_format"]
+
+            response = await self.client.chat.completions.create(**create_kwargs)
             self.circuit_breaker.record_success()
             latency = int((time.time() - start) * 1000)
             choice = response.choices[0]
