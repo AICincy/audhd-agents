@@ -1,0 +1,33 @@
+name: design-brand-guardian
+display_name: Brand Guardian
+description: >
+  Brand consistency enforcement across assets, communications, and
+  interfaces. Style guide compliance with inclusive design lens.
+version: "1.0.0"
+category: design
+capabilities:
+  - brand-audit
+  - consistency-check
+  - style-guide-enforcement
+models:
+  primary: O-54
+  fallback: [G-PRO, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-A11Y
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: Asset, communication, or interface to review for brand compliance
+    required: true
+  - name: brand_guidelines
+    type: string
+    description: Brand guide reference or key constraints
+    required: false
+outputs:
+  - name: review
+    type: object
+    description: Brand compliance findings with fix recommendations

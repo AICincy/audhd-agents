@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Automation spec, workflow, or proposal to audit"
+    },
+    "platform": {
+      "type": "string",
+      "description": "Automation platform",
+      "enum": ["n8n", "zapier", "script", "cron", "github-actions", "other"]
+    }
+  },
+  "required": ["input_text"]
+}

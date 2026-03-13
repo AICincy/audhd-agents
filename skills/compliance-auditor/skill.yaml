@@ -1,0 +1,38 @@
+name: compliance-auditor
+display_name: Compliance Auditor
+description: >
+  Regulatory compliance auditing across frameworks (SOC 2, GDPR, HIPAA,
+  FedRAMP). Gap assessment with remediation priorities.
+version: "1.0.0"
+category: support
+capabilities:
+  - compliance-audit
+  - regulatory-analysis
+  - gap-assessment
+models:
+  primary: C-OP46
+  fallback: [G-PRO, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-VERIFY
+  - SK-GATE
+  - SK-DECOMP
+inputs:
+  - name: input_text
+    type: string
+    description: Policy, process, system description, or evidence to audit
+    required: true
+  - name: framework
+    type: string
+    description: Compliance framework to audit against
+    required: false
+  - name: scope
+    type: string
+    description: Audit scope
+    required: false
+outputs:
+  - name: audit
+    type: object
+    description: Compliance findings with gap analysis and remediation plan

@@ -1,0 +1,33 @@
+name: automation-governance
+display_name: Automation Governance
+description: >
+  Pre-deployment audit for automations (n8n, Zapier, scripts, crons).
+  ROI, risk, maintainability, and fallback assessment.
+version: "1.0.0"
+category: automation
+capabilities:
+  - automation-audit
+  - risk-assessment
+  - roi-analysis
+models:
+  primary: C-OP46
+  fallback: [C-SN46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-GATE
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: Automation spec, workflow diagram, or proposal to audit
+    required: true
+  - name: platform
+    type: string
+    description: Automation platform
+    required: false
+outputs:
+  - name: audit
+    type: object
+    description: Governance audit with pass/fail per criterion

@@ -1,0 +1,40 @@
+name: agents-orchestrator
+display_name: Agents Orchestrator
+description: >
+  Multi-agent workflow coordination, task routing, and inter-agent
+  state management. Hub-and-spoke enforcement for monotropic attention.
+version: "1.0.0"
+category: specialized
+capabilities:
+  - agent-coordination
+  - task-routing
+  - state-management
+  - workflow-orchestration
+models:
+  primary: C-OP46
+  fallback: [C-SN46, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-DECOMP
+  - SK-BRIDGE
+  - SK-GATE
+  - SK-EXTERN
+inputs:
+  - name: input_text
+    type: string
+    description: Workflow description or complex task to orchestrate across agents
+    required: true
+  - name: agents
+    type: string
+    description: Available agent pool for this workflow
+    required: false
+  - name: constraints
+    type: string
+    description: Budget, time, or model constraints
+    required: false
+outputs:
+  - name: plan
+    type: object
+    description: Orchestration plan with agent assignments and execution sequence

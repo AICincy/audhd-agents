@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "input_text": {
+      "type": "string",
+      "description": "Training requirements or content area"
+    },
+    "audience": {
+      "type": "string",
+      "description": "Target learner profile"
+    },
+    "modality": {
+      "type": "string",
+      "description": "Delivery format",
+      "enum": ["self-paced", "instructor-led", "hybrid", "lab-based"]
+    }
+  },
+  "required": ["input_text"]
+}

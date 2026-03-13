@@ -1,0 +1,10 @@
+[
+  {
+    "description": "AI/ML certification pathway for cloud engineers",
+    "input": {
+      "input_text": "Design a 40-hour AI/ML certification pathway for cloud engineers transitioning to AI roles. Must cover ML fundamentals, model deployment, MLOps, and responsible AI.",
+      "audience": "Mid-level cloud engineers with Python experience",
+      "modality": "hybrid"
+    }
+  }
+]

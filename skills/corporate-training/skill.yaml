@@ -1,0 +1,39 @@
+name: corporate-training
+display_name: Corporate Training Designer
+description: >
+  Training program design using ecological psychology and instructional
+  design. Certification pathway development for cloud education.
+version: "1.0.0"
+category: specialized
+capabilities:
+  - curriculum-design
+  - learning-objectives
+  - assessment-design
+  - certification-pathways
+models:
+  primary: O-54
+  fallback: [C-OP46, G-PRO, C-SN46]
+  openai: gpt-5.4
+  anthropic: claude-opus-4.6
+  gemini: gemini-3.1-pro
+sk_hooks:
+  - SK-A11Y
+  - SK-DECOMP
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: Training requirements, content area, or existing materials to redesign
+    required: true
+  - name: audience
+    type: string
+    description: Target learner profile
+    required: false
+  - name: modality
+    type: string
+    description: Delivery format
+    required: false
+outputs:
+  - name: program
+    type: object
+    description: Training program with objectives, modules, assessments

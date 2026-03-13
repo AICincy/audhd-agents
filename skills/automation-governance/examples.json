@@ -1,0 +1,9 @@
+[
+  {
+    "description": "Audit a Zapier workflow that auto-posts to Slack",
+    "input": {
+      "input_text": "Zapier workflow: When new row in Google Sheet 'Incidents' -> format message -> post to #incidents Slack channel -> update sheet status to 'notified'",
+      "platform": "zapier"
+    }
+  }
+]

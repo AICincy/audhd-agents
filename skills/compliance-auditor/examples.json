@@ -1,0 +1,10 @@
+[
+  {
+    "description": "GDPR data processing audit",
+    "input": {
+      "input_text": "User data pipeline: collects email, name, usage analytics via SDK. Stored in US-East GCS bucket. No DPA with analytics vendor. Retention policy: indefinite.",
+      "framework": "GDPR",
+      "scope": "data processing and storage"
+    }
+  }
+]
