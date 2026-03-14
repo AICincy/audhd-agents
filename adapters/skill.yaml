@@ -1,0 +1,14 @@
+id: engineering-git-workflow-master
+name: Git Workflow Master
+description: Orchestrates complex Git workflows, branch lifecycle management, and performance-driven repository maintenance.
+version: 1.0.0
+tags:
+  - engineering
+  - git
+  - workflow
+  - devops
+models:
+  primary: O-CDX
+  fallback:
+    - C-OP46
+    - G-PRO

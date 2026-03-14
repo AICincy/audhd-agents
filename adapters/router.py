@@ -3,9 +3,8 @@
 import os
 import yaml
 import json
-import time
+import asyncio
 from pathlib import Path
-from typing import Optional
 
 try:
     from dotenv import load_dotenv
@@ -29,6 +28,7 @@ class SkillRouter:
             load_dotenv(override=True)
         else:
             import sys
+
             print(
                 "Warning: python-dotenv not installed. "
                 "Environment variables must be set manually. "
@@ -36,13 +36,29 @@ class SkillRouter:
                 file=sys.stderr,
             )
 
-        with open(config_path) as f:
+        with open(config_path, encoding="utf-8") as f:
             self.config = yaml.safe_load(f)
 
         self.adapters = {}
         self.adapter_init_errors = {}
+        self.skill_map = {}
+        self._build_skill_map()
         self._init_adapters()
         self.alias_map = self.config.get("alias_map", {})
+
+    def _build_skill_map(self):
+        """Build a map of skill_id to directory path for nested discovery."""
+        skill_root = Path("skills")
+        if not skill_root.exists():
+            return
+        for path in skill_root.rglob("skill.yaml"):
+            try:
+                with open(path, encoding="utf-8") as f:
+                    cfg = yaml.safe_load(f)
+                    if cfg and "id" in cfg:
+                        self.skill_map[cfg["id"]] = path.parent
+            except Exception:
+                continue
 
     def _init_adapters(self):
         """Initialize provider adapters from config with circuit breaker settings."""
@@ -58,17 +74,13 @@ class SkillRouter:
             cfg = providers["anthropic"]
             key = os.getenv(cfg.get("env_key", "ANTHROPIC_API_KEY"))
             if key:
-                self.adapters["anthropic"] = AnthropicAdapter(
-                    api_key=key, config=cfg
-                )
+                self.adapters["anthropic"] = AnthropicAdapter(api_key=key, config=cfg)
 
         if "openai" in providers:
             cfg = providers["openai"]
             key = os.getenv(cfg.get("env_key", "OPENAI_API_KEY"))
             if key:
-                self.adapters["openai"] = OpenAIAdapter(
-                    api_key=key, config=cfg
-                )
+                self.adapters["openai"] = OpenAIAdapter(api_key=key, config=cfg)
 
         if "google" in providers:
             cfg = providers["google"]
@@ -90,14 +102,24 @@ class SkillRouter:
         return None, alias
 
     def load_skill(self, skill_id: str) -> dict:
-        """Load skill configuration from skills directory."""
-        skill_dir = Path("skills") / skill_id
-        with open(skill_dir / "skill.yaml") as f:
+        """Load skill configuration from skills directory (Synchronous)."""
+        skill_dir = self.skill_map.get(skill_id)
+        if not skill_dir:
+            skill_dir = Path("skills") / skill_id
+
+        with open(skill_dir / "skill.yaml", encoding="utf-8") as f:
             skill_config = yaml.safe_load(f)
-        with open(skill_dir / "prompt.md") as f:
-            prompt = f.read()
-        with open(skill_dir / "schema.json") as f:
-            schema = json.load(f)
+
+        prompt_path = skill_dir / "prompt.md"
+        # Blocking I/O
+        prompt = prompt_path.read_text(encoding="utf-8") if prompt_path.exists() else ""
+
+        schema_path = skill_dir / "schema.json"
+        schema = {}
+        if schema_path.exists():
+            with open(schema_path, encoding="utf-8") as f:
+                schema = json.load(f)
+
         return {
             "config": skill_config,
             "prompt": prompt,
@@ -108,7 +130,35 @@ class SkillRouter:
         """Load PROFILE.md cognitive profile."""
         profile_path = Path("PROFILE.md")
         if profile_path.exists():
-            return profile_path.read_text()
+            return profile_path.read_text(encoding="utf-8")
+        return ""
+
+    def load_skills_md(self) -> str:
+        """Load SKILL.md cognitive support skills."""
+        skills_path = Path("SKILL.md")
+        if skills_path.exists():
+            return skills_path.read_text(encoding="utf-8")
+        return ""
+
+    def load_model_md(self, provider: str) -> str:
+        """Load provider-specific model instructions (e.g., models/OPENAI.md)."""
+        model_map = {
+            "openai": "models/OPENAI.md",
+            "anthropic": "models/ANTHROPIC.md",
+            "google": "models/GEMINI.md",
+        }
+        path_str = model_map.get(provider.lower())
+        if path_str:
+            path = Path(path_str)
+            if path.exists():
+                return path.read_text(encoding="utf-8")
+        return ""
+
+    def load_tool_md(self) -> str:
+        """Load TOOL.md global tool definitions."""
+        tool_path = Path("TOOL.md")
+        if tool_path.exists():
+            return tool_path.read_text(encoding="utf-8")
         return ""
 
     def get_status(self) -> dict:
@@ -120,7 +170,8 @@ class SkillRouter:
         """
         status = {}
         for name, adapter in self.adapters.items():
-            key_preview = adapter.api_key[:8] + "..." if adapter.api_key else None
+            api_key = getattr(adapter, "api_key", None)
+            key_preview = api_key[:8] + "..." if api_key else None
             status[name] = {
                 "connected": bool(getattr(adapter, "client", None)),
                 "key_prefix": key_preview,
@@ -158,10 +209,23 @@ class SkillRouter:
                 }
         return status
 
+    async def _load_instruction_stack(self, provider_name: str) -> str:
+        """Offload blocking I/O to a thread to keep the event loop responsive."""
+        loop = asyncio.get_running_loop()
+        profile = await loop.run_in_executor(None, self.load_profile_md)
+        model_md = await loop.run_in_executor(None, self.load_model_md, provider_name)
+        skills_md = await loop.run_in_executor(None, self.load_skills_md)
+        tool_md = await loop.run_in_executor(None, self.load_tool_md)
+
+        stack = [profile, model_md, skills_md, tool_md]
+        return "\n\n".join(filter(None, stack))
+
     async def execute(self, request: SkillRequest) -> SkillResponse:
         """Route and execute a skill request."""
-        skill = self.load_skill(request.skill_id)
-        profile_md = self.load_profile_md()
+        # Offload initial skill loading which involves multiple files
+        loop = asyncio.get_running_loop()
+        skill = await loop.run_in_executor(None, self.load_skill, request.skill_id)
+
         skill_config = skill["config"]
         prompt_md = skill["prompt"]
 
@@ -169,7 +233,7 @@ class SkillRouter:
         if request.model_override:
             model_chain = [request.model_override]
         else:
-            primary = skill_config.get("models", {}).get("primary", "C-OP46")
+            primary = skill_config.get("models", {}).get("primary", "G-PRO")
             fallback = skill_config.get("models", {}).get("fallback", [])
             model_chain = [primary] + fallback
 
@@ -185,12 +249,14 @@ class SkillRouter:
 
             adapter = self.adapters[provider_name]
             if not adapter.circuit_breaker.can_execute():
-                last_error = RuntimeError(
-                    f"Circuit breaker open for {provider_name}"
-                )
+                last_error = RuntimeError(f"Circuit breaker open for {provider_name}")
                 continue
 
-            system_prompt = adapter.build_system_prompt(prompt_md, profile_md)
+            # Non-blocking load of the rest of the stack
+            combined_instructions = await self._load_instruction_stack(provider_name)
+            system_prompt = adapter.build_system_prompt(
+                prompt_md, combined_instructions
+            )
             user_prompt = request.input_text
 
             try:
@@ -201,12 +267,24 @@ class SkillRouter:
                     **request.options,
                 )
 
+                # Safely parse JSON if possible
+                content = result.get("content", "").strip()
+                output = {"raw": content}
+
+                if content.startswith(("{", "[")):
+                    try:
+                        # Offload heavy JSON parsing for large responses (>10KB)
+                        if len(content) > 10000:
+                            output = await loop.run_in_executor(
+                                None, json.loads, content
+                            )
+                        else:
+                            output = json.loads(content)
+                    except json.JSONDecodeError:
+                        output = {"raw": content, "error": "JSON parse failed"}
+
                 return SkillResponse(
-                    output=(
-                        json.loads(result["content"])
-                        if result["content"].strip().startswith("{")
-                        else {"raw": result["content"]}
-                    ),
+                    output=output,
                     model_used=model_id,
                     provider=provider_name,
                     input_tokens=result["input_tokens"],

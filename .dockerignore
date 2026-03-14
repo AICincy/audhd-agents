@@ -1,0 +1,12 @@
+.git
+.github
+.vscode
+.env
+.env.*
+__pycache__/
+.pytest_cache/
+*.pyc
+*.pyo
+*.pyd
+dist/
+tests/

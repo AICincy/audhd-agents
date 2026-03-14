@@ -58,10 +58,18 @@ class GoogleAdapter(BaseAdapter):
 
         start = time.time()
         try:
+            thinking_budget = kwargs.get("thinking_budget")
+            thinking_config = None
+            if thinking_budget is not None and hasattr(types, "ThinkingConfig"):
+                thinking_config = types.ThinkingConfig(
+                    thinking_budget=thinking_budget
+                )
+
             config = types.GenerateContentConfig(
                 system_instruction=system_prompt,
                 temperature=kwargs.get("temperature", 0.0),
                 max_output_tokens=kwargs.get("max_tokens", 65536),
+                thinking_config=thinking_config,
             )
             response = await self.client.aio.models.generate_content(
                 model=model,

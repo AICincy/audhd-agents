@@ -184,13 +184,7 @@ def main():
             print(f"Error: Skill directory not found: {skill_dirs[0]}")
             sys.exit(1)
     else:
-        skill_dirs = sorted(
-            [
-                d
-                for d in SKILLS_DIR.iterdir()
-                if d.is_dir() and (d / "skill.yaml").exists()
-            ]
-        )
+        skill_dirs = sorted([p.parent for p in SKILLS_DIR.rglob("skill.yaml")])
 
     if not skill_dirs:
         print("No skills found. Add skill directories under skills/")

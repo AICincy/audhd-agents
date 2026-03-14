@@ -1,0 +1,160 @@
+name: Deploy Cloud Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_production:
+        description: "Promote the staging-tested image to production"
+        required: true
+        default: false
+        type: boolean
+  push:
+    tags:
+      - "v*"
+
+env:
+  IMAGE_NAME: audhd-agents-runtime
+  REQUIRED_PROVIDERS: openai,anthropic,google
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    outputs:
+      image_repo: ${{ steps.meta.outputs.image_repo }}
+      image_digest: ${{ steps.build.outputs.image_digest }}
+    steps:
+    - uses: actions/checkout@v4
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+        service_account: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT }}
+    - uses: google-github-actions/setup-gcloud@v2
+    - name: Configure Artifact Registry auth
+      run: |
+        gcloud auth configure-docker "${{ vars.GAR_LOCATION }}-docker.pkg.dev" --quiet
+    - id: meta
+      name: Set image repo metadata
+      run: |
+        echo "image_repo=${{ vars.GAR_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GAR_REPOSITORY }}/${{ env.IMAGE_NAME }}" >> "$GITHUB_OUTPUT"
+    - id: build
+      name: Build container image
+      run: |
+        IMAGE_URI="${{ steps.meta.outputs.image_repo }}:${GITHUB_SHA}"
+        gcloud builds submit --tag "$IMAGE_URI" .
+        DIGEST="$(gcloud artifacts docker images describe "$IMAGE_URI" --format='value(image_summary.digest)')"
+        echo "image_digest=$DIGEST" >> "$GITHUB_OUTPUT"
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build-image
+    outputs:
+      service_url: ${{ steps.describe.outputs.service_url }}
+    environment: staging
+    steps:
+    - uses: actions/checkout@v4
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+        service_account: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT }}
+    - uses: google-github-actions/setup-gcloud@v2
+    - name: Deploy staging service
+      run: |
+        gcloud run deploy "${{ vars.CLOUD_RUN_STAGING_SERVICE }}" \
+          --image "${{ needs.build-image.outputs.image_repo }}@${{ needs.build-image.outputs.image_digest }}" \
+          --project "${{ vars.GCP_PROJECT_ID }}" \
+          --region "${{ vars.GCP_REGION }}" \
+          --platform managed \
+          --service-account "${{ vars.CLOUD_RUN_RUNTIME_SERVICE_ACCOUNT }}" \
+          --no-allow-unauthenticated \
+          --min-instances 0 \
+          --max-instances 10 \
+          --concurrency 4 \
+          --timeout 300 \
+          --memory 1Gi \
+          --set-env-vars "APP_ENV=staging,LOG_LEVEL=INFO,REQUIRED_PROVIDERS=${{ env.REQUIRED_PROVIDERS }},GOOGLE_GENAI_USE_VERTEXAI=true,GOOGLE_CLOUD_PROJECT=${{ vars.GCP_PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ vars.GCP_REGION }}" \
+          --set-secrets "OPENAI_API_KEY=OPENAI_API_KEY:latest,ANTHROPIC_API_KEY=ANTHROPIC_API_KEY:latest,VERTEX_API_KEY=VERTEX_API_KEY:latest"
+    - id: describe
+      name: Capture staging URL
+      run: |
+        SERVICE_URL="$(gcloud run services describe "${{ vars.CLOUD_RUN_STAGING_SERVICE }}" --project "${{ vars.GCP_PROJECT_ID }}" --region "${{ vars.GCP_REGION }}" --format='value(status.url)')"
+        echo "service_url=$SERVICE_URL" >> "$GITHUB_OUTPUT"
+
+  smoke-staging:
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    steps:
+    - uses: actions/checkout@v4
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+        service_account: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT }}
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+    - name: Issue identity token
+      run: |
+        echo "SERVICE_AUTH_TOKEN=$(gcloud auth print-identity-token)" >> "$GITHUB_ENV"
+    - name: Smoke-test staging
+      run: |
+        python scripts/smoke_runtime.py --base-url "${{ needs.deploy-staging.outputs.service_url }}"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [build-image, smoke-staging]
+    if: github.event_name == 'push' || github.event.inputs.deploy_production == 'true'
+    environment: production
+    outputs:
+      service_url: ${{ steps.describe.outputs.service_url }}
+    steps:
+    - uses: actions/checkout@v4
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+        service_account: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT }}
+    - uses: google-github-actions/setup-gcloud@v2
+    - name: Deploy production service
+      run: |
+        gcloud run deploy "${{ vars.CLOUD_RUN_PRODUCTION_SERVICE }}" \
+          --image "${{ needs.build-image.outputs.image_repo }}@${{ needs.build-image.outputs.image_digest }}" \
+          --project "${{ vars.GCP_PROJECT_ID }}" \
+          --region "${{ vars.GCP_REGION }}" \
+          --platform managed \
+          --service-account "${{ vars.CLOUD_RUN_RUNTIME_SERVICE_ACCOUNT }}" \
+          --no-allow-unauthenticated \
+          --min-instances 1 \
+          --max-instances 10 \
+          --concurrency 4 \
+          --timeout 300 \
+          --memory 1Gi \
+          --set-env-vars "APP_ENV=production,LOG_LEVEL=INFO,REQUIRED_PROVIDERS=${{ env.REQUIRED_PROVIDERS }},GOOGLE_GENAI_USE_VERTEXAI=true,GOOGLE_CLOUD_PROJECT=${{ vars.GCP_PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ vars.GCP_REGION }}" \
+          --set-secrets "OPENAI_API_KEY=OPENAI_API_KEY:latest,ANTHROPIC_API_KEY=ANTHROPIC_API_KEY:latest,VERTEX_API_KEY=VERTEX_API_KEY:latest"
+    - id: describe
+      name: Capture production URL
+      run: |
+        SERVICE_URL="$(gcloud run services describe "${{ vars.CLOUD_RUN_PRODUCTION_SERVICE }}" --project "${{ vars.GCP_PROJECT_ID }}" --region "${{ vars.GCP_REGION }}" --format='value(status.url)')"
+        echo "service_url=$SERVICE_URL" >> "$GITHUB_OUTPUT"
+
+  smoke-production:
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: github.event_name == 'push' || github.event.inputs.deploy_production == 'true'
+    steps:
+    - uses: actions/checkout@v4
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+        service_account: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT }}
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+    - name: Issue identity token
+      run: |
+        echo "SERVICE_AUTH_TOKEN=$(gcloud auth print-identity-token)" >> "$GITHUB_ENV"
+    - name: Smoke-test production
+      run: |
+        python scripts/smoke_runtime.py --base-url "${{ needs.deploy-production.outputs.service_url }}"

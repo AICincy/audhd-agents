@@ -31,7 +31,7 @@ audhd-agents/
 │   ├── anthropic_adapter.py    # Claude adapter
 │   ├── openai_adapter.py       # OpenAI adapter
 │   └── google_adapter.py       # Gemini / Vertex adapter
-├── runtime/                    # Router, planner, executor (Beta Pro)
+├── runtime/                    # Private FastAPI operator runtime
 ├── dist/                       # Generated per-LLM manifests
 ├── .vscode/                    # VS Code configuration
 └── build.py                    # Master build script
@@ -83,13 +83,49 @@ Run `python build.py` to generate `dist/` manifests for each LLM.
 3. `cp .env.example .env` and fill in your API keys
 4. `pip install -r requirements.txt`
 5. `python build.py` to generate LLM-specific files in `dist/`
-6. Deploy generated manifests to respective platforms
+6. Run config diagnostics: `python scripts/check_connections.py --mode config`
+7. Run live diagnostics before release: `python scripts/check_connections.py --mode live`
+8. Build manifests: `python build.py`
 
 For Google, the repo supports both:
 
 - Gemini Developer API via `GOOGLE_API_KEY`
 - Vertex AI Express Mode via `GOOGLE_GENAI_USE_VERTEXAI=true` and `VERTEX_API_KEY`
 - Vertex AI standard auth via `GOOGLE_GENAI_USE_VERTEXAI=true` plus `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, and either `GOOGLE_APPLICATION_CREDENTIALS`, `VERTEX_SERVICE_ACCOUNT_FILE`, or inline `VERTEX_SERVICE_ACCOUNT`
+
+## Private Runtime
+
+The production target is a private operator service built with FastAPI.
+
+- `GET /healthz`: process health only
+- `GET /readyz`: router, required provider, and skill preload readiness
+- `POST /execute`: authenticated skill execution
+
+Run it locally:
+
+```bash
+uvicorn runtime.app:app --host 0.0.0.0 --port 8080
+```
+
+Runtime env contract:
+
+- `APP_ENV=staging|production`
+- `REQUIRED_PROVIDERS=openai,anthropic,google`
+- `LOG_LEVEL=INFO|DEBUG|WARNING`
+
+`/readyz` is configuration-only. It does not make live provider calls. Use `python scripts/check_connections.py --mode live` for the release gate.
+
+## Production Delivery
+
+Cloud Run is the first production target.
+
+- Private authenticated service only
+- Secret Manager for provider credentials
+- GitHub Actions deploys via Workload Identity Federation
+- Staging deploy plus smoke test before production promotion
+- Production reuses the same image digest as staging
+
+See [infra/cloudrun/README.md](infra/cloudrun/README.md) for required GitHub variables, secrets, and the runtime defaults encoded in the deploy workflow.
 
 ## Loading Order (All Models)
 

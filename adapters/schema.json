@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "repo_path": {
+      "type": "string",
+      "description": "Absolute path to the local git repository."
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "rebase",
+        "merge",
+        "prune",
+        "audit",
+        "cleanup"
+      ],
+      "description": "The primary git operation to perform."
+    },
+    "target_branch": {
+      "type": "string",
+      "description": "The branch involved in the operation (e.g., 'main' or 'feature/x')."
+    },
+    "context_logs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Paths to performance monitoring logs (perfmon) to correlate with repo activity."
+    }
+  },
+  "required": [
+    "repo_path",
+    "action"
+  ]
+}

@@ -8,8 +8,8 @@ Loaded on first tool invocation. Defines what each tool does, when to use it, an
 
 | Category | Tools | Primary Models |
 | --- | --- | --- |
-| Search and Research | Web search, workspace search, document retrieval | G-PRO, C-OP46 |
-| Code Execution | Code interpreter, script runner, environment tools | O-CDX |
+| Search and Research | Web search, WHOIS, DNS scan, document retrieval | G-PRO, C-OP46 |
+| Code Execution | Code interpreter, filesystem tools, git operations | O-CDX |
 | Document Operations | Read, write, edit, create pages and databases | C-SN46, C-OP46 |
 | Communication | Draft emails, messages, stakeholder comms | O-54, C-OP46 |
 | Analysis | Data extraction, comparison, synthesis | C-OP46, G-PRO |
