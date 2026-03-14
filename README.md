@@ -9,32 +9,36 @@ Built by neurodivergent engineers for neurodivergent engineers.
 ```
 audhd-agents/
 ├── PROFILE.md                    # Cognitive profile + constraints
-├── AGENT.md                    # Swarm orchestration + routing
-├── TOOL.md                     # Tool contracts + errors
-├── SKILL.md                    # Cognitive skills (SK-*)
+├── AGENT.md                      # Swarm orchestration + routing
+├── TOOL.md                       # Tool contracts + errors
+├── SKILL.md                      # Cognitive skills (SK-*)
 ├── models/
-│   ├── CLAUDE.md               # Claude instructions
-│   ├── GEMINI.md               # Gemini instructions
-│   └── OPENAI.md               # GPT instructions
-├── capabilities/               # Capability definitions
-├── skills/                     # Skill definitions
+│   ├── ANTHROPIC.md              # Anthropic adapter instructions
+│   ├── CLAUDE.md                 # Claude instructions
+│   ├── GEMINI.md                 # Gemini instructions
+│   └── OPENAI.md                 # GPT instructions
+├── capabilities/                 # Capability definitions
+├── skills/                       # Skill definitions
 │   └── {skill-name}/
-│       ├── skill.yaml          # Definition
-│       ├── prompt.md           # Prompt
-│       ├── schema.json         # Schema
-│       └── examples.json       # Tests
-├── graphs/                     # Capability chaining
-├── agents/                     # Agent compositions
+│       ├── skill.yaml            # Definition
+│       ├── prompt.md             # Prompt
+│       ├── schema.json           # Schema
+│       └── examples.json         # Tests
+├── graphs/                       # Capability chaining
+├── agents/                       # Agent compositions
 ├── adapters/
-│   ├── config.yaml             # Provider config
-│   ├── router.py               # Router with failover
-│   ├── anthropic_adapter.py    # Claude adapter
-│   ├── openai_adapter.py       # OpenAI adapter
-│   └── google_adapter.py       # Gemini adapter
-├── runtime/                    # FastAPI runtime
-├── dist/                       # Generated manifests
-├── .vscode/                    # VS Code config
-└── build.py                    # Build script
+│   ├── skill.yaml                # Adapter layer skill definition
+│   ├── schema.json               # Adapter invocation schema
+│   ├── config.yaml               # Provider config
+│   ├── router.py                 # Router with failover
+│   ├── anthropic_adapter.py      # Claude adapter
+│   ├── openai_adapter.py         # OpenAI adapter
+│   └── google_adapter.py         # Gemini adapter
+├── runtime/                      # FastAPI runtime
+├── scripts/                      # Build and diagnostics
+├── dist/                         # Generated manifests
+├── .vscode/                      # VS Code config
+└── build.py                      # Build script
 ```
 
 ## Models (11)
@@ -124,7 +128,7 @@ Deployed to Cloud Run.
 - Staging deploy and smoke test before production
 - Production reuses staging image digest
 
-See [infra/cloudrun/README.md](https://github.com/AICincy/audhd-agents/blob/main/infra/cloudrun/README.md) for GitHub variables, secrets, and runtime defaults.
+See [infra/cloudrun/README.md](infra/cloudrun/README.md) for GitHub variables, secrets, and runtime defaults.
 
 ## Loading Order (All Models)
 
@@ -135,4 +139,4 @@ See [infra/cloudrun/README.md](https://github.com/AICincy/audhd-agents/blob/main
 
 ## Contributing
 
-Contributions welcome, especially from neurodivergent developers. Fork [PROFILE.md](http://PROFILE.md) and adapt it to your patterns.
+Contributions welcome, especially from neurodivergent developers. Fork [PROFILE.md](PROFILE.md) and adapt it to your patterns.

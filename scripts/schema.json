@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "enum": ["build", "check_connections"],
+      "description": "Script command to execute."
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["config", "live"],
+      "description": "Diagnostics mode. Required when command is check_connections."
+    },
+    "skills_dir": {
+      "type": "string",
+      "default": "skills",
+      "description": "Path to skills directory."
+    },
+    "output_dir": {
+      "type": "string",
+      "default": "dist",
+      "description": "Path to output directory for build artifacts."
+    }
+  },
+  "required": ["command"]
+}

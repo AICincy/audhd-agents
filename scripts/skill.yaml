@@ -1,0 +1,32 @@
+id: engineering-build-scripts
+name: Build and Diagnostics Scripts
+description: Build system and diagnostic scripts for generating dist/ manifests and checking provider connections.
+version: 1.0.0
+tags:
+  - engineering
+  - build
+  - diagnostics
+  - scripts
+models:
+  primary: O-CDX
+  fallback:
+    - C-SN46
+capabilities:
+  primary: generate
+  secondary: evaluate
+inputs:
+  - name: command
+    type: string
+    required: true
+    description: "Script command to execute (build, check_connections)."
+  - name: mode
+    type: string
+    required: false
+    description: "For check_connections: config (offline) or live (API calls)."
+outputs:
+  - name: result
+    type: object
+    description: "Script execution result with exit code and output."
+  - name: artifacts
+    type: array
+    description: "List of generated files (for build command)."

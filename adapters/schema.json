@@ -2,35 +2,47 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "repo_path": {
+    "provider": {
       "type": "string",
-      "description": "Absolute path to the local git repository."
+      "enum": ["anthropic", "openai", "google"],
+      "description": "Target LLM provider."
     },
-    "action": {
+    "model_id": {
       "type": "string",
-      "enum": [
-        "rebase",
-        "merge",
-        "prune",
-        "audit",
-        "cleanup"
-      ],
-      "description": "The primary git operation to perform."
+      "description": "Model identifier from agent registry (e.g., C-OP46, G-PRO, O-54)."
     },
-    "target_branch": {
-      "type": "string",
-      "description": "The branch involved in the operation (e.g., 'main' or 'feature/x')."
-    },
-    "context_logs": {
-      "type": "array",
-      "items": {
-        "type": "string"
+    "payload": {
+      "type": "object",
+      "description": "Provider-normalized request payload.",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": { "type": "string", "enum": ["system", "user", "assistant"] },
+              "content": { "type": "string" }
+            },
+            "required": ["role", "content"]
+          }
+        },
+        "max_tokens": { "type": "integer", "minimum": 1 },
+        "temperature": { "type": "number", "minimum": 0, "maximum": 2 }
       },
-      "description": "Paths to performance monitoring logs (perfmon) to correlate with repo activity."
+      "required": ["messages"]
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "timeout_ms": { "type": "integer", "default": 60000 },
+        "retry_count": { "type": "integer", "default": 3 },
+        "fallback_chain": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered list of fallback model IDs."
+        }
+      }
     }
   },
-  "required": [
-    "repo_path",
-    "action"
-  ]
+  "required": ["provider", "model_id", "payload"]
 }

@@ -9,7 +9,7 @@ from pathlib import Path
 
 VALID_APP_ENVS = {"staging", "production"}
 VALID_LOG_LEVELS = {"DEBUG", "INFO", "WARNING", "ERROR"}
-DEFAULT_REQUIRED_PROVIDERS = ("google",)
+DEFAULT_REQUIRED_PROVIDERS = ("openai", "anthropic", "google")
 
 
 @dataclass(frozen=True)
@@ -37,7 +37,7 @@ class RuntimeSettings:
                 f"LOG_LEVEL must be one of {sorted(VALID_LOG_LEVELS)}, got: {log_level!r}"
             )
 
-        raw_required = ",".join(
+        raw_required = os.getenv("REQUIRED_PROVIDERS") or ",".join(
             DEFAULT_REQUIRED_PROVIDERS
         )
         required_providers = tuple(
