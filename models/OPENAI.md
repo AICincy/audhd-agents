@@ -67,7 +67,7 @@ Architecture synthesis, escalation review, audit reasoning, prioritization, and 
 
 - Architecture and system design tradeoffs
 - Audit, governance, or compliance synthesis
-- Cross-skill planning and orchestration decisions
+- Cross-skill planning and orchestration decisions (SK-SYS-AUDIT)
 - Escalation reviews where multiple candidate paths exist
 - Executive-level prioritization and decision memos
 
@@ -146,7 +146,7 @@ Fast structured checking, quantitative reasoning, benchmark review, test-result 
 - Structured QA passes and verification scorecards
 - Test result analysis and regression triage
 - Numeric sanity checks and compact reasoning chains
-- Time-boxed evaluations where speed matters more than prose richness
+- Time-boxed evaluations and log parsing (SK-SYS-AUDIT)
 
 ### O-O4M Cognitive Support Function
 

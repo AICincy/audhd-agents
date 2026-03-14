@@ -24,6 +24,8 @@ These skills are not tasks. They are cognitive augmentation patterns designed fo
 | SK-BRIDGE | Context Bridge | Handoff between agents or sessions | Generate handoff block with full context preservation |
 | SK-CODEREVIEW | Code Review | PR, diff, patch, or implementation needs review | Severity-ordered findings with file refs, impact, and suggested fixes |
 | SK-NUDGE | Behavioral Nudge | Task paralysis, overwhelming queue, low activation | Surface single critical item, micro-sprint framing, opt-out completion |
+| SK-SYS-AUDIT | System API Audit | API call density > 20/min or CPU > 80% | Analyze log correlation IDs to identify leaking agents or infinite loops |
+| SK-SYS-RECOVER | Resource Recovery | OOM threat or high RAM residency | Force connection reaping, reduce gRPC session caps, or throttle specific skill IDs |
 | SK-A11Y | Accessibility Gate | UI/UX output, content for public consumption, design decisions | WCAG 2.2 check, POUR principles, assistive tech considerations |
 
 ---
@@ -360,3 +362,33 @@ Severity levels: CRITICAL (blocks release), HIGH (must fix before merge), MEDIUM
 - Do not call something safe if you did not inspect the risky path.
 - If no findings: say so explicitly and note remaining testing gaps or uncertainty.
 - Prefer concrete findings over speculative commentary.
+
+---
+
+## SK-SYS-AUDIT: System API Audit
+
+### SK-SYS-AUDIT When to Activate
+- Triggered autonomously when `server.js` logs `RESOURCE_STRAIN` or Heap > 800MB.
+- Triggered periodically by the Orchestrator to verify "infinite" call behavior.
+
+### SK-SYS-AUDIT Output Format
+```text
+AUDIT REPORT: [Timestamp]
+HOT_SKILLS: [List of skills generating highest load]
+TRACE_CORRELATION: [Correlation ID mapping to resource spikes]
+STATUS: [OPTIMAL | RESOURCE_STRAIN | LEAK_DETECTED]
+ACTION: [Recommendation for SK-SYS-RECOVER]
+```
+
+---
+
+## SK-SYS-RECOVER: Resource Recovery
+
+### SK-SYS-RECOVER When to Activate
+- Verdict from SK-SYS-AUDIT requires immediate intervention.
+- Manual override by Operator during "lockup" events.
+
+### SK-SYS-RECOVER Rules
+- Reduce `maxSessionMemory` in 128MB increments.
+- Reduce `sessionIdleTimeout` to 30s.
+- Injects "BACKOFF" headers to authenticated skill callers.

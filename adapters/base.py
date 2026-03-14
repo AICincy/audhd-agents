@@ -9,6 +9,7 @@ import time
 @dataclass
 class SkillRequest:
     """Incoming skill execution request."""
+
     skill_id: str
     input_text: str
     options: dict = field(default_factory=dict)
@@ -18,18 +19,21 @@ class SkillRequest:
 @dataclass
 class SkillResponse:
     """Skill execution response."""
+
     output: dict
     model_used: str
     provider: str
     input_tokens: int = 0
     output_tokens: int = 0
     latency_ms: int = 0
+    headers: dict = field(default_factory=dict)
     cached: bool = False
 
 
 @dataclass
 class CostRecord:
     """Cost tracking record (optional logging only)."""
+
     timestamp: str
     skill_id: str
     model: str
@@ -82,13 +86,13 @@ class BaseAdapter(ABC):
         )
 
     @abstractmethod
-    async def execute(self, model: str, system_prompt: str,
-                      user_prompt: str, **kwargs) -> dict:
+    async def execute(
+        self, model: str, system_prompt: str, user_prompt: str, **kwargs
+    ) -> dict:
         """Execute a prompt against the provider."""
         ...
 
     @abstractmethod
-    def build_system_prompt(self, skill_prompt: str,
-                            profile_md: str) -> str:
+    def build_system_prompt(self, skill_prompt: str, profile_md: str) -> str:
         """Build provider-specific system prompt from skill prompt + PROFILE.md."""
         ...

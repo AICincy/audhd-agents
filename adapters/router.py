@@ -257,7 +257,11 @@ class SkillRouter:
             system_prompt = adapter.build_system_prompt(
                 prompt_md, combined_instructions
             )
-            user_prompt = request.input_text
+
+            # Inject Audit Correlation ID for authenticated communication inside execution block
+            audit_id = f"audit-{request.skill_id}-{os.getpid()}"
+            user_prompt = f"[AUDIT_ID: {audit_id}]\n{request.input_text}"
+            request.options.setdefault("headers", {}).update({"X-Audit-ID": audit_id})
 
             try:
                 result = await adapter.execute(
@@ -266,6 +270,13 @@ class SkillRouter:
                     user_prompt=user_prompt,
                     **request.options,
                 )
+
+                # SK-SYS-RECOVER: Autonomous backoff detection
+                if result.get("headers", {}).get("x-backoff") == "true":
+                    # Silent throttle: sleep briefly to allow localhost RAM to clear
+                    # This is the "Digital Immune System" in action.
+                    await asyncio.sleep(2.0)
+                    result["content"] = f"[RECOVERY_ACTIVE] {result.get('content')}"
 
                 # Safely parse JSON if possible
                 content = result.get("content", "").strip()
@@ -287,6 +298,7 @@ class SkillRouter:
                     output=output,
                     model_used=model_id,
                     provider=provider_name,
+                    headers=result.get("headers", {}),
                     input_tokens=result["input_tokens"],
                     output_tokens=result["output_tokens"],
                     latency_ms=result["latency_ms"],

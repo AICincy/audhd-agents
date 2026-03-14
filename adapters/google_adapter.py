@@ -49,8 +49,9 @@ class GoogleAdapter(BaseAdapter):
         except Exception as exc:
             self.init_error = str(exc)
 
-    async def execute(self, model: str, system_prompt: str,
-                      user_prompt: str, **kwargs) -> dict:
+    async def execute(
+        self, model: str, system_prompt: str, user_prompt: str, **kwargs
+    ) -> dict:
         if not self.client or not types:
             raise RuntimeError(self.init_error or "Google client not initialized")
         if not self.circuit_breaker.can_execute():
@@ -61,9 +62,7 @@ class GoogleAdapter(BaseAdapter):
             thinking_budget = kwargs.get("thinking_budget")
             thinking_config = None
             if thinking_budget is not None and hasattr(types, "ThinkingConfig"):
-                thinking_config = types.ThinkingConfig(
-                    thinking_budget=thinking_budget
-                )
+                thinking_config = types.ThinkingConfig(thinking_budget=thinking_budget)
 
             config = types.GenerateContentConfig(
                 system_instruction=system_prompt,
@@ -82,8 +81,8 @@ class GoogleAdapter(BaseAdapter):
             usage = getattr(response, "usage_metadata", None)
             input_tokens = getattr(usage, "prompt_token_count", 0) if usage else 0
             output_tokens = (
-                getattr(usage, "candidates_token_count", 0) or 0
-            ) if usage else 0
+                (getattr(usage, "candidates_token_count", 0) or 0) if usage else 0
+            )
 
             return {
                 "content": self._extract_text(response),
@@ -91,6 +90,7 @@ class GoogleAdapter(BaseAdapter):
                 "input_tokens": input_tokens,
                 "output_tokens": output_tokens,
                 "latency_ms": latency,
+                "headers": getattr(response, "headers", {}),
             }
         except Exception:
             self.circuit_breaker.record_failure()
@@ -99,13 +99,11 @@ class GoogleAdapter(BaseAdapter):
     def build_system_prompt(self, skill_prompt: str, profile_md: str) -> str:
         return f"{profile_md}\n\n---\n\n{skill_prompt}"
 
-    def estimate_cost(self, input_tokens: int,
-                      output_tokens: int, model: str) -> float:
+    def estimate_cost(self, input_tokens: int, output_tokens: int, model: str) -> float:
         rates = self.config.get("models", {}).get(model, {})
         input_rate = rates.get("cost_per_1k_input", 0.00125)
         output_rate = rates.get("cost_per_1k_output", 0.005)
-        return (input_tokens / 1000 * input_rate) + \
-               (output_tokens / 1000 * output_rate)
+        return (input_tokens / 1000 * input_rate) + (output_tokens / 1000 * output_rate)
 
     @classmethod
     def has_configuration(cls, config: dict) -> bool:
@@ -126,7 +124,9 @@ class GoogleAdapter(BaseAdapter):
 
     def _should_use_vertex(self) -> bool:
         """Decide whether to route Google calls through Vertex AI."""
-        mode_env = os.getenv(self.config.get("vertex_mode_env", "GOOGLE_GENAI_USE_VERTEXAI"))
+        mode_env = os.getenv(
+            self.config.get("vertex_mode_env", "GOOGLE_GENAI_USE_VERTEXAI")
+        )
         if mode_env is not None and mode_env.strip():
             return mode_env.strip().lower() in {"1", "true", "yes", "on"}
 
@@ -178,14 +178,12 @@ class GoogleAdapter(BaseAdapter):
             )
 
         credentials = self._load_vertex_credentials()
-        self.project = (
-            os.getenv(self.config.get("vertex_project_env", "GOOGLE_CLOUD_PROJECT"))
-            or os.getenv(self.config.get("project_id_env", "GOOGLE_PROJECT_ID"))
-        )
-        self.location = (
-            os.getenv(self.config.get("vertex_location_env", "GOOGLE_CLOUD_LOCATION"))
-            or self.config.get("vertex_default_location", "global")
-        )
+        self.project = os.getenv(
+            self.config.get("vertex_project_env", "GOOGLE_CLOUD_PROJECT")
+        ) or os.getenv(self.config.get("project_id_env", "GOOGLE_PROJECT_ID"))
+        self.location = os.getenv(
+            self.config.get("vertex_location_env", "GOOGLE_CLOUD_LOCATION")
+        ) or self.config.get("vertex_default_location", "global")
 
         if not self.project:
             raise RuntimeError(
@@ -211,15 +209,14 @@ class GoogleAdapter(BaseAdapter):
         if self.vertex_api_key:
             return None
 
-        file_env = (
-            os.getenv(
-                self.config.get("vertex_service_account_file_env", "VERTEX_SERVICE_ACCOUNT_FILE")
+        file_env = os.getenv(
+            self.config.get(
+                "vertex_service_account_file_env", "VERTEX_SERVICE_ACCOUNT_FILE"
             )
-            or os.getenv(
-                self.config.get(
-                    "google_application_credentials_env",
-                    "GOOGLE_APPLICATION_CREDENTIALS",
-                )
+        ) or os.getenv(
+            self.config.get(
+                "google_application_credentials_env",
+                "GOOGLE_APPLICATION_CREDENTIALS",
             )
         )
         inline_env = os.getenv(
