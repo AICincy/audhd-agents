@@ -55,24 +55,24 @@ audhd-agents/
 
 ## Cognitive Design Principles
 
-Matches AuDHD cognitive patterns:
+Designed to match AuDHD cognitive patterns:
 
 - **Monotropism:** Single-thread control. Autonomous handoffs via orchestrator only.
 - **Pattern compression:** Verdict first, structure second.
 - **Asymmetric working memory:** Maps over turn-by-turn. Full view before sequencing.
-- **Interest-based activation:** Micro-sprints, momentum tracking, smallest first actions.
-- **Executive function offload:** Agents infer and execute. Questions last resort.
+- **Interest-based activation:** Micro-sprints, momentum tracking, smallest-first actions.
+- **Executive function offload:** Agents infer and execute. Questions are a last resort.
 
 ## Skill System (AIO)
 
-Each skill has a canonical definition building to 3 LLM formats:
+Each skill has a canonical definition that builds to 3 LLM formats:
 
 - **skill.yaml**: Name, description, capabilities, inputs, outputs, mappings
 - **prompt.md**: Prompt logic with goal, rules, workflow, output
 - **schema.json**: Schema for validation
 - **examples.json**: Test invocations
 
-51 skills across engineering, design, testing, PM, marketing, specialized domains.
+51 skills across engineering, design, testing, PM, marketing, and specialized domains.
 
 Run `python build.py` to generate `dist/` manifests.
 
@@ -85,7 +85,6 @@ Run `python build.py` to generate `dist/` manifests.
 5. `python build.py` to generate `dist/` files
 6. Config diagnostics: `python scripts/check_connections.py --mode config`
 7. Live diagnostics: `python scripts/check_connections.py --mode live`
-8. Build manifests: `python build.py`
 
 Google support:
 
@@ -95,11 +94,11 @@ Google support:
 
 ## Private Runtime
 
-Production runs on FastAPI service.
+Production runs on a FastAPI service.
 
-- `GET /healthz`: process health
-- `GET /readyz`: router, provider, skill readiness
-- `POST /execute`: authenticated skill execution
+- `GET /healthz`: Process health
+- `GET /readyz`: Router, provider, skill readiness
+- `POST /execute`: Authenticated skill execution
 
 Run locally:
 
@@ -107,25 +106,25 @@ Run locally:
 uvicorn runtime.app:app --host 0.0.0.0 --port 8080
 ```
 
-Runtime env:
+Runtime environment variables:
 
 - `APP_ENV=staging|production`
 - `REQUIRED_PROVIDERS=openai,anthropic,google`
 - `LOG_LEVEL=INFO|DEBUG|WARNING`
 
-`/readyz` checks config only. Use `python scripts/check_connections.py --mode live` for release gate.
+`/readyz` checks config only. Use `python scripts/check_connections.py --mode live` as a release gate.
 
 ## Production Delivery
 
-Cloud Run production target.
+Deployed to Cloud Run.
 
 - Private authenticated service
 - Secret Manager for credentials
 - GitHub Actions deploys via Workload Identity
-- Staging deploy + smoke test before production
+- Staging deploy and smoke test before production
 - Production reuses staging image digest
 
-See [infra/cloudrun/README.md](https://github.com/AICincy/audhd-agents/blob/main/infra/cloudrun/README.md) for GitHub variables, secrets, runtime defaults.
+See [infra/cloudrun/README.md](https://github.com/AICincy/audhd-agents/blob/main/infra/cloudrun/README.md) for GitHub variables, secrets, and runtime defaults.
 
 ## Loading Order (All Models)
 
@@ -136,4 +135,4 @@ See [infra/cloudrun/README.md](https://github.com/AICincy/audhd-agents/blob/main
 
 ## Contributing
 
-Contributions welcome, especially from neurodivergent developers. Fork [PROFILE.md](http://PROFILE.md) and adapt to your patterns.
+Contributions welcome, especially from neurodivergent developers. Fork [PROFILE.md](http://PROFILE.md) and adapt it to your patterns.
