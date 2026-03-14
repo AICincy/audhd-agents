@@ -1,45 +1,45 @@
 # AUDHD Cognitive Swarm Protocol
 
-Multi-agent orchestration system designed for AuDHD cognition. Orchestrator-managed topology with 11 models, skill-based cognitive augmentation, and LLM-specific deployment adapters.
+Multi-agent orchestration for AuDHD cognition. 11 models, skill-based augmentation, LLM-specific adapters.
 
-Built by and for neurodivergent engineers who need AI systems that work *with* their cognitive architecture instead of against it.
+Built by neurodivergent engineers for neurodivergent engineers.
 
 ## Architecture
 
-```text
+```
 audhd-agents/
-├── PROFILE.md                    # Cognitive profile + universal constraints
-├── AGENT.md                    # Swarm orchestration + routing matrix
-├── TOOL.md                     # Tool contracts + error classification
-├── SKILL.md                    # Cognitive support skills (SK-*)
+├── PROFILE.md                    # Cognitive profile + constraints
+├── AGENT.md                    # Swarm orchestration + routing
+├── TOOL.md                     # Tool contracts + errors
+├── SKILL.md                    # Cognitive skills (SK-*)
 ├── models/
-│   ├── CLAUDE.md               # Claude Opus/Sonnet instructions
-│   ├── GEMINI.md               # Gemini 2.5 Pro / Vertex instructions
-│   └── OPENAI.md               # GPT-5 / Codex / Max instructions
-├── capabilities/               # Atomic capability definitions (Beta Pro)
-├── skills/                     # AIO canonical skill definitions
+│   ├── CLAUDE.md               # Claude instructions
+│   ├── GEMINI.md               # Gemini instructions
+│   └── OPENAI.md               # GPT instructions
+├── capabilities/               # Capability definitions
+├── skills/                     # Skill definitions
 │   └── {skill-name}/
-│       ├── skill.yaml          # Canonical definition
-│       ├── prompt.md           # Prompt logic
-│       ├── schema.json         # Function schema
-│       └── examples.json       # Test invocations
-├── graphs/                     # Capability chaining (Beta Pro)
-├── agents/                     # Agent compositions (Beta Pro)
+│       ├── skill.yaml          # Definition
+│       ├── prompt.md           # Prompt
+│       ├── schema.json         # Schema
+│       └── examples.json       # Tests
+├── graphs/                     # Capability chaining
+├── agents/                     # Agent compositions
 ├── adapters/
-│   ├── config.yaml             # Provider config + model routing
-│   ├── router.py               # Skill-to-model router with failover
+│   ├── config.yaml             # Provider config
+│   ├── router.py               # Router with failover
 │   ├── anthropic_adapter.py    # Claude adapter
 │   ├── openai_adapter.py       # OpenAI adapter
-│   └── google_adapter.py       # Gemini / Vertex adapter
-├── runtime/                    # Private FastAPI operator runtime
-├── dist/                       # Generated per-LLM manifests
-├── .vscode/                    # VS Code configuration
-└── build.py                    # Master build script
+│   └── google_adapter.py       # Gemini adapter
+├── runtime/                    # FastAPI runtime
+├── dist/                       # Generated manifests
+├── .vscode/                    # VS Code config
+└── build.py                    # Build script
 ```
 
 ## Models (11)
 
-| ID | Model | Role |
+| **ID** | **Model** | **Role** |
 | --- | --- | --- |
 | C-OP46 | Claude Opus 4.6 | Deep Analyst (Primary) |
 | C-OP45 | Claude Opus 4.5 | Deep Analyst (Fallback) |
@@ -55,89 +55,85 @@ audhd-agents/
 
 ## Cognitive Design Principles
 
-This system is built around AuDHD cognitive patterns:
+Matches AuDHD cognitive patterns:
 
-- **Monotropism:** Single-thread control at the user boundary. Autonomous handoffs are allowed only through orchestrator-managed state relay.
-- **Pattern compression:** Verdict first, supporting structure second.
-- **Asymmetric working memory:** Maps over turn-by-turn. Full system view before sequencing.
-- **Interest-based activation:** Micro-sprints, momentum tracking, smallest-possible first actions.
-- **Executive function offload:** Agents infer and execute. Questions are a last resort.
+- **Monotropism:** Single-thread control. Autonomous handoffs via orchestrator only.
+- **Pattern compression:** Verdict first, structure second.
+- **Asymmetric working memory:** Maps over turn-by-turn. Full view before sequencing.
+- **Interest-based activation:** Micro-sprints, momentum tracking, smallest first actions.
+- **Executive function offload:** Agents infer and execute. Questions last resort.
 
 ## Skill System (AIO)
 
-Each skill is a canonical definition that builds to all 3 LLM formats:
+Each skill has a canonical definition building to 3 LLM formats:
 
-- **skill.yaml**: Name, description, capabilities, inputs, outputs, model mappings
-- **prompt.md**: Prompt logic with goal, rules, workflow, output format
-- **schema.json**: Function/tool schema for input validation
-- **examples.json**: Test invocations for validation
+- **skill.yaml**: Name, description, capabilities, inputs, outputs, mappings
+- **prompt.md**: Prompt logic with goal, rules, workflow, output
+- **schema.json**: Schema for validation
+- **examples.json**: Test invocations
 
-51 skills across engineering, design, testing, project management, marketing, and specialized domains.
+51 skills across engineering, design, testing, PM, marketing, specialized domains.
 
-Run `python build.py` to generate `dist/` manifests for each LLM.
+Run `python build.py` to generate `dist/` manifests.
 
 ## Setup
 
-1. Clone this repo
-2. Open in VS Code (recommended extensions auto-suggested)
-3. `cp .env.example .env` and fill in your API keys
+1. Clone repo
+2. Open in VS Code
+3. `cp .env.example .env` and add API keys
 4. `pip install -r requirements.txt`
-5. `python build.py` to generate LLM-specific files in `dist/`
-6. Run config diagnostics: `python scripts/check_connections.py --mode config`
-7. Run live diagnostics before release: `python scripts/check_connections.py --mode live`
+5. `python build.py` to generate `dist/` files
+6. Config diagnostics: `python scripts/check_connections.py --mode config`
+7. Live diagnostics: `python scripts/check_connections.py --mode live`
 8. Build manifests: `python build.py`
 
-For Google, the repo supports both:
+Google support:
 
-- Gemini Developer API via `GOOGLE_API_KEY`
-- Vertex AI Express Mode via `GOOGLE_GENAI_USE_VERTEXAI=true` and `VERTEX_API_KEY`
-- Vertex AI standard auth via `GOOGLE_GENAI_USE_VERTEXAI=true` plus `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, and either `GOOGLE_APPLICATION_CREDENTIALS`, `VERTEX_SERVICE_ACCOUNT_FILE`, or inline `VERTEX_SERVICE_ACCOUNT`
+- Gemini API via `GOOGLE_API_KEY`
+- Vertex Express via `GOOGLE_GENAI_USE_VERTEXAI=true` and `VERTEX_API_KEY`
+- Vertex standard via `GOOGLE_GENAI_USE_VERTEXAI=true` plus `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, and auth credentials
 
 ## Private Runtime
 
-The production target is a private operator service built with FastAPI.
+Production runs on FastAPI service.
 
-- `GET /healthz`: process health only
-- `GET /readyz`: router, required provider, and skill preload readiness
+- `GET /healthz`: process health
+- `GET /readyz`: router, provider, skill readiness
 - `POST /execute`: authenticated skill execution
 
-Run it locally:
+Run locally:
 
-```bash
+```
 uvicorn runtime.app:app --host 0.0.0.0 --port 8080
 ```
 
-Runtime env contract:
+Runtime env:
 
 - `APP_ENV=staging|production`
 - `REQUIRED_PROVIDERS=openai,anthropic,google`
 - `LOG_LEVEL=INFO|DEBUG|WARNING`
 
-`/readyz` is configuration-only. It does not make live provider calls. Use `python scripts/check_connections.py --mode live` for the release gate.
+`/readyz` checks config only. Use `python scripts/check_connections.py --mode live` for release gate.
 
 ## Production Delivery
 
-Cloud Run is the first production target.
+Cloud Run production target.
 
-- Private authenticated service only
-- Secret Manager for provider credentials
-- GitHub Actions deploys via Workload Identity Federation
-- Staging deploy plus smoke test before production promotion
-- Production reuses the same image digest as staging
+- Private authenticated service
+- Secret Manager for credentials
+- GitHub Actions deploys via Workload Identity
+- Staging deploy + smoke test before production
+- Production reuses staging image digest
 
-See [infra/cloudrun/README.md](infra/cloudrun/README.md) for required GitHub variables, secrets, and the runtime defaults encoded in the deploy workflow.
+See [infra/cloudrun/README.md](https://github.com/AICincy/audhd-agents/blob/main/infra/cloudrun/README.md) for GitHub variables, secrets, runtime defaults.
 
 ## Loading Order (All Models)
 
-1. `PROFILE.md` (cognitive profile, universal constraints)
+1. `PROFILE.md` (cognitive profile, constraints)
 2. Model-specific file (`models/CLAUDE.md`, `models/GEMINI.md`, or `models/OPENAI.md`)
-3. `SKILL.md` (cognitive support skills)
+3. `SKILL.md` (cognitive skills)
 4. `TOOL.md` (on first tool invocation)
 
 ## Contributing
 
-Contributions welcome, especially from neurodivergent developers. The cognitive profile in PROFILE.md can be forked and adapted to your own patterns.
-
-## License
-
-MIT. See [LICENSE](LICENSE).
+Contributions welcome, especially from neurodivergent developers. Fork [PROFILE.md](http://PROFILE.md) and adapt to your patterns.
