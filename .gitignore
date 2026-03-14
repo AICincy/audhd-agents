@@ -4,4 +4,7 @@ __pycache__/
 .DS_Store
 *.egg-info/
 .env
-audhd-agents-main.code-workspace
+node_modules/
+*.log
+venv/
+.venv/
