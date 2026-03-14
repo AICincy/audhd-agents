@@ -1,0 +1,20 @@
+﻿python : INFO:     Started server process [13764]
+At line:1 char:1
++ python -m uvicorn runtime.app:app > uvicorn.log 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (INFO:     Started server process [13764]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+INFO:     Waiting for application startup.
+{"app_env": "staging", "event": "runtime_startup_complete", "required_providers": ["openai", "anthropic", "google"], 
+"skill_count": 51}
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53784 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53785 - "GET /readyz HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:53786 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53787 - "GET /readyz HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:58444 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58446 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58445 - "GET /readyz HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:58447 - "GET /readyz HTTP/1.1" 503 Service Unavailable
