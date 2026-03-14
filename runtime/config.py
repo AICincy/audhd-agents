@@ -37,8 +37,8 @@ class RuntimeSettings:
                 f"LOG_LEVEL must be one of {sorted(VALID_LOG_LEVELS)}, got: {log_level!r}"
             )
 
-        raw_required = ",".join(
-            DEFAULT_REQUIRED_PROVIDERS
+        raw_required = os.getenv(
+            "REQUIRED_PROVIDERS", ",".join(DEFAULT_REQUIRED_PROVIDERS)
         )
         required_providers = tuple(
             provider.strip().lower()

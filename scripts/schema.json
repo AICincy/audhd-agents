@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Diagnostic Scripts",
+  "description": "Schema for diagnostic script invocation and output",
+  "type": "object",
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": ["config", "live"],
+      "description": "Diagnostic mode: config validates structure only, live makes real API calls"
+    },
+    "target": {
+      "type": "string",
+      "enum": ["all", "router", "providers", "skills", "stack"],
+      "description": "Specific component to diagnose, or all for full check",
+      "default": "all"
+    }
+  },
+  "required": ["mode"],
+  "definitions": {
+    "check_result": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the check"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["OK", "FAIL", "WARN", "INFO"],
+          "description": "Check result status"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable detail about the check result"
+        },
+        "remediation": {
+          "type": "string",
+          "description": "Actionable fix if status is FAIL"
+        }
+      },
+      "required": ["name", "status"]
+    },
+    "diagnostic_report": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/check_result"
+          }
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": ["mode", "checks", "passed"]
+    }
+  }
+}

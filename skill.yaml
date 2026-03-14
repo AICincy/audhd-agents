@@ -1,0 +1,51 @@
+name: orchestrator
+display_name: Orchestrator
+description: >
+  System-level orchestrator that routes tasks to optimal model and skill
+  combinations. Manages the full execution lifecycle: classification, routing,
+  instruction stack loading, failover, cost tracking, and handoff formatting.
+  Enforces AuDHD cognitive constraints from PROFILE.md.
+version: "1.0.0"
+category: system
+capabilities:
+  - orchestrate
+  - routing
+  - state-management
+models:
+  primary: C-SN46
+  fallback: [C-SN45, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-sonnet-4-6
+  gemini: gemini-2.5-pro
+sk_hooks:
+  - SK-DECOMP
+  - SK-GATE
+  - SK-RESUME
+  - SK-EXTERN
+inputs:
+  - name: input_text
+    type: string
+    description: Task description or user request to classify and route
+    required: true
+  - name: energy_level
+    type: string
+    description: Current cognitive energy state (high, medium, low, crash)
+    required: false
+    default: high
+  - name: context
+    type: string
+    description: Prior state, partial results, or conversation history
+    required: false
+outputs:
+  - name: routing_decision
+    type: object
+    description: Model selection, skill invocation, tier rationale, fallback chain, cost estimate
+options:
+  format:
+    type: string
+    enum: [full, compact]
+    default: full
+  dry_run:
+    type: boolean
+    description: If true, return routing decision without executing
+    default: false

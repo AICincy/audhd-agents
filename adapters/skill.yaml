@@ -1,14 +1,37 @@
-id: engineering-git-workflow-master
-name: Git Workflow Master
-description: Orchestrates complex Git workflows, branch lifecycle management, and performance-driven repository maintenance.
-version: 1.0.0
-tags:
-  - engineering
-  - git
-  - workflow
-  - devops
+name: adapter-layer
+display_name: Provider Adapter Layer
+description: >
+  Routes skill execution requests to LLM providers (Anthropic, OpenAI, Google)
+  with automatic failover, circuit breaking, and cost tracking. Resolves model
+  aliases to provider-specific endpoints per config.yaml.
+version: "1.0.0"
+category: system
+capabilities:
+  - orchestrate
+  - routing
 models:
-  primary: O-CDX
-  fallback:
-    - C-OP46
-    - G-PRO
+  primary: C-SN46
+  fallback: [C-SN45, G-PRO]
+  openai: gpt-5.4
+  anthropic: claude-sonnet-4-6
+  gemini: gemini-2.5-pro
+sk_hooks:
+  - SK-GATE
+  - SK-VERIFY
+inputs:
+  - name: skill_id
+    type: string
+    description: Canonical skill ID to execute
+    required: true
+  - name: input_text
+    type: string
+    description: User prompt or task input
+    required: true
+  - name: model_override
+    type: string
+    description: Force a specific model alias instead of skill default
+    required: false
+outputs:
+  - name: response
+    type: object
+    description: SkillResponse with output, model_used, provider, tokens, latency

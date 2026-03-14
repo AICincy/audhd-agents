@@ -9,32 +9,55 @@ Built by neurodivergent engineers for neurodivergent engineers.
 ```
 audhd-agents/
 ├── PROFILE.md                    # Cognitive profile + constraints
-├── AGENT.md                    # Swarm orchestration + routing
-├── TOOL.md                     # Tool contracts + errors
-├── SKILL.md                    # Cognitive skills (SK-*)
+├── AGENT.md                      # Swarm orchestration + routing
+├── TOOL.md                       # Tool contracts + errors
+├── SKILL.md                      # Cognitive skills (SK-*)
+├── CAPABILITIES.md               # Capability map + graph chains
+├── prompt.md                     # Orchestrator system prompt
+├── skill.yaml                    # Orchestrator skill manifest
+├── build.py                      # Build script (generates dist/)
 ├── models/
-│   ├── CLAUDE.md               # Claude instructions
-│   ├── GEMINI.md               # Gemini instructions
-│   └── OPENAI.md               # GPT instructions
-├── capabilities/               # Capability definitions
-├── skills/                     # Skill definitions
+│   ├── ANTHROPIC.md              # Anthropic platform instructions
+│   ├── CLAUDE.md                 # Claude model instructions
+│   ├── GEMINI.md                 # Gemini instructions
+│   └── OPENAI.md                 # GPT instructions
+├── capabilities/                 # Capability YAML definitions (10)
+├── skills/                       # Skill definitions (51 skills)
 │   └── {skill-name}/
-│       ├── skill.yaml          # Definition
-│       ├── prompt.md           # Prompt
-│       ├── schema.json         # Schema
-│       └── examples.json       # Tests
-├── graphs/                     # Capability chaining
-├── agents/                     # Agent compositions
+│       ├── skill.yaml            # Definition
+│       ├── prompt.md             # Prompt
+│       ├── schema.json           # Schema
+│       └── examples.json         # Tests
+├── graphs/                       # Capability chaining
+│   ├── capability_graph.yaml     # DAG of capabilities
+│   └── routing_rules.yaml        # Trigger-to-capability mapping
+├── agents/                       # Agent compositions (planned)
 ├── adapters/
-│   ├── config.yaml             # Provider config
-│   ├── router.py               # Router with failover
-│   ├── anthropic_adapter.py    # Claude adapter
-│   ├── openai_adapter.py       # OpenAI adapter
-│   └── google_adapter.py       # Gemini adapter
-├── runtime/                    # FastAPI runtime
-├── dist/                       # Generated manifests
-├── .vscode/                    # VS Code config
-└── build.py                    # Build script
+│   ├── __init__.py               # Package init
+│   ├── base.py                   # Base adapter class
+│   ├── config.yaml               # Provider config (11 models)
+│   ├── router.py                 # Router with failover
+│   ├── anthropic_adapter.py      # Claude adapter
+│   ├── openai_adapter.py         # OpenAI adapter
+│   ├── google_adapter.py         # Gemini adapter
+│   ├── schema.json               # Adapter invocation schema
+│   └── skill.yaml                # Adapter skill definition
+├── runtime/                      # FastAPI runtime
+│   ├── app.py                    # Application server
+│   └── config.py                 # Environment config
+├── scripts/                      # Diagnostic + operational scripts
+│   ├── check_connections.py      # Config + live connectivity checks
+│   ├── smoke_runtime.py          # Runtime endpoint smoke tests
+│   ├── skill.yaml                # Scripts skill definition
+│   ├── prompt.md                 # Scripts prompt
+│   └── schema.json               # Scripts schema
+├── tests/                        # Test suite
+│   ├── test_router.py            # Router tests
+│   └── test_runtime_app.py       # Runtime tests
+├── infra/
+│   └── cloudrun/                 # Cloud Run deployment (in progress)
+│       └── README.md             # Deployment notes + requirements
+└── .vscode/                      # VS Code config
 ```
 
 ## Models (11)
@@ -114,9 +137,9 @@ Runtime environment variables:
 
 `/readyz` checks config only. Use `python scripts/check_connections.py --mode live` as a release gate.
 
-## Production Delivery
+## Production Delivery (In Progress)
 
-Deployed to Cloud Run.
+Target: Cloud Run deployment.
 
 - Private authenticated service
 - Secret Manager for credentials
@@ -124,7 +147,9 @@ Deployed to Cloud Run.
 - Staging deploy and smoke test before production
 - Production reuses staging image digest
 
-See [infra/cloudrun/README.md](https://github.com/AICincy/audhd-agents/blob/main/infra/cloudrun/README.md) for GitHub variables, secrets, and runtime defaults.
+**Status:** CI workflow exists (`deploy-cloud-run.yml`). Container definition (Dockerfile) and IaC are not yet implemented.
+
+See [infra/cloudrun/README.md](https://github.com/AICincy/audhd-agents/blob/main/infra/cloudrun/README.md) for planned GitHub variables, secrets, and runtime defaults.
 
 ## Loading Order (All Models)
 
@@ -135,4 +160,4 @@ See [infra/cloudrun/README.md](https://github.com/AICincy/audhd-agents/blob/main
 
 ## Contributing
 
-Contributions welcome, especially from neurodivergent developers. Fork [PROFILE.md](http://PROFILE.md) and adapt it to your patterns.
+Contributions welcome, especially from neurodivergent developers. Fork PROFILE.md and adapt it to your patterns.

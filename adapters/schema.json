@@ -1,36 +1,42 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Adapter Layer",
+  "description": "Schema for skill execution through the adapter routing layer",
   "type": "object",
   "properties": {
-    "repo_path": {
+    "skill_id": {
       "type": "string",
-      "description": "Absolute path to the local git repository."
+      "description": "Canonical skill ID from skills/ directory"
     },
-    "action": {
+    "input_text": {
       "type": "string",
-      "enum": [
-        "rebase",
-        "merge",
-        "prune",
-        "audit",
-        "cleanup"
-      ],
-      "description": "The primary git operation to perform."
+      "description": "User prompt or task input to send to the skill"
     },
-    "target_branch": {
+    "model_override": {
       "type": "string",
-      "description": "The branch involved in the operation (e.g., 'main' or 'feature/x')."
+      "description": "Optional model alias to override skill default routing"
     },
-    "context_logs": {
-      "type": "array",
-      "items": {
-        "type": "string"
+    "options": {
+      "type": "object",
+      "properties": {
+        "max_tokens": {
+          "type": "integer",
+          "description": "Maximum tokens in response"
+        },
+        "temperature": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2,
+          "description": "Sampling temperature"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["json", "text"],
+          "description": "Desired output format"
+        }
       },
-      "description": "Paths to performance monitoring logs (perfmon) to correlate with repo activity."
+      "description": "Additional execution options passed to the provider adapter"
     }
   },
-  "required": [
-    "repo_path",
-    "action"
-  ]
+  "required": ["skill_id", "input_text"]
 }

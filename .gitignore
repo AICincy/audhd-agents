@@ -5,3 +5,6 @@ __pycache__/
 *.egg-info/
 .env
 audhd-agents-main.code-workspace
+.claude/
+node_modules/
+uvicorn.log

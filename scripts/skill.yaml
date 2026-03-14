@@ -1,0 +1,35 @@
+name: diagnostic-scripts
+display_name: Diagnostic Scripts
+description: >
+  Operational diagnostic utilities for validating configuration, provider
+  connectivity, alias resolution, skill loading, and runtime health of the
+  audhd-agents system. Includes config-only and live validation modes.
+version: "1.0.0"
+category: operations
+capabilities:
+  - evaluate
+  - audit
+models:
+  primary: O-CDX
+  fallback: [C-SN46, O-54]
+  openai: gpt-5.3-codex
+  anthropic: claude-sonnet-4-6
+  gemini: gemini-2.5-pro
+sk_hooks:
+  - SK-VERIFY
+  - SK-CODEREVIEW
+inputs:
+  - name: mode
+    type: string
+    description: "Diagnostic mode: config validates structure only, live makes real API calls"
+    required: true
+    enum: [config, live]
+  - name: target
+    type: string
+    description: Specific component to diagnose (all, router, providers, skills, stack)
+    required: false
+    default: all
+outputs:
+  - name: diagnostic_report
+    type: object
+    description: Pass/fail per check with error classification and remediation guidance

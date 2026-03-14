@@ -125,8 +125,8 @@ Every model interaction should be cost-aware.
 
 | Energy | Max Tier | Model Pool | Behavior |
 | --- | --- | --- | --- |
-| High | T5 | All 9 | Normal operation |
-| Medium | T4 | All 9, prefer fast models for T1-T2 | Standard |
+| High | T5 | All 11 | Normal operation |
+| Medium | T4 | All 11, prefer fast models for T1-T2 | Standard |
 | Low | T2 | Sonnet + Gemini only | Micro-steps. Single next action. |
 | Crash | T1 | None new | "Everything is saved. Nothing is urgent. Come back when ready." |
 

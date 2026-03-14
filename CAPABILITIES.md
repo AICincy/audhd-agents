@@ -1,6 +1,6 @@
 # Capability Map
 
-Maps all 50 skills to 10 atomic capabilities. Each skill has one primary capability and zero or one secondary.
+Maps all 51 skills to 10 atomic capabilities. Each skill has one primary capability and zero or one secondary.
 
 ## Capabilities
 
@@ -17,7 +17,7 @@ Maps all 50 skills to 10 atomic capabilities. Each skill has one primary capabil
 | audit | Check compliance and security | compliance-auditor, automation-governance, security-engineer, accessibility-auditor, legal-compliance-checker | 5 |
 | optimize | Improve performance and efficiency | autonomous-optimization, database-optimizer, workflow-optimizer | 3 |
 
-**Total: 50 skills across 10 capabilities** (some skills appear as secondary in other capabilities)
+**Total: 51 skills across 10 capabilities** (some skills appear as secondary in other capabilities)
 
 ## Capability Graph Chains
 
@@ -33,7 +33,7 @@ Maps all 50 skills to 10 atomic capabilities. Each skill has one primary capabil
 ## Migration Path (Current → Beta Pro)
 
 1. **Done:** Capability definitions, graph, routing rules, skill mapping
-2. **Next:** Validate 3-5 skills with real API calls
-3. **Then:** Build runtime planner + executor in `runtime/`
-4. **Then:** Migrate `adapters/router.py` to capability-aware routing
-5. **Then:** Add `capabilities:` field to each skill.yaml
+2. **Planned:** Validate 3-5 skills with real API calls
+3. **Planned:** Build runtime planner + executor in `runtime/`
+4. **Planned:** Migrate `adapters/router.py` to capability-aware routing
+5. **Planned:** Add `capabilities:` field to each skill.yaml
