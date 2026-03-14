@@ -30,10 +30,14 @@ Maps all 51 skills to 10 atomic capabilities. Each skill has one primary capabil
 | security_pipeline | audit > analyze > generate | Vulnerability remediation |
 | feedback_loop | research > synthesize > analyze > plan | User feedback processing |
 
-## Migration Path (Current > Beta Pro)
+## Implementation Status
 
-1. **Done:** Capability definitions, graph, routing rules, skill mapping
-2. **Next:** Validate 3-5 skills with real API calls
-3. **Then:** Build runtime planner + executor in `runtime/`
-4. **Then:** Migrate `adapters/router.py` to capability-aware routing
-5. **Then:** Add `capabilities:` field to each skill.yaml
+| Milestone | Status | Notes |
+| --- | --- | --- |
+| Capability definitions | Done | 10 capabilities defined in `capabilities/` |
+| Graph and routing rules | Done | `graphs/capability_graph.yaml`, `graphs/routing_rules.yaml` |
+| Skill mapping (51 skills) | Done | All skills have `skill.yaml`, `prompt.md`, `schema.json`, `examples.json` |
+| API validation | Not started | Validate skills with real API calls |
+| Runtime planner | Not started | Build planner/executor in `runtime/` |
+| Capability-aware routing | Not started | Migrate `adapters/router.py` to use capability graph |
+| Skill-level capability tags | Not started | Add `capabilities:` field to each `skill.yaml` |
