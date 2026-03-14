@@ -1,14 +1,37 @@
-id: engineering-git-workflow-master
-name: Git Workflow Master
-description: Orchestrates complex Git workflows, branch lifecycle management, and performance-driven repository maintenance.
+id: engineering-adapter-layer
+name: LLM Adapter Layer
+description: Manages provider-specific API adapters for Anthropic, OpenAI, and Google with failover routing and cost tracking.
 version: 1.0.0
 tags:
   - engineering
-  - git
-  - workflow
-  - devops
+  - adapters
+  - providers
+  - routing
 models:
   primary: O-CDX
   fallback:
-    - C-OP46
+    - C-SN46
     - G-PRO
+capabilities:
+  primary: orchestrate
+  secondary: transform
+inputs:
+  - name: provider
+    type: string
+    required: true
+    description: "Target provider (anthropic, openai, google)."
+  - name: model_id
+    type: string
+    required: true
+    description: "Model identifier from agent registry (e.g., C-OP46, G-PRO)."
+  - name: payload
+    type: object
+    required: true
+    description: "Provider-normalized request payload."
+outputs:
+  - name: response
+    type: object
+    description: "Normalized response from the target model."
+  - name: metadata
+    type: object
+    description: "Latency, token usage, cost estimate, provider status."

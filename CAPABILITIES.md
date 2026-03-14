@@ -1,6 +1,6 @@
 # Capability Map
 
-Maps all 50 skills to 10 atomic capabilities. Each skill has one primary capability and zero or one secondary.
+Maps all 51 skills to 10 atomic capabilities. Each skill has one primary capability and zero or one secondary.
 
 ## Capabilities
 
@@ -17,20 +17,20 @@ Maps all 50 skills to 10 atomic capabilities. Each skill has one primary capabil
 | audit | Check compliance and security | compliance-auditor, automation-governance, security-engineer, accessibility-auditor, legal-compliance-checker | 5 |
 | optimize | Improve performance and efficiency | autonomous-optimization, database-optimizer, workflow-optimizer | 3 |
 
-**Total: 50 skills across 10 capabilities** (some skills appear as secondary in other capabilities)
+**Total: 51 skills across 10 capabilities** (some skills appear as secondary in other capabilities)
 
 ## Capability Graph Chains
 
 | Chain | Sequence | Use Case |
 | --- | --- | --- |
-| research_to_report | research → analyze → synthesize | Investigation and reporting |
-| build_and_validate | plan → generate → evaluate → optimize | Full build cycle |
-| code_review_pipeline | analyze → audit → evaluate | Code quality checks |
-| content_pipeline | research → plan → generate → evaluate | Content creation |
-| security_pipeline | audit → analyze → generate | Vulnerability remediation |
-| feedback_loop | research → synthesize → analyze → plan | User feedback processing |
+| research_to_report | research > analyze > synthesize | Investigation and reporting |
+| build_and_validate | plan > generate > evaluate > optimize | Full build cycle |
+| code_review_pipeline | analyze > audit > evaluate | Code quality checks |
+| content_pipeline | research > plan > generate > evaluate | Content creation |
+| security_pipeline | audit > analyze > generate | Vulnerability remediation |
+| feedback_loop | research > synthesize > analyze > plan | User feedback processing |
 
-## Migration Path (Current → Beta Pro)
+## Migration Path (Current > Beta Pro)
 
 1. **Done:** Capability definitions, graph, routing rules, skill mapping
 2. **Next:** Validate 3-5 skills with real API calls

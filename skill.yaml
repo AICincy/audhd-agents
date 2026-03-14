@@ -1,1 +1,35 @@
- 
+id: orchestrator
+name: Cognitive Swarm Orchestrator
+description: Routes tasks to appropriate models based on complexity tier, capability requirements, and energy-adaptive constraints.
+version: 1.0.0
+tags:
+  - orchestration
+  - routing
+  - cognitive-support
+models:
+  primary: C-SN46
+  fallback:
+    - C-OP46
+    - G-PRO
+capabilities:
+  primary: orchestrate
+inputs:
+  - name: task
+    type: string
+    required: true
+    description: The task to route and execute.
+  - name: tier
+    type: string
+    required: false
+    description: "Complexity tier (T1-T5). Auto-classified if omitted."
+  - name: energy
+    type: string
+    required: false
+    description: "Energy level (high, medium, low, crash). Defaults to high."
+outputs:
+  - name: result
+    type: object
+    description: Routed task result with model attribution and cost tracking.
+  - name: routing_metadata
+    type: object
+    description: Which model handled the task, tier, cost estimate, fallback chain.
