@@ -1,6 +1,17 @@
 # Cloud Run Deployment Notes
 
-This repo now ships a private operator runtime in [`runtime/app.py`](../../runtime/app.py).
+## Status
+
+**Not yet deployable.** No Dockerfile or container definition exists in this repo. The workflow (`deploy-cloud-run.yml`) and this config spec are scaffolding for a planned deployment.
+
+To make this functional, you need:
+1. A `Dockerfile` in the repo root
+2. GitHub repository variables and secrets configured (listed below)
+3. GCP project with Cloud Run, Secret Manager, and Artifact Registry enabled
+
+---
+
+This repo ships a private operator runtime in [`runtime/app.py`](../../runtime/app.py).
 
 ## Required GitHub Repository Variables
 
