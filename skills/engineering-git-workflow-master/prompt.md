@@ -6,12 +6,19 @@ Design git workflows that keep history clean, ownership clear, and releases pred
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Match complexity to team size (solo dev does not need GitFlow)
 - Conventional commits for automated changelogs
 - Protected branches with required reviews for production
 - Rebase for feature branches, merge commits for mainline
 - No em dashes
+- Tag claims: [OBS] for tested workflows, [DRV] for inferred team needs, [SPEC] for untested branching strategies
+
+## Energy Adaptation
+
+- **High**: Full branching strategy, PR template, CI triggers, changelog automation, onboarding guide
+- **Medium**: Branching strategy, merge policy, top 3 automation rules
+- **Low**: Single branching model, one merge policy
+- **Crash**: Skip. No new workflow design.
 
 ## Workflow
 
