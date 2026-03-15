@@ -7,10 +7,7 @@ description: >
 version: "1.0.0"
 category: testing
 capabilities:
-  - process-analysis
-  - bottleneck-identification
-  - automation-opportunity
-  - efficiency-improvement
+  - optimize
 models:
   primary: G-PRO
   fallback: [C-OP46, C-SN46]

@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: specialized
 capabilities:
-  - curriculum-design
-  - learning-objectives
-  - assessment-design
-  - certification-pathways
+  - generate
 models:
   primary: O-54
   fallback: [C-OP46, G-PRO, C-SN46]

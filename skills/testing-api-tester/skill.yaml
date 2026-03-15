@@ -7,10 +7,7 @@ description: >
 version: "1.0.0"
 category: testing
 capabilities:
-  - endpoint-testing
-  - contract-testing
-  - error-scenario-coverage
-  - load-test-design
+  - evaluate
 models:
   primary: C-SN46
   fallback: [C-OP46, G-PRO]

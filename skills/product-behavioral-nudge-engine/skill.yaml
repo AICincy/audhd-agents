@@ -7,10 +7,7 @@ description: >
 version: "1.0.0"
 category: product
 capabilities:
-  - nudge-design
-  - cognitive-support
-  - attention-management
-  - progress-persistence
+  - analyze
 models:
   primary: C-OP46
   fallback: [O-54, G-PRO]

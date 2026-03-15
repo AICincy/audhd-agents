@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - react-development
-  - typescript
-  - state-management
-  - performance-optimization
+  - generate
 models:
   primary: C-OP46
   fallback: [O-CDX, C-SN46, G-PRO]

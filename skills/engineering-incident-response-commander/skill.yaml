@@ -7,10 +7,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - incident-triage
-  - severity-classification
-  - communication-templates
-  - post-mortem
+  - analyze
 models:
   primary: C-OP46
   fallback: [C-SN46, G-PRO]

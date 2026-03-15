@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - ci-cd-design
-  - infrastructure-as-code
-  - deployment-automation
-  - container-orchestration
+  - generate
 models:
   primary: C-OP46
   fallback: [C-SN46, G-PRO]

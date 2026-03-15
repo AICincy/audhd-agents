@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: design
 capabilities:
-  - research-design
-  - interview-guides
-  - usability-testing
-  - insight-synthesis
+  - research
 models:
   primary: C-OP46
   fallback: [O-54, G-PRO]

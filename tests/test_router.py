@@ -81,7 +81,9 @@ def test_execute_fails_over_to_fallback_model():
 
     assert response.provider == "google"
     assert response.model_used == "gemini-2.5-pro"
-    assert response.output == {"status": "ok"}
+    output = dict(response.output)
+    output.pop("_validation", None)
+    assert output == {"status": "ok"}
 
 
 def test_google_adapter_prefers_vertex_when_vertex_key_present(monkeypatch):

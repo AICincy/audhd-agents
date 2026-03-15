@@ -6,9 +6,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - code-analysis
-  - security-review
-  - risk-assessment
+  - analyze
 models:
   primary: C-OP46
   fallback: [O-CDX, C-SN46, G-PRO]
@@ -16,7 +14,6 @@ models:
   anthropic: claude-opus-4-6
   gemini: gemini-2.5-pro
 sk_hooks:
-  - SK-CODEREVIEW
   - SK-GATE
   - SK-VERIFY
   - SK-DECOMP

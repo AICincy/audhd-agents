@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: design
 capabilities:
-  - component-design
-  - interaction-patterns
-  - responsive-design
-  - developer-handoff
+  - generate
 models:
   primary: C-OP46
   fallback: [O-CDX, C-SN46, G-PRO]

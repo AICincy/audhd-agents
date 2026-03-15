@@ -7,9 +7,7 @@ description: >
 version: "1.0.0"
 category: specialized
 capabilities:
-  - mcp-server-design
-  - schema-definition
-  - tool-integration
+  - generate
 models:
   primary: C-OP46
   fallback: [C-SN46, G-PRO]

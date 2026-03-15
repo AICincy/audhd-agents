@@ -1,0 +1,60 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Program Files\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\krass\.antigravity\audhd-agents
+configfile: pyproject.toml
+plugins: anyio-4.12.1
+collecting ... collected 3 items
+
+tests/test_router.py::test_resolve_alias_returns_provider_and_model PASSED [ 33%]
+tests/test_router.py::test_execute_fails_over_to_fallback_model FAILED   [ 66%]
+tests/test_router.py::test_google_adapter_prefers_vertex_when_vertex_key_present PASSED [100%]
+
+================================== FAILURES ===================================
+__________________ test_execute_fails_over_to_fallback_model __________________
+
+    def test_execute_fails_over_to_fallback_model():
+        router = SkillRouter.__new__(SkillRouter)
+        router.alias_map = {
+            "PRIMARY": "openai/gpt-5.4",
+            "FALLBACK": "google/gemini-2.5-pro",
+        }
+        router.adapters = {
+            "openai": FailingAdapter(),
+            "google": SuccessfulAdapter(),
+        }
+        router.load_skill = lambda skill_id: {
+            "config": {"models": {"primary": "PRIMARY", "fallback": ["FALLBACK"]}},
+            "prompt": "Return JSON.",
+            "schema": {},
+        }
+        router.load_profile_md = lambda: "PROFILE"
+    
+        response = asyncio.run(
+            router.execute(SkillRequest(skill_id="demo", input_text="hello"))
+        )
+    
+        assert response.provider == "google"
+        assert response.model_used == "gemini-2.5-pro"
+>       assert response.output == {"status": "ok"}
+E       AssertionError: assert {'_validation...status': 'ok'} == {'status': 'ok'}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Left contains 1 more item:
+E         {'_validation': {'passed': True,
+E                          'warnings': ['[CLAIM_TAGS] No claim tags in T3+ structured '
+E                                       'output.']}}
+E         ...
+E         
+E         ...Full output truncated (10 lines hidden), use '-vv' to show
+
+tests\test_router.py:84: AssertionError
+============================== warnings summary ===============================
+..\..\AppData\Roaming\Python\Python314\site-packages\google\genai\types.py:43
+  C:\Users\krass\AppData\Roaming\Python\Python314\site-packages\google\genai\types.py:43: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_router.py::test_execute_fails_over_to_fallback_model - Asse...
+=================== 1 failed, 2 passed, 1 warning in 3.26s ====================

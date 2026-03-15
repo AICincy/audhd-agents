@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: testing
 capabilities:
-  - failure-triage
-  - flaky-detection
-  - coverage-analysis
-  - test-health
+  - analyze
 models:
   primary: C-SN46
   fallback: [C-OP46, G-PRO]

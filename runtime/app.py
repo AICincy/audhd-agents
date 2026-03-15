@@ -228,7 +228,9 @@ def create_app(
                 detail=readiness,
             )
 
-        if payload.skill_id not in state.skill_index:
+        skill_id_provided = bool(payload.skill_id)
+
+        if skill_id_provided and payload.skill_id not in state.skill_index:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Unknown skill_id: {payload.skill_id}",
@@ -238,21 +240,28 @@ def create_app(
         started_at = time.time()
 
         try:
-            result = await state.router.execute(  # type: ignore[union-attr]
-                SkillRequest(
-                    skill_id=payload.skill_id,
-                    input_text=payload.input_text,
-                    options=payload.options,
-                    model_override=payload.model_override,
-                ),
-                cognitive_state_override=payload.cognitive_state,  # P1-1
+            skill_request = SkillRequest(
+                skill_id=payload.skill_id,
+                input_text=payload.input_text,
+                options=payload.options,
+                model_override=payload.model_override,
             )
+            if skill_id_provided:
+                result = await state.router.execute(  # type: ignore[union-attr]
+                    skill_request,
+                    cognitive_state_override=payload.cognitive_state,  # P1-1
+                )
+            else:
+                result = await state.router.execute_chain(  # type: ignore[union-attr]
+                    skill_request,
+                    cognitive_state_override=payload.cognitive_state,
+                )
         except Exception as exc:
             emit_log(
                 logger,
                 "skill_execution_failed",
                 request_id=request_id,
-                skill_id=payload.skill_id,
+                skill_id=payload.skill_id or "capability-chain",
                 model_override=payload.model_override,
                 latency_ms=int((time.time() - started_at) * 1000),
                 failure_class=exc.__class__.__name__,
@@ -267,7 +276,7 @@ def create_app(
             logger,
             "skill_execution_succeeded",
             request_id=request_id,
-            skill_id=payload.skill_id,
+            skill_id=payload.skill_id or "capability-chain",
             provider=result.provider,
             model_used=result.model_used,
             input_tokens=result.input_tokens,

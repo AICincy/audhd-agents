@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: support
 capabilities:
-  - data-analysis
-  - trend-identification
-  - anomaly-detection
-  - report-generation
+  - synthesize
 models:
   primary: G-PRO
   fallback: [C-OP46, C-SN46]

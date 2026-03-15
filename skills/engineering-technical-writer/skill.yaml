@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - api-documentation
-  - architecture-docs
-  - runbooks
-  - developer-guides
+  - generate
 models:
   primary: C-OP46
   fallback: [O-54, C-SN46]

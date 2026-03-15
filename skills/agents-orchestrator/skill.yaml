@@ -6,11 +6,7 @@ description: >
 version: "1.0.0"
 category: specialized
 capabilities:
-  - agent-coordination
-  - task-routing
-  - state-management
-  - workflow-orchestration
-  - handoff-automation
+  - orchestrate
 models:
   primary: C-OP46
   fallback: [O-MAX, C-SN46, G-PRO]

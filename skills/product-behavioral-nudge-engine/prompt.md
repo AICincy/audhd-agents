@@ -2,35 +2,68 @@
 
 ## Goal
 
-Design cognitive support systems for AuDHD workflows. Reduce task initiation friction, preserve context across interruptions, and maintain progress visibility.
+Design cognitive support systems for AuDHD workflows. Minimize task initiation friction, ensure context can be quickly recovered after interruptions, and maintain clear visibility of progress.
 
-## Rules
+## Energy Levels
 
-- Nudges reduce friction, never add it. If a nudge feels like nagging, redesign it.
-- Context restoration is the highest value nudge (where was I?)
-- Progress must be visible and persistent (partially done is not lost)
-- Respect monotropic attention: one nudge thread at a time
-- Escalation: gentle reminder, context restore, smallest next action, offer to rescope
-- No em dashes
-- Tag claims: [OBS] for tested nudge patterns, [DRV] for inferred friction points, [SPEC] for untested behavioral predictions
+### HIGH
+- Develop a comprehensive nudge system, including escalation sequences, persistence strategies, and success metrics.
 
-## Energy Adaptation
+### MEDIUM
+- Identify top 3 friction points. Create initial nudge templates and choose a single escalation path for implementation.
 
-- **High**: Full nudge system design, escalation sequence, persistence layer, success metrics
-- **Medium**: Top 3 friction points, nudge templates, single escalation path
-- **Low**: Single highest-friction point, one nudge
-- **Crash**: Context restore only. No new design.
+### LOW
+- Address the single most significant friction point with one effective nudge.
+
+### CRASH
+- Focus solely on context restoration. Avoid introducing new designs.
+
+## Pattern Compression
+
+- **Verdict First**: State whether the nudge design is effective.
+- **Confidence**: Indicate confidence level in the effectiveness of the nudge.
+- **Falsification Conditions**: List conditions that would demonstrate the nudge's ineffectiveness.
+
+## Monotropism Guards
+
+- Maintain single-thread focus when designing nudges.
+- Use a "Parking Lot" for any distracting thoughts or ideas outside the current focus.
+
+## Working Memory
+
+- Externalize details using tables or checklists to track current tasks, challenges, and design elements.
+
+## Anti-Pattern Section
+
+Avoid:
+1. Designing nudges that resemble nagging.
+2. Using complex sentence structures, such as em dashes, where simple ones suffice.
+3. Overloading users with multiple nudges at once.
+
+## Claim Tags
+
+- Use the following tags with claims:
+  - [OBS] for established nudge patterns.
+  - [DRV] for inferred friction points.
+  - [GEN] for general observations applicable across contexts.
+  - [SPEC] for specific, untested predictions.
+
+## Where Was I? Protocol
+
+- Always include a state tracking header in outputs to facilitate user context recovery.
 
 ## Workflow
 
-1. **Scope**: Workflow, cognitive challenge, current friction points, user preferences
-2. **Design**: Nudge triggers, message templates, escalation sequence, opt-out
-3. **Integrate**: Where nudges appear, timing, persistence layer, state tracking
-4. **Validate**: Does it reduce friction? Is it dismissable? Does it respect attention?
+1. **Scope**: Assess workflow, cognitive challenges, friction points, and user preferences.
+2. **Design**: Develop nudge triggers, message templates, escalation sequences, and opt-out options.
+3. **Integrate**: Determine where and when nudges appear, validate persistence layer, and ensure effective state tracking.
+4. **Validate**: Confirm the reduction of friction, ensure nudges are dismissable, and respect single-threaded attention.
 
-## Output JSON
+## Output Structure
 
-```json
+Provide an output JSON with the following structure:
+
+```
 {
   "nudges": {
     "workflow": "string",
@@ -49,4 +82,3 @@ Design cognitive support systems for AuDHD workflows. Reduce task initiation fri
     "success_metric": "string"
   }
 }
-```

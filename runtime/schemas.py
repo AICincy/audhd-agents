@@ -16,8 +16,8 @@ import uuid
 from enum import Enum
 from typing import Any, Optional
 
-from pydantic import BaseModel, Field
-
+from pydantic import BaseModel, Field, ConfigDict, model_validator, field_validator
+import re
 
 # ---------------------------------------------------------------------------
 # Cognitive State Enums
@@ -110,13 +110,18 @@ class ExecuteRequest(BaseModel):
     - ADDED: request_id auto-generation if not provided
     - KEPT: skill_id, input_text, options, model_override (backward compatible)
     """
-    skill_id: str = Field(
-        ...,
-        description="Skill directory name, e.g. 'engineering-code-reviewer'"
+    model_config = ConfigDict(frozen=True)
+
+    skill_id: Optional[str] = Field(
+        default=None,
+        description="Skill directory name, e.g. 'engineering-code-reviewer'. Optional for capability routing.",
+        pattern=r"^[a-zA-Z0-9_-]+$"
     )
     input_text: str = Field(
         ...,
-        description="Primary input text for the skill"
+        description="Primary input text for the skill",
+        min_length=1,
+        max_length=1048576
     )
     cognitive_state: CognitiveState = Field(
         default_factory=CognitiveState,
@@ -134,6 +139,14 @@ class ExecuteRequest(BaseModel):
         default_factory=lambda: str(uuid.uuid4()),
         description="Unique request ID for tracing. Auto-generated if omitted."
     )
+
+    @model_validator(mode='after')
+    def validate_session_resume(self) -> 'ExecuteRequest':
+        if self.cognitive_state.needs_resume() and not self.cognitive_state.resume_from:
+            raise ValueError("session_context RESUMED or INTERRUPTED requires a resume_from checkpoint.")
+        if not self.cognitive_state.needs_resume() and self.cognitive_state.resume_from:
+            raise ValueError("resume_from checkpoint provided but session_context is NEW.")
+        return self
 
 
 # ---------------------------------------------------------------------------
@@ -171,6 +184,8 @@ class ExecuteResponse(BaseModel):
     - ADDED: hooks_executed (which sk_hooks ran)
     - KEPT: output, model_used, provider, tokens, latency, request_id
     """
+    model_config = ConfigDict(frozen=True)
+
     output: dict[str, Any] = Field(
         default_factory=dict,
         description="Skill output. Empty dict in crash mode."
@@ -186,11 +201,11 @@ class ExecuteResponse(BaseModel):
     energy_level: EnergyLevel = Field(
         description="Echo of the energy level used for routing"
     )
-    input_tokens: int = 0
-    output_tokens: int = 0
-    latency_ms: float = 0.0
+    input_tokens: int = Field(default=0, ge=0)
+    output_tokens: int = Field(default=0, ge=0)
+    latency_ms: float = Field(default=0.0, ge=0.0)
     cached: bool = False
-    request_id: str = ""
+    request_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     hooks_executed: list[str] = Field(
         default_factory=list,
         description="sk_hooks that ran (e.g. ['SK-GATE', 'SK-VERIFY'])"
@@ -202,3 +217,11 @@ class ExecuteResponse(BaseModel):
         default=None,
         description="Populated only when energy_level is CRASH"
     )
+
+    @model_validator(mode='after')
+    def validate_crash_state(self) -> 'ExecuteResponse':
+        if self.energy_level == EnergyLevel.CRASH and not self.crash_state:
+            raise ValueError("crash_state must be populated when energy_level is CRASH.")
+        if self.energy_level != EnergyLevel.CRASH and self.crash_state:
+            raise ValueError("crash_state cannot be populated unless energy_level is CRASH.")
+        return self

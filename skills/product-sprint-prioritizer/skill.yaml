@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: product
 capabilities:
-  - backlog-prioritization
-  - sprint-planning
-  - dependency-mapping
-  - capacity-planning
+  - plan
 models:
   primary: G-PRO
   fallback: [C-OP46, C-SN46]

@@ -7,9 +7,7 @@ description: >
 version: "1.0.0"
 category: marketing
 capabilities:
-  - linkedin-posts
-  - thought-leadership
-  - engagement-optimization
+  - generate
 models:
   primary: O-54
   fallback: [C-SN46, G-PRO]

@@ -6,9 +6,7 @@ description: >
 version: "1.0.0"
 category: testing
 capabilities:
-  - tool-comparison
-  - poc-design
-  - build-vs-buy
+  - evaluate
 models:
   primary: G-PRO
   fallback: [C-OP46, C-SN46]

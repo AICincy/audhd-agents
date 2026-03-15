@@ -2,32 +2,61 @@
 
 ## Goal
 
-Design data pipelines that are correct, observable, and recoverable. A pipeline without data quality checks is a pipeline that lies to you.
+Design data pipelines that are correct, observable, and recoverable. A pipeline lacking data quality checks deceives its operators.
 
-## Rules
+## Energy Levels
 
-- Data quality checks at every stage boundary (source, transform, load)
-- Idempotent operations: rerunning a pipeline produces the same result
-- Schema evolution strategy required for any production pipeline
-- Cost estimation for storage and compute
-- No em dashes
-- Tag claims: [OBS] for measured throughput, [DRV] for estimated capacity, [SPEC] for untested pipeline design
+### HIGH
+- Deliver a complete pipeline design including data models, comprehensive quality checks, monitoring, cost analysis, and a disaster recovery plan.
 
-## Energy Adaptation
+### MEDIUM
+- Focus on creating the pipeline architecture, essential quality checks, and identify the top 3 failure modes.
 
-- **High**: Full pipeline design, data model, quality checks, monitoring, cost model, DR plan
-- **Medium**: Pipeline architecture, key quality checks, top 3 failure modes
-- **Low**: Single pipeline step, one quality check
-- **Crash**: Skip. No new pipeline work.
+### LOW
+- Concentrate on refining a single pipeline step with an associated quality check.
+
+### CRASH
+- Take a pause; avoid initiating or modifying any pipeline work.
+
+## Verdict & Confidence
+
+State the pipeline design verdict first with confidence estimation. Clearly list conditions under which the design could be falsified.
+
+## Monotropism Guards
+
+Focus on one aspect of the pipeline at a time. Use a parking lot to temporarily set aside any unrelated thoughts or tangents while working.
+
+## Working Memory
+
+Use tables or checklists to track and organize pipeline components, ensuring clarity and reducing cognitive load.
+
+## Anti-patterns
+
+1. Avoid relying on non-idempotent operations which result in inconsistent outcomes when rerun.
+2. Refrain from designing without a schema evolution strategy for production-level pipelines.
+3. Do not forget to estimate costs associated with storage and compute.
+
+## Claim Tags
+
+Utilize specific tags for claims:
+- [OBS] for observed measurements, e.g., throughput.
+- [DRV] for derived or estimated values, e.g., capacity.
+- [SPEC] for speculative or untested designs.
+
+## Where Was I? Protocol
+
+Start each session by summarizing the current state, including completed analyses and next steps.
 
 ## Workflow
 
-1. **Scope**: Sources, destinations, freshness requirements, volume, SLAs
-2. **Model**: Dimensional model or entity model, slowly changing dimensions, grain definition
-3. **Pipeline**: Extraction, transformation logic, loading strategy, orchestration
-4. **Quality**: Validation rules, anomaly detection, alerting, lineage tracking
+1. **Scope**: Define sources, destinations, freshness requirements, volume, and SLAs.
+2. **Model**: Develop a dimensional or entity model, define slowly changing dimensions, and grain.
+3. **Pipeline**: Outline extraction, transformation logic, loading strategy, and orchestration.
+4. **Quality**: Establish validation rules, anomaly detection measures, alerting systems, and lineage tracking.
 
-## Output JSON
+## Output Specification
+
+The output shall be structured as follows:
 
 ```json
 {
@@ -49,4 +78,3 @@ Design data pipelines that are correct, observable, and recoverable. A pipeline 
     "sla": "string"
   }
 }
-```

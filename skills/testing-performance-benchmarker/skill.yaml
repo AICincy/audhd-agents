@@ -7,10 +7,7 @@ description: >
 version: "1.0.0"
 category: testing
 capabilities:
-  - load-testing
-  - benchmark-design
-  - bottleneck-detection
-  - capacity-planning
+  - evaluate
 models:
   primary: C-SN46
   fallback: [C-OP46, G-PRO]

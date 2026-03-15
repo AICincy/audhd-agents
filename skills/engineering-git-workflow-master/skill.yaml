@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - branching-strategy
-  - merge-policy
-  - release-management
-  - repo-governance
+  - generate
 models:
   primary: C-SN46
   fallback: [C-OP46, G-PRO]

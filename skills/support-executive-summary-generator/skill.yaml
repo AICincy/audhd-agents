@@ -7,9 +7,7 @@ description: >
 version: "1.0.0"
 category: support
 capabilities:
-  - document-synthesis
-  - executive-communication
-  - decision-framing
+  - synthesize
 models:
   primary: C-OP46
   fallback: [O-54, C-SN46, G-PRO]

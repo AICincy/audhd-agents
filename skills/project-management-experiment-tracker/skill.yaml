@@ -7,9 +7,7 @@ description: >
 version: "1.0.0"
 category: project-management
 capabilities:
-  - experiment-design
-  - hypothesis-tracking
-  - results-analysis
+  - evaluate
 models:
   primary: G-PRO
   fallback: [C-OP46, C-SN46]

@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - pipeline-design
-  - data-modeling
-  - warehouse-architecture
-  - data-quality
+  - transform
 models:
   primary: G-PRO
   fallback: [C-OP46, C-SN46]

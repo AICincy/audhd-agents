@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - code-intelligence
-  - symbol-indexing
-  - cross-reference
-  - ide-tooling
+  - transform
 models:
   primary: C-OP46
   fallback: [C-SN46, G-PRO]

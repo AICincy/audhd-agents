@@ -6,9 +6,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - auto-scaling
-  - parameter-tuning
-  - resource-optimization
+  - optimize
 models:
   primary: G-PRO
   fallback: [C-OP46, C-SN46]

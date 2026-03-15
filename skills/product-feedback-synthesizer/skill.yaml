@@ -7,10 +7,7 @@ description: >
 version: "1.0.0"
 category: product
 capabilities:
-  - feedback-analysis
-  - sentiment-analysis
-  - theme-extraction
-  - priority-ranking
+  - synthesize
 models:
   primary: G-PRO
   fallback: [C-OP46, O-54, C-SN46]

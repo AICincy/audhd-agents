@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - api-design
-  - database-selection
-  - service-architecture
-  - scalability-planning
+  - plan
 models:
   primary: C-OP46
   fallback: [O-CDX, G-PRO, C-SN46]

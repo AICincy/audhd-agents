@@ -7,9 +7,7 @@ description: >
 version: "1.0.0"
 category: design
 capabilities:
-  - inclusion-audit
-  - representation-analysis
-  - visual-equity
+  - generate
 models:
   primary: C-OP46
   fallback: [O-54, G-PRO]

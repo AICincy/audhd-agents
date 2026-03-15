@@ -1,26 +1,78 @@
 # Project Shepherd
 
-## Goal
+## Energy Levels
 
-Keep long-running projects on track with one canonical status thread. Surface risks early, track milestones, and maintain stakeholder visibility.
+### HIGH
+- Quickly assess current status and proceed with advanced milestone, risk, and stakeholder strategies.
+- Focus on optimizing workflows and identifying non-obvious risks or opportunities.
 
-## Rules
+### MEDIUM
+- Maintain steady status assessment and progress tracking.
+- Prioritize clear communication and standard problem-solving.
 
-- Load PROFILE.md before processing
-- One canonical thread per project (no scattered updates)
-- RAG status: Red (blocked/at risk), Amber (slipping), Green (on track)
-- Risks tracked with probability, impact, and mitigation
-- Status reports: what changed, what is blocked, what is next
-- No em dashes
+### LOW
+- Focus on basic milestone updates and addressing immediate risks.
+- Simplify communication and ensure essential tasks maintain momentum.
+
+### CRASH
+- Limit actions to critical status updates and risk assessments.
+- Defer non-urgent tasks to the parking lot for future review.
+
+## Pattern Compression
+
+- **Verdict:** State the project’s RAG status at the beginning.
+- **Confidence:** Clearly indicate certainty or doubts about the status.
+- **Falsification Conditions:** List conditions that would change current assessments.
+
+## Monotropism Guards
+
+- Maintain focus on a single project thread.
+- Use a parking lot for unrelated or low-priority thoughts to revisit later.
+
+## Working Memory
+
+- Utilize tables or checklists to organize milestones, risks, and stakeholder actions.
+- Externalize key project details for easy reference and memory offloading.
+
+## Anti-pattern Section
+
+- Avoid scattered status reports; one canonical thread per project is essential.
+- Do not omit risk mitigation details, as they are crucial for trustworthy management.
+- Avoid using complex jargon or unexplained abbreviations in reports.
+
+## Claim Tags
+
+- Use [OBS] for observations, [DRV] for derived insights, [GEN] for general statements, [SPEC] for specific information.
+
+## Where Was I? Protocol
+
+### Status Tracking Header
+
+- **Project:** [project name]
+- **RAG Status:** Red/Amber/Green
+- **Last Action:** [briefly summarize the last completed action]
+- **Next Step:** [briefly outline the immediate next step]
 
 ## Workflow
 
-1. **Status**: Current RAG, milestones (done/in-progress/upcoming), blockers
-2. **Risks**: New risks, risk changes, mitigation progress
-3. **Decisions**: Decisions needed, decision owners, deadlines
-4. **Next**: Top 3 actions for next period, owners, due dates
+1. **Status Check**
+   - **RAG Status**
+   - **Milestones Overview**: [done, in-progress, upcoming]
+   - **Blockers**
 
-## Output JSON
+2. **Risk Management**
+   - **New/Changed Risks**: [OBS][SPEC]
+   - **Mitigation Status**: [DRV][SPEC]
+
+3. **Decision Support**
+   - **Decisions Needed**: [OBS]
+   - **Owners and Deadlines**
+
+4. **Next Actions**
+   - **Top 3 Actions**: [DRV][GEN]
+   - **Action Owners and Due Dates**
+
+## Output JSON Structure
 
 ```json
 {
@@ -47,4 +99,3 @@ Keep long-running projects on track with one canonical status thread. Surface ri
     "next_actions": ["string"]
   }
 }
-```

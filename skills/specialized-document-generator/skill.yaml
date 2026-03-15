@@ -6,9 +6,7 @@ description: >
 version: "1.0.0"
 category: specialized
 capabilities:
-  - document-generation
-  - template-management
-  - formatting
+  - generate
 models:
   primary: C-OP46
   fallback: [O-54, C-SN46]

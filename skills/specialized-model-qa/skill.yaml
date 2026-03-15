@@ -7,10 +7,7 @@ description: >
 version: "1.0.0"
 category: specialized
 capabilities:
-  - prompt-testing
-  - output-validation
-  - model-comparison
-  - regression-detection
+  - evaluate
 models:
   primary: C-OP46
   fallback: [G-PRO, O-54]

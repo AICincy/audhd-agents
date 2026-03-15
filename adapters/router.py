@@ -5,7 +5,11 @@ import yaml
 import json
 import asyncio
 import logging
+import re
+import uuid
+import copy
 from pathlib import Path
+from typing import Dict, Any, Optional
 
 try:
     from dotenv import load_dotenv
@@ -27,6 +31,7 @@ from runtime.cognitive import (
 )
 from runtime.hooks import run_hooks, HookContext
 from runtime.validation import validate_output
+from runtime.planner import RuntimePlanner
 
 logger = logging.getLogger("audhd_agents.router")
 
@@ -38,7 +43,11 @@ class SkillRouter:
     output validation (A-6) into the execution flow.
     """
 
-    def __init__(self, config_path: str = "adapters/config.yaml"):
+    def __init__(self, config_path: Optional[str] = None):
+        if not config_path:
+            config_path = str(Path(__file__).parent / "config.yaml")
+
+        self.planner = RuntimePlanner()
         # Load .env file into os.environ
         if load_dotenv:
             # Prefer the repo-local .env over inherited shell state so key updates
@@ -55,17 +64,18 @@ class SkillRouter:
             )
 
         with open(config_path, encoding="utf-8") as f:
-            self.config = yaml.safe_load(f)
+            self.config: Dict[str, Any] = yaml.safe_load(f)
 
-        self.adapters = {}
-        self.adapter_init_errors = {}
-        self.skill_map = {}
+        self.adapters: Dict[str, Any] = {}
+        self.adapter_init_errors: Dict[str, str] = {}
+        self.skill_map: Dict[str, Path] = {}
+        self.skill_capabilities: Dict[str, list[str]] = {}
         self._build_skill_map()
         self._init_adapters()
         self.alias_map = self.config.get("alias_map", {})
 
     def _build_skill_map(self):
-        """Build a map of skill_id to directory path for nested discovery."""
+        """Build a map of skill_id to directory path across for nested discovery."""
         skill_root = Path("skills")
         if not skill_root.exists():
             return
@@ -76,9 +86,12 @@ class SkillRouter:
             try:
                 with open(path, encoding="utf-8") as f:
                     cfg = yaml.safe_load(f)
-                    if cfg and "id" in cfg:
-                        self.skill_map[cfg["id"]] = path.parent
-            except Exception:
+                    if cfg and "name" in cfg:
+                        name = cfg["name"]
+                        self.skill_map[name] = path.parent
+                        self.skill_capabilities[name] = cfg.get("capabilities", [])
+            except Exception as e:
+                logger.error("Failed to load skill at %s: %s", path, e)
                 continue
 
     def _init_adapters(self):
@@ -120,7 +133,7 @@ class SkillRouter:
         if "/" in full:
             provider, model = full.split("/", 1)
             return provider, model
-        return None, alias
+        raise ValueError(f"Could not resolve alias '{alias}' to a provider/model pair. Check alias_map in config.yaml.")
 
     def load_skill(self, skill_id: str) -> dict:
         """Load skill configuration from skills directory (Synchronous)."""
@@ -128,8 +141,11 @@ class SkillRouter:
         if not skill_dir:
             skill_dir = Path("skills") / skill_id
 
-        with open(skill_dir / "skill.yaml", encoding="utf-8") as f:
-            skill_config = yaml.safe_load(f)
+        try:
+            with open(skill_dir / "skill.yaml", encoding="utf-8") as f:
+                skill_config = yaml.safe_load(f)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Skill '{skill_id}' not found or missing skill.yaml at {skill_dir}")
 
         prompt_path = skill_dir / "prompt.md"
         # Blocking I/O
@@ -196,10 +212,10 @@ class SkillRouter:
             router = SkillRouter()
             print(json.dumps(router.get_status(), indent=2))
         """
-        status = {}
+        status: Dict[str, Any] = {}
         for name, adapter in self.adapters.items():
             api_key = getattr(adapter, "api_key", None)
-            key_preview = api_key[:8] + "..." if api_key else None
+            key_preview = "********" + api_key[-4:] if api_key and len(api_key) >= 4 else None
             status[name] = {
                 "connected": bool(getattr(adapter, "client", None)),
                 "key_prefix": key_preview,
@@ -217,38 +233,41 @@ class SkillRouter:
             if getattr(adapter, "init_error", None):
                 status[name]["error"] = adapter.init_error
         # Report providers configured but missing keys
-        for provider in self.config.get("providers", {}):
-            if provider not in status:
-                env_key = self.config["providers"][provider].get("env_key", "")
-                error = self.adapter_init_errors.get(provider)
-                if not error and provider == "google":
-                    error = (
-                        "Set GOOGLE_API_KEY for Gemini Developer API, or "
-                        "set VERTEX_API_KEY / GOOGLE_GENAI_USE_VERTEXAI for Vertex AI"
-                    )
-                elif not error:
-                    error = f"API key not found. Set {env_key} in .env"
-                status[provider] = {
-                    "connected": False,
-                    "key_prefix": None,
-                    "circuit_breaker": "n/a",
-                    "models": [],
-                    "error": error,
-                }
+        providers_dict = self.config.get("providers", {})
+        if isinstance(providers_dict, dict):
+            for provider, p_config in providers_dict.items():
+                p_str = str(provider)
+                if p_str not in status:
+                    env_key = p_config.get("env_key", "") if isinstance(p_config, dict) else ""
+                    error = self.adapter_init_errors.get(p_str)
+                    if not error and p_str == "google":
+                        error = (
+                            "Set GOOGLE_API_KEY for Gemini Developer API, or "
+                            "set VERTEX_API_KEY / GOOGLE_GENAI_USE_VERTEXAI for Vertex AI"
+                        )
+                    elif not error:
+                        error = f"API key not found. Set {env_key} in .env"
+                    status[p_str] = {
+                        "connected": False,
+                        "key_prefix": None,
+                        "circuit_breaker": "n/a",
+                        "models": [],
+                        "error": error,
+                    }
         return status
 
-    async def _load_instruction_stack(self, provider_name: str) -> str:
+    async def _load_instruction_stack(self, provider_name: str, needs_tools: bool = False) -> str:
         """Offload blocking I/O to a thread to keep the event loop responsive.
 
         Stack order: PROFILE.md > prompt_base.md > model MD > SKILL.md > TOOL.md
         The shared prompt base (A-5) is loaded between PROFILE.md and model MD.
         """
         loop = asyncio.get_running_loop()
-        profile = await loop.run_in_executor(None, self.load_profile_md)
-        prompt_base = await loop.run_in_executor(None, self.load_prompt_base)
-        model_md = await loop.run_in_executor(None, self.load_model_md, provider_name)
-        skills_md = await loop.run_in_executor(None, self.load_skills_md)
-        tool_md = await loop.run_in_executor(None, self.load_tool_md)
+        profile = await loop.run_in_executor(None, self.load_profile_md)  # type: ignore[arg-type]
+        prompt_base = await loop.run_in_executor(None, self.load_prompt_base)  # type: ignore[arg-type]
+        model_md = await loop.run_in_executor(None, self.load_model_md, provider_name)  # type: ignore[arg-type]
+        skills_md = await loop.run_in_executor(None, self.load_skills_md)  # type: ignore[arg-type]
+        tool_md = await loop.run_in_executor(None, self.load_tool_md) if needs_tools else ""  # type: ignore[arg-type]
 
         stack = [profile, prompt_base, model_md, skills_md, tool_md]
         return "\n\n".join(filter(None, stack))
@@ -377,7 +396,8 @@ class SkillRouter:
                 continue
 
             # Non-blocking load of the instruction stack
-            combined_instructions = await self._load_instruction_stack(provider_name)
+            needs_tools = bool(skill_config.get("tools"))
+            combined_instructions = await self._load_instruction_stack(provider_name, needs_tools)
             system_prompt = adapter.build_system_prompt(
                 prompt_md, combined_instructions
             )
@@ -385,36 +405,43 @@ class SkillRouter:
             # Inject cognitive preamble at the top of system prompt
             system_prompt = cognitive_preamble + "\n\n" + system_prompt
 
-            # Audit correlation ID
-            audit_id = f"audit-{request.skill_id}-{os.getpid()}"
+            # Audit correlation ID (uniqueness fix)
+            audit_id = f"audit-{request.skill_id}-{os.getpid()}-{str(uuid.uuid4())[:8]}"
             user_prompt = f"[AUDIT_ID: {audit_id}]\n{request.input_text}"
-            request.options.setdefault("headers", {}).update({"X-Audit-ID": audit_id})
+            
+            # Deep copy to prevent state pollution across failovers
+            req_options = copy.deepcopy(request.options)
+            req_options.setdefault("headers", {}).update({"X-Audit-ID": audit_id})
 
             try:
                 result = await adapter.execute(
                     model=model_id,
                     system_prompt=system_prompt,
                     user_prompt=user_prompt,
-                    **request.options,
+                    **req_options,
                 )
 
                 # SK-SYS-RECOVER: Autonomous backoff detection
                 if result.get("headers", {}).get("x-backoff") == "true":
-                    await asyncio.sleep(2.0)
+                    import random
+                    await asyncio.sleep(min(2.0 + random.random(), 5.0))
                     result["content"] = f"[RECOVERY_ACTIVE] {result.get('content')}"
 
                 # Parse JSON output
                 content = result.get("content", "").strip()
                 output = {"raw": content}
 
-                if content.startswith(("{", "[")):
+                # Robust JSON regex extraction
+                json_content = re.sub(r"^```(?:json)?|```$", "", content, flags=re.IGNORECASE).strip()
+
+                if json_content.startswith(("{", "[")):
                     try:
-                        if len(content) > 10000:
+                        if len(json_content) > 10000:
                             output = await loop.run_in_executor(
-                                None, json.loads, content
+                                None, json.loads, json_content
                             )
                         else:
-                            output = json.loads(content)
+                            output = json.loads(json_content)
                     except json.JSONDecodeError:
                         output = {"raw": content, "error": "JSON parse failed"}
 
@@ -452,9 +479,9 @@ class SkillRouter:
                     model_used=model_id,
                     provider=provider_name,
                     headers=result.get("headers", {}),
-                    input_tokens=result["input_tokens"],
-                    output_tokens=result["output_tokens"],
-                    latency_ms=result["latency_ms"],
+                    input_tokens=result.get("input_tokens", 0),
+                    output_tokens=result.get("output_tokens", 0),
+                    latency_ms=result.get("latency_ms", 0.0),
                 )
 
             except Exception as e:
@@ -464,3 +491,72 @@ class SkillRouter:
         raise RuntimeError(
             f"All models failed for skill {request.skill_id}: {last_error}"
         )
+
+    async def execute_chain(self, request: SkillRequest, cognitive_state_override=None) -> SkillResponse:
+        """Route and execute a chain of skills based on capability planning.
+
+        Execution flow:
+        1. Leverage RuntimePlanner to determine capability chain from input.
+        2. Resolve capabilities to specific skill IDs.
+        3. Execute the chain sequentially, bridging state.
+        """
+        # P1-1: Accept cognitive_state from runtime.schemas.CognitiveState
+        if cognitive_state_override is not None:
+            el = cognitive_state_override.energy_level
+            request.options["energy_level"] = el.value if hasattr(el, "value") else str(el)
+            att = cognitive_state_override.attention_state
+            request.options["attention_state"] = att.value if hasattr(att, "value") else str(att)
+            sc = cognitive_state_override.session_context
+            request.options["session_context"] = sc.value if hasattr(sc, "value") else str(sc)
+
+        cognitive_state = parse_cognitive_state(request.options)
+        
+        # Infer mode to help the planner or hooks later
+        if not cognitive_state.active_mode or cognitive_state.active_mode == "execute":
+            inferred = infer_mode(request.input_text)
+            if inferred != "execute":
+                cognitive_state.active_mode = inferred
+
+        # Use planner to parse intentions and determine capability chain
+        capabilities = self.planner.plan_execution_chain(request.input_text)
+        if not capabilities:
+            raise ValueError(f"Planner could not determine a capability chain for the given input.")
+            
+        logger.info(f"Planned capability chain: {capabilities}")
+        
+        skills_to_run = []
+        for cap in capabilities:
+            skill_id = self.planner.resolve_capability_to_skill(cap, self.skill_capabilities)
+            if not skill_id:
+                raise ValueError(f"Planner could not resolve capability '{cap}' to a known skill.")
+            skills_to_run.append(skill_id)
+            
+        logger.info(f"Resolved skill chain: {skills_to_run}")
+        
+        current_input = request.input_text
+        last_response = None
+        
+        for idx, skill_id in enumerate(skills_to_run):
+            logger.info(f"Executing step {idx+1}/{len(skills_to_run)}: {skill_id} (Capability: {capabilities[idx]})")
+            
+            step_request = SkillRequest(
+                skill_id=skill_id,
+                input_text=current_input,
+                options=request.options.copy(),
+                model_override=request.model_override
+            )
+            
+            step_response = await self.execute(step_request, cognitive_state_override)
+            last_response = step_response
+            
+            # Simple state bridge (SK-BRIDGE concept) with JSON safe wrapper
+            raw_output = step_response.output.get("raw", "")
+            current_input = json.dumps({
+                "previous_step_output": {"skill": skill_id, "output": raw_output},
+                "original_request": request.input_text
+            }, ensure_ascii=False)
+            
+        if last_response is None:
+            raise RuntimeError("Execution chain completed but no response was generated.")
+            
+        return last_response

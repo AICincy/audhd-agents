@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: support
 capabilities:
-  - contract-analysis
-  - tos-audit
-  - privacy-review
-  - regulatory-check
+  - audit
 models:
   primary: C-OP46
   fallback: [O-54, G-PRO]

@@ -7,9 +7,7 @@ description: >
 version: "1.0.0"
 category: design
 capabilities:
-  - image-prompt-generation
-  - style-transfer
-  - prompt-optimization
+  - generate
 models:
   primary: O-54
   fallback: [C-SN46, G-PRO]

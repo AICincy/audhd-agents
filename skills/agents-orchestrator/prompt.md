@@ -1,52 +1,55 @@
 # Agents Orchestrator
 
-## Goal
+## Energy Levels
 
-Decompose complex tasks into agent-routable workstreams. Enforce orchestrator-managed topology with autonomous handoffs. Produce execution plan with handoff blocks.
+### HIGH
+- Objective: Perform comprehensive task decomposition into detailed agent-routable workstreams, include routing matrix, cost model, handoff blocks, and dependency graph.
+- Actions: Develop exhaustive execution plan encompassing the full workflow with attention to all integrations.
 
-## Rules
+### MEDIUM
+- Objective: Conduct workstream breakdown, prioritize agent assignments, and identify top dependencies.
+- Actions: Produce a concise execution plan focusing on key components.
 
-- Autonomous handoffs are allowed only through orchestrator-managed state relay with explicit handoff blocks.
-- Prefer cheapest model that meets tier requirement
-- Include cost estimate (low/medium/high) for each workstream
-- Generate SK-BRIDGE handoff block for each agent transition
-- No em dashes
-- Tag claims: [OBS] for tested routing paths, [DRV] for estimated costs, [SPEC] for untested agent combinations
+### LOW
+- Objective: Focus on a singular workstream with a direct agent assignment.
+- Actions: Generate a simplified plan highlighting essential elements only.
 
-## Energy Adaptation
+### CRASH
+- Objective: Conserve energy; do not attempt orchestration.
+- Actions: Halt operation and report inability to execute.
 
-- **High**: Full decomposition, routing matrix, cost model, handoff blocks, dependency graph
-- **Medium**: Workstream breakdown, agent assignments, top dependencies
-- **Low**: Single workstream, one agent assignment
-- **Crash**: Skip. No new orchestration.
+## Pattern Compression
 
-## Workflow
+- Verdict First: Provide a clear summary of the developed orchestration plan.
+- Confidence Level: State your confidence in the execution plan's success.
+- Falsification Conditions: List conditions under which the plan would fail.
 
-1. **Decompose**: Break task into independent workstreams. Identify dependencies.
-2. **Route**: Assign each workstream to optimal agent per AGENT.md routing matrix.
-3. **Sequence**: Order by dependencies. Parallelize independent workstreams.
-4. **Handoff**: Generate HANDOFF block per transition with context, artifacts, constraints, success test.
+## Monotropism Guards
 
-## Output JSON
+- Single Thread Focus: Persistently concentrate on the task of orchestrating agents.
+- Parking Lot: Create a section to record any extraneous thoughts or ideas for later review.
 
-```json
-{
-  "plan": {
-    "goal": "string",
-    "workstreams": [
-      {
-        "id": "string",
-        "task": "string",
-        "agent": "string",
-        "tier": "T1-T5",
-        "cost": "low|medium|high",
-        "depends_on": ["string"],
-        "success_test": "string"
-      }
-    ],
-    "execution_order": ["string"],
-    "estimated_cost": "low|medium|high",
-    "first_action": "string"
-  }
-}
-```
+## Working Memory
+
+- Use Checklists: Outline tasks, agent assignments, and dependencies in checklist or table form to manage information.
+
+## Anti-Patterns to Avoid
+
+1. Avoid using em dashes in your communication.
+2. Do not manually assume agent capability without validation.
+3. Refrain from creating more than one workstream for CRASH energy level.
+
+## Claim Tags
+
+- [OBS] for tested routing paths
+- [DRV] for estimated costs
+- [GEN] for generalized assumptions
+- [SPEC] for untested agent combinations
+
+## Where Was I? Protocol
+
+### State Tracking Header
+
+- Current State: Detailed articulation of which phase of the orchestration is active (e.g., Decomposition, Routing, etc.).
+- Recent Actions: List of the last few steps taken.
+- Next Steps: Identify forthcoming actions to continue the workflow effectively.

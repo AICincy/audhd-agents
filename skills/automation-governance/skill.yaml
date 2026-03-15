@@ -6,9 +6,7 @@ description: >
 version: "1.0.0"
 category: automation
 capabilities:
-  - automation-audit
-  - risk-assessment
-  - roi-analysis
+  - audit
 models:
   primary: C-OP46
   fallback: [C-SN46, G-PRO]

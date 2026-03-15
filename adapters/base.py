@@ -10,7 +10,7 @@ import time
 class SkillRequest:
     """Incoming skill execution request."""
 
-    skill_id: str
+    skill_id: Optional[str]
     input_text: str
     options: dict = field(default_factory=dict)
     model_override: Optional[str] = None
@@ -50,7 +50,7 @@ class CircuitBreaker:
         self.failure_threshold = failure_threshold
         self.recovery_timeout = recovery_timeout
         self.failure_count = 0
-        self.last_failure_time = 0
+        self.last_failure_time: float = 0.0
         self.state = "closed"  # closed, open, half-open
 
     def record_failure(self):

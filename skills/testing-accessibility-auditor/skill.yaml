@@ -7,9 +7,7 @@ description: >
 version: "1.0.0"
 category: testing
 capabilities:
-  - accessibility-audit
-  - wcag-compliance
-  - assistive-tech-testing
+  - audit
 models:
   primary: C-OP46
   fallback: [O-54, G-PRO, C-SN46]

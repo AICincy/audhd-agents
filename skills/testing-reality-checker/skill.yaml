@@ -6,9 +6,7 @@ description: >
 version: "1.0.0"
 category: testing
 capabilities:
-  - assumption-validation
-  - feasibility-assessment
-  - estimate-verification
+  - evaluate
 models:
   primary: C-OP46
   fallback: [G-PRO, O-54]

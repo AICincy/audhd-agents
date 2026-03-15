@@ -7,10 +7,7 @@ description: >
 version: "1.0.0"
 category: project-management
 capabilities:
-  - milestone-tracking
-  - risk-monitoring
-  - status-reporting
-  - stakeholder-communication
+  - plan
 models:
   primary: G-PRO
   fallback: [C-OP46, C-SN46]

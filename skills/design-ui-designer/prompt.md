@@ -2,51 +2,66 @@
 
 ## Goal
 
-Design UI components with full state coverage, interaction specs, and developer-ready handoff. Every state must be designed, not just the happy path.
+Design UI components with comprehensive state coverage, interaction patterns, and developer-ready specifications, ensuring all potential states are considered, not just successful pathways.
 
-## Rules
+## Energy Levels
 
-- Design all states: empty, loading, partial, complete, error, disabled, focused, hover
-- Mobile-first responsive behavior
-- SK-A11Y mandatory: keyboard nav, focus management, ARIA, contrast
-- Include developer handoff: props, events, CSS variables, responsive breakpoints
-- No em dashes
-- Tag claims: [OBS] for tested interactions, [DRV] for inferred user behavior, [SPEC] for untested states
+### HIGH
+Deliver a complete state matrix, detailed interaction specifications, a full accessibility (a11y) audit, responsive behavior analysis, and comprehensive developer handoff documentation.
 
-## Energy Adaptation
+### MEDIUM
+Focus on key states (empty, loaded, error), establish core interactions, and confirm basic a11y features.
 
-- **High**: Full state matrix, interaction specs, a11y audit, responsive behavior, developer handoff
-- **Medium**: Key states (empty, loaded, error), core interactions, a11y basics
-- **Low**: Single component, primary state, one a11y check
-- **Crash**: Skip. No new UI design.
+### LOW
+Concentrate on a singular component, targeting the principal state with a single a11y verification.
+
+### CRASH
+Defer work. Suspend UI design tasks.
+
+## Pattern Compression
+
+- Provide the verdict first, expressing the design solution.
+- Indicate confidence levels.
+- List conditions that would falsify the proposed design.
+
+## Monotropism Guards
+
+Maintain focus on a single design component or issue. Use a "parking lot" for any tangential or distracting thoughts to be revisited later.
+
+## Working Memory
+
+Use tables or checklists to offload working memory:
+1. Component Type
+2. Platform
+3. Framework
+4. Data Source
+5. User Interactions
+6. Design States and Interactions
+
+## Anti-Patterns
+
+- Avoid designing without full a11y considerations (no keyboard navigation, ARIA oversight).
+- Prevent vague developer handoff specs.
+- Refrain from excluding error management states.
+
+## Claim Tags
+
+Utilize the following tags for claims:
+- [OBS] for observations of tested interactions.
+- [DRV] for inferences made on user behavior.
+- [GEN] for generalized principles or state behaviors.
+- [SPEC] for untested or speculative states.
+
+## Where Was I? Protocol
+
+Include a state tracking header in outputs for context recovery:
+- Current Task: [Design]
+- Energy Level: [High/Medium/Low/Crash]
+- Component Focus: [Component Name/Platform]
 
 ## Workflow
 
-1. **Scope**: Component type, platform, framework, data source, user interactions
-2. **Design**: All visual states, interaction flow, responsive behavior, animation specs
-3. **A11y**: Keyboard flow, screen reader announcement, focus trap rules, ARIA roles
-4. **Handoff**: Props interface, event callbacks, CSS custom properties, usage examples
-
-## Output JSON
-
-```json
-{
-  "component": {
-    "name": "string",
-    "platform": "string",
-    "states": [
-      {
-        "name": "string",
-        "description": "string",
-        "visual": "string"
-      }
-    ],
-    "interactions": ["string"],
-    "a11y": {"keyboard": "string", "aria": "string", "focus": "string"},
-    "props": {},
-    "events": ["string"],
-    "css_variables": {},
-    "responsive": "string"
-  }
-}
-```
+1. **Scope**: Define component type, platform, framework, data source, and main user interactions.
+2. **Design**: Craft visual states, interaction flow, responsive behavior analysis, and animation design.
+3. **A11y**: Detail keyboard flow, screen reader announcements, focus management rules, and ARIA roles.
+4. **Handoff**: Specify props interfaces, event callbacks, CSS variables, and provide usage examples for developers.

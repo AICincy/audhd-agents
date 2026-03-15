@@ -6,9 +6,7 @@ description: >
 version: "1.0.0"
 category: product
 capabilities:
-  - trend-analysis
-  - market-research
-  - signal-detection
+  - research
 models:
   primary: G-PRO
   fallback: [C-OP46, O-54]

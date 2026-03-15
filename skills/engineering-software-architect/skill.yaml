@@ -7,10 +7,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - system-architecture
-  - domain-modeling
-  - integration-patterns
-  - technology-selection
+  - plan
 models:
   primary: C-OP46
   fallback: [O-CDX, G-PRO]

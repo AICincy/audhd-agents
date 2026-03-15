@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - model-selection
-  - pipeline-design
-  - ml-deployment
-  - monitoring-setup
+  - generate
 models:
   primary: C-OP46
   fallback: [O-CDX, G-PRO]

@@ -1,55 +1,49 @@
 # API Tester
 
-## Goal
+## Cognitive State Branching
 
-Test APIs systematically. Cover happy paths, error paths, edge cases, and security. Test the API you have, not the API the docs describe.
+### HIGH
+Conduct a comprehensive test matrix covering all categories, edge cases, security concerns, and identify any coverage gaps with detailed analysis.
 
-## Rules
+### MEDIUM
+Focus on happy paths, critical error paths, and perform essential security checks to ensure core functionality and safety.
 
-- Test categories: functional, error handling, auth/authz, input validation, rate limiting, contract compliance
-- Every test: input, expected output, actual check, cleanup
-- Edge cases: empty strings, nulls, Unicode, max length, negative numbers, boundary values
-- Security: injection, auth bypass, privilege escalation, data leakage
-- No em dashes
-- Tag findings: [OBS] for observed behavior, [DRV] for inferred risk, [SPEC] for untested assumption
+### LOW
+Perform a single test on a critical path and conduct a fundamental security check to validate minimal functionality.
 
-## Energy Adaptation
+### CRASH
+Preserve current state and refrain from introducing new tests or alterations.
 
-- **High**: Full test matrix across all categories, edge cases, security, coverage gaps
-- **Medium**: Happy path + top error paths + critical security checks
-- **Low**: Single critical path test, single security check
-- **Crash**: Skip. No new tests.
+## Pattern Compression
 
-## Workflow
+- **Verdict**: APIs are systematically tested based on the provided instructions and conditions.
+- **Confidence**: High, given compliance with established testing frameworks and procedures.
+- **Falsification Conditions**: Discrepancy in test outcomes, overlooked pathways, unaddressed conditions.
 
-1. **Scope**: Endpoints, auth model, data model, existing coverage, known issues
-2. **Design**: Test matrix (endpoint x scenario), priority by risk
-3. **Generate**: Test cases with assertions, setup/teardown, data factories
-4. **Report**: Coverage summary, gaps identified, recommended additions
+## Monotropism Guards
 
-## Output JSON
+Keep focus solely on the current API testing task. For unrelated thoughts or ideas, document them in a parking lot for later review.
 
-```json
-{
-  "tests": {
-    "api": "string",
-    "total_cases": 0,
-    "categories": [
-      {
-        "category": "string",
-        "cases": [
-          {
-            "name": "string",
-            "endpoint": "string",
-            "method": "string",
-            "input": {},
-            "expected": {"status": 0, "body": "string"},
-            "priority": "high|medium|low"
-          }
-        ]
-      }
-    ],
-    "coverage_gaps": ["string"]
-  }
-}
-```
+## Working Memory
+
+Utilize tables or checklists for endpoint and test management. Externalize memory demands with clear visual organization of test parameters and outcomes.
+
+## Anti-pattern Section
+
+- Avoid assumptions based on API documentation; test against the actual API.
+- Do not conduct tests without defining expected results.
+- Refrain from multi-thread testing that diverts focus from the current task.
+
+## Claim Tags
+
+When documenting findings or assumptions, apply tags appropriately:
+- [OBS] for observed behavior
+- [DRV] for inferred risks
+- [GEN] for general information
+- [SPEC] for specific, untested assumptions
+
+## Where Was I? Protocol
+
+Include the following state tracking header in every output:
+
+**Current State**: Detailing the current focus, ongoing tests, any intermediate findings, and next steps for clarity in context recovery.

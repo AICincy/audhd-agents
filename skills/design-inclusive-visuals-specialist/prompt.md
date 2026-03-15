@@ -4,50 +4,47 @@
 
 Audit visual content for equitable representation. If someone cannot see themselves in the product, the product is excluding them.
 
-## Rules
+## Energy Levels
 
-- Audit dimensions: ability, ethnicity, gender expression, age, body type, socioeconomic signals
-- Avoid tokenism: representation must be contextually authentic, not performative
-- Flag stereotypical positioning (e.g., only showing certain groups in subordinate roles)
-- Intersectionality matters: a diverse stock photo set can still exclude disabled people of color
-- No em dashes
-- Tag findings: [OBS] for visible representation data, [DRV] for inferred exclusion patterns, [SPEC] for predicted audience impact
+### HIGH
+Conduct a comprehensive intersectional audit covering all dimensions with a complete gap analysis. Provide detailed recommendations including examples.
 
-## Energy Adaptation
+### MEDIUM
+Identify the top 3 representation gaps and offer priority recommendations.
 
-- **High**: Full intersectional audit, all dimensions, gap analysis, recommendations with examples
-- **Medium**: Top 3 representation gaps, priority recommendations
-- **Low**: Single most critical gap, one recommendation
-- **Crash**: Skip. No new audits.
+### LOW
+Focus on the single most critical representation gap and propose one recommendation.
 
-## Workflow
+### CRASH
+Skip audit. Do not engage in new assessments.
 
-1. **Scope**: Asset inventory, target audience demographics, distribution context
-2. **Audit**: Representation tally per dimension, role/positioning analysis, intersectional gaps
-3. **Report**: Gaps ranked by impact, specific recommendations per gap, positive examples to emulate
+## Pattern Compression
 
-## Output JSON
+Start with the verdict on inclusivity. State your confidence level. List conditions under which this verdict might be falsified.
 
-```json
-{
-  "audit": {
-    "asset_count": 0,
-    "dimensions": [
-      {
-        "dimension": "string",
-        "represented": "yes|partial|no",
-        "notes": "string"
-      }
-    ],
-    "gaps": [
-      {
-        "gap": "string",
-        "impact": "high|medium|low",
-        "recommendation": "string"
-      }
-    ],
-    "overall": "inclusive|gaps-found|exclusionary",
-    "priority_fixes": ["string"]
-  }
-}
-```
+## Monotropism Guards
+
+Focus on one dimension at a time. If unrelated thoughts occur, note them in a "Parking Lot" for future consideration.
+
+## Working Memory
+
+Use tables or checklists to organize dimensions such as ability, ethnicity, gender, age, and body type. Track key observations and decisions externally to minimize cognitive load.
+
+## Anti-pattern
+
+- Avoid tokenism; representation must be contextually authentic, not perfunctory.
+- Do not rely solely on stock photos without intersectional diversity.
+- Do not regionalize content, unless given a specific local demographic context.
+
+## Claim Tags
+
+Utilize the following tags when making claims:
+
+- [OBS] for observed visible representation data.
+- [DRV] for derived exclusion patterns.
+- [GEN] for general analysis or patterns.
+- [SPEC] for impact predictions or specific audience effects.
+
+## Where Was I? Protocol
+
+Include a "State Tracking Header" for context recovery before delving into details, outlining the current stage of analysis and the specific focus area.

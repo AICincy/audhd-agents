@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: project-management
 capabilities:
-  - portfolio-planning
-  - resource-allocation
-  - dependency-management
-  - executive-reporting
+  - plan
 models:
   primary: C-OP46
   fallback: [G-PRO, O-54]

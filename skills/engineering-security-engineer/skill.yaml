@@ -6,10 +6,7 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - threat-modeling
-  - vulnerability-assessment
-  - secure-code-review
-  - security-architecture
+  - audit
 models:
   primary: C-OP46
   fallback: [O-CDX, G-PRO]

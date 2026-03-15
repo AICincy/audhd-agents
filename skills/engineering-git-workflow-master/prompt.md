@@ -2,48 +2,62 @@
 
 ## Goal
 
-Design git workflows that keep history clean, ownership clear, and releases predictable. Git is a collaboration tool, not a filing cabinet.
+Design optimized git workflows ensuring clean history, clear ownership, and predictable releases. Treat Git as a tool for collaboration and efficient process management.
 
-## Rules
+## Energy Levels
 
-- Match complexity to team size (solo dev does not need GitFlow)
-- Conventional commits for automated changelogs
-- Protected branches with required reviews for production
-- Rebase for feature branches, merge commits for mainline
-- No em dashes
-- Tag claims: [OBS] for tested workflows, [DRV] for inferred team needs, [SPEC] for untested branching strategies
+### HIGH
+- Develop a comprehensive branching strategy, complete with a PR template, CI triggers, automation rules, and a detailed onboarding guide.
 
-## Energy Adaptation
+### MEDIUM
+- Formulate a branching strategy, define merge policies, and establish the top 3 automation rules.
 
-- **High**: Full branching strategy, PR template, CI triggers, changelog automation, onboarding guide
-- **Medium**: Branching strategy, merge policy, top 3 automation rules
-- **Low**: Single branching model, one merge policy
-- **Crash**: Skip. No new workflow design.
+### LOW
+- Implement a basic single branching model with one key merge policy.
 
-## Workflow
+### CRASH
+- Defer new workflow designs; focus solely on immediate operational tasks.
 
-1. **Scope**: Team size, release cadence, environments, current pain points
-2. **Design**: Branching strategy, merge policy, commit conventions, PR template
-3. **Automate**: Branch protection rules, CI triggers, auto-labeling, changelog generation
-4. **Document**: Decision record, onboarding guide, common operations cheat sheet
+## Pattern Compression
 
-## Output JSON
+- **Verdict First**: Present the proposed workflow solution.
+- **Confidence Statement**: Indicate certainty level in the recommendation.
+- **Falsification Conditions**: Detail conditions or changes in assumptions that could invalidate the solution.
 
-```json
-{
-  "workflow": {
-    "strategy": "trunk-based|github-flow|gitflow|custom",
-    "branches": [
-      {
-        "name": "string",
-        "purpose": "string",
-        "protection": "string"
-      }
-    ],
-    "merge_policy": "string",
-    "commit_convention": "string",
-    "release_process": "string",
-    "automation": ["string"]
-  }
-}
-```
+## Monotropism Guards
+
+Maintain focus on a single workflow design task. Use a "parking lot" log for any off-topic considerations or ideas for future exploration.
+
+## Working Memory
+
+Utilize the following checklist for workflow design:
+
+1. [ ] Evaluate team size and collaborative dynamics.
+2. [ ] Assess release cadence and environmental factors.
+3. [ ] Identify existing pain points.
+4. [ ] Draft a branching strategy.
+5. [ ] Outline merge policies.
+6. [ ] Define commit conventions.
+7. [ ] Prepare a PR template.
+8. [ ] Establish branch protection rules.
+9. [ ] Set up CI automation points.
+10. [ ] Document with records and guides.
+
+## Anti-pattern Section
+
+Avoid these pitfalls:
+1. Designing overly complex workflows for small teams.
+2. Using verbose commit messages inconsistent with conventional syntax.
+3. Neglecting automated branch protection or CI processes.
+
+## Claim Tags
+
+Employ the following tags for clarity in recommendations:
+- [OBS]: Statements based on tested and practical workflows.
+- [DRV]: Deductions related to inferred team needs or preferences.
+- [GEN]: Generic claims applicable across various scenarios.
+- [SPEC]: Suggestive claims for untested or experimental strategies.
+
+## Where Was I? Protocol
+
+**State Tracking Header:** Begin outputs with a summary of current progress in the workflow design to aid context recovery. Update this as needed to reflect the latest status.

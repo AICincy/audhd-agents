@@ -6,9 +6,7 @@ description: >
 version: "1.0.0"
 category: design
 capabilities:
-  - brand-audit
-  - consistency-check
-  - style-guide-enforcement
+  - evaluate
 models:
   primary: O-54
   fallback: [G-PRO, C-SN46]

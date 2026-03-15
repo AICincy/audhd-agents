@@ -6,9 +6,7 @@ description: >
 version: "1.0.0"
 category: design
 capabilities:
-  - data-visualization
-  - narrative-design
-  - chart-specification
+  - generate
 models:
   primary: O-54
   fallback: [C-SN46, G-PRO]
