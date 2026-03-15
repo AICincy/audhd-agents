@@ -1,20 +1,25 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Design requirements, wireframe, existing CSS, or layout spec"
-    },
-    "platform": {
-      "type": "string",
-      "description": "Target platform",
-      "enum": ["web", "devvit", "mobile-web", "cross-platform"]
-    },
-    "css_approach": {
-      "type": "string",
-      "description": "CSS methodology",
-      "enum": ["vanilla", "tailwind", "css-modules", "styled-components"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Design requirements, wireframe, existing CSS, or layout spec"
+        },
+        "platform": {
+          "type": "string",
+          "description": "Target platform",
+          "enum": ["web", "devvit", "mobile-web", "cross-platform"]
+        },
+        "css_approach": {
+          "type": "string",
+          "description": "CSS methodology",
+          "enum": ["vanilla", "tailwind", "css-modules", "styled-components"]
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

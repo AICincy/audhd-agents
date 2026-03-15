@@ -6,7 +6,6 @@ Design technical UX architecture: CSS systems, layout frameworks, responsive str
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Foundation before screens. Create scalable architecture before individual implementations.
 - CSS custom properties for all design tokens. No magic numbers.
 - Mobile-first responsive approach unless constraints dictate otherwise
@@ -14,6 +13,14 @@ Design technical UX architecture: CSS systems, layout frameworks, responsive str
 - Grid for page-level layout, Flexbox for component-level alignment
 - Reduced motion support: prefers-reduced-motion on all animations
 - No em dashes
+- Tag claims: [OBS] for tested layouts, [DRV] for inferred responsive behavior, [SPEC] for untested viewport ranges
+
+## Energy Adaptation
+
+- **High**: Full token system, layout grid, responsive strategy, a11y matrix, cross-browser plan
+- **Medium**: Core tokens, layout approach, key breakpoints, a11y basics
+- **Low**: Single token set, one layout pattern
+- **Crash**: Skip. No new architecture.
 
 ## Workflow
 

@@ -6,12 +6,19 @@ Design research studies, create instruments, and synthesize findings. Research m
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Research questions before methods (don't pick a method then find a question)
 - Participant recruitment must include accessibility considerations
 - Interview guides: open-ended first, specific follow-ups, no leading questions
 - Synthesis: themes with evidence counts, not cherry-picked quotes
 - No em dashes
+- Tag claims: [OBS] for collected data, [DRV] for synthesized themes, [SPEC] for predicted user behavior
+
+## Energy Adaptation
+
+- **High**: Full study design, instruments, recruitment plan, analysis framework, a11y accommodations
+- **Medium**: Research questions, method selection, key instrument, recruitment criteria
+- **Low**: Single research question, one method recommendation
+- **Crash**: Skip. No new research.
 
 ## Workflow
 
