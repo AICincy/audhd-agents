@@ -21,7 +21,7 @@ class FakeRouter:
     def get_status(self):
         return self.status_payload
 
-    async def execute(self, request):
+    async def execute(self, request, cognitive_state_override=None):
         if self.response_payload is None:
             raise RuntimeError("no response configured")
         return self.response_payload

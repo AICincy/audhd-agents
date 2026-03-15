@@ -25,7 +25,7 @@ from pydantic import BaseModel, Field
 
 class EnergyLevel(str, Enum):
     """Maps to AGENT.md Energy-Adaptive Routing matrix.
-    
+
     HIGH   -> full model pool, full output
     MEDIUM -> mid-tier models, standard output
     LOW    -> fastest models only, single micro-action
@@ -39,7 +39,7 @@ class EnergyLevel(str, Enum):
 
 class AttentionState(str, Enum):
     """Monotropism signal from PROFILE.md.
-    
+
     FOCUSED       -> single-thread enforcement strict
     DIFFUSE       -> allow broader context gathering
     TRANSITIONING -> announce topic shift before executing
@@ -51,7 +51,7 @@ class AttentionState(str, Enum):
 
 class SessionContext(str, Enum):
     """Where Was I? protocol from AGENT.md.
-    
+
     NEW         -> fresh session, no prior state
     RESUMED     -> returning after break, load checkpoint
     INTERRUPTED -> unexpected break, recover gracefully
@@ -67,7 +67,7 @@ class SessionContext(str, Enum):
 
 class CognitiveState(BaseModel):
     """Cognitive context passed with every /execute request.
-    
+
     This is the nervous system of the AuDHD architecture.
     Without it, skills are generic LLM templates.
     With it, every skill adapts to the user's current capacity.
@@ -104,7 +104,7 @@ class CognitiveState(BaseModel):
 
 class ExecuteRequest(BaseModel):
     """POST /execute request body.
-    
+
     Changes from prior version:
     - ADDED: cognitive_state (CognitiveState) with sensible defaults
     - ADDED: request_id auto-generation if not provided
@@ -163,7 +163,7 @@ class CrashStateResponse(BaseModel):
 
 class ExecuteResponse(BaseModel):
     """POST /execute response body.
-    
+
     Changes from prior version:
     - ADDED: cognitive_compliance (validation results)
     - ADDED: crash_state (populated only in crash mode)

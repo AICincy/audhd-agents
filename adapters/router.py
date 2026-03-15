@@ -253,7 +253,7 @@ class SkillRouter:
         stack = [profile, prompt_base, model_md, skills_md, tool_md]
         return "\n\n".join(filter(None, stack))
 
-    async def execute(self, request: SkillRequest) -> SkillResponse:
+    async def execute(self, request: SkillRequest, cognitive_state_override=None) -> SkillResponse:
         """Route and execute a skill request with cognitive pipeline.
 
         Execution flow:
@@ -266,7 +266,20 @@ class SkillRouter:
         7. Execute against model chain with failover
         8. Validate output against cognitive contract (A-6)
         9. Return response with validation metadata
+
+        P1-1: Accepts cognitive_state_override from runtime.schemas.CognitiveState.
+        When provided, its values are injected into request options for
+        parse_cognitive_state compatibility.
         """
+        # P1-1: Accept cognitive_state from runtime.schemas.CognitiveState
+        if cognitive_state_override is not None:
+            el = cognitive_state_override.energy_level
+            request.options["energy_level"] = el.value if hasattr(el, "value") else str(el)
+            att = cognitive_state_override.attention_state
+            request.options["attention_state"] = att.value if hasattr(att, "value") else str(att)
+            sc = cognitive_state_override.session_context
+            request.options["session_context"] = sc.value if hasattr(sc, "value") else str(sc)
+
         # Step 1: Parse cognitive state (A-3)
         cognitive_state = parse_cognitive_state(request.options)
 
