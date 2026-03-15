@@ -1,9 +1,14 @@
 [
   {
-    "description": "Certification analytics pipeline",
+    "description": "ETL pipeline for certification completion data",
     "input": {
-      "input_text": "Build analytics pipeline: ingest certification exam results (CSV daily dump), user activity logs (streaming), and course completion events. Need daily dashboard refresh and real-time completion alerts.",
-      "platform": "bigquery"
+      "input_text": "Build ETL pipeline: ingest certification completion events from Pub/Sub, enrich with user profile data from Cloud SQL, aggregate daily completion rates, load to BigQuery for analytics.",
+      "pipeline_type": "streaming",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "design",
+        "task_tier": "T3"
+      }
     }
   }
 ]

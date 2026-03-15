@@ -1,15 +1,19 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Idea or hypothesis to prototype"
-    },
-    "time_box": {
-      "type": "string",
-      "description": "Time constraint",
-      "enum": ["30min", "1hr", "2hr", "4hr", "1day"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Feature idea or prototype requirements"
+        },
+        "stack": {
+          "type": "string",
+          "description": "Technology stack preference"
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

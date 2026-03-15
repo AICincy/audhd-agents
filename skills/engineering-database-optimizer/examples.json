@@ -2,8 +2,13 @@
   {
     "description": "Optimize slow certification lookup query",
     "input": {
-      "input_text": "SELECT u.*, c.* FROM users u JOIN certifications c ON u.id = c.user_id WHERE c.status = 'active' AND u.region = 'us-east' ORDER BY c.expiry_date; -- Takes 4.2s on 2M rows, seq scan on certifications",
-      "engine": "postgresql"
+      "input_text": "PostgreSQL query taking 4.2s: SELECT u.*, c.* FROM users u JOIN certifications c ON u.id = c.user_id WHERE c.status = 'active' AND u.region = 'us-east' ORDER BY c.completed_at DESC LIMIT 50. Table: 2M users, 8M certs. Indexes: users(id), certifications(user_id).",
+      "database": "postgresql",
+      "cognitive_state": {
+        "energy_level": "medium",
+        "active_mode": "troubleshoot",
+        "task_tier": "T2"
+      }
     }
   }
 ]

@@ -1,15 +1,20 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Slow query, EXPLAIN plan, schema, or performance report"
-    },
-    "engine": {
-      "type": "string",
-      "description": "Database engine",
-      "enum": ["postgresql", "mysql", "bigquery", "firestore", "mongodb", "redis", "sqlite"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Query, schema, or performance issue to optimize"
+        },
+        "database": {
+          "type": "string",
+          "description": "Database engine",
+          "enum": ["postgresql", "mysql", "bigquery", "firestore", "redis", "mongodb", "spanner"]
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

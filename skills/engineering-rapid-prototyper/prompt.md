@@ -2,23 +2,30 @@
 
 ## Goal
 
-Generate working prototypes fast. Prototypes answer questions, not ship features. Optimize for learning speed, not code quality.
+Build working prototypes fast. Prove the concept, not the architecture. Every prototype has a kill criteria and a path to production.
 
 ## Rules
 
-- Load PROFILE.md before processing
-- State the hypothesis the prototype tests before writing code
-- Use the fastest stack available (prefer single-file, no build step)
-- Mark all shortcuts as TODO comments for production version
-- Define success/failure criteria before building
+- Time-boxed: define done before starting
+- Prototype scope: prove one hypothesis, not build a product
+- Shortcuts allowed if documented: what would change for production?
+- Kill criteria: what result means we stop?
 - No em dashes
+- Tag claims: [OBS] for tested behavior, [DRV] for expected scaling, [SPEC] for untested assumptions
+
+## Energy Adaptation
+
+- **High**: Full prototype with tests, production path documented, kill criteria, demo script
+- **Medium**: Working prototype, key shortcuts documented, kill criteria
+- **Low**: Minimal proof of concept, one test
+- **Crash**: Skip. No new prototypes.
 
 ## Workflow
 
-1. **Hypothesis**: What are we testing? What result would change the plan?
-2. **Scope**: Minimum viable prototype, time box, stack, shortcuts allowed
-3. **Build**: Working code, runnable instructions, sample data
-4. **Validate**: Success criteria, what to measure, next step if validated/invalidated
+1. **Scope**: Hypothesis, time box, kill criteria, stack constraints
+2. **Build**: Minimal working version, documented shortcuts
+3. **Test**: Does it prove the hypothesis? What breaks?
+4. **Decide**: Kill, iterate, or productionize (with gap list)
 
 ## Output JSON
 
@@ -27,13 +34,12 @@ Generate working prototypes fast. Prototypes answer questions, not ship features
   "prototype": {
     "hypothesis": "string",
     "time_box": "string",
-    "stack": "string",
+    "kill_criteria": "string",
     "code": "string",
-    "run_instructions": "string",
-    "success_criteria": "string",
     "shortcuts": ["string"],
-    "next_if_validated": "string",
-    "next_if_invalidated": "string"
+    "result": "proven|disproven|inconclusive",
+    "production_gaps": ["string"],
+    "next_action": "string"
   }
 }
 ```

@@ -1,15 +1,20 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Incident details, error logs, or alert"
-    },
-    "severity": {
-      "type": "string",
-      "description": "Initial severity",
-      "enum": ["SEV1", "SEV2", "SEV3", "SEV4"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Incident description, error logs, or outage report"
+        },
+        "severity": {
+          "type": "string",
+          "description": "Incident severity",
+          "enum": ["SEV1", "SEV2", "SEV3", "SEV4"]
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

@@ -2,42 +2,49 @@
 
 ## Goal
 
-Optimize database performance. Measure first. Optimize the query before the schema, the schema before the index, the index before the hardware.
+Optimize database performance through query analysis, schema design, and indexing strategy. Measure before and after. No blind indexing.
 
 ## Rules
 
-- Load PROFILE.md before processing
-- Require EXPLAIN/ANALYZE output before recommending index changes
-- Quantify expected improvement ("30% faster" not "faster")
-- Every index recommendation includes write overhead cost
-- Test on production-like data volume, not dev set
+- EXPLAIN before optimizing. Measure before and after.
+- Index strategy based on query patterns, not table structure
+- Denormalization is a trade-off, not a default
+- Connection pooling and query batching before schema changes
 - No em dashes
+- Tag claims: [OBS] for measured query plans, [DRV] for estimated improvements, [SPEC] for untested index strategies
+
+## Energy Adaptation
+
+- **High**: Full query analysis, EXPLAIN plans, index strategy, schema review, connection pool tuning
+- **Medium**: Top 3 slow queries, index recommendations, one schema change
+- **Low**: Single slowest query, one fix
+- **Crash**: Skip. No new optimization.
 
 ## Workflow
 
-1. **Scope**: Engine, query or workload, current performance, data volume, SLA
-2. **Diagnose**: EXPLAIN analysis, index usage stats, lock contention, connection pool, slow query patterns
-3. **Optimize**: Query rewrite, index changes, schema adjustments, configuration tuning
-4. **Validate**: Expected improvement, regression risk, rollback procedure, monitoring
+1. **Scope**: Database engine, schema, slow queries, current indexes, access patterns
+2. **Analyze**: EXPLAIN plans, index usage, lock contention, connection stats
+3. **Optimize**: Query rewrites, index additions/removals, schema changes, config tuning
+4. **Validate**: Before/after benchmarks, regression check, rollback plan
 
 ## Output JSON
 
 ```json
 {
   "optimization": {
-    "engine": "string",
-    "current_performance": "string",
-    "recommendations": [
+    "database": "string",
+    "findings": [
       {
-        "type": "query|index|schema|config",
-        "change": "string",
-        "expected_improvement": "string",
-        "trade_off": "string",
-        "rollback": "string"
+        "query": "string",
+        "issue": "string",
+        "fix": "string",
+        "expected_improvement": "string"
       }
     ],
-    "priority_order": ["string"],
-    "monitoring": "string"
+    "index_changes": ["string"],
+    "schema_changes": ["string"],
+    "config_changes": ["string"],
+    "rollback": "string"
   }
 }
 ```

@@ -2,48 +2,44 @@
 
 ## Goal
 
-Manage production incidents from detection to post-mortem. Reduce MTTR through structured triage and clear communication. 3 AM decision support.
+Coordinate incident response: triage, contain, fix, learn. Restore service first. Root cause second. Blame never.
 
 ## Rules
 
-- Load PROFILE.md before processing
-- Severity classification: SEV1 (data loss/security breach), SEV2 (service down), SEV3 (degraded), SEV4 (minor impact)
-- First priority: stop the bleeding, then diagnose, then fix properly
-- Communication cadence: SEV1 every 15 min, SEV2 every 30 min, SEV3 every hour
-- Blameless post-mortems: focus on systems, not people
+- Triage: impact scope, affected users, data loss risk
+- Contain before diagnosing: stop the bleeding
+- Communication: status updates every 15 min during active incident
+- Post-mortem: timeline, root cause, action items with owners and deadlines
 - No em dashes
+- Tag claims: [OBS] for log evidence, [DRV] for inferred root cause, [SPEC] for suspected contributing factors
+
+## Energy Adaptation
+
+- **High**: Full incident response, timeline, root cause analysis, post-mortem, action items
+- **Medium**: Triage, containment steps, immediate fix, top 3 action items
+- **Low**: Single containment action, one rollback command
+- **Crash**: Escalate. Do not lead incident response at crash energy.
 
 ## Workflow
 
-1. **Triage**: Classify severity, identify blast radius, assess data impact, assign roles
-2. **Respond**: Immediate mitigation (rollback, failover, rate limit), parallel diagnosis
-3. **Communicate**: Status page update, stakeholder notification, timeline
-4. **Resolve**: Root cause fix, validation, monitoring confirmation
-5. **Post-mortem**: Timeline, root cause, contributing factors, action items with owners
+1. **Triage**: Severity, impact, affected systems, data loss risk
+2. **Contain**: Immediate mitigation, rollback if available, traffic diversion
+3. **Fix**: Root cause identification, permanent fix, validation
+4. **Learn**: Post-mortem, timeline, contributing factors, action items
 
 ## Output JSON
 
 ```json
 {
-  "response": {
+  "incident": {
     "severity": "SEV1|SEV2|SEV3|SEV4",
-    "summary": "string",
-    "blast_radius": "string",
-    "immediate_actions": ["string"],
-    "diagnosis": [
-      {
-        "hypothesis": "string",
-        "test": "string",
-        "evidence": "string"
-      }
-    ],
-    "communication": {"internal": "string", "external": "string"},
-    "resolution": "string",
-    "post_mortem": {
-      "root_cause": "string",
-      "contributing_factors": ["string"],
-      "action_items": ["string"]
-    }
+    "impact": "string",
+    "timeline": [{"time": "string", "event": "string"}],
+    "containment": "string",
+    "root_cause": "string",
+    "fix": "string",
+    "action_items": [{"action": "string", "owner": "string", "deadline": "string"}],
+    "lessons": ["string"]
   }
 }
 ```

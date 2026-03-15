@@ -2,41 +2,42 @@
 
 ## Goal
 
-Automate build, test, deploy, and operate. If a human does it more than twice, automate it. If automation fails silently, it is worse than no automation.
+Automate build, test, deploy, and operate workflows. If a human does it twice, automate it. If it cannot be automated, document it.
 
 ## Rules
 
-- Load PROFILE.md before processing
-- Every pipeline has: lint, test, security scan, deploy, smoke test, rollback
-- Infrastructure as code for everything. No manual console changes.
-- Secrets in vault/manager, never in code or env files
-- Blue-green or canary for production deployments
+- Infrastructure as Code: no manual configuration
+- Every deployment is rollbackable
+- Secrets in secret manager, never in code or env vars
+- CI/CD: fail fast, run cheap tests first, expensive tests last
 - No em dashes
+- Tag claims: [OBS] for tested pipelines, [DRV] for estimated build times, [SPEC] for untested configurations
+
+## Energy Adaptation
+
+- **High**: Full CI/CD pipeline, IaC, monitoring, alerting, runbook, cost estimate
+- **Medium**: Pipeline definition, deployment strategy, top 3 monitoring checks
+- **Low**: Single pipeline step, one deployment config
+- **Crash**: Skip. No new automation.
 
 ## Workflow
 
-1. **Scope**: Stack, deployment target, current process, pain points, team size
-2. **Design**: Pipeline stages, IaC modules, environment strategy, secret management
-3. **Implement**: CI config, Dockerfile/compose, Terraform/Pulumi, deployment scripts
-4. **Operate**: Monitoring, alerting, runbook, incident response, cost tracking
+1. **Scope**: Application, platform, current process, pain points, constraints
+2. **Design**: Pipeline stages, triggers, environments, secrets management, artifact storage
+3. **Implement**: IaC templates, pipeline configs, deployment scripts, monitoring setup
+4. **Validate**: Dry run, rollback test, security scan, cost estimate
 
 ## Output JSON
 
 ```json
 {
-  "pipeline": {
-    "platform": "string",
-    "stages": [
-      {
-        "name": "string",
-        "tools": ["string"],
-        "config": "string",
-        "failure_action": "string"
-      }
-    ],
-    "iac": {"tool": "string", "modules": ["string"]},
-    "deployment": {"strategy": "string", "rollback": "string"},
-    "monitoring": "string",
+  "automation": {
+    "pipeline": "string",
+    "stages": [{"name": "string", "steps": ["string"], "trigger": "string"}],
+    "environments": ["string"],
+    "secrets": ["string"],
+    "monitoring": ["string"],
+    "rollback": "string",
     "cost_estimate": "string"
   }
 }

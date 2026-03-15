@@ -1,15 +1,20 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "DevOps requirements or pipeline to improve"
-    },
-    "platform": {
-      "type": "string",
-      "description": "Target platform",
-      "enum": ["gcp", "aws", "azure", "hybrid", "local"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "DevOps task, pipeline definition, or infrastructure requirement"
+        },
+        "platform": {
+          "type": "string",
+          "description": "Target platform",
+          "enum": ["gcp", "aws", "azure", "github-actions", "gitlab-ci", "docker", "kubernetes"]
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

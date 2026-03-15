@@ -1,15 +1,20 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Data requirements or pipeline to improve"
-    },
-    "platform": {
-      "type": "string",
-      "description": "Data platform",
-      "enum": ["bigquery", "snowflake", "databricks", "redshift", "postgres", "custom"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Data pipeline requirements or data architecture challenge"
+        },
+        "pipeline_type": {
+          "type": "string",
+          "description": "Pipeline type",
+          "enum": ["batch", "streaming", "hybrid", "ETL", "ELT"]
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

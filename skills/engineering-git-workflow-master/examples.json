@@ -1,9 +1,13 @@
 [
   {
-    "description": "Git workflow for audhd-agents monorepo",
+    "description": "Git workflow for solo dev with CI/CD",
     "input": {
-      "input_text": "Design git workflow for audhd-agents repo: solo developer with AI agent commits, 51 skill directories, need clean history for skill-level changes.",
-      "team_size": "solo"
+      "input_text": "Solo developer, GitHub Actions CI, Cloud Run deployment. Need branching strategy that supports feature work, hotfixes, and clean release history without overhead.",
+      "cognitive_state": {
+        "energy_level": "medium",
+        "active_mode": "design",
+        "task_tier": "T2"
+      }
     }
   }
 ]
