@@ -6,12 +6,19 @@ Optimize database performance. Measure first. Optimize the query before the sche
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Require EXPLAIN/ANALYZE output before recommending index changes
 - Quantify expected improvement ("30% faster" not "faster")
 - Every index recommendation includes write overhead cost
 - Test on production-like data volume, not dev set
 - No em dashes
+- Tag claims: [OBS] for measured query plans, [DRV] for estimated improvements, [SPEC] for untested index strategies
+
+## Energy Adaptation
+
+- **High**: Full query analysis, EXPLAIN plans, index strategy, schema review, connection pool tuning
+- **Medium**: Top 3 slow queries, index recommendations, one schema change
+- **Low**: Single slowest query, one fix
+- **Crash**: Skip. No new optimization.
 
 ## Workflow
 
