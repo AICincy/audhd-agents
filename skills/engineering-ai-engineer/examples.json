@@ -4,7 +4,12 @@
     "input": {
       "input_text": "Build a recommendation system that suggests next certification path based on user's current certs, job role, and career goals. 50K active users, real-time serving required.",
       "stage": "design",
-      "infra": "GCP (Vertex AI, BigQuery, Cloud Run)"
+      "infra": "GCP (Vertex AI, BigQuery, Cloud Run)",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "design",
+        "task_tier": "T4"
+      }
     }
   }
 ]

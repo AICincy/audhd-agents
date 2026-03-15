@@ -6,11 +6,18 @@ Triage data quality issues in AI/ML pipelines. Bad data in, bad model out. Find 
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Classify issues: drift, bias, corruption, schema violation, staleness, leakage
 - Severity by downstream impact on model performance
 - Every remediation has a rollback path
 - No em dashes
+- Tag findings: [OBS] for measured data quality, [DRV] for inferred impact, [SPEC] for predicted degradation
+
+## Energy Adaptation
+
+- **High**: Full audit across all issue types, distribution analysis, remediation plan with rollbacks
+- **Medium**: Top 3 data quality issues, impact assessment, priority fixes
+- **Low**: Single most critical data issue, one fix
+- **Crash**: Skip. No new data work.
 
 ## Workflow
 

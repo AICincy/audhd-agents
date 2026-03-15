@@ -3,7 +3,12 @@
     "description": "Auto-scale inference cluster based on certification exam traffic",
     "input": {
       "input_text": "GKE cluster serving certification exam platform. Traffic: 200 RPS baseline, 2000 RPS peak during promo events. Current: manual scaling with 30-min lag. Need auto-scaling within cost budget of $5K/month.",
-      "objective": "cost"
+      "objective": "cost",
+      "cognitive_state": {
+        "energy_level": "medium",
+        "active_mode": "design",
+        "task_tier": "T3"
+      }
     }
   }
 ]
