@@ -1,9 +1,10 @@
-"""Skill-to-model router with failover and dotenv loading."""
+"""Skill-to-model router with failover, cognitive pipeline, and dotenv loading."""
 
 import os
 import yaml
 import json
 import asyncio
+import logging
 from pathlib import Path
 
 try:
@@ -16,9 +17,26 @@ from .anthropic_adapter import AnthropicAdapter
 from .openai_adapter import OpenAIAdapter
 from .google_adapter import GoogleAdapter
 
+# Cognitive pipeline imports (A-2, A-3, A-4, A-6)
+from runtime.cognitive import (
+    CognitiveState,
+    parse_cognitive_state,
+    infer_mode,
+    filter_model_chain,
+    build_cognitive_preamble,
+)
+from runtime.hooks import run_hooks, HookContext
+from runtime.validation import validate_output
+
+logger = logging.getLogger("audhd_agents.router")
+
 
 class SkillRouter:
-    """Routes skill requests to the appropriate LLM provider."""
+    """Routes skill requests to the appropriate LLM provider.
+
+    Integrates cognitive pipeline (A-3), sk_hooks (A-4), and
+    output validation (A-6) into the execution flow.
+    """
 
     def __init__(self, config_path: str = "adapters/config.yaml"):
         # Load .env file into os.environ
@@ -52,6 +70,9 @@ class SkillRouter:
         if not skill_root.exists():
             return
         for path in skill_root.rglob("skill.yaml"):
+            # Skip _base directory (shared templates, not a skill)
+            if "_base" in path.parts:
+                continue
             try:
                 with open(path, encoding="utf-8") as f:
                     cfg = yaml.safe_load(f)
@@ -133,6 +154,13 @@ class SkillRouter:
             return profile_path.read_text(encoding="utf-8")
         return ""
 
+    def load_prompt_base(self) -> str:
+        """Load shared prompt base template (A-5)."""
+        base_path = Path("skills/_base/prompt_base.md")
+        if base_path.exists():
+            return base_path.read_text(encoding="utf-8")
+        return ""
+
     def load_skills_md(self) -> str:
         """Load SKILL.md cognitive support skills."""
         skills_path = Path("SKILL.md")
@@ -210,32 +238,115 @@ class SkillRouter:
         return status
 
     async def _load_instruction_stack(self, provider_name: str) -> str:
-        """Offload blocking I/O to a thread to keep the event loop responsive."""
+        """Offload blocking I/O to a thread to keep the event loop responsive.
+
+        Stack order: PROFILE.md > prompt_base.md > model MD > SKILL.md > TOOL.md
+        The shared prompt base (A-5) is loaded between PROFILE.md and model MD.
+        """
         loop = asyncio.get_running_loop()
         profile = await loop.run_in_executor(None, self.load_profile_md)
+        prompt_base = await loop.run_in_executor(None, self.load_prompt_base)
         model_md = await loop.run_in_executor(None, self.load_model_md, provider_name)
         skills_md = await loop.run_in_executor(None, self.load_skills_md)
         tool_md = await loop.run_in_executor(None, self.load_tool_md)
 
-        stack = [profile, model_md, skills_md, tool_md]
+        stack = [profile, prompt_base, model_md, skills_md, tool_md]
         return "\n\n".join(filter(None, stack))
 
     async def execute(self, request: SkillRequest) -> SkillResponse:
-        """Route and execute a skill request."""
-        # Offload initial skill loading which involves multiple files
+        """Route and execute a skill request with cognitive pipeline.
+
+        Execution flow:
+        1. Parse cognitive state from request options (A-3)
+        2. Auto-infer mode from input if not provided (PROFILE.md)
+        3. Load skill config and prompt
+        4. Build model chain and filter by energy level (AGENT.md)
+        5. Run sk_hooks pre-processing (A-4)
+        6. Build cognitive preamble and inject into prompt (A-2)
+        7. Execute against model chain with failover
+        8. Validate output against cognitive contract (A-6)
+        9. Return response with validation metadata
+        """
+        # Step 1: Parse cognitive state (A-3)
+        cognitive_state = parse_cognitive_state(request.options)
+
+        # Step 2: Auto-infer mode if not set
+        if not cognitive_state.active_mode or cognitive_state.active_mode == "execute":
+            inferred = infer_mode(request.input_text)
+            if inferred != "execute":
+                cognitive_state.active_mode = inferred
+
+        # Step 3: Load skill (offload blocking I/O)
         loop = asyncio.get_running_loop()
         skill = await loop.run_in_executor(None, self.load_skill, request.skill_id)
 
         skill_config = skill["config"]
         prompt_md = skill["prompt"]
 
-        # Determine model chain: override > primary > fallback
+        # Step 4: Build and filter model chain
         if request.model_override:
             model_chain = [request.model_override]
         else:
             primary = skill_config.get("models", {}).get("primary", "G-PRO")
             fallback = skill_config.get("models", {}).get("fallback", [])
             model_chain = [primary] + fallback
+
+        # Energy-adaptive model filtering (AGENT.md)
+        model_chain = filter_model_chain(model_chain, cognitive_state, self.alias_map)
+
+        # Crash mode: no new tasks
+        if not model_chain and cognitive_state.is_crash:
+            return SkillResponse(
+                output={
+                    "raw": (
+                        "Everything is saved. Nothing is urgent. "
+                        "Come back when ready."
+                    ),
+                    "cognitive_state": {"energy_level": "crash", "output_mode": "crash"},
+                },
+                model_used="none",
+                provider="cognitive_pipeline",
+                input_tokens=0,
+                output_tokens=0,
+                latency_ms=0,
+            )
+
+        if not model_chain:
+            raise RuntimeError(
+                f"No models available for skill {request.skill_id} at "
+                f"energy level '{cognitive_state.energy_level}'"
+            )
+
+        # Step 5: Run sk_hooks pre-processing (A-4)
+        hook_names = skill_config.get("sk_hooks", [])
+        if hook_names:
+            hook_ctx = HookContext(
+                skill_id=request.skill_id,
+                cognitive_state=cognitive_state,
+                input_text=request.input_text,
+                prompt=prompt_md,
+                options=request.options,
+            )
+            hook_result = run_hooks(hook_names, hook_ctx)
+
+            if hook_result.modified_prompt:
+                prompt_md = hook_result.modified_prompt
+            if hook_result.modified_input:
+                request = SkillRequest(
+                    skill_id=request.skill_id,
+                    input_text=hook_result.modified_input,
+                    options=request.options,
+                    model_override=request.model_override,
+                )
+            if hook_result.validation_warnings:
+                logger.warning(
+                    "Hook warnings for %s: %s",
+                    request.skill_id,
+                    hook_result.validation_warnings,
+                )
+
+        # Step 6: Build cognitive preamble (A-2)
+        cognitive_preamble = build_cognitive_preamble(cognitive_state)
 
         last_error = None
         for alias in model_chain:
@@ -252,13 +363,16 @@ class SkillRouter:
                 last_error = RuntimeError(f"Circuit breaker open for {provider_name}")
                 continue
 
-            # Non-blocking load of the rest of the stack
+            # Non-blocking load of the instruction stack
             combined_instructions = await self._load_instruction_stack(provider_name)
             system_prompt = adapter.build_system_prompt(
                 prompt_md, combined_instructions
             )
 
-            # Inject Audit Correlation ID for authenticated communication inside execution block
+            # Inject cognitive preamble at the top of system prompt
+            system_prompt = cognitive_preamble + "\n\n" + system_prompt
+
+            # Audit correlation ID
             audit_id = f"audit-{request.skill_id}-{os.getpid()}"
             user_prompt = f"[AUDIT_ID: {audit_id}]\n{request.input_text}"
             request.options.setdefault("headers", {}).update({"X-Audit-ID": audit_id})
@@ -273,18 +387,15 @@ class SkillRouter:
 
                 # SK-SYS-RECOVER: Autonomous backoff detection
                 if result.get("headers", {}).get("x-backoff") == "true":
-                    # Silent throttle: sleep briefly to allow localhost RAM to clear
-                    # This is the "Digital Immune System" in action.
                     await asyncio.sleep(2.0)
                     result["content"] = f"[RECOVERY_ACTIVE] {result.get('content')}"
 
-                # Safely parse JSON if possible
+                # Parse JSON output
                 content = result.get("content", "").strip()
                 output = {"raw": content}
 
                 if content.startswith(("{", "[")):
                     try:
-                        # Offload heavy JSON parsing for large responses (>10KB)
                         if len(content) > 10000:
                             output = await loop.run_in_executor(
                                 None, json.loads, content
@@ -293,6 +404,35 @@ class SkillRouter:
                             output = json.loads(content)
                     except json.JSONDecodeError:
                         output = {"raw": content, "error": "JSON parse failed"}
+
+                # Step 8: Validate output against cognitive contract (A-6)
+                validation = validate_output(
+                    content,
+                    active_mode=cognitive_state.active_mode,
+                    energy_level=cognitive_state.energy_level,
+                    task_tier=cognitive_state.task_tier,
+                )
+
+                if not validation.passed:
+                    logger.warning(
+                        "Output validation failed for %s: %s",
+                        request.skill_id,
+                        validation.violations,
+                    )
+                    # Attach validation metadata to output (transparent, not opaque)
+                    if isinstance(output, dict):
+                        output["_validation"] = {
+                            "passed": validation.passed,
+                            "violations": validation.violations,
+                            "warnings": validation.warnings,
+                        }
+
+                elif validation.warnings:
+                    if isinstance(output, dict):
+                        output["_validation"] = {
+                            "passed": True,
+                            "warnings": validation.warnings,
+                        }
 
                 return SkillResponse(
                     output=output,
