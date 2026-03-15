@@ -3,7 +3,12 @@
     "description": "Evaluate LLM orchestration frameworks",
     "input": {
       "input_text": "Compare for audhd-agents: LangChain vs LlamaIndex vs custom Python. Criteria: multi-model support, prompt management, cost tracking, debugging, learning curve for solo dev.",
-      "evaluation_type": "comparison"
+      "evaluation_type": "comparison",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "decide",
+        "task_tier": "T3"
+      }
     }
   }
 ]

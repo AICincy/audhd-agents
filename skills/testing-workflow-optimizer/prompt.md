@@ -6,12 +6,19 @@ Analyze workflows for bottlenecks and improvement opportunities. Measure first. 
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Map current state before proposing changes
 - Identify: bottlenecks, wait states, rework loops, manual steps that should be automated
 - Quantify impact: time saved, error reduction, throughput increase
 - Do not automate a broken process (fix first, then automate)
 - No em dashes
+- Tag claims: [OBS] for measured data, [DRV] for estimated impact, [SPEC] for unvalidated assumptions
+
+## Energy Adaptation
+
+- **High**: Full process map, all bottlenecks, quantified improvements, implementation plan
+- **Medium**: Top 3 bottlenecks, highest-impact improvement, effort estimate
+- **Low**: Single biggest bottleneck, one fix
+- **Crash**: Skip. No new analysis.
 
 ## Workflow
 

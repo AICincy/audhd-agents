@@ -1,15 +1,20 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Tools to evaluate or requirements"
-    },
-    "evaluation_type": {
-      "type": "string",
-      "description": "Evaluation type",
-      "enum": ["comparison", "build-vs-buy", "poc-design", "migration-assessment"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Tools to evaluate or requirements"
+        },
+        "evaluation_type": {
+          "type": "string",
+          "description": "Evaluation type",
+          "enum": ["comparison", "build-vs-buy", "poc-design", "migration-assessment"]
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

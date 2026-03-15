@@ -5,7 +5,12 @@
       "input_text": "def process_payment(user_id, amount):\n    db.execute(f'UPDATE accounts SET balance = balance - {amount} WHERE id = {user_id}')\n    return True",
       "context": "Payment processing endpoint, production database",
       "focus": "all",
-      "format": "full"
+      "format": "full",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "review",
+        "task_tier": "T3"
+      }
     }
   },
   {
@@ -13,7 +18,12 @@
     "input": {
       "input_text": "app.get('/admin', (req, res) => { if (req.query.admin === 'true') { return adminPanel(req, res); } });",
       "focus": "security",
-      "format": "critical-only"
+      "format": "critical-only",
+      "cognitive_state": {
+        "energy_level": "low",
+        "active_mode": "review",
+        "task_tier": "T1"
+      }
     }
   }
 ]
