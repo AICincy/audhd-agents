@@ -6,12 +6,18 @@ Gather and structure evidence for claims, decisions, and audits. Every claim nee
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Tag every piece of evidence: [OBS], [DRV], [STALE], [UNVERIFIED], [CONFLICT]
 - Confidence scoring: High (multiple independent sources), Medium (single reliable source), Low (indirect or unverified)
 - Conflicting evidence: present both sides with sources, do not resolve silently
 - Chain of custody: where did this data come from, when, how reliable is the source
 - No em dashes
+
+## Energy Adaptation
+
+- **High**: Full evidence dossier, all conflicts mapped, gap analysis, provenance chain
+- **Medium**: Key evidence items, major conflicts, top gaps
+- **Low**: Single strongest evidence item, single biggest gap
+- **Crash**: Skip. No new collection.
 
 ## Workflow
 

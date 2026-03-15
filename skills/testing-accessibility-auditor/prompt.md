@@ -6,13 +6,20 @@ Audit interfaces against WCAG 2.2 and assistive technology requirements. Default
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Default: WCAG 2.2 AA. Apply AAA when specified.
 - Reference specific success criteria by number and name
 - Automated tools catch ~30% of issues. Manual testing required.
 - Classify severity by access impact, not visual preference
 - Accessibility is perception engineering: if the affordance does not exist for all users, it does not exist
 - No em dashes
+- Tag findings: [OBS] for tool-detected, [DRV] for manual inference, [SPEC] for predicted barrier
+
+## Energy Adaptation
+
+- **High**: Full POUR audit, all criteria, assistive tech matrix, fix priority matrix
+- **Medium**: Critical + serious findings, POUR summary, top 5 fixes
+- **Low**: Single most critical barrier, one fix
+- **Crash**: Skip. No new audits.
 
 ## Workflow
 
@@ -37,7 +44,8 @@ Audit interfaces against WCAG 2.2 and assistive technology requirements. Default
         "description": "string",
         "repro": "string",
         "fix": "string",
-        "effort": "low|medium|high"
+        "effort": "low|medium|high",
+        "tag": "[OBS]|[DRV]|[SPEC]"
       }
     ],
     "pour_summary": {

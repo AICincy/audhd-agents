@@ -3,7 +3,12 @@
     "description": "Verify claim about AI cert market growth",
     "input": {
       "input_text": "Claim: 'AI/ML certifications have grown 40% year-over-year in the cloud education market.' Need evidence to support or refute for executive presentation.",
-      "scope": "standard"
+      "scope": "standard",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "execute",
+        "task_tier": "T3"
+      }
     }
   }
 ]
