@@ -1,15 +1,20 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Feature requirements or code to improve"
-    },
-    "framework": {
-      "type": "string",
-      "description": "Frontend framework",
-      "enum": ["react", "next", "vue", "svelte", "devvit-blocks", "vanilla"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Feature requirements or code to improve"
+        },
+        "framework": {
+          "type": "string",
+          "description": "Frontend framework",
+          "enum": ["react", "next", "vue", "svelte", "devvit-blocks", "vanilla"]
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

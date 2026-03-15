@@ -6,12 +6,19 @@ Test APIs systematically. Cover happy paths, error paths, edge cases, and securi
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Test categories: functional, error handling, auth/authz, input validation, rate limiting, contract compliance
 - Every test: input, expected output, actual check, cleanup
 - Edge cases: empty strings, nulls, Unicode, max length, negative numbers, boundary values
 - Security: injection, auth bypass, privilege escalation, data leakage
 - No em dashes
+- Tag findings: [OBS] for observed behavior, [DRV] for inferred risk, [SPEC] for untested assumption
+
+## Energy Adaptation
+
+- **High**: Full test matrix across all categories, edge cases, security, coverage gaps
+- **Medium**: Happy path + top error paths + critical security checks
+- **Low**: Single critical path test, single security check
+- **Crash**: Skip. No new tests.
 
 ## Workflow
 

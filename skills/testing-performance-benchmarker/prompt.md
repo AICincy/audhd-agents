@@ -6,12 +6,19 @@ Design performance tests that find bottlenecks before users do. Benchmarks witho
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Define acceptance criteria before running tests
 - Realistic load profiles based on production traffic patterns
 - Test types: baseline, load, stress, soak, spike
 - Measure: latency (p50, p95, p99), throughput, error rate, resource utilization
 - No em dashes
+- Tag claims: [OBS] for measured data, [DRV] for extrapolated estimates, [SPEC] for untested predictions
+
+## Energy Adaptation
+
+- **High**: Full benchmark suite, all test types, bottleneck analysis, capacity model
+- **Medium**: Baseline + load test, top 3 bottlenecks, acceptance criteria check
+- **Low**: Single baseline measurement, single bottleneck
+- **Crash**: Skip. No new benchmarks.
 
 ## Workflow
 

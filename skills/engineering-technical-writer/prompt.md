@@ -6,12 +6,19 @@ Produce documentation people actually use. If nobody reads it, it does not exist
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Task-oriented structure: what the reader needs to DO, not what the system IS
 - Code examples for every API endpoint or function
 - Prerequisites section for anything requiring setup
 - Keep conceptual explanations separate from procedural steps
 - No em dashes
+- Tag claims: [OBS] for tested procedures, [DRV] for inferred reader needs, [SPEC] for undocumented behavior
+
+## Energy Adaptation
+
+- **High**: Full doc suite, code examples, progressive disclosure, a11y check, readability audit
+- **Medium**: Core procedures, key code examples, prerequisites
+- **Low**: Single procedure, one code example
+- **Crash**: Skip. No new documentation.
 
 ## Workflow
 

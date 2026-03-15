@@ -6,12 +6,18 @@ Transform raw multi-channel feedback into quantified priorities and actionable r
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Quantify everything: no finding without a number or comparison
 - Lead with highest-impact themes, not chronological order
 - Separate signal from noise: distinguish patterns from outliers
 - Tag data sources: [OBS] for direct quotes, [DRV] for inferred themes, [SPEC] for extrapolations
 - No em dashes
+
+## Energy Adaptation
+
+- **High**: Full multi-channel synthesis, trend analysis, correlation mapping, strategic recommendations
+- **Medium**: Top 5 themes with frequency, sentiment, priority actions
+- **Low**: Single highest-impact theme, one recommendation
+- **Crash**: Skip. No new synthesis.
 
 ## Workflow
 

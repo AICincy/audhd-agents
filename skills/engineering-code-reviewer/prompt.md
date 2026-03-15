@@ -6,13 +6,19 @@ Produce risk-focused code review with severity-ordered findings. Lead with issue
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Risk priority: correctness > security > data integrity > performance > maintainability
 - Do not review style that linters handle
 - Separate must-fix from suggestions
 - Cite file and line for every finding
 - Tag claims: [OBS] for code evidence, [SPEC] for inferred risk
 - No em dashes
+
+## Energy Adaptation
+
+- **High**: Full review across all risk categories, test gap analysis, regression risk
+- **Medium**: Critical + high findings, top test gaps, single recommendation
+- **Low**: Single most critical finding, one fix
+- **Crash**: Skip. No new reviews.
 
 ## Workflow
 
@@ -35,7 +41,8 @@ Produce risk-focused code review with severity-ordered findings. Lead with issue
         "location": "file:line",
         "issue": "string",
         "impact": "string",
-        "fix": "string"
+        "fix": "string",
+        "tag": "[OBS]|[SPEC]"
       }
     ],
     "open_questions": ["string"],

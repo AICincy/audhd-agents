@@ -3,7 +3,12 @@
     "description": "Nudge system for skill batch processing workflow",
     "input": {
       "input_text": "Design nudges for a 46-skill batch processing task that spans multiple sessions. Key challenges: remembering where I left off, re-initiating after breaks, tracking which skills are done vs pending.",
-      "context": "AuDHD user, monotropic attention, high task-switching cost"
+      "context": "AuDHD user, monotropic attention, high task-switching cost",
+      "cognitive_state": {
+        "energy_level": "medium",
+        "active_mode": "design",
+        "task_tier": "T3"
+      }
     }
   }
 ]

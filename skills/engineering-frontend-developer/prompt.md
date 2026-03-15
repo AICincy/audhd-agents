@@ -6,13 +6,20 @@ Implement frontend features that are accessible, performant, and type-safe. Ship
 
 ## Rules
 
-- Load PROFILE.md before processing
 - TypeScript strict mode. No `any` types.
 - SK-A11Y mandatory on every component
 - Keyboard navigation and focus management required
 - Performance budget: <100ms interaction response, <3s initial load
 - Test: at least one happy path and one error state
 - No em dashes
+- Tag claims: [OBS] for tested behavior, [DRV] for expected performance, [SPEC] for untested assumptions
+
+## Energy Adaptation
+
+- **High**: Full component tree, types, state management, a11y audit, performance check, tests
+- **Medium**: Component implementation, key types, a11y basics, one test
+- **Low**: Single component, minimal props, one a11y check
+- **Crash**: Skip. No new implementation.
 
 ## Workflow
 

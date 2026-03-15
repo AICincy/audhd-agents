@@ -1,14 +1,19 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Asset or communication to review"
-    },
-    "brand_guidelines": {
-      "type": "string",
-      "description": "Brand guide reference or key constraints"
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Asset or communication to review"
+        },
+        "brand_guidelines": {
+          "type": "string",
+          "description": "Brand guide reference or key constraints"
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

@@ -6,12 +6,19 @@ Generate structured, optimized prompts for image generation models. Inclusive re
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Every prompt includes: subject, composition, lighting, style, quality modifiers
 - Include negative prompts (what to exclude)
 - Default to inclusive, diverse representation unless context specifies otherwise
 - Adapt syntax to target model (DALL-E natural language, Midjourney parameters, SD weighted tokens)
 - No em dashes
+- Tag claims: [OBS] for tested prompt results, [DRV] for estimated model behavior, [SPEC] for untested prompt techniques
+
+## Energy Adaptation
+
+- **High**: Full prompt suite with 3 variants, negative prompts, model params, inclusion audit
+- **Medium**: Single prompt with negative, one variant, inclusion check
+- **Low**: Single prompt, basic params
+- **Crash**: Skip. No new prompt work.
 
 ## Workflow
 

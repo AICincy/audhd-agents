@@ -6,12 +6,19 @@ Triage test failures fast. Distinguish real bugs from flaky tests from environme
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Classify failures: real bug, flaky test, environment issue, data dependency, timeout
 - Flaky test detection: same test fails intermittently across runs
 - Pattern detection: related failures often share root cause
 - Coverage gaps: what critical paths have no tests?
 - No em dashes
+- Tag classifications: [OBS] for confirmed, [DRV] for inferred from pattern, [SPEC] for suspected
+
+## Energy Adaptation
+
+- **High**: Full triage, pattern analysis, flaky detection, coverage gaps, trend analysis
+- **Medium**: Failure triage + top patterns + critical gaps
+- **Low**: Single highest-priority failure, one root cause
+- **Crash**: Skip. No new analysis.
 
 ## Workflow
 
@@ -34,7 +41,8 @@ Triage test failures fast. Distinguish real bugs from flaky tests from environme
         "test": "string",
         "classification": "bug|flaky|environment|data|timeout",
         "root_cause": "string",
-        "priority": "high|medium|low"
+        "priority": "high|medium|low",
+        "tag": "[OBS]|[DRV]|[SPEC]"
       }
     ],
     "patterns": ["string"],

@@ -6,12 +6,19 @@ Design production ML systems. Notebooks are prototypes, not products. Every desi
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Start with problem framing (is ML the right tool?)
 - Model selection: simplest model that meets requirements first
 - Every pipeline has: data validation, model validation, deployment gate, monitoring, rollback
 - Cost estimation for training and inference
 - No em dashes
+- Tag claims: [OBS] for benchmarked results, [DRV] for estimated performance, [SPEC] for untested architecture
+
+## Energy Adaptation
+
+- **High**: Full pipeline design, model selection rationale, deployment strategy, monitoring, cost model, model card
+- **Medium**: Problem framing, model choice, deployment strategy, top 3 risks
+- **Low**: Single model recommendation, one deployment path
+- **Crash**: Skip. No new ML design.
 
 ## Workflow
 

@@ -6,13 +6,20 @@ Transform data into accessible visual narratives. Every chart must tell one stor
 
 ## Rules
 
-- Load PROFILE.md before processing
 - One message per chart. If two messages, two charts.
 - Chart type follows data relationship (comparison, trend, composition, distribution)
 - Colorblind-safe palettes only. Never rely on color alone.
 - Alt text for every visualization (mandatory a11y)
 - Data-ink ratio: maximize data, minimize decoration
 - No em dashes
+- Tag claims: [OBS] for sourced data, [DRV] for calculated metrics, [SPEC] for projected trends
+
+## Energy Adaptation
+
+- **High**: Full narrative visualization, annotations, alt text, multiple chart variants, a11y audit
+- **Medium**: Single chart with key annotations, alt text, one narrative
+- **Low**: Chart type recommendation, single data mapping
+- **Crash**: Skip. No new visualizations.
 
 ## Workflow
 

@@ -2,7 +2,23 @@
   {
     "description": "Reality check: ship 51 skills in one week as solo dev",
     "input": {
-      "input_text": "Plan: Push all 51 skills to GitHub repo with full AIO format (4 files each = 204 files), wire up build.py, test adapters for 3 LLM providers, and deploy API. Timeline: 1 week. Team: solo."
+      "input_text": "Plan: Push all 51 skills to GitHub repo with full AIO format (4 files each = 204 files), wire up build.py, test adapters for 3 LLM providers, and deploy API. Timeline: 1 week. Team: solo.",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "review",
+        "task_tier": "T3"
+      }
+    }
+  },
+  {
+    "description": "Quick low-energy check on a deployment claim",
+    "input": {
+      "input_text": "Claim: Cloud Run cold start is under 2 seconds for our container.",
+      "cognitive_state": {
+        "energy_level": "low",
+        "active_mode": "review",
+        "task_tier": "T1"
+      }
     }
   }
 ]

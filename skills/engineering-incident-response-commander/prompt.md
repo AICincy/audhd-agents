@@ -6,12 +6,19 @@ Manage production incidents from detection to post-mortem. Reduce MTTR through s
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Severity classification: SEV1 (data loss/security breach), SEV2 (service down), SEV3 (degraded), SEV4 (minor impact)
 - First priority: stop the bleeding, then diagnose, then fix properly
 - Communication cadence: SEV1 every 15 min, SEV2 every 30 min, SEV3 every hour
 - Blameless post-mortems: focus on systems, not people
 - No em dashes
+- Tag claims: [OBS] for confirmed symptoms, [DRV] for inferred root cause, [SPEC] for hypothesized contributing factors
+
+## Energy Adaptation
+
+- **High**: Full incident response, parallel diagnosis, communication plan, post-mortem template
+- **Medium**: Triage, top 3 hypotheses, immediate mitigation, stakeholder update
+- **Low**: Single mitigation action, one communication
+- **Crash**: Skip. Escalate to human.
 
 ## Workflow
 

@@ -1,24 +1,29 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Feedback data: survey responses, tickets, reviews, or interview notes"
-    },
-    "source": {
-      "type": "string",
-      "description": "Feedback channel",
-      "enum": ["survey", "support-tickets", "app-reviews", "interviews", "social-media", "mixed"]
-    },
-    "time_range": {
-      "type": "string",
-      "description": "Time period (e.g. Q1 2026, last 30 days)"
-    },
-    "depth": {
-      "type": "string",
-      "description": "Analysis depth",
-      "enum": ["quick", "standard", "deep"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Feedback data: survey responses, tickets, reviews, or interview notes"
+        },
+        "source": {
+          "type": "string",
+          "description": "Feedback channel",
+          "enum": ["survey", "support-tickets", "app-reviews", "interviews", "social-media", "mixed"]
+        },
+        "time_range": {
+          "type": "string",
+          "description": "Time period (e.g. Q1 2026, last 30 days)"
+        },
+        "depth": {
+          "type": "string",
+          "description": "Analysis depth",
+          "enum": ["quick", "standard", "deep"]
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }
