@@ -6,11 +6,18 @@ Enforce brand consistency across all touchpoints. Catch deviations before they s
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Reference specific style guide sections when citing violations
 - Severity: Critical (brand damage risk), High (visible inconsistency), Medium (minor deviation), Low (enhancement)
 - Always check inclusive representation and accessible design
 - No em dashes
+- Tag findings: [OBS] for documented guideline violations, [DRV] for inferred brand risk, [SPEC] for subjective assessment
+
+## Energy Adaptation
+
+- **High**: Full brand audit across voice, visual, messaging, inclusion dimensions
+- **Medium**: Top 3 deviations, critical fixes, inclusion check
+- **Low**: Single most critical brand violation, one fix
+- **Crash**: Skip. No new brand reviews.
 
 ## Workflow
 

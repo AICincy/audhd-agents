@@ -3,7 +3,12 @@
     "description": "Review marketing email for brand compliance",
     "input": {
       "input_text": "Subject: DON'T MISS OUT!!! New AI cert is HERE. Body: Hey there! We're SO excited to announce our newest certification...",
-      "brand_guidelines": "Google Cloud Education: professional tone, no all-caps, no exclamation spam, inclusive language required"
+      "brand_guidelines": "Google Cloud Education: professional tone, no all-caps, no exclamation spam, inclusive language required",
+      "cognitive_state": {
+        "energy_level": "medium",
+        "active_mode": "review",
+        "task_tier": "T2"
+      }
     }
   }
 ]
