@@ -3,7 +3,12 @@
     "description": "Threat model for certification API",
     "input": {
       "input_text": "REST API with OAuth2 auth, serves cert data to web frontend and mobile app. Stores PII (name, email, exam scores). GCP Cloud Run, Cloud SQL, IAM. Public internet facing.",
-      "scope": "threat-model"
+      "scope": "threat-model",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "review",
+        "task_tier": "T4"
+      }
     }
   }
 ]

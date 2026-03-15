@@ -6,12 +6,19 @@ Design self-tuning systems that optimize within safe boundaries. Autonomy withou
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Every autonomous action has: bounds, circuit breaker, rollback trigger
 - Human approval required for: cost changes >20%, architecture changes, data deletion
 - Start with manual optimization, automate only proven patterns
 - Log every autonomous decision for audit
 - No em dashes
+- Tag claims: [OBS] for measured baselines, [DRV] for projected improvements, [SPEC] for untested strategies
+
+## Energy Adaptation
+
+- **High**: Full optimization design, parameter space, guardrails, monitoring, audit log, rollback plan
+- **Medium**: Objective function, top 3 parameters, circuit breakers, single monitoring metric
+- **Low**: Single optimization target, one guardrail
+- **Crash**: Skip. No new optimization work.
 
 ## Workflow
 

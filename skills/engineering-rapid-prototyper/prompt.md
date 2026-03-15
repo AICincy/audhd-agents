@@ -6,12 +6,19 @@ Generate working prototypes fast. Prototypes answer questions, not ship features
 
 ## Rules
 
-- Load PROFILE.md before processing
 - State the hypothesis the prototype tests before writing code
 - Use the fastest stack available (prefer single-file, no build step)
 - Mark all shortcuts as TODO comments for production version
 - Define success/failure criteria before building
 - No em dashes
+- Tag claims: [OBS] for tested prototypes, [DRV] for projected feasibility, [SPEC] for untested hypotheses
+
+## Energy Adaptation
+
+- **High**: Full prototype with hypothesis, code, run instructions, validation plan
+- **Medium**: Hypothesis, minimal code, success criteria
+- **Low**: Single hypothesis statement, one experiment design
+- **Crash**: Skip. No new prototypes.
 
 ## Workflow
 

@@ -1,19 +1,24 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "ML problem statement or system to improve"
-    },
-    "stage": {
-      "type": "string",
-      "description": "Project stage",
-      "enum": ["exploration", "design", "training", "deployment", "optimization"]
-    },
-    "infra": {
-      "type": "string",
-      "description": "Infrastructure constraints (GCP, AWS, on-prem, etc.)"
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "ML problem statement or system to improve"
+        },
+        "stage": {
+          "type": "string",
+          "description": "Project stage",
+          "enum": ["exploration", "design", "training", "deployment", "optimization"]
+        },
+        "infra": {
+          "type": "string",
+          "description": "Infrastructure constraints (GCP, AWS, on-prem, etc.)"
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

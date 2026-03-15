@@ -4,7 +4,12 @@
     "input": {
       "input_text": "POST /api/v1/skills/{skill_id}/execute - accepts JSON body with input_text, options, model_override. Returns structured output per skill schema. Auth: Bearer token. Rate limit: 60/min.",
       "doc_type": "api-reference",
-      "audience": "Developers integrating with audhd-agents API"
+      "audience": "Developers integrating with audhd-agents API",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "draft",
+        "task_tier": "T3"
+      }
     }
   }
 ]

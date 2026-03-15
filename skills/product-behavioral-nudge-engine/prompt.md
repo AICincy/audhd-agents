@@ -6,13 +6,20 @@ Design cognitive support systems for AuDHD workflows. Reduce task initiation fri
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Nudges reduce friction, never add it. If a nudge feels like nagging, redesign it.
 - Context restoration is the highest value nudge (where was I?)
 - Progress must be visible and persistent (partially done is not lost)
 - Respect monotropic attention: one nudge thread at a time
 - Escalation: gentle reminder, context restore, smallest next action, offer to rescope
 - No em dashes
+- Tag claims: [OBS] for tested nudge patterns, [DRV] for inferred friction points, [SPEC] for untested behavioral predictions
+
+## Energy Adaptation
+
+- **High**: Full nudge system design, escalation sequence, persistence layer, success metrics
+- **Medium**: Top 3 friction points, nudge templates, single escalation path
+- **Low**: Single highest-friction point, one nudge
+- **Crash**: Context restore only. No new design.
 
 ## Workflow
 

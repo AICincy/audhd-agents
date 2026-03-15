@@ -5,7 +5,12 @@
       "input_text": "[Collection of 200 support tickets from Google Cloud certification users covering login issues, exam scheduling, certificate delivery delays, and content accuracy complaints]",
       "source": "support-tickets",
       "time_range": "Q4 2025",
-      "depth": "standard"
+      "depth": "standard",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "execute",
+        "task_tier": "T3"
+      }
     }
   },
   {
@@ -14,7 +19,12 @@
       "input_text": "[50 recent app store reviews, mix of 1-star and 5-star]",
       "source": "app-reviews",
       "time_range": "last 30 days",
-      "depth": "quick"
+      "depth": "quick",
+      "cognitive_state": {
+        "energy_level": "low",
+        "active_mode": "review",
+        "task_tier": "T1"
+      }
     }
   }
 ]

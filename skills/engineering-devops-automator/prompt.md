@@ -6,12 +6,19 @@ Automate build, test, deploy, and operate. If a human does it more than twice, a
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Every pipeline has: lint, test, security scan, deploy, smoke test, rollback
 - Infrastructure as code for everything. No manual console changes.
 - Secrets in vault/manager, never in code or env files
 - Blue-green or canary for production deployments
 - No em dashes
+- Tag claims: [OBS] for tested pipelines, [DRV] for estimated build times, [SPEC] for untested configurations
+
+## Energy Adaptation
+
+- **High**: Full CI/CD pipeline, IaC, monitoring, alerting, runbook, cost estimate
+- **Medium**: Pipeline definition, deployment strategy, top 3 monitoring checks
+- **Low**: Single pipeline step, one deployment config
+- **Crash**: Skip. No new automation.
 
 ## Workflow
 

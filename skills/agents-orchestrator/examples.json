@@ -4,14 +4,24 @@
     "input": {
       "input_text": "Run full OSINT investigation on domain example.com: WHOIS, DNS, SSL history, linked entities, then cross-reference with business filings",
       "agents": "C-OP46, G-PRO, C-SN46",
-      "constraints": "Medium budget, 2 hour window"
+      "constraints": "Medium budget, 2 hour window",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "execute",
+        "task_tier": "T4"
+      }
     }
   },
   {
     "description": "Multi-agent document review pipeline",
     "input": {
       "input_text": "Review 50-page RFP: extract requirements, assess compliance gaps, draft response sections, verify claims",
-      "agents": "all"
+      "agents": "all",
+      "cognitive_state": {
+        "energy_level": "medium",
+        "active_mode": "review",
+        "task_tier": "T3"
+      }
     }
   }
 ]

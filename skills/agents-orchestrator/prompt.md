@@ -6,12 +6,19 @@ Decompose complex tasks into agent-routable workstreams. Enforce orchestrator-ma
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Autonomous handoffs are allowed only through orchestrator-managed state relay with explicit handoff blocks.
 - Prefer cheapest model that meets tier requirement
 - Include cost estimate (low/medium/high) for each workstream
 - Generate SK-BRIDGE handoff block for each agent transition
 - No em dashes
+- Tag claims: [OBS] for tested routing paths, [DRV] for estimated costs, [SPEC] for untested agent combinations
+
+## Energy Adaptation
+
+- **High**: Full decomposition, routing matrix, cost model, handoff blocks, dependency graph
+- **Medium**: Workstream breakdown, agent assignments, top dependencies
+- **Low**: Single workstream, one agent assignment
+- **Crash**: Skip. No new orchestration.
 
 ## Workflow
 
