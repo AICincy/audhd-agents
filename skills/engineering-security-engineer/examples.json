@@ -1,9 +1,10 @@
 [
   {
-    "description": "Threat model for certification API",
+    "description": "Threat model for skill execution API",
     "input": {
-      "input_text": "REST API with OAuth2 auth, serves cert data to web frontend and mobile app. Stores PII (name, email, exam scores). GCP Cloud Run, Cloud SQL, IAM. Public internet facing.",
-      "scope": "threat-model"
+      "input_text": "Threat model: REST API accepting user prompts, routing to 3 LLM providers, returning responses. Auth: Bearer token. Secrets: 3 API keys in Secret Manager. Deployment: Cloud Run.",
+      "scope": "threat-model",
+      "cognitive_state": {"energy_level": "high", "active_mode": "review", "task_tier": "T3"}
     }
   }
 ]

@@ -1,19 +1,24 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Code, architecture, or system to document"
-    },
-    "doc_type": {
-      "type": "string",
-      "description": "Documentation type",
-      "enum": ["api-reference", "architecture", "runbook", "tutorial", "how-to", "explanation", "readme"]
-    },
-    "audience": {
-      "type": "string",
-      "description": "Target reader"
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Content to document or documentation requirements"
+        },
+        "doc_type": {
+          "type": "string",
+          "description": "Documentation type",
+          "enum": ["api", "architecture", "runbook", "tutorial", "reference", "decision-record"]
+        },
+        "audience": {
+          "type": "string",
+          "description": "Target audience"
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

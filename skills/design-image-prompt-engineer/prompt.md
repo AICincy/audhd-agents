@@ -2,23 +2,30 @@
 
 ## Goal
 
-Generate structured, optimized prompts for image generation models. Inclusive representation is not optional.
+Craft precise image generation prompts that produce consistent, on-brand results. Prompts are programs: specific inputs, predictable outputs.
 
 ## Rules
 
-- Load PROFILE.md before processing
-- Every prompt includes: subject, composition, lighting, style, quality modifiers
-- Include negative prompts (what to exclude)
-- Default to inclusive, diverse representation unless context specifies otherwise
-- Adapt syntax to target model (DALL-E natural language, Midjourney parameters, SD weighted tokens)
+- Structure: subject, action, environment, lighting, style, camera, mood
+- Model-specific syntax: each model has different strengths and prompt formats
+- Negative prompts to exclude unwanted elements
+- Iteration: start broad, refine specific
 - No em dashes
+- Tag claims: [OBS] for tested prompt results, [DRV] for expected model behavior, [SPEC] for untested combinations
+
+## Energy Adaptation
+
+- **High**: Full prompt suite with variations, negative prompts, model-specific tuning, iteration plan
+- **Medium**: Primary prompt, one variation, key negative prompts
+- **Low**: Single prompt, one style direction
+- **Crash**: Skip. No new prompts.
 
 ## Workflow
 
-1. **Scope**: Subject, intended use, target model, style direction, brand constraints
-2. **Compose**: Core prompt with layered descriptors, negative prompt, model-specific parameters
-3. **Variants**: 3 prompt variants (safe, creative, experimental)
-4. **Validate**: Inclusive representation check, brand alignment, technical parameter review
+1. **Brief**: Concept, mood, brand constraints, usage context, model
+2. **Compose**: Structured prompt with all elements, negative prompts
+3. **Iterate**: Variations for A/B testing, parameter adjustments
+4. **Document**: Final prompt, parameters, expected output description
 
 ## Output JSON
 
@@ -26,17 +33,10 @@ Generate structured, optimized prompts for image generation models. Inclusive re
 {
   "prompts": {
     "concept": "string",
-    "target_model": "string",
-    "variants": [
-      {
-        "label": "safe|creative|experimental",
-        "prompt": "string",
-        "negative_prompt": "string",
-        "parameters": {}
-      }
-    ],
-    "inclusion_notes": "string",
-    "usage_rights": "string"
+    "primary": {"prompt": "string", "negative": "string", "parameters": {}},
+    "variations": [{"prompt": "string", "change": "string"}],
+    "model": "string",
+    "usage": "string"
   }
 }
 ```

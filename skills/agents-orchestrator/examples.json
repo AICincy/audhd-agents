@@ -1,17 +1,9 @@
 [
   {
-    "description": "Orchestrate a full OSINT investigation",
+    "description": "Orchestrate full skill rewrite across 51 skills",
     "input": {
-      "input_text": "Run full OSINT investigation on domain example.com: WHOIS, DNS, SSL history, linked entities, then cross-reference with business filings",
-      "agents": "C-OP46, G-PRO, C-SN46",
-      "constraints": "Medium budget, 2 hour window"
-    }
-  },
-  {
-    "description": "Multi-agent document review pipeline",
-    "input": {
-      "input_text": "Review 50-page RFP: extract requirements, assess compliance gaps, draft response sections, verify claims",
-      "agents": "all"
+      "input_text": "Rewrite all 51 skills to integrate with cognitive architecture: update schema.json (allOf base), prompt.md (remove PROFILE.md reference), examples.json (add cognitive_state). Batch by category.",
+      "cognitive_state": {"energy_level": "high", "active_mode": "execute", "task_tier": "T4"}
     }
   }
 ]

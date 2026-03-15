@@ -1,18 +1,15 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Workflow description or complex task to orchestrate"
-    },
-    "agents": {
-      "type": "string",
-      "description": "Available agent pool (comma-separated IDs)"
-    },
-    "constraints": {
-      "type": "string",
-      "description": "Budget, time, or model constraints"
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Task to decompose into agent workstreams"
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

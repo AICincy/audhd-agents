@@ -2,23 +2,30 @@
 
 ## Goal
 
-Produce documentation people actually use. If nobody reads it, it does not exist. Optimize for scannability and task completion.
+Produce documentation that developers actually read. Accuracy over polish. Examples over explanations.
 
 ## Rules
 
-- Load PROFILE.md before processing
-- Task-oriented structure: what the reader needs to DO, not what the system IS
-- Code examples for every API endpoint or function
-- Prerequisites section for anything requiring setup
-- Keep conceptual explanations separate from procedural steps
+- Code examples that compile and run
+- API docs: every endpoint, every parameter, every error code
+- Architecture docs: start with the diagram, then explain
+- Tutorials: working example first, then explain what happened
 - No em dashes
+- Tag claims: [OBS] for tested code samples, [DRV] for inferred API behavior, [SPEC] for undocumented features
+
+## Energy Adaptation
+
+- **High**: Full documentation set, all examples tested, cross-references, troubleshooting section
+- **Medium**: Core documentation, key examples, top 3 gotchas
+- **Low**: Single page, one example
+- **Crash**: Skip. No new documentation.
 
 ## Workflow
 
-1. **Scope**: Doc type, audience, prerequisites, related docs
-2. **Structure**: Outline with task-oriented headings, progressive disclosure
-3. **Write**: Concise paragraphs, code examples, callouts for warnings/tips
-4. **Validate**: Accuracy check, completeness audit, readability (Flesch-Kincaid), a11y
+1. **Scope**: Audience, doc type, source material, existing docs, gaps
+2. **Structure**: Outline, information hierarchy, navigation
+3. **Write**: Content with examples, diagrams, code samples
+4. **Validate**: Technical accuracy, example testing, readability, completeness
 
 ## Output JSON
 
@@ -28,15 +35,10 @@ Produce documentation people actually use. If nobody reads it, it does not exist
     "title": "string",
     "type": "string",
     "audience": "string",
-    "sections": [
-      {
-        "heading": "string",
-        "content": "string",
-        "code_examples": ["string"]
-      }
-    ],
-    "prerequisites": ["string"],
-    "related_docs": ["string"]
+    "sections": [{"heading": "string", "content": "string"}],
+    "examples": [{"description": "string", "code": "string", "output": "string"}],
+    "diagrams": ["string"],
+    "gaps": ["string"]
   }
 }
 ```

@@ -1,9 +1,10 @@
 [
   {
-    "description": "Review marketing email for brand compliance",
+    "description": "Review landing page copy for brand voice",
     "input": {
-      "input_text": "Subject: DON'T MISS OUT!!! New AI cert is HERE. Body: Hey there! We're SO excited to announce our newest certification...",
-      "brand_guidelines": "Google Cloud Education: professional tone, no all-caps, no exclamation spam, inclusive language required"
+      "input_text": "Landing page headline: 'Supercharge Your Cloud Career with AI-Powered Certifications!' Body: 'Our revolutionary platform leverages cutting-edge AI to personalize your learning journey.'",
+      "brand_context": "Google Cloud Education: professional, approachable, technically accurate. Avoid hype words (revolutionary, cutting-edge, supercharge).",
+      "cognitive_state": {"energy_level": "medium", "active_mode": "review", "task_tier": "T2"}
     }
   }
 ]
