@@ -6,7 +6,6 @@ Design technical UX architecture: CSS systems, layout frameworks, responsive str
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Foundation before screens. Create scalable architecture before individual implementations.
 - CSS custom properties for all design tokens. No magic numbers.
 - Mobile-first responsive approach unless constraints dictate otherwise
@@ -14,6 +13,14 @@ Design technical UX architecture: CSS systems, layout frameworks, responsive str
 - Grid for page-level layout, Flexbox for component-level alignment
 - Reduced motion support: prefers-reduced-motion on all animations
 - No em dashes
+- Tag claims: [OBS] for tested layouts, [DRV] for inferred responsive behavior, [SPEC] for untested viewport ranges
+
+## Energy Adaptation
+
+- **High**: Full CSS system, design tokens, layout grid, responsive strategy, a11y audit, cross-browser matrix
+- **Medium**: Token system, primary layout, key breakpoints, a11y essentials
+- **Low**: Single layout pattern, one breakpoint
+- **Crash**: Skip. No new architecture work.
 
 ## Workflow
 
@@ -29,22 +36,9 @@ Design technical UX architecture: CSS systems, layout frameworks, responsive str
   "system": {
     "name": "string",
     "platform": "string",
-    "tokens": {
-      "colors": {},
-      "spacing": {},
-      "typography": {}
-    },
-    "layout": {
-      "grid": "string",
-      "breakpoints": {},
-      "patterns": ["string"]
-    },
-    "a11y": [
-      {
-        "requirement": "string",
-        "implementation": "string"
-      }
-    ],
+    "tokens": {"colors": {}, "spacing": {}, "typography": {}},
+    "layout": {"grid": "string", "breakpoints": {}, "patterns": ["string"]},
+    "a11y": [{"requirement": "string", "implementation": "string"}],
     "handoff": "string",
     "next_action": "string"
   }

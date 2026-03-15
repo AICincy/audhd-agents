@@ -4,7 +4,8 @@
     "input": {
       "input_text": "Expandable card for Reddit Devvit app: shows title and preview, expands to full content on click. Must handle loading state for async content fetch.",
       "platform": "devvit",
-      "framework": "devvit-blocks"
+      "framework": "devvit-blocks",
+      "cognitive_state": {"energy_level": "high", "active_mode": "design", "task_tier": "T3"}
     }
   }
 ]

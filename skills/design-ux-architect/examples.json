@@ -4,7 +4,8 @@
     "input": {
       "input_text": "Need a design token system for a Reddit Devvit app with dark mode support, mobile-responsive layout, and WCAG AA compliance",
       "platform": "devvit",
-      "css_approach": "vanilla"
+      "css_approach": "vanilla",
+      "cognitive_state": {"energy_level": "high", "active_mode": "design", "task_tier": "T3"}
     }
   },
   {
@@ -12,7 +13,8 @@
     "input": {
       "input_text": "Multi-panel dashboard: sidebar nav, main content area with 3-column grid, collapsible panels. Must work 320px to 2560px.",
       "platform": "web",
-      "css_approach": "tailwind"
+      "css_approach": "tailwind",
+      "cognitive_state": {"energy_level": "medium", "active_mode": "design", "task_tier": "T3"}
     }
   }
 ]

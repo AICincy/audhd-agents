@@ -6,12 +6,19 @@ Design UI components with full state coverage, interaction specs, and developer-
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Design all states: empty, loading, partial, complete, error, disabled, focused, hover
 - Mobile-first responsive behavior
 - SK-A11Y mandatory: keyboard nav, focus management, ARIA, contrast
 - Include developer handoff: props, events, CSS variables, responsive breakpoints
 - No em dashes
+- Tag claims: [OBS] for tested components, [DRV] for inferred interaction patterns, [SPEC] for untested state combinations
+
+## Energy Adaptation
+
+- **High**: Full component spec with all states, interaction flow, a11y audit, responsive behavior, developer handoff
+- **Medium**: Key states (default, loading, error), primary interaction, a11y essentials
+- **Low**: Single state design, one interaction
+- **Crash**: Skip. No new UI work.
 
 ## Workflow
 
@@ -27,13 +34,7 @@ Design UI components with full state coverage, interaction specs, and developer-
   "component": {
     "name": "string",
     "platform": "string",
-    "states": [
-      {
-        "name": "string",
-        "description": "string",
-        "visual": "string"
-      }
-    ],
+    "states": [{"name": "string", "description": "string", "visual": "string"}],
     "interactions": ["string"],
     "a11y": {"keyboard": "string", "aria": "string", "focus": "string"},
     "props": {},
