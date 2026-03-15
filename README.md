@@ -143,7 +143,7 @@ See [infra/cloudrun/README.md](infra/cloudrun/README.md) for planned GitHub vari
 ## Loading Order (All Models)
 
 1. `PROFILE.md` (cognitive profile, constraints)
-2. Model-specific file (`models/CLAUDE.md`, `models/GEMINI.md`, or `models/OPENAI.md`)
+2. Model-specific file (`models/ANTHROPIC.md`, `models/CLAUDE.md`, `models/GEMINI.md`, or `models/OPENAI.md`)
 3. `SKILL.md` (cognitive skills)
 4. `TOOL.md` (on first tool invocation)
 
