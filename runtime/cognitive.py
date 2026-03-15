@@ -3,9 +3,9 @@
 Implements AGENT.md energy-adaptive routing and PROFILE.md cognitive contracts
 as runtime-enforceable state rather than text instructions.
 
-This module is the runtime mechanism for A-2 (PROFILE.md loading) and
-A-3 (cognitive state pipeline). It replaces the dead-code pattern of
-"Load PROFILE.md before processing" with actual state that models branch on.
+Resolves:
+- A-2: PROFILE.md runtime integration (extends existing router)
+- A-3: Cognitive state pipeline with energy-adaptive routing
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from typing import Any
 
 
-# AGENT.md energy-adaptive routing table (Section: Energy-Adaptive Routing)
+# AGENT.md energy-adaptive routing table
 ENERGY_ROUTING: dict[str, dict[str, Any]] = {
     "high": {
         "max_tier": "T5",
@@ -42,10 +42,8 @@ ENERGY_ROUTING: dict[str, dict[str, Any]] = {
     },
 }
 
-# AGENT.md tier numeric mapping (Section: Task Classification)
 TIER_ORDER: dict[str, int] = {"T1": 1, "T2": 2, "T3": 3, "T4": 4, "T5": 5}
 
-# PROFILE.md mode routing table (Section: Mode Routing)
 MODE_SIGNALS: dict[str, list[str]] = {
     "osint": [
         "name", "phone", "address", "username", "email", "domain",
@@ -65,18 +63,7 @@ MODE_SIGNALS: dict[str, list[str]] = {
 
 @dataclass
 class CognitiveState:
-    """Runtime cognitive state derived from PROFILE.md and AGENT.md contracts.
-
-    This is the central data structure that replaces static text instructions
-    with actual state that the runtime and models can branch on.
-
-    Attributes:
-        energy_level: Operator energy from AGENT.md energy-adaptive routing.
-        active_mode: Inferred from PROFILE.md mode routing table.
-        task_tier: AGENT.md complexity classification (T1-T5).
-        active_thread: Current monotropic focus thread.
-        context_switches: Number of topic switches in session.
-    """
+    """Runtime cognitive state from PROFILE.md and AGENT.md contracts."""
 
     energy_level: str = "medium"
     active_mode: str = "execute"
@@ -98,41 +85,31 @@ class CognitiveState:
 
     @property
     def routing(self) -> dict[str, Any]:
-        """Get AGENT.md energy-adaptive routing config for current state."""
         return ENERGY_ROUTING[self.energy_level]
 
     @property
     def max_tier_num(self) -> int:
-        """Numeric max tier allowed by current energy level."""
         return TIER_ORDER[self.routing["max_tier"]]
 
     @property
     def task_tier_num(self) -> int:
-        """Numeric value of requested task tier."""
         return TIER_ORDER[self.task_tier]
 
     @property
     def tier_allowed(self) -> bool:
-        """Whether current task tier is allowed at current energy level."""
         return self.task_tier_num <= self.max_tier_num
 
     @property
     def is_crash(self) -> bool:
-        """Whether operator is in crash energy state."""
         return self.energy_level == "crash"
 
     @property
     def output_mode(self) -> str:
-        """Output density mode from AGENT.md routing."""
         return self.routing["output_mode"]
 
 
 def infer_mode(input_text: str) -> str:
-    """Infer PROFILE.md mode from natural language input.
-
-    Scans input for signal words from the mode routing table.
-    Returns the first matching mode, or 'execute' as default.
-    """
+    """Infer PROFILE.md mode from natural language input."""
     lower = input_text.lower()
     for mode, signals in MODE_SIGNALS.items():
         for signal in signals:
@@ -146,57 +123,27 @@ def filter_model_chain(
     cognitive_state: CognitiveState,
     alias_map: dict[str, str],
 ) -> list[str]:
-    """Filter model chain by energy-adaptive routing rules from AGENT.md.
+    """Filter model chain by AGENT.md energy-adaptive routing.
 
-    High/Medium energy: all models allowed.
-    Low energy: only Sonnet + Gemini (fast, budget models).
-    Crash energy: empty chain (no new tasks).
-
-    Args:
-        model_chain: Ordered list of model aliases to try.
-        cognitive_state: Current cognitive state.
-        alias_map: Alias to provider/model mapping from config.yaml.
-
-    Returns:
-        Filtered model chain respecting energy constraints.
+    High/Medium: all models. Low: Sonnet + Gemini only. Crash: empty.
     """
     pool = cognitive_state.routing["model_pool"]
-
     if pool == "all":
         return model_chain
-
-    if not pool:  # crash mode: no new tasks
+    if not pool:
         return []
-
-    # Filter to energy-allowed aliases
     allowed = set(pool)
     filtered = [m for m in model_chain if m in allowed]
-
-    # If filtering removed everything, keep the last fallback
-    # (graceful degradation over hard failure)
     if not filtered and model_chain:
         for candidate in reversed(model_chain):
             if candidate in allowed:
                 return [candidate]
-        # No allowed model in chain at all: return empty
         return []
-
     return filtered
 
 
 def build_cognitive_preamble(state: CognitiveState) -> str:
-    """Build runtime cognitive state block for injection into system prompt.
-
-    This replaces the static 'Load PROFILE.md before processing' text
-    instruction with actual state that the model can branch on.
-    The preamble is injected BEFORE the skill-specific prompt.
-
-    Args:
-        state: Current cognitive state.
-
-    Returns:
-        Markdown block with active cognitive state for prompt injection.
-    """
+    """Build runtime cognitive state block for system prompt injection."""
     lines = [
         "## Active Cognitive State (injected by runtime/cognitive.py)",
         "",
@@ -205,47 +152,29 @@ def build_cognitive_preamble(state: CognitiveState) -> str:
         f"- **Task tier**: {state.task_tier} (max allowed: {state.routing['max_tier']})",
         f"- **Output mode**: {state.output_mode}",
     ]
-
     if state.active_thread:
         lines.append(f"- **Active thread**: {state.active_thread}")
-
     if state.context_switches > 2:
         lines.append(
-            f"- **WARNING**: {state.context_switches} context switches detected. "
-            "Monotropism contract: minimize further switching. Present one result at a time."
+            f"- **WARNING**: {state.context_switches} context switches. "
+            "Monotropism contract: minimize further switching."
         )
-
     if not state.tier_allowed:
         lines.append(
-            f"- **TIER BLOCKED**: Task tier {state.task_tier} exceeds energy-allowed "
-            f"max {state.routing['max_tier']}. Defer to next high-energy window or downgrade scope."
+            f"- **TIER BLOCKED**: {state.task_tier} exceeds max "
+            f"{state.routing['max_tier']}. Defer or downgrade."
         )
-
     if state.is_crash:
         lines.extend([
             "",
-            "**CRASH MODE ACTIVE**: Output only state summary and reassurance.",
+            "**CRASH MODE ACTIVE**: Output only state summary + reassurance.",
             "No new analysis. No deliverables. No questions.",
-            'Format: "Everything is saved. Nothing is urgent. '
-            'Here is where you left off: [context]. Come back when ready."',
         ])
-
     return "\n".join(lines)
 
 
 def parse_cognitive_state(options: dict[str, Any]) -> CognitiveState:
-    """Extract cognitive state from skill request options.
-
-    Supports both nested and flat option formats:
-      - Nested: {"cognitive_state": {"energy_level": "low", ...}}
-      - Flat: {"energy_level": "low", "task_tier": "T2", ...}
-
-    Args:
-        options: Request options dict from SkillRequest.
-
-    Returns:
-        Parsed CognitiveState with validated fields.
-    """
+    """Extract cognitive state from request options (nested or flat)."""
     cs = options.get("cognitive_state", {})
     if isinstance(cs, dict) and cs:
         return CognitiveState(
@@ -255,8 +184,6 @@ def parse_cognitive_state(options: dict[str, Any]) -> CognitiveState:
             active_thread=cs.get("active_thread", ""),
             context_switches=cs.get("context_switches", 0),
         )
-
-    # Flat format fallback
     return CognitiveState(
         energy_level=options.get("energy_level", "medium"),
         active_mode=options.get("active_mode", ""),

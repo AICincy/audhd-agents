@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "audhd-agents/schema-base",
-  "description": "Shared cognitive state schema. All skill schemas MUST include this base via allOf. This is the single source of truth for cognitive state inputs per A-1.",
+  "description": "Shared cognitive state schema. All skill schemas extend this base via allOf. Single source of truth per A-1.",
   "type": "object",
   "definitions": {
     "cognitive_state": {
@@ -12,29 +12,29 @@
           "type": "string",
           "enum": ["high", "medium", "low", "crash"],
           "default": "medium",
-          "description": "Operator energy level per AGENT.md energy-adaptive routing. Controls: model pool, max task tier, output density, output skeleton."
+          "description": "Operator energy per AGENT.md energy-adaptive routing. Controls model pool, max tier, output density."
         },
         "active_mode": {
           "type": "string",
           "enum": ["osint", "troubleshoot", "draft", "rewrite", "decide", "design", "summarize", "review", "chat", "execute"],
           "default": "execute",
-          "description": "Inferred from PROFILE.md mode routing table. Determines output skeleton and formatting rules. Auto-inferred from input_text if not provided."
+          "description": "PROFILE.md mode routing. Auto-inferred from input_text if not provided."
         },
         "task_tier": {
           "type": "string",
           "enum": ["T1", "T2", "T3", "T4", "T5"],
           "default": "T3",
-          "description": "AGENT.md complexity classification. T1=trivial, T2=standard, T3=complex, T4=expert, T5=critical. Controls verification requirements and model selection."
+          "description": "AGENT.md complexity classification. Controls verification and model selection."
         },
         "active_thread": {
           "type": "string",
           "default": "",
-          "description": "Current monotropic focus thread per PROFILE.md. Prevents context switching. Agents must not open new threads without announcing."
+          "description": "Current monotropic focus thread. Agents must not open new threads without announcing."
         },
         "context_switches": {
           "type": "integer",
           "default": 0,
-          "description": "Topic switches in current session. High count (>2) triggers monotropism guard via SK-PRIORITIZE hook."
+          "description": "Topic switches in session. >2 triggers SK-PRIORITIZE monotropism guard."
         }
       },
       "required": ["energy_level"]
