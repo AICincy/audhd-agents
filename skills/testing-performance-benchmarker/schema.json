@@ -1,15 +1,20 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "System to benchmark or performance requirements"
-    },
-    "test_type": {
-      "type": "string",
-      "description": "Performance test type",
-      "enum": ["baseline", "load", "stress", "soak", "spike", "comprehensive"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "System to benchmark or performance requirements"
+        },
+        "test_type": {
+          "type": "string",
+          "description": "Performance test type",
+          "enum": ["baseline", "load", "stress", "soak", "spike", "comprehensive"]
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }
