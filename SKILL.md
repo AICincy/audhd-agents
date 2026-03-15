@@ -24,8 +24,8 @@ These skills are not tasks. They are cognitive augmentation patterns designed fo
 | SK-BRIDGE | Context Bridge | Handoff between agents or sessions | Generate handoff block with full context preservation |
 | SK-CODEREVIEW | Code Review | PR, diff, patch, or implementation needs review | Severity-ordered findings with file refs, impact, and suggested fixes |
 | SK-NUDGE | Behavioral Nudge | Task paralysis, overwhelming queue, low activation | Surface single critical item, micro-sprint framing, opt-out completion |
-| SK-SYS-AUDIT | System API Audit | API call density > 20/min or CPU > 80% | Analyze log correlation IDs to identify leaking agents or infinite loops |
-| SK-SYS-RECOVER | Resource Recovery | OOM threat or high RAM residency | Force connection reaping, reduce gRPC session caps, or throttle specific skill IDs |
+| SK-SYS-AUDIT | System API Audit | /readyz degraded or uvicorn memory > 512MB | Analyze correlation IDs to identify leaking agents or infinite loops |
+| SK-SYS-RECOVER | Resource Recovery | OOM threat or high RAM residency | Reduce concurrency, shrink connection pools, force GC, throttle skills |
 | SK-A11Y | Accessibility Gate | UI/UX output, content for public consumption, design decisions | WCAG 2.2 check, POUR principles, assistive tech considerations |
 
 ---
@@ -368,27 +368,43 @@ Severity levels: CRITICAL (blocks release), HIGH (must fix before merge), MEDIUM
 ## SK-SYS-AUDIT: System API Audit
 
 ### SK-SYS-AUDIT When to Activate
-- Triggered autonomously when `server.js` logs `RESOURCE_STRAIN` or Heap > 800MB.
-- Triggered periodically by the Orchestrator to verify "infinite" call behavior.
+
+- Triggered when `/readyz` returns degraded status or response latency exceeds 2s.
+- Triggered when uvicorn process RSS exceeds 512MB (monitored via `psutil.Process().memory_info().rss`).
+- Triggered periodically by the Orchestrator to detect runaway skill execution or infinite loops.
 
 ### SK-SYS-AUDIT Output Format
+
 ```text
 AUDIT REPORT: [Timestamp]
+RUNTIME: Python/FastAPI (runtime/app.py) via uvicorn
 HOT_SKILLS: [List of skills generating highest load]
 TRACE_CORRELATION: [Correlation ID mapping to resource spikes]
-STATUS: [OPTIMAL | RESOURCE_STRAIN | LEAK_DETECTED]
+MEMORY: [RSS current / RSS peak / threshold]
+STATUS: [OPTIMAL | DEGRADED | LEAK_DETECTED]
 ACTION: [Recommendation for SK-SYS-RECOVER]
 ```
+
+### SK-SYS-AUDIT Rules
+
+- Correlation IDs sourced from FastAPI structured logging middleware.
+- Memory tracked via `psutil`, not heap snapshots.
+- `/readyz` latency measured end-to-end including provider checks.
+- Hot skills identified by aggregating `/execute` request counts per `skill_id` over trailing 5-minute window.
 
 ---
 
 ## SK-SYS-RECOVER: Resource Recovery
 
 ### SK-SYS-RECOVER When to Activate
-- Verdict from SK-SYS-AUDIT requires immediate intervention.
+
+- Verdict from SK-SYS-AUDIT is DEGRADED or LEAK_DETECTED.
 - Manual override by Operator during "lockup" events.
 
 ### SK-SYS-RECOVER Rules
-- Reduce `maxSessionMemory` in 128MB increments.
-- Reduce `sessionIdleTimeout` to 30s.
-- Injects "BACKOFF" headers to authenticated skill callers.
+
+- Reduce uvicorn `--limit-concurrency` in decrements of 10.
+- Shrink httpx connection pool sizes (`max_connections`, `max_keepalive_connections`) in decrements of 5.
+- Force Python garbage collection (`gc.collect(2)`) and log freed object counts.
+- Throttle specific skill IDs via FastAPI middleware rate limits (`slowapi` or custom).
+- If RSS still above threshold after pool + GC intervention: restart uvicorn workers gracefully (`SIGHUP`).
