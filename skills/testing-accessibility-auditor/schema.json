@@ -1,20 +1,25 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "URL, component markup, design spec, or screenshot to audit"
-    },
-    "standard": {
-      "type": "string",
-      "description": "WCAG 2.2 conformance level",
-      "enum": ["AA", "AAA"]
-    },
-    "scope": {
-      "type": "string",
-      "description": "Audit scope",
-      "enum": ["page", "component", "journey", "application"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "URL, component markup, design spec, or screenshot to audit"
+        },
+        "standard": {
+          "type": "string",
+          "description": "WCAG 2.2 conformance level",
+          "enum": ["AA", "AAA"]
+        },
+        "scope": {
+          "type": "string",
+          "description": "Audit scope",
+          "enum": ["page", "component", "journey", "application"]
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

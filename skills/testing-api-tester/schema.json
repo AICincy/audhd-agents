@@ -1,15 +1,20 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "API spec or endpoint description"
-    },
-    "test_type": {
-      "type": "string",
-      "description": "Testing focus",
-      "enum": ["functional", "security", "contract", "load", "comprehensive"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "API spec or endpoint description"
+        },
+        "test_type": {
+          "type": "string",
+          "description": "Testing focus",
+          "enum": ["functional", "security", "contract", "load", "comprehensive"]
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

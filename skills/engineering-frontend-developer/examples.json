@@ -3,7 +3,12 @@
     "description": "Certification progress dashboard component",
     "input": {
       "input_text": "React component: certification progress dashboard showing completed/in-progress/available certs as cards with progress rings. Filterable by category. Data from REST API.",
-      "framework": "react"
+      "framework": "react",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "execute",
+        "task_tier": "T3"
+      }
     }
   }
 ]

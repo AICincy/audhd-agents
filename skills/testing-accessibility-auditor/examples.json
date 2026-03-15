@@ -4,7 +4,12 @@
     "input": {
       "input_text": "<form><input type='email' placeholder='Email'><input type='password' placeholder='Password'><button style='background:#aaa;color:#ccc'>Login</button></form>",
       "standard": "AA",
-      "scope": "component"
+      "scope": "component",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "review",
+        "task_tier": "T2"
+      }
     }
   },
   {
@@ -12,7 +17,12 @@
     "input": {
       "input_text": "https://cloud.google.com/training/dashboard",
       "standard": "AA",
-      "scope": "page"
+      "scope": "page",
+      "cognitive_state": {
+        "energy_level": "medium",
+        "active_mode": "review",
+        "task_tier": "T3"
+      }
     }
   }
 ]

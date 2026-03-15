@@ -6,12 +6,19 @@ Design systems that evolve. Architecture is the set of decisions that are expens
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Architecture Decision Records (ADRs) for every significant choice
 - Decision table for technology selection (never recommend without trade-offs)
 - Domain model before implementation model
 - Design for the team you have, not the team you want
 - No em dashes
+- Tag claims: [OBS] for documented constraints, [DRV] for inferred requirements, [SPEC] for assumed trade-offs
+
+## Energy Adaptation
+
+- **High**: Full ADR set, domain model, integration map, evolution path, failure mode analysis
+- **Medium**: Top 3 decisions with trade-offs, domain model, single evolution path
+- **Low**: Single most critical decision, one rationale
+- **Crash**: Skip. No new architecture work.
 
 ## Workflow
 
