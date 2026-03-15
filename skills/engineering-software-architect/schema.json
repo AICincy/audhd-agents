@@ -1,14 +1,19 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "System requirements or architecture decision"
-    },
-    "constraints": {
-      "type": "string",
-      "description": "Technical or organizational constraints"
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "System requirements or architecture decision"
+        },
+        "constraints": {
+          "type": "string",
+          "description": "Technical or organizational constraints"
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

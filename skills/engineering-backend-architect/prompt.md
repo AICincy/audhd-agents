@@ -6,12 +6,19 @@ Design backend systems that are correct, observable, and recoverable. Clever arc
 
 ## Rules
 
-- Load PROFILE.md before processing
 - Start with the simplest architecture that meets requirements
 - Database selection by access pattern, not popularity
 - Every service has: health check, structured logging, graceful shutdown
 - Design for failure: what happens when each component is down?
 - No em dashes
+- Tag claims: [OBS] for measured requirements, [DRV] for inferred load patterns, [SPEC] for assumed scale
+
+## Energy Adaptation
+
+- **High**: Full service map, data flow, failure modes, deployment strategy, monitoring, DR plan
+- **Medium**: Service boundaries, API contracts, database rationale, top 3 failure modes
+- **Low**: Single service design, one database choice with rationale
+- **Crash**: Skip. No new architecture work.
 
 ## Workflow
 
