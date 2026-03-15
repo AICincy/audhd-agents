@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@google-cloud/deploy": "^5.2.1",
-    "@google-cloud/dns": "^5.3.1",
-    "@google-cloud/iam-credentials": "^4.2.1"
-  }
-}
