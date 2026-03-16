@@ -1,70 +1,30 @@
 # audhd-agents
 
-Multi-agent orchestration for AuDHD cognition. Hub-and-spoke swarm across 9 LLM instances, 51 skills, energy-adaptive routing, and a FastAPI runtime with output validation.
+Multi-agent orchestration designed for AuDHD cognition. Nine LLM instances, 51 skills, 21 runtime hooks, energy-adaptive routing, and a FastAPI service with output validation.
 
-Built by a neurodivergent engineer, for neurodivergent engineers. Every design decision maps to a real cognitive pattern: monotropism, pattern compression, asymmetric working memory, interest-based activation.
+Every design decision maps to a real cognitive pattern: monotropism, pattern compression, asymmetric working memory, interest-based activation, executive function offload. This is cognitive augmentation for a competent adult, not safety scaffolding.
 
-MIT License — [AICincy](https://github.com/AICincy)
+MIT License
 
----
+## How it works
 
-## How It Works
+```
+Operator input + cognitive_state
+        |
+   [ Router ]  reads energy/mode/tier, selects model chain
+        |
+   [ Hooks ]   21 hooks (3 always-on: reality-check, energy-route, knowledge-inject)
+        |
+   [ Provider ] OpenAI or Google adapter executes against chosen model
+        |
+   [ Validation ] checks output against PROFILE.md contracts
+        |
+   Response + cognitive_state echo
+```
 
-1. **Operator sends input** with optional `cognitive_state` (energy level, focus mode, task tier)
-2. **Router** reads cognitive state, classifies task tier (T1–T5), selects model from the routing matrix
-3. **Hooks** run pre-execution (speech cleanup, task decomposition, reality-check injection, energy routing)
-4. **Skill** executes against the chosen provider (OpenAI or Google)
-5. **Validation** checks output against PROFILE.md contracts (no em dashes, no filler, claim tagging)
-6. **Response** echoes cognitive state back for orchestrator continuity
-
-Crash mode short-circuits everything: saves state, returns one sentence, stops.
-
----
-
-## Agent Registry (9 models)
-
-| ID | Model | Role | Tier |
-|----|-------|------|------|
-| G-PRO | Gemini 2.5 Pro | Deep Analyst / Integrator | T3–T5 |
-| G-PRO31 | Gemini 3.1 Pro Preview | Deep Analyst / Integrator | T3–T5 |
-| G-FLA31 | Gemini 3.1 Flash | Rapid Verifier / Analyst | T1–T3 |
-| O-54P | GPT-5.4 Pro | Deep Planner / Analyst | T4–T5 |
-| O-54 | GPT-5.4 | Ideation Engine (Primary) | T2–T4 |
-| O-53 | GPT-5.3 | Ideation Engine (Fallback) | T2–T4 |
-| O-CDX | GPT-5.3 Codex | Code Automator | T2–T4 |
-| O-O4M | o4-mini | Rapid Verifier | T1–T2 |
-| O-MAX | GPT Max | Generalist Overflow | T2–T4 |
-
-Routing matrix, circuit breakers, and escalation protocol are in [AGENT.md](AGENT.md).
-
----
-
-## Skills (51)
-
-Skills are defined in `skills/{name}/` with four files each:
-
-| File | Purpose |
-|------|---------|
-| `skill.yaml` | Name, description, capabilities, inputs, outputs |
-| `prompt.md` | Prompt logic: goal, rules, workflow, output format |
-| `schema.json` | JSON Schema for input/output validation |
-| `examples.json` | Test invocations |
-
-Skill domains: engineering, design, testing, product, marketing, project management, specialized.
-
-`python build.py` generates `dist/` manifests in OpenAI, Gemini, and canonical formats.
-
----
+Crash mode short-circuits the pipeline: saves state, returns one sentence, stops.
 
 ## Setup
-
-### Requirements
-
-- Python 3.11+
-- OpenAI API key (required)
-- Google API key or Vertex AI credentials (required)
-
-### Install
 
 ```bash
 git clone https://github.com/AICincy/audhd-agents
@@ -73,141 +33,192 @@ pip install -e ".[dev]"
 cp .env.example .env
 ```
 
-Edit `.env` and fill in your API keys:
+Add your API keys to `.env`:
 
 ```bash
-# Required
-OPENAI_API_KEY=sk-...
-GOOGLE_API_KEY=AIza...
-
-# Optional: Vertex AI instead of Gemini Developer API
-GOOGLE_GENAI_USE_VERTEXAI=false
-GOOGLE_CLOUD_PROJECT=
-GOOGLE_CLOUD_LOCATION=global
-GOOGLE_APPLICATION_CREDENTIALS=   # path to service account JSON
-
-# Optional: Vertex Express Mode (API key auth, no ADC)
-VERTEX_API_KEY=
-
-# API auth for /execute endpoint (leave empty to disable in dev)
-AUDHD_API_KEYS=
-
-# Webhook signing secret for Notion integration
-NOTION_WEBHOOK_SECRET=
+OPENAI_API_KEY=sk-...           # required
+GOOGLE_API_KEY=AIza...          # required (or use Vertex AI below)
 ```
 
-### Verify
+Verify:
 
 ```bash
-# Check config (no live calls)
-python scripts/check_connections.py --mode config
-
-# Live connection test (makes real API calls)
-python scripts/check_connections.py --mode live
-
-# Run tests
-pytest -q
+python scripts/check_connections.py --mode config   # config check, no API calls
+python scripts/check_connections.py --mode live      # live connection test
+pytest -q                                            # 150 tests
+python build.py                                      # generate dist/ manifests
 ```
 
-### Build skill manifests
+## Models
+
+Nine models registered in [`adapters/config.yaml`](adapters/config.yaml). Full routing matrix and circuit breakers in [AGENT.md](AGENT.md).
+
+| Alias | Model | Provider | Tier | Role |
+|-------|-------|----------|------|------|
+| G-PRO31 | gemini-3.1-pro-preview | Google | T3 | Deep analyst, OSINT, drafting |
+| G-PRO | gemini-2.5-pro | Google | T3 | Research, multimodal, data analysis |
+| G-FLA31 | gemini-3.1-flash | Google | T1 | Triage, fast drafts, analysis |
+| G-FLA | gemini-2.5-flash | Google | T1 | Fast/cheap, STT cleanup, TTS prep |
+| O-54P | gpt-5.4-pro | OpenAI | T5 | Deep planning, audit synthesis |
+| O-54 | gpt-5.4 | OpenAI | T3 | Ideation, creative, stakeholder comms |
+| O-53 | gpt-5.3 | OpenAI | T3 | Generalist overflow, fallback |
+| O-CDX | gpt-5.3-codex | OpenAI | T3 | Code generation, automation |
+| O-O4M | o4-mini | OpenAI | T1 | Rapid verification, benchmarks |
+
+### Energy-adaptive routing
+
+| Energy | Max tier | Behavior |
+|--------|----------|----------|
+| High | T5 | Full execution, all models available |
+| Medium | T4 | Standard, prefer fast models for T1-T2 |
+| Low | T2 | Gemini + o4-mini only, 3 bullets max |
+| Crash | T1 | No new work. Save state. Stop. |
+
+## Skills
+
+51 skills across 9 domains, each defined by four files:
+
+| Domain | Count | Examples |
+|--------|-------|---------|
+| Engineering | 16 | code-reviewer, software-architect, security-engineer, devops-automator |
+| Testing | 8 | reality-checker, accessibility-auditor, performance-benchmarker |
+| Design | 7 | ux-architect, ui-designer, brand-guardian, inclusive-visuals |
+| Specialized | 6 | agents-orchestrator, mcp-builder, model-qa |
+| Product | 4 | sprint-prioritizer, feedback-synthesizer, trend-researcher |
+| Support | 4 | compliance-auditor, legal-compliance-checker, analytics-reporter |
+| Project Mgmt | 3 | project-shepherd, experiment-tracker |
+| Marketing | 2 | content-creator, linkedin-content-creator |
+| Automation | 1 | automation-governance |
+
+Each skill has: `skill.yaml` (definition), `prompt.md` (prompt logic), `schema.json` (validation), `examples.json` (test cases).
+
+All skills reference `G-PRO31` as primary model with `[G-PRO, O-54P]` fallback chain.
+
+Build manifests for OpenAI and Gemini formats:
 
 ```bash
-python build.py
-# Outputs to dist/ (not committed)
+python build.py    # outputs to dist/
 ```
 
----
+## Hooks
 
-## Runtime (FastAPI)
+21 runtime hooks executed via `run_hooks()` in the router pipeline. Three are always-on and fire on every execution regardless of skill configuration.
+
+| Hook | Phase | Always-on |
+|------|-------|-----------|
+| reality-check | prompt_injection | Yes |
+| energy-route | prompt_injection | Yes |
+| knowledge-inject | pre_execute | Yes |
+| decompose | pre_execute | |
+| bridge | pre_execute | |
+| speech-input | pre_execute | |
+| quality-gate | prompt_injection | |
+| verify | prompt_injection | |
+| focus | prompt_injection | |
+| format | prompt_injection | |
+| load-skill | prompt_injection | |
+| micro-step | prompt_injection | |
+| anchor | prompt_injection | |
+| code-review | prompt_injection | |
+| refocus | prompt_injection | |
+| accessibility | prompt_injection | |
+| system-audit | prompt_injection | |
+| tone | prompt_injection | |
+| resume | on_resume | |
+| recover | on_error | |
+| speech-output | post_execute | |
+
+Output validation (`runtime/validation.py`) runs after every model call and checks: no em dashes, no filler phrases, no unsolicited motivation, claim tags present for T3+ output, energy-appropriate length.
+
+## Runtime API
 
 ```bash
 uvicorn runtime.app:app --host 0.0.0.0 --port 8080
 ```
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/healthz` | GET | Process health |
-| `/readyz` | GET | Router, provider, and skill readiness |
-| `/execute` | POST | Authenticated skill execution |
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `/healthz` | GET | None | Process health |
+| `/readyz` | GET | None | Router, provider, skill readiness |
+| `/execute` | POST | Bearer | Skill execution with cognitive state |
+| `/webhooks/notion` | POST | HMAC | Notion webhook receiver |
 
-**Runtime environment variables:**
+Environment variables:
 
-| Variable | Values | Default |
-|----------|--------|---------|
-| `APP_ENV` | `staging`, `production` | `staging` |
-| `REQUIRED_PROVIDERS` | comma-separated provider names | `openai,google` |
-| `LOG_LEVEL` | `DEBUG`, `INFO`, `WARNING` | `INFO` |
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `APP_ENV` | `staging` | `staging` or `production` |
+| `REQUIRED_PROVIDERS` | `openai,google` | Providers that must be healthy |
+| `LOG_LEVEL` | `INFO` | Logging level |
+| `AUDHD_API_KEYS` | (empty) | Comma-separated bearer tokens for `/execute` |
+| `NOTION_WEBHOOK_SECRET` | (empty) | HMAC-SHA256 signing secret for webhooks |
 
-`/readyz` checks config only — it does not make live API calls. Use `python scripts/check_connections.py --mode live` as your release gate.
+## CLI
 
----
+```bash
+sk engineering-code-reviewer "Review this PR diff" --focus security
+sk engineering-ai-engineer "Build a rec system" --energy low --tier T2
+sk --list
+cat diff.txt | sk engineering-code-reviewer --format critical-only
+```
 
-## Google Provider Options
+The CLI calls `validate_output()` on every response and prints violations to stderr.
 
-Three mutually exclusive auth paths:
+## Google auth options
 
-| Mode | Variables Required |
+| Mode | Required variables |
 |------|--------------------|
 | Gemini Developer API | `GOOGLE_API_KEY` |
-| Vertex Express (API key) | `GOOGLE_GENAI_USE_VERTEXAI=true`, `VERTEX_API_KEY` |
+| Vertex Express | `GOOGLE_GENAI_USE_VERTEXAI=true`, `VERTEX_API_KEY` |
 | Vertex Standard (ADC) | `GOOGLE_GENAI_USE_VERTEXAI=true`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, `GOOGLE_APPLICATION_CREDENTIALS` |
 
-The adapter auto-selects Vertex when a Vertex-specific credential is present. Set `GOOGLE_GENAI_USE_VERTEXAI=true` to force it.
+## Cognitive architecture
 
----
+Five patterns from [PROFILE.md](PROFILE.md):
 
-## Cognitive Architecture
+- **Monotropism**: one thread, one objective, one next action. Topic shift requires announcement.
+- **Pattern compression**: verdict first, then model, assumptions, counterexamples, execution steps.
+- **Asymmetric working memory**: full system view before sequencing. Tables over prose. State externalized.
+- **Interest-based activation**: micro-steps for low-interest tasks. Smallest possible first action.
+- **Executive function offload**: infer and execute. Questions are a last resort.
 
-Five cognitive patterns drive every design decision:
+Claim tags enforced on T3+ output: `[observed]`, `[inferred]`, `[general]`, `[unverified]`.
 
-| Pattern | Implementation |
-|---------|---------------|
-| **Monotropism** | One active thread. Orchestrator-managed handoffs only. No parallel notifications. |
-| **Pattern compression** | Verdict first. Supporting structure after. Templates enforce this at output. |
-| **Asymmetric working memory** | Full system view before sequencing. Tables over prose. State externalized in artifacts. |
-| **Interest-based activation** | Micro-steps for low-interest tasks. Smallest possible first action. Timed goals. |
-| **Executive function offload** | Agents infer and execute. Questions are a last resort. Artifact over discussion. |
+## Project structure
 
-**Energy-adaptive routing:**
+```
+adapters/           Provider layer (router, OpenAI, Google adapters, config)
+runtime/            FastAPI service, hooks, validation, cognitive pipeline, schemas
+skills/             51 skill definitions (skill.yaml, prompt.md, schema.json, examples.json)
+cli/                sk command-line tool
+scripts/            Diagnostics, smoke tests, provider validation
+tests/              150 tests
+models/             LLM-specific instruction files (GEMINI.md, OPENAI.md)
+capabilities/       Capability definitions (YAML)
+graphs/             Capability chaining
+infra/cloudrun/     Cloud Run deployment config
+build.py            Manifest generator (outputs to dist/)
+```
 
-| Energy | Max Tier | Model Pool | Output |
-|--------|----------|------------|--------|
-| High | T5 | All 9 | Full execution, all cognitive patterns active |
-| Medium | T4 | All 9 | Standard, reduced branching |
-| Low | T2 | Gemini + o4-mini | Core task only, 3 bullets max |
-| Crash | T1 | None new | "Everything is saved. Nothing is urgent. Come back when ready." |
+## Deployment
 
----
+Dockerfile and GitHub Actions workflows exist. Cloud Run deployment scaffolding in `infra/cloudrun/`.
 
-## Loading Order (for LLM context)
+```bash
+docker build -t audhd-agents .
+```
 
-When using agents directly (not via the runtime API), load files in this order:
+See [infra/cloudrun/README.md](infra/cloudrun/README.md) for secrets, variables, and runtime defaults.
 
-1. [PROFILE.md](PROFILE.md) — cognitive profile and output constraints
-2. [models/GEMINI.md](models/GEMINI.md) or [models/OPENAI.md](models/OPENAI.md) — provider-specific instructions
-3. [SKILL.md](SKILL.md) — skill invocation protocol
-4. [TOOL.md](TOOL.md) — on first tool invocation only
+## Related
 
----
-
-## Skill Definitions (audhd-skills)
-
-Skill prompt files are sourced from [AICincy/audhd-skills](https://github.com/AICincy/audhd-skills). The cognitive runtime (`runtime/`) and adapters (`adapters/`) live in this repo only.
-
----
-
-## Cloud Run Deployment
-
-Infrastructure scaffolding exists in `infra/cloudrun/` and `.github/workflows/deploy-cloud-run.yml`. A Dockerfile is present. **Deployment is not yet validated end-to-end.**
-
-Planned: private authenticated service, Secret Manager for credentials, Workload Identity for GitHub Actions, staging smoke test before production promotion.
-
-See [infra/cloudrun/README.md](infra/cloudrun/README.md) for the full variable and secret reference.
-
----
+- [AICincy/audhd-skills](https://github.com/AICincy/audhd-skills) — skill prompt templates and cognitive augmentation layer
+- [AGENT.md](AGENT.md) — routing matrix, circuit breakers, escalation protocol, cost tracking
+- [PROFILE.md](PROFILE.md) — cognitive profile and output constraints
+- [GROUNDING.md](https://github.com/AICincy/audhd-skills/blob/main/GROUNDING.md) — what every component actually does vs. aspirational
 
 ## Contributing
 
-Contributions welcome, especially from neurodivergent developers. If you adapt [PROFILE.md](PROFILE.md) to your own cognitive patterns, open a PR — different neurodivergent profiles should be first-class.
+Contributions welcome, especially from neurodivergent developers. Fork [PROFILE.md](PROFILE.md) and adapt to your own cognitive patterns.
 
-Bug reports and skill additions go in [issues](https://github.com/AICincy/audhd-agents/issues).
+[Open an issue](https://github.com/AICincy/audhd-agents/issues) for bugs, skill requests, or profile adaptations.
