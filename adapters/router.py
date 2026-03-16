@@ -554,7 +554,7 @@ class SkillRouter:
         # Use planner to parse intentions and determine capability chain
         capabilities = self.planner.plan_execution_chain(request.input_text)
         if not capabilities:
-            raise ValueError(f"Planner could not determine a capability chain for the given input.")
+            raise ValueError("Planner could not determine a capability chain for the given input.")
 
         logger.info(f"Planned capability chain: {capabilities}")
 

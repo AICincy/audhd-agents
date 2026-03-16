@@ -272,7 +272,7 @@ def sk_scholar(ctx) -> Any:
     - Does not maintain persistent state across requests
     - Does not act as a supervisor (orchestrator handles routing)
     """
-    from runtime.hooks import HookResult
+    _, HookResult = _lazy_import()
     result = HookResult()
 
     mode = ctx.cognitive_state.active_mode
