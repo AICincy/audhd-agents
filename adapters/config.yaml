@@ -83,8 +83,28 @@ providers:
           - multimodal
           - data-analysis
           - cost-effective
-      # gemini-3.1-pro-preview / G-PRO31 removed: phantom model ID
-      # gemini-3.1-flash / G-FLA31 removed: phantom model ID
+      gemini-3.1-pro-preview:
+        id: gemini-3.1-pro-preview
+        alias: G-PRO31
+        tier: T3
+        context_window: 1048576
+        max_output: 65536
+        strengths:
+          - deep-reasoning
+          - complex-analysis
+          - drafting
+          - osint
+      gemini-3.1-flash:
+        id: gemini-3.1-flash
+        alias: G-FLA31
+        tier: T1
+        context_window: 1048576
+        max_output: 8192
+        strengths:
+          - fast-cheap
+          - triage
+          - rapid-drafting
+          - analysis
       gemini-2.5-flash:
         id: gemini-2.5-flash
         alias: G-FLA
@@ -107,8 +127,9 @@ alias_map:
   O-CDX: openai/gpt-5.3-codex
   O-O4M: openai/o4-mini
   G-PRO: google/gemini-2.5-pro
+  G-PRO31: google/gemini-3.1-pro-preview
+  G-FLA31: google/gemini-3.1-flash
   G-FLA: google/gemini-2.5-flash
-  # O-MAX/gpt-max, G-PRO31/gemini-3.1-pro-preview, G-FLA31/gemini-3.1-flash removed: phantom IDs
 
 # Circuit breakers (applied to all provider adapters)
 circuit_breaker:

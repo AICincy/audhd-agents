@@ -226,7 +226,8 @@ def _list_skills(loader: SkillLoader) -> None:
     name_w = max(len(s["name"]) for s in skills) + 2
     cat_w = max(len(s.get("category", "")) for s in skills) + 2
     print(f"{'SKILL':<{name_w}} {'CATEGORY':<{cat_w}} DESCRIPTION")
-    print(f"{'\u2500' * name_w} {'\u2500' * cat_w} {'\u2500' * 50}")
+    sep = "\u2500"
+    print(f"{sep * name_w} {sep * cat_w} {sep * 50}")
     for s in sorted(skills, key=lambda x: x["name"]):
         desc = s.get("description", "")[:50]
         print(f"{s['name']:<{name_w}} {s.get('category', ''):<{cat_w}} {desc}")
