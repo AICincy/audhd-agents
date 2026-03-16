@@ -2,6 +2,8 @@
 
 Post-processing: flags violations transparently, does NOT modify output
 (per honesty protocol: explicit over implicit).
+
+F9 fix: CLAIM_TAGS skipped for machine-readable JSON responses.
 """
 
 from __future__ import annotations
@@ -41,6 +43,21 @@ MOTIVATION_PHRASES = [
 ]
 
 
+def _is_json_response(text: str) -> bool:
+    """Detect machine-readable JSON responses that should skip prose rules.
+
+    Checks if trimmed output starts with { or [ and ends with } or ],
+    indicating structured data rather than prose claims.
+    """
+    stripped = text.strip()
+    if not stripped:
+        return False
+    return (
+        (stripped.startswith("{") and stripped.endswith("}"))
+        or (stripped.startswith("[") and stripped.endswith("]"))
+    )
+
+
 def validate_output(
     output_text: str,
     active_mode: str = "execute",
@@ -76,9 +93,10 @@ def validate_output(
             result.add_violation("NO_MOTIVATION", f"Encouragement: '{phrase}'")
             break
 
-    # Claim tags in structured output (skip chat)
+    # Claim tags in structured output (skip chat and JSON responses)
     # F4 fix: escalated from warning to violation per reality-check RC-003
-    if active_mode != "chat":
+    # F9 fix: skip for JSON responses (no prose claims to tag)
+    if active_mode != "chat" and not _is_json_response(output_text):
         tier_num = int(task_tier[1]) if len(task_tier) == 2 and task_tier[0] == "T" else 3
         has_tags = any(tag in output_text for tag in ["[observed]", "[inferred]", "[general]", "[unverified]"])
         if tier_num >= 3 and not has_tags:
