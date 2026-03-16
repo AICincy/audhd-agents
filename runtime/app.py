@@ -1,10 +1,16 @@
 """Private FastAPI runtime for operator-driven skill execution.
 
 P1-1: Added cognitive_state to /execute request schema.
-- Import ExecuteRequest/ExecuteResponse from runtime.schemas
-- Crash mode short-circuit (no model call when energy=crash)
-- cognitive_state passthrough to router
-- Backward compatible: omitting cognitive_state defaults to medium/focused/new
+P2-1: Added webhook endpoints, auth middleware, structured logging.
+P2-2: Added pipeline bridge initialization for webhook -> skill routing.
+
+Endpoints:
+    GET  /healthz              Liveness probe
+    GET  /readyz               Readiness probe (provider checks)
+    POST /execute              Skill execution with cognitive state
+    POST /webhooks/notion      Notion webhook receiver (HMAC verified)
+    GET  /webhooks/notion      Webhook subsystem health
+    POST /webhooks/test        Dev echo endpoint (staging only)
 """
 
 from __future__ import annotations
@@ -32,6 +38,13 @@ from runtime.schemas import (
     CognitiveCompliance,
     EnergyLevel,
 )
+
+# P2-1: Webhook and middleware imports
+from runtime.webhooks import router as webhook_router
+from runtime.middleware import register_middleware
+
+# P2-2: Pipeline bridge
+from runtime.pipeline_bridge import init_bridge
 
 
 def configure_logger(name: str, level: str) -> logging.Logger:
@@ -137,12 +150,18 @@ def create_app(
             router = router_factory(runtime_settings.config_path)
             state.router = router
             state.skill_index = inventory_factory(router)
+
+            # P2-2: Initialize pipeline bridge so webhook handlers can
+            # dispatch events to the cognitive pipeline
+            init_bridge(router, state.skill_index)
+
             emit_log(
                 logger,
                 "runtime_startup_complete",
                 app_env=runtime_settings.app_env,
                 required_providers=list(runtime_settings.required_providers),
                 skill_count=len(state.skill_index),
+                pipeline_bridge="initialized",
             )
         except Exception as exc:  # pragma: no cover - exercised via readyz tests
             state.startup_error = str(exc)
@@ -159,7 +178,8 @@ def create_app(
 
     app = FastAPI(
         title=runtime_settings.service_name,
-        version="1.0.0",
+        version="2.1.0",
+        description="AuDHD Cognitive Swarm runtime with webhook-to-skill pipeline",
         lifespan=lifespan,
     )
     app.state.runtime = RuntimeState(
@@ -167,6 +187,12 @@ def create_app(
         startup_error="runtime startup not completed",
     )
     app.state.logger = logger
+
+    # P2-1: Register middleware stack (CORS, request ID, logging, timing)
+    register_middleware(app)
+
+    # P2-1: Mount webhook router
+    app.include_router(webhook_router)
 
     def get_state(request: Request) -> RuntimeState:
         return request.app.state.runtime

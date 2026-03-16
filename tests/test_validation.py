@@ -15,7 +15,7 @@ class TestEmDashDetection:
         assert not result.passed
 
     def test_clean_text_passes(self):
-        result = validate_output("This is clean: no dashes here.")
+        result = validate_output("This is clean: no dashes here.", task_tier="T1")
         assert result.passed
 
 
@@ -38,9 +38,9 @@ class TestMotivationDetection:
 
 
 class TestClaimTags:
-    def test_warns_missing_tags_t3(self):
+    def test_violates_missing_tags_t3(self):
         result = validate_output("The system has 51 skills.", task_tier="T3")
-        assert any("CLAIM_TAGS" in w for w in result.warnings)
+        assert any("CLAIM_TAGS" in v for v in result.violations)
 
     def test_no_warning_with_tags(self):
         result = validate_output("The system has 51 skills. [OBS]", task_tier="T3")

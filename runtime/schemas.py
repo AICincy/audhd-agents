@@ -266,7 +266,7 @@ class ExecuteResponse(BaseModel):
     request_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     hooks_executed: list[str] = Field(
         default_factory=list,
-        description="sk_hooks that ran (e.g. ['SK-GATE', 'SK-VERIFY'])",
+        description="Skill hooks that ran (e.g. ['quality-gate', 'verify'])",
     )
     cognitive_compliance: CognitiveCompliance = Field(
         default_factory=CognitiveCompliance,

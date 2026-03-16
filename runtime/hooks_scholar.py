@@ -1,4 +1,4 @@
-"""SK-SCHOLAR (P2.7) + Context Monitoring Extensions (P2.5).
+"""knowledge-inject (P2.7) + Context Monitoring Extensions (P2.5).
 
 Grounded implementations per audit discussion constraints:
 - Prompt-injection only (no independent action, no persistent listener)
@@ -90,8 +90,8 @@ def detect_energy_signals(text: str) -> list[dict[str, Any]]:
 
     # Hyperfocus: very long input, high technical density
     tech_terms = re.findall(
-        r"\b(?:function|class|def|import|API|schema|deploy|runtime|config|"  # noqa: E501
-        r"docker|kubernetes|pipeline|endpoint|database|query|index|"  # noqa: E501
+        r"\b(?:function|class|def|import|API|schema|deploy|runtime|config|"
+        r"docker|kubernetes|pipeline|endpoint|database|query|index|"
         r"error|exception|traceback|debug|log|test|assert|validate)\b",
         text, re.IGNORECASE,
     )
@@ -187,9 +187,9 @@ def detect_overload_signals(input_text: str) -> dict[str, Any] | None:
 
     # Multiple distinct requests (conjunctions + action verbs)
     action_boundaries = re.findall(
-        r"\b(?:and\s+(?:also|then)?\s*(?:can|could|please|would)?|"  # noqa: E501
-        r"also\s+(?:can|could|please)?|"  # noqa: E501
-        r"plus\s+(?:can|could|please)?|"  # noqa: E501
+        r"\b(?:and\s+(?:also|then)?\s*(?:can|could|please|would)?|"
+        r"also\s+(?:can|could|please)?|"
+        r"plus\s+(?:can|could|please)?|"
         r"oh\s+and|then\s+(?:can|could|please)?)\b",
         input_text, re.IGNORECASE,
     )
@@ -220,7 +220,7 @@ def detect_overload_signals(input_text: str) -> dict[str, Any] | None:
 
 
 # ===========================================================================
-# P2.7: SK-SCHOLAR - AuDHD Knowledge Injection Hook
+# P2.7: knowledge-inject - AuDHD Knowledge Injection Hook
 # ===========================================================================
 
 # Mode-specific cognitive patterns from PROFILE.md
@@ -255,7 +255,7 @@ _SCHOLAR_SWITCH_COST: dict[str, str] = {
 
 
 def sk_scholar(ctx) -> Any:
-    """SK-SCHOLAR: AuDHD knowledge-injection hook (P2.7).
+    """knowledge-inject: AuDHD knowledge-injection hook (P2.7).
 
     Always-on pre_execute hook. Injects PROFILE.md cognitive model
     into every skill's prompt based on current mode and energy.
@@ -282,7 +282,7 @@ def sk_scholar(ctx) -> Any:
     # Crash mode: minimal injection to avoid overhead
     if e_key == "crash":
         result.modified_prompt = (ctx.prompt or "") + (
-            "\n\n## Cognitive Lens (SK-SCHOLAR: crash)\n"
+            "\n\n## Cognitive Lens (knowledge-inject: crash)\n"
             "Emergency. Single action. Save state. Stop.\n"
             "This system augments a competent adult. Crash mode reduces load, not agency.\n"
         )
@@ -290,7 +290,7 @@ def sk_scholar(ctx) -> Any:
 
     # Build cognitive lens injection
     scholar_lines = [
-        f"\n\n## Cognitive Lens (SK-SCHOLAR: {mode}/{e_key})",
+        f"\n\n## Cognitive Lens (knowledge-inject: {mode}/{e_key})",
         "",
         "### Active Pattern",
         f"{_SCHOLAR_MODE_PATTERNS.get(mode, _SCHOLAR_MODE_PATTERNS['execute'])}",
@@ -366,9 +366,9 @@ def patch_hook_registry(
         from runtime.hooks_scholar import patch_hook_registry
         patch_hook_registry(HOOK_REGISTRY, ALWAYS_ON_HOOKS)
     """
-    registry["SK-SCHOLAR"] = sk_scholar
-    if "SK-SCHOLAR" not in always_on:
-        always_on.append("SK-SCHOLAR")
+    registry["knowledge-inject"] = sk_scholar
+    if "knowledge-inject" not in always_on:
+        always_on.append("knowledge-inject")
 
 
 def get_context_monitors() -> dict[str, Any]:
