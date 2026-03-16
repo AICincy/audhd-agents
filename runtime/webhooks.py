@@ -1,7 +1,7 @@
 """Notion webhook endpoint router.
 
 Receives, verifies, deduplicates, and routes Notion webhook events
-to the cognitive pipeline.
+to the cognitive pipeline via pipeline_bridge.
 
 Endpoints:
     POST /webhooks/notion     - Receive webhook events
@@ -158,53 +158,67 @@ async def log_event(event: WebhookEvent) -> None:
 
 
 async def handle_page_event(event: WebhookEvent) -> None:
-    """Process page lifecycle events.
+    """Process page lifecycle events through the cognitive pipeline."""
+    from runtime.pipeline_bridge import dispatch_event
 
-    Routes to cognitive pipeline based on event action:
-    - created: potential skill trigger
-    - updated: diff detection, property change routing
-    - deleted: cleanup, state invalidation
-    - content_updated: re-index, re-validate
-    """
-    action = event.action
     entity = event.data.entity
 
     logger.info(
         json.dumps({
-            "event": "page_event_processed",
-            "action": action,
+            "event": "page_event_routing",
+            "action": event.action,
             "page_id": entity.id,
             "page_title": entity.title,
             "updated_properties": event.data.updated_properties,
         })
     )
 
+    result = await dispatch_event(event)
+    if result:
+        logger.info(
+            json.dumps({
+                "event": "page_event_skill_result",
+                "action": event.action,
+                "page_id": entity.id,
+                "skill_id": result.get("skill_id"),
+                "has_error": "error" in result,
+            })
+        )
+
 
 async def handle_database_event(event: WebhookEvent) -> None:
-    """Process database lifecycle events."""
+    """Process database lifecycle events through the cognitive pipeline."""
+    from runtime.pipeline_bridge import dispatch_event
+
     logger.info(
         json.dumps({
-            "event": "database_event_processed",
+            "event": "database_event_routing",
             "action": event.action,
             "database_id": event.data.entity.id,
         })
     )
 
+    await dispatch_event(event)
+
 
 async def handle_data_source_event(event: WebhookEvent) -> None:
-    """Process data source events (schema changes, new rows)."""
+    """Process data source events through the cognitive pipeline."""
+    from runtime.pipeline_bridge import dispatch_event
+
     logger.info(
         json.dumps({
-            "event": "data_source_event_processed",
+            "event": "data_source_event_routing",
             "action": event.action,
             "data_source_id": event.data.entity.id,
             "updated_properties": event.data.updated_properties,
         })
     )
 
+    await dispatch_event(event)
+
 
 async def handle_view_event(event: WebhookEvent) -> None:
-    """Process view lifecycle events."""
+    """Process view lifecycle events (log only, no skill trigger)."""
     logger.info(
         json.dumps({
             "event": "view_event_processed",
@@ -234,7 +248,7 @@ async def receive_webhook(request: Request, body: bytes = Depends(verify_webhook
     1. HMAC signature verified (via verify_webhook dependency)
     2. Parse body as VerificationChallenge or WebhookEvent
     3. Dedup check by event_id
-    4. Route to category handlers
+    4. Route to category handlers -> cognitive pipeline
     5. Return 200 immediately (async processing for heavy work)
     """
     started_at = time.time()
@@ -278,7 +292,7 @@ async def receive_webhook(request: Request, body: bytes = Depends(verify_webhook
             message="Duplicate event, already processed",
         )
 
-    # Dispatch to handlers
+    # Dispatch to handlers (which now call pipeline_bridge)
     handlers_run = await _event_router.dispatch(event)
 
     processing_ms = (time.time() - started_at) * 1000
@@ -305,8 +319,11 @@ async def receive_webhook(request: Request, body: bytes = Depends(verify_webhook
 @router.get("/notion")
 async def webhook_health():
     """Health check for webhook subsystem."""
+    from runtime.pipeline_bridge import is_ready as bridge_ready
+
     return {
         "status": "ok",
+        "pipeline_bridge": "ready" if bridge_ready() else "not_initialized",
         "dedup_cache_size": _dedup.size,
         "registered_categories": [cat.value for cat in EventCategory],
         "event_types_supported": len(WebhookEventType),
