@@ -13,3 +13,13 @@ venv/
 .vscode/
 package.json
 package-lock.json
+
+# F7: Repo hygiene — leaked/debug artifacts
+bfg.jar
+passwords.txt
+check_output.txt
+output.txt
+reality_output.txt
+test_output.txt
+review_output.md
+audit_report.json

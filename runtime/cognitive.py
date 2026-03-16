@@ -6,12 +6,29 @@ as runtime-enforceable state rather than text instructions.
 Resolves:
 - A-2: PROFILE.md runtime integration (extends existing router)
 - A-3: Cognitive state pipeline with energy-adaptive routing
+
+F5/F6 fix: CognitiveState imported from schemas.py (canonical).
+Duplicate dataclass removed. Low-energy pool corrected.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Any
+
+from runtime.schemas import (
+    CognitiveState,
+    EnergyLevel,
+    TIER_ORDER,
+    VALID_MODES,
+)
+
+# Re-export for backward compatibility
+__all__ = [
+    "CognitiveState", "EnergyLevel", "ENERGY_ROUTING", "TIER_ORDER",
+    "VALID_MODES", "MODE_SIGNALS", "infer_mode", "filter_model_chain",
+    "build_cognitive_preamble", "parse_cognitive_state",
+    "get_routing", "get_max_tier_num", "tier_allowed", "get_output_mode",
+]
 
 
 # AGENT.md energy-adaptive routing table
@@ -30,7 +47,7 @@ ENERGY_ROUTING: dict[str, dict[str, Any]] = {
     },
     "low": {
         "max_tier": "T2",
-        "model_pool": ["G-PRO", "G-PRO31", "G-FLA31", "O-O4M"],
+        "model_pool": ["G-FLA31", "O-O4M"],
         "behavior": "micro_steps",
         "output_mode": "minimal",
     },
@@ -41,8 +58,6 @@ ENERGY_ROUTING: dict[str, dict[str, Any]] = {
         "output_mode": "crash",
     },
 }
-
-TIER_ORDER: dict[str, int] = {"T1": 1, "T2": 2, "T3": 3, "T4": 4, "T5": 5}
 
 MODE_SIGNALS: dict[str, list[str]] = {
     "osint": [
@@ -61,51 +76,35 @@ MODE_SIGNALS: dict[str, list[str]] = {
 }
 
 
-@dataclass
-class CognitiveState:
-    """Runtime cognitive state from PROFILE.md and AGENT.md contracts."""
+# ---------------------------------------------------------------------------
+# Standalone routing functions (operate on Pydantic CognitiveState)
+# ---------------------------------------------------------------------------
 
-    energy_level: str = "medium"
-    active_mode: str = "execute"
-    task_tier: str = "T3"
-    active_thread: str = ""
-    context_switches: int = 0
+def _energy_key(state: CognitiveState) -> str:
+    """Convert EnergyLevel enum to ENERGY_ROUTING dict key."""
+    if isinstance(state.energy_level, EnergyLevel):
+        return state.energy_level.value
+    return str(state.energy_level)
 
-    def __post_init__(self) -> None:
-        if self.energy_level not in ENERGY_ROUTING:
-            self.energy_level = "medium"
-        if self.task_tier not in TIER_ORDER:
-            self.task_tier = "T3"
-        valid_modes = {
-            "osint", "troubleshoot", "draft", "rewrite", "decide",
-            "design", "summarize", "review", "chat", "execute",
-        }
-        if self.active_mode not in valid_modes:
-            self.active_mode = "execute"
 
-    @property
-    def routing(self) -> dict[str, Any]:
-        return ENERGY_ROUTING[self.energy_level]
+def get_routing(state: CognitiveState) -> dict[str, Any]:
+    """Get AGENT.md energy routing config for current state."""
+    return ENERGY_ROUTING[_energy_key(state)]
 
-    @property
-    def max_tier_num(self) -> int:
-        return TIER_ORDER[self.routing["max_tier"]]
 
-    @property
-    def task_tier_num(self) -> int:
-        return TIER_ORDER[self.task_tier]
+def get_max_tier_num(state: CognitiveState) -> int:
+    """Max allowed tier number for current energy level."""
+    return TIER_ORDER[get_routing(state)["max_tier"]]
 
-    @property
-    def tier_allowed(self) -> bool:
-        return self.task_tier_num <= self.max_tier_num
 
-    @property
-    def is_crash(self) -> bool:
-        return self.energy_level == "crash"
+def tier_allowed(state: CognitiveState) -> bool:
+    """Check if current task tier is within energy-allowed range."""
+    return state.task_tier_num <= get_max_tier_num(state)
 
-    @property
-    def output_mode(self) -> str:
-        return self.routing["output_mode"]
+
+def get_output_mode(state: CognitiveState) -> str:
+    """Get output mode string for current energy level."""
+    return get_routing(state)["output_mode"]
 
 
 def infer_mode(input_text: str) -> str:
@@ -125,9 +124,9 @@ def filter_model_chain(
 ) -> list[str]:
     """Filter model chain by AGENT.md energy-adaptive routing.
 
-    High/Medium: all models. Low: Sonnet + Gemini only. Crash: empty.
+    High/Medium: all models. Low: G-FLA31 + O-O4M only. Crash: empty.
     """
-    pool = cognitive_state.routing["model_pool"]
+    pool = get_routing(cognitive_state)["model_pool"]
     if pool == "all":
         return model_chain
     if not pool:
@@ -144,31 +143,33 @@ def filter_model_chain(
 
 def build_cognitive_preamble(state: CognitiveState) -> str:
     """Build runtime cognitive state block for system prompt injection."""
+    routing = get_routing(state)
+    output_mode = routing["output_mode"]
+    max_tier = routing["max_tier"]
     lines = [
         "## Active Cognitive State (injected by runtime/cognitive.py)",
         "",
-        f"- **Energy level**: {state.energy_level}",
+        f"- **Energy level**: {_energy_key(state)}",
         f"- **Mode**: {state.active_mode}",
-        f"- **Task tier**: {state.task_tier} (max allowed: {state.routing['max_tier']})",
-        f"- **Output mode**: {state.output_mode}",
+        f"- **Task tier**: {state.task_tier} (max allowed: {max_tier})",
+        f"- **Output mode**: {output_mode}",
     ]
     if state.active_thread:
         lines.append(f"- **Active thread**: {state.active_thread}")
     if state.context_switches > 2:
         lines.append(
-            f"- **WARNING**: {state.context_switches} context switches. "
+            f"- **Context switches**: {state.context_switches}. "
             "Monotropism contract: minimize further switching."
         )
-    if not state.tier_allowed:
+    if not tier_allowed(state):
         lines.append(
             f"- **TIER BLOCKED**: {state.task_tier} exceeds max "
-            f"{state.routing['max_tier']}. Defer or downgrade."
+            f"{max_tier}. Defer or downgrade."
         )
-    if state.is_crash:
+    if state.is_crash():
         lines.extend([
             "",
-            "**CRASH MODE ACTIVE**: Output only state summary + reassurance.",
-            "No new analysis. No deliverables. No questions.",
+            "**CRASH MODE**: Save state. No inference. No deliverables.",
         ])
     return "\n".join(lines)
 
@@ -179,14 +180,17 @@ def parse_cognitive_state(options: dict[str, Any]) -> CognitiveState:
     if isinstance(cs, dict) and cs:
         return CognitiveState(
             energy_level=cs.get("energy_level", "medium"),
-            active_mode=cs.get("active_mode", ""),
+            active_mode=cs.get("active_mode", "execute"),
             task_tier=cs.get("task_tier", "T3"),
             active_thread=cs.get("active_thread", ""),
             context_switches=cs.get("context_switches", 0),
+            attention_state=cs.get("attention_state", "focused"),
+            session_context=cs.get("session_context", "new"),
+            resume_from=cs.get("resume_from"),
         )
     return CognitiveState(
         energy_level=options.get("energy_level", "medium"),
-        active_mode=options.get("active_mode", ""),
+        active_mode=options.get("active_mode", "execute"),
         task_tier=options.get("task_tier", "T3"),
         active_thread=options.get("active_thread", ""),
         context_switches=options.get("context_switches", 0),

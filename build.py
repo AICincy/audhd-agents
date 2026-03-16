@@ -7,6 +7,7 @@ Usage:
   python build.py                         # Build all skills, all adapters
   python build.py --skill code-reviewer   # Build one skill
   python build.py --adapter openai        # Build all skills for one adapter
+  python build.py --external-skills ../audhd-skills  # Include VoltAgent .md skills
 """
 
 import json
@@ -55,6 +56,45 @@ def load_skill(skill_dir: Path) -> dict:
     return skill
 
 
+def load_voltagent_skill(skill_dir: Path) -> dict:
+    """Load a VoltAgent-format skill from .md + .json files.
+
+    F3 fix: Supports audhd-skills repo layout where each skill directory
+    contains prompt_base.md and schema_base.json (with optional _base/ shared).
+    """
+    prompt_md = skill_dir / "prompt_base.md"
+    schema_json = skill_dir / "schema_base.json"
+
+    if not prompt_md.exists():
+        raise FileNotFoundError(f"Missing prompt_base.md in {skill_dir}")
+
+    skill_name = skill_dir.name
+    prompt_text = prompt_md.read_text()
+
+    # Extract description from first non-empty, non-heading line
+    description = ""
+    for line in prompt_text.split("\n"):
+        stripped = line.strip()
+        if stripped and not stripped.startswith("#"):
+            description = stripped[:200]
+            break
+
+    skill = {
+        "name": skill_name,
+        "description": description,
+        "prompt": prompt_text,
+        "schema": {},
+        "examples": [],
+        "voltagent": True,
+    }
+
+    if schema_json.exists():
+        with open(schema_json) as f:
+            skill["schema"] = json.load(f)
+
+    return skill
+
+
 def build_openai(skill: dict) -> dict:
     """Generate OpenAI function tool definition."""
     schema = skill.get("schema", {})
@@ -70,7 +110,6 @@ def build_openai(skill: dict) -> dict:
             },
         },
     }
-
 
 
 def _convert_gemini_property(val: dict) -> dict:
@@ -118,9 +157,9 @@ BUILDERS = {
 }
 
 
-def build_skill(skill_dir: Path, adapters: list) -> dict:
+def build_skill(skill_dir: Path, adapters: list, voltagent: bool = False) -> dict:
     """Build one skill for specified adapters."""
-    skill = load_skill(skill_dir)
+    skill = load_voltagent_skill(skill_dir) if voltagent else load_skill(skill_dir)
     results = {}
     for adapter in adapters:
         builder = BUILDERS[adapter]
@@ -157,6 +196,10 @@ def main():
         default="all",
         help="Target adapter (default: all)",
     )
+    parser.add_argument(
+        "--external-skills",
+        help="Path to external VoltAgent skills directory (e.g. ../audhd-skills)",
+    )
     args = parser.parse_args()
 
     adapters = ADAPTERS if args.adapter == "all" else [args.adapter]
@@ -164,6 +207,7 @@ def main():
     for adapter in adapters:
         (DIST_DIR / adapter).mkdir(parents=True, exist_ok=True)
 
+    # Internal skills (skill.yaml format)
     if args.skill:
         skill_dirs = [SKILLS_DIR / args.skill]
         if not skill_dirs[0].exists():
@@ -172,12 +216,14 @@ def main():
     else:
         skill_dirs = sorted([p.parent for p in SKILLS_DIR.rglob("skill.yaml")])
 
-    if not skill_dirs:
+    if not skill_dirs and not args.external_skills:
         print("No skills found. Add skill directories under skills/")
         sys.exit(0)
 
     built = 0
     errors = []
+
+    # Build internal skills
     for skill_dir in skill_dirs:
         try:
             results = build_skill(skill_dir, adapters)
@@ -190,6 +236,32 @@ def main():
         except Exception as e:
             errors.append((skill_dir.name, str(e)))
             print(f"  FAIL {skill_dir.name}: {e}")
+
+    # Build external VoltAgent skills (F3 fix)
+    if args.external_skills:
+        ext_path = Path(args.external_skills)
+        if not ext_path.exists():
+            print(f"Warning: External skills path not found: {ext_path}")
+        else:
+            ext_dirs = sorted([
+                d for d in ext_path.iterdir()
+                if d.is_dir()
+                and not d.name.startswith("_")
+                and not d.name.startswith(".")
+                and (d / "prompt_base.md").exists()
+            ])
+            for skill_dir in ext_dirs:
+                try:
+                    results = build_skill(skill_dir, adapters, voltagent=True)
+                    for adapter, manifest in results.items():
+                        out_path = DIST_DIR / adapter / f"{skill_dir.name}.json"
+                        with open(out_path, "w") as f:
+                            json.dump(manifest, f, indent=2)
+                    built += 1
+                    print(f"  OK  {skill_dir.name} (voltagent)")
+                except Exception as e:
+                    errors.append((skill_dir.name, str(e)))
+                    print(f"  FAIL {skill_dir.name}: {e}")
 
     # Generate aggregated manifests
     print()

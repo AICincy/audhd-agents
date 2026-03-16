@@ -77,13 +77,15 @@ def validate_output(
             break
 
     # Claim tags in structured output (skip chat)
+    # F4 fix: escalated from warning to violation per SK-REALITY RC-003
     if active_mode != "chat":
         tier_num = int(task_tier[1]) if len(task_tier) == 2 and task_tier[0] == "T" else 3
         has_tags = any(tag in output_text for tag in ["[OBS]", "[DRV]", "[GEN]", "[SPEC]"])
         if tier_num >= 3 and not has_tags:
-            result.add_warning(
+            result.add_violation(
                 "CLAIM_TAGS",
-                "No claim tags in T3+ structured output."
+                "No claim tags in T3+ structured output. "
+                "SK-REALITY RC-003: output blocked until claims tagged."
             )
 
     # Energy-appropriate length
@@ -96,7 +98,7 @@ def validate_output(
     if energy_level == "crash" and line_count > 5:
         result.add_violation(
             "ENERGY_CRASH",
-            f"{line_count} lines in crash mode. Expected: state summary only."
+            f"{line_count} lines in crash mode. Expected: state checkpoint only."
         )
 
     # Verdict-first (PROFILE.md pattern compression)
