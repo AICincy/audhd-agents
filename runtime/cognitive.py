@@ -9,6 +9,7 @@ Resolves:
 
 F5/F6 fix: CognitiveState imported from schemas.py (canonical).
 Duplicate dataclass removed. Low-energy pool corrected.
+F7 fix: filter_model_chain now resolves aliases before pool comparison.
 """
 
 from __future__ import annotations
@@ -117,6 +118,24 @@ def infer_mode(input_text: str) -> str:
     return "execute"
 
 
+def _matches_pool(alias: str, allowed: set[str], alias_map: dict[str, str]) -> bool:
+    """Check if a model alias matches any entry in the allowed pool.
+
+    Resolves alias to full qualified name via alias_map, then checks if any
+    pool entry is a substring of the resolved name (e.g. 'o4-mini' in
+    'openai/o4-mini'). Falls back to direct membership check.
+    """
+    # Direct match first (no alias resolution needed)
+    if alias in allowed:
+        return True
+    # Resolve alias to full qualified name
+    resolved = alias_map.get(alias, alias)
+    if resolved in allowed:
+        return True
+    # Substring match: pool entries like "o4-mini" match "openai/o4-mini"
+    return any(pool_entry in resolved for pool_entry in allowed)
+
+
 def filter_model_chain(
     model_chain: list[str],
     cognitive_state: CognitiveState,
@@ -125,6 +144,7 @@ def filter_model_chain(
     """Filter model chain by AGENT.md energy-adaptive routing.
 
     High/Medium: all models. Low: gemini-2.5-flash + o4-mini only. Crash: empty.
+    Resolves aliases via alias_map before comparing against the energy pool.
     """
     pool = get_routing(cognitive_state)["model_pool"]
     if pool == "all":
@@ -132,10 +152,11 @@ def filter_model_chain(
     if not pool:
         return []
     allowed = set(pool)
-    filtered = [m for m in model_chain if m in allowed]
+    filtered = [m for m in model_chain if _matches_pool(m, allowed, alias_map)]
     if not filtered and model_chain:
+        # Fallback: try reversed chain for best available match
         for candidate in reversed(model_chain):
-            if candidate in allowed:
+            if _matches_pool(candidate, allowed, alias_map):
                 return [candidate]
         return []
     return filtered
