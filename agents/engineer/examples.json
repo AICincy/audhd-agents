@@ -1,0 +1,62 @@
+{
+  "agent": "engineer",
+  "examples": [
+    {
+      "id": "EX-ENG-001",
+      "title": "Microservice Decomposition with FMEA",
+      "description": "Decompose a monolithic application into microservices with failure mode analysis.",
+      "input": {
+        "task_type": "decomposition",
+        "context": "Legacy monolithic e-commerce application. 500k LOC Python. Handles catalog, orders, payments, inventory, user auth. Team wants to move to microservices.",
+        "constraints": [
+          { "name": "No downtime migration", "type": "business", "negotiable": false },
+          { "name": "Team size: 8 engineers", "type": "resource", "negotiable": false },
+          { "name": "6-month timeline", "type": "time", "negotiable": true }
+        ],
+        "energy_level": "high"
+      },
+      "expected_output": {
+        "components_table": "| Component | Bounded Context | Dependencies | Migration Priority |\n|---|---|---|---|\n| Auth Service | User Identity | None (leaf) | 1 [DRV] |\n| Catalog Service | Product Data | Auth | 2 [DRV] |\n| Order Service | Order Processing | Auth, Catalog, Inventory | 4 [DRV] |\n| Payment Service | Financial Txns | Auth, Order | 5 [DRV] |\n| Inventory Service | Stock Management | Catalog | 3 [DRV] |",
+        "fmea_excerpt": "| Component | Failure Mode | S | L | D | RPN | Mitigation |\n|---|---|---|---|---|---|---|\n| Payment Service | Network partition during txn | 9 | 4 | 3 | 108 | Saga pattern with compensation [GEN] |\n| Order Service | Stale inventory read | 7 | 6 | 5 | 210 | Event-driven inventory sync [GEN] |",
+        "claim_summary": { "obs_count": 3, "drv_count": 8, "gen_count": 5, "spec_count": 0 },
+        "audhd_markers": ["table_first_output", "no_prose_decomposition", "rpn_sorted", "priority_numbered"]
+      }
+    },
+    {
+      "id": "EX-ENG-002",
+      "title": "Design Pattern Selection for Event-Driven System",
+      "description": "Select appropriate patterns for an event-driven notification system.",
+      "input": {
+        "task_type": "design_pattern_selection",
+        "context": "Building notification system for SaaS platform. Must handle email, SMS, push, in-app. Volume: 10M notifications/day. Latency requirement: < 30s for critical alerts.",
+        "constraints": [
+          { "name": "< 30s latency for critical", "type": "technical", "negotiable": false },
+          { "name": "At-least-once delivery", "type": "technical", "negotiable": false },
+          { "name": "AWS infrastructure", "type": "technical", "negotiable": false }
+        ],
+        "energy_level": "medium"
+      },
+      "expected_output": {
+        "tradeoff_matrix": "| Pattern | Throughput | Latency | Complexity | Reliability | Fit Score |\n|---|---|---|---|---|---|\n| Fan-out on write | High | Low | Medium | Medium | 7/10 [DRV] |\n| Fan-out on read | Medium | High | Low | High | 5/10 [DRV] |\n| Priority queue + workers | High | Low (critical) | Medium | High | 9/10 [DRV] |\n| Event sourcing + CQRS | Very High | Medium | High | Very High | 6/10 [DRV] |",
+        "recommendation": "Priority queue + workers. Meets latency constraint for critical. At-least-once via SQS FIFO. Complexity manageable for team. [DRV]",
+        "audhd_markers": ["tradeoff_matrix", "numeric_scores", "dominant_option_highlighted", "constraint_mapped"]
+      }
+    },
+    {
+      "id": "EX-ENG-003",
+      "title": "Cross-Discipline Coordination (Low Energy)",
+      "description": "Coordinate handoffs between multiple specialist agents for infrastructure migration.",
+      "input": {
+        "task_type": "cross_discipline_coordination",
+        "context": "Migrating CI/CD pipeline from Jenkins to GitHub Actions. Involves DevOps (pipeline), SecOps (secret management), Software Engineer (workflow files), Data Engineer (data pipeline triggers).",
+        "energy_level": "low"
+      },
+      "expected_output": {
+        "raci": "| Deliverable | R | A | C | I |\n|---|---|---|---|---|\n| Pipeline config | DevOps | Engineer | Software Eng | SecOps |\n| Secret rotation | SecOps | Engineer | DevOps | All |\n| Workflow files | Software Eng | Engineer | DevOps | Data Eng |\n| Data triggers | Data Eng | Engineer | DevOps | Software Eng |",
+        "handoff_sequence": "1. Engineer defines scope + constraints [OBS]\n2. DevOps drafts pipeline config\n3. SecOps reviews secret management\n4. Software Eng writes workflow files\n5. Data Eng adds data triggers\n6. Engineer validates integration [DRV]",
+        "energy_note": "Low energy mode: RACI table + numbered sequence only. No deep analysis. Escalate if blockers found.",
+        "audhd_markers": ["raci_table", "numbered_handoff", "energy_gated", "no_deep_analysis_at_low"]
+      }
+    }
+  ]
+}

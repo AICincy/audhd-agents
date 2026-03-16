@@ -1,0 +1,192 @@
+{
+  "agent": "engineer",
+  "domain": "general_engineering",
+  "reality_skill_version": "1.0.0",
+  "claim_tags": ["OBS", "DRV", "GEN", "SPEC"],
+  "validation_rules": {
+    "architecture": [
+      {
+        "rule": "component_existence",
+        "description": "Every component referenced in architecture must exist in provided context or be tagged [SPEC]",
+        "severity": "error"
+      },
+      {
+        "rule": "interface_completeness",
+        "description": "Every component interface must have defined input and output types",
+        "severity": "warning"
+      },
+      {
+        "rule": "dependency_acyclicity",
+        "description": "Dependency graphs must be validated for cycles. Cycles must be explicitly flagged.",
+        "severity": "error"
+      },
+      {
+        "rule": "constraint_traceability",
+        "description": "Every constraint must trace to a source document or be tagged [GEN]",
+        "severity": "warning"
+      }
+    ],
+    "design_patterns": [
+      {
+        "rule": "pattern_existence",
+        "description": "Referenced design patterns must be established patterns or tagged [SPEC] if novel",
+        "severity": "warning"
+      },
+      {
+        "rule": "pattern_fitness",
+        "description": "Pattern recommendations must include explicit fitness criteria evaluation",
+        "severity": "warning"
+      }
+    ],
+    "requirements": [
+      {
+        "rule": "requirement_id_format",
+        "description": "Requirement IDs must follow pattern REQ-NNNN",
+        "severity": "warning",
+        "regex": "^REQ-[0-9]{4}$"
+      },
+      {
+        "rule": "acceptance_criteria_present",
+        "description": "Every decomposed requirement must have at least one acceptance criterion",
+        "severity": "error"
+      }
+    ],
+    "general": [
+      {
+        "rule": "no_untagged_claims",
+        "description": "Every factual assertion must have a claim tag",
+        "severity": "error"
+      },
+      {
+        "rule": "spec_gating",
+        "description": "[SPEC] claims must never be presented as [OBS] or [DRV]",
+        "severity": "critical"
+      },
+      {
+        "rule": "externalization_check",
+        "description": "Complex state must be in tables or diagrams, not prose paragraphs",
+        "severity": "warning"
+      }
+    ]
+  },
+  "output_gating": {
+    "pre_output_checks": [
+      "All claims tagged",
+      "No [SPEC] presented as [OBS]",
+      "Tables used for multi-item data",
+      "Dependency cycles flagged",
+      "Constraints traceable to source"
+    ],
+    "block_on_failure": ["no_untagged_claims", "spec_gating"],
+    "warn_on_failure": ["externalization_check", "interface_completeness", "constraint_traceability"]
+  },
+  "model_profiles": {
+    "gemini-3.1-pro-preview": {
+      "alias": "G-PRO31",
+      "hallucination_risk": "low",
+      "strengths": ["Deep architecture reasoning", "Strong constraint analysis", "Good dependency detection"],
+      "known_drift_patterns": [
+        {
+          "pattern": "over_engineering",
+          "description": "May propose unnecessarily complex architectures when simpler solutions exist",
+          "frequency": "occasional",
+          "mitigation": "Require explicit complexity justification. Compare against simpler alternatives."
+        },
+        {
+          "pattern": "pattern_familiarity_bias",
+          "description": "Favors well-known patterns over potentially better-fit novel approaches",
+          "frequency": "occasional",
+          "mitigation": "Require at least one unconventional option in tradeoff analysis."
+        }
+      ],
+      "audhd_considerations": {
+        "context_window_usage": "Excellent for full system architecture. Keep scope explicit.",
+        "externalization_support": "Generates structured ADRs and dependency tables well.",
+        "monotropism_alignment": "One subsystem at a time. Explicit scope boundaries."
+      }
+    },
+    "gemini-3.1-flash-lite-preview": {
+      "alias": "G-FLA31",
+      "hallucination_risk": "low",
+      "strengths": ["Fast component analysis", "Quick constraint validation"],
+      "known_drift_patterns": [
+        {
+          "pattern": "shallow_analysis",
+          "description": "May miss cross-cutting concerns in fast mode",
+          "frequency": "occasional",
+          "mitigation": "Flag if analysis scope exceeds single component. Escalate to G-PRO31."
+        }
+      ],
+      "audhd_considerations": {
+        "context_window_usage": "Good for single-component focus.",
+        "externalization_support": "Maintains table format.",
+        "monotropism_alignment": "Perfect for medium-energy bounded tasks."
+      }
+    },
+    "gpt-5.4": {
+      "alias": "O-54",
+      "hallucination_risk": "medium",
+      "strengths": ["Creative design alternatives", "Novel pattern identification", "Good brainstorming structure"],
+      "known_drift_patterns": [
+        {
+          "pattern": "creative_overreach",
+          "description": "May propose architectures that sound elegant but violate stated constraints",
+          "frequency": "occasional",
+          "mitigation": "Run constraint satisfaction check on all creative proposals."
+        },
+        {
+          "pattern": "novelty_bias",
+          "description": "May favor novel approaches over proven solutions without sufficient justification",
+          "frequency": "occasional",
+          "mitigation": "Require feasibility score and risk assessment alongside novel proposals."
+        }
+      ],
+      "audhd_considerations": {
+        "context_window_usage": "Good for bounded ideation. Keep constraints tight.",
+        "externalization_support": "Generates structured option lists.",
+        "monotropism_alignment": "Divergent phase only. Switch to convergent model after."
+      }
+    },
+    "gpt-5.4-pro": {
+      "alias": "O-54P",
+      "hallucination_risk": "low",
+      "strengths": ["Deep planning", "Strong dependency resolution", "Good consensus partner"],
+      "known_drift_patterns": [
+        {
+          "pattern": "planning_granularity_creep",
+          "description": "May over-decompose plans into unnecessarily fine-grained steps",
+          "frequency": "rare",
+          "mitigation": "Set explicit decomposition depth limit. Stop at implementable unit."
+        }
+      ],
+      "audhd_considerations": {
+        "context_window_usage": "Excellent for full project scope.",
+        "externalization_support": "Strong structured plan output.",
+        "monotropism_alignment": "Good for deep single-thread planning."
+      }
+    },
+    "o4-mini": {
+      "alias": "O-O4M",
+      "hallucination_risk": "medium",
+      "strengths": ["Fast verification", "Good binary decisions"],
+      "known_drift_patterns": [
+        {
+          "pattern": "confirmation_bias",
+          "description": "May verify claims that match expected engineering patterns without deep check",
+          "frequency": "occasional",
+          "mitigation": "Never sole verifier for architecture decisions. Cross-validate."
+        }
+      ],
+      "audhd_considerations": {
+        "context_window_usage": "Minimal. Single claim.",
+        "externalization_support": "JSON output.",
+        "monotropism_alignment": "Low-energy verification."
+      }
+    }
+  },
+  "error_handling": {
+    "on_hallucination_detected": "Tag as [SPEC], flag to operator, do not present as fact",
+    "on_verification_failure": "Block output, request additional context",
+    "on_energy_crash": "Route to nano model, JSON-only, binary output, escalate immediately"
+  }
+}

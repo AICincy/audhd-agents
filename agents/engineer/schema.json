@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EngineerAgentSchema",
+  "description": "Domain-specific I/O schema for the Engineer agent. Extends _base/schema_base.json.",
+  "type": "object",
+  "extends": "../../_base/schema_base.json",
+  "definitions": {
+    "ArchitectureDecisionRecord": {
+      "type": "object",
+      "required": ["id", "title", "status", "context", "decision", "consequences"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^ADR-[0-9]{4}$" },
+        "title": { "type": "string" },
+        "status": { "type": "string", "enum": ["proposed", "accepted", "deprecated", "superseded"] },
+        "context": { "type": "string" },
+        "decision": { "type": "string" },
+        "consequences": {
+          "type": "object",
+          "properties": {
+            "positive": { "type": "array", "items": { "type": "string" } },
+            "negative": { "type": "array", "items": { "type": "string" } },
+            "neutral": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "DependencyEntry": {
+      "type": "object",
+      "required": ["component", "depends_on", "type", "risk"],
+      "properties": {
+        "component": { "type": "string" },
+        "depends_on": { "type": "string" },
+        "type": { "type": "string", "enum": ["hard", "soft", "optional", "runtime", "build"] },
+        "risk": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "TradeoffEntry": {
+      "type": "object",
+      "required": ["option", "pros", "cons", "effort", "risk"],
+      "properties": {
+        "option": { "type": "string" },
+        "pros": { "type": "array", "items": { "type": "string" } },
+        "cons": { "type": "array", "items": { "type": "string" } },
+        "effort": { "type": "string", "enum": ["trivial", "low", "medium", "high", "extreme"] },
+        "risk": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+        "recommendation": { "type": "boolean" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "ConstraintEntry": {
+      "type": "object",
+      "required": ["name", "type", "description", "source"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["technical", "business", "regulatory", "resource", "time", "cognitive"] },
+        "description": { "type": "string" },
+        "source": { "type": "string" },
+        "negotiable": { "type": "boolean" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "FailureModeEntry": {
+      "type": "object",
+      "required": ["component", "failure_mode", "severity", "likelihood", "detection", "mitigation"],
+      "properties": {
+        "component": { "type": "string" },
+        "failure_mode": { "type": "string" },
+        "severity": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "likelihood": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "detection": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "rpn": { "type": "integer", "description": "Risk Priority Number = severity * likelihood * detection" },
+        "mitigation": { "type": "string" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "EngineerInput": {
+      "type": "object",
+      "required": ["task_type", "context"],
+      "properties": {
+        "task_type": {
+          "type": "string",
+          "enum": [
+            "architecture_review",
+            "system_design",
+            "decomposition",
+            "tradeoff_analysis",
+            "dependency_mapping",
+            "failure_mode_analysis",
+            "constraint_satisfaction",
+            "design_pattern_selection",
+            "cross_discipline_coordination",
+            "requirements_decomposition"
+          ]
+        },
+        "context": { "type": "string" },
+        "constraints": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ConstraintEntry" }
+        },
+        "energy_level": { "type": "string", "enum": ["high", "medium", "low", "crash"] },
+        "scope": { "type": "string" },
+        "existing_architecture": { "type": "string" }
+      }
+    },
+    "EngineerOutput": {
+      "type": "object",
+      "required": ["task_type", "result", "claim_summary"],
+      "properties": {
+        "task_type": { "type": "string" },
+        "result": {
+          "type": "object",
+          "properties": {
+            "adrs": { "type": "array", "items": { "$ref": "#/definitions/ArchitectureDecisionRecord" } },
+            "dependencies": { "type": "array", "items": { "$ref": "#/definitions/DependencyEntry" } },
+            "tradeoffs": { "type": "array", "items": { "$ref": "#/definitions/TradeoffEntry" } },
+            "failure_modes": { "type": "array", "items": { "$ref": "#/definitions/FailureModeEntry" } },
+            "constraints": { "type": "array", "items": { "$ref": "#/definitions/ConstraintEntry" } },
+            "mermaid_diagram": { "type": "string" },
+            "recommendation": { "type": "string" }
+          }
+        },
+        "claim_summary": {
+          "type": "object",
+          "properties": {
+            "obs_count": { "type": "integer" },
+            "drv_count": { "type": "integer" },
+            "gen_count": { "type": "integer" },
+            "spec_count": { "type": "integer" },
+            "unverified_claims": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "energy_used": { "type": "string", "enum": ["high", "medium", "low", "crash"] },
+        "handoff": {
+          "type": "object",
+          "properties": {
+            "target_agent": { "type": "string" },
+            "reason": { "type": "string" },
+            "context_payload": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
