@@ -77,15 +77,15 @@ def validate_output(
             break
 
     # Claim tags in structured output (skip chat)
-    # F4 fix: escalated from warning to violation per SK-REALITY RC-003
+    # F4 fix: escalated from warning to violation per reality-check RC-003
     if active_mode != "chat":
         tier_num = int(task_tier[1]) if len(task_tier) == 2 and task_tier[0] == "T" else 3
-        has_tags = any(tag in output_text for tag in ["[OBS]", "[DRV]", "[GEN]", "[SPEC]"])
+        has_tags = any(tag in output_text for tag in ["[observed]", "[inferred]", "[general]", "[unverified]"])
         if tier_num >= 3 and not has_tags:
             result.add_violation(
                 "CLAIM_TAGS",
                 "No claim tags in T3+ structured output. "
-                "SK-REALITY RC-003: output blocked until claims tagged."
+                "reality-check RC-003: output blocked until claims tagged."
             )
 
     # Energy-appropriate length

@@ -47,7 +47,7 @@ ENERGY_ROUTING: dict[str, dict[str, Any]] = {
     },
     "low": {
         "max_tier": "T2",
-        "model_pool": ["G-FLA31", "O-O4M"],
+        "model_pool": ["gemini-2.5-flash", "o4-mini"],
         "behavior": "micro_steps",
         "output_mode": "minimal",
     },
@@ -124,7 +124,7 @@ def filter_model_chain(
 ) -> list[str]:
     """Filter model chain by AGENT.md energy-adaptive routing.
 
-    High/Medium: all models. Low: G-FLA31 + O-O4M only. Crash: empty.
+    High/Medium: all models. Low: gemini-2.5-flash + o4-mini only. Crash: empty.
     """
     pool = get_routing(cognitive_state)["model_pool"]
     if pool == "all":
@@ -149,49 +149,4 @@ def build_cognitive_preamble(state: CognitiveState) -> str:
     lines = [
         "## Active Cognitive State (injected by runtime/cognitive.py)",
         "",
-        f"- **Energy level**: {_energy_key(state)}",
-        f"- **Mode**: {state.active_mode}",
-        f"- **Task tier**: {state.task_tier} (max allowed: {max_tier})",
-        f"- **Output mode**: {output_mode}",
-    ]
-    if state.active_thread:
-        lines.append(f"- **Active thread**: {state.active_thread}")
-    if state.context_switches > 2:
-        lines.append(
-            f"- **Context switches**: {state.context_switches}. "
-            "Monotropism contract: minimize further switching."
-        )
-    if not tier_allowed(state):
-        lines.append(
-            f"- **TIER BLOCKED**: {state.task_tier} exceeds max "
-            f"{max_tier}. Defer or downgrade."
-        )
-    if state.is_crash():
-        lines.extend([
-            "",
-            "**CRASH MODE**: Save state. No inference. No deliverables.",
-        ])
-    return "\n".join(lines)
-
-
-def parse_cognitive_state(options: dict[str, Any]) -> CognitiveState:
-    """Extract cognitive state from request options (nested or flat)."""
-    cs = options.get("cognitive_state", {})
-    if isinstance(cs, dict) and cs:
-        return CognitiveState(
-            energy_level=cs.get("energy_level", "medium"),
-            active_mode=cs.get("active_mode", "execute"),
-            task_tier=cs.get("task_tier", "T3"),
-            active_thread=cs.get("active_thread", ""),
-            context_switches=cs.get("context_switches", 0),
-            attention_state=cs.get("attention_state", "focused"),
-            session_context=cs.get("session_context", "new"),
-            resume_from=cs.get("resume_from"),
-        )
-    return CognitiveState(
-        energy_level=options.get("energy_level", "medium"),
-        active_mode=options.get("active_mode", "execute"),
-        task_tier=options.get("task_tier", "T3"),
-        active_thread=options.get("active_thread", ""),
-        context_switches=options.get("context_switches", 0),
-    )
+        f"- **Energy level**: {_
