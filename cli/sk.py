@@ -27,6 +27,7 @@ from pathlib import Path
 from cli.skill_loader import SkillLoader
 from cli.llm_client import call_llm
 from cli.validator import validate_input
+from runtime.validation import validate_output
 
 
 def main() -> None:
@@ -187,6 +188,21 @@ def main() -> None:
 
     # Call LLM
     response = call_llm(model_alias, system_prompt, user_msg)
+
+    # Validate output against cognitive contract (mirrors router.py Step 8)
+    validation = validate_output(
+        response,
+        active_mode=args.mode or skill["meta"].get("default_mode", "execute"),
+        energy_level=args.energy,
+        task_tier=args.tier,
+    )
+    if not validation.passed:
+        print("[validation] violations:", file=sys.stderr)
+        for v in validation.violations:
+            print(f"  {v}", file=sys.stderr)
+    if validation.warnings:
+        for w in validation.warnings:
+            print(f"[validation] warning: {w}", file=sys.stderr)
 
     if args.json_out:
         print(json.dumps({

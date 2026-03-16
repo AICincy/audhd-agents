@@ -359,33 +359,35 @@ class SkillRouter:
                 f"energy level '{cognitive_state.energy_level}'"
             )
 
-        # Step 5: Run sk_hooks pre-processing (A-4)
+        # Step 5: Run sk_hooks pre-processing (A-4).
+        # Always call run_hooks() — always-on hooks (reality-check, energy-route,
+        # knowledge-inject) are prepended unconditionally inside run_hooks()
+        # regardless of whether the skill declares any sk_hooks.
         hook_names = skill_config.get("sk_hooks", [])
-        if hook_names:
-            hook_ctx = HookContext(
-                skill_id=request.skill_id,
-                cognitive_state=cognitive_state,
-                input_text=request.input_text,
-                prompt=prompt_md,
-                options=request.options,
-            )
-            hook_result = run_hooks(hook_names, hook_ctx)
+        hook_ctx = HookContext(
+            skill_id=request.skill_id,
+            cognitive_state=cognitive_state,
+            input_text=request.input_text,
+            prompt=prompt_md,
+            options=request.options,
+        )
+        hook_result = run_hooks(hook_names, hook_ctx)
 
-            if hook_result.modified_prompt:
-                prompt_md = hook_result.modified_prompt
-            if hook_result.modified_input:
-                request = SkillRequest(
-                    skill_id=request.skill_id,
-                    input_text=hook_result.modified_input,
-                    options=request.options,
-                    model_override=request.model_override,
-                )
-            if hook_result.validation_warnings:
-                logger.warning(
-                    "Hook warnings for %s: %s",
-                    request.skill_id,
-                    hook_result.validation_warnings,
-                )
+        if hook_result.modified_prompt:
+            prompt_md = hook_result.modified_prompt
+        if hook_result.modified_input:
+            request = SkillRequest(
+                skill_id=request.skill_id,
+                input_text=hook_result.modified_input,
+                options=request.options,
+                model_override=request.model_override,
+            )
+        if hook_result.validation_warnings:
+            logger.warning(
+                "Hook warnings for %s: %s",
+                request.skill_id,
+                hook_result.validation_warnings,
+            )
 
         # Step 6: Build cognitive preamble (A-2)
         cognitive_preamble = build_cognitive_preamble(cognitive_state)
