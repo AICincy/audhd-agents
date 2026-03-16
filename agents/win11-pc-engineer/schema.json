@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Win11PcEngineerAgentSchema",
+  "description": "Domain-specific I/O schema for the Windows 11 PC Engineer agent.",
+  "type": "object",
+  "extends": "../../_base/schema_base.json",
+  "definitions": {
+    "DiagnosticEntry": {
+      "type": "object",
+      "required": ["component", "status", "expected", "action"],
+      "properties": {
+        "component": { "type": "string" },
+        "status": { "type": "string", "enum": ["healthy", "degraded", "failed", "unknown"] },
+        "expected": { "type": "string" },
+        "action": { "type": "string" },
+        "evidence": { "type": "string" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "RegistryOperation": {
+      "type": "object",
+      "required": ["path", "operation", "backup_command"],
+      "properties": {
+        "path": { "type": "string" },
+        "value_name": { "type": "string" },
+        "value_data": {},
+        "value_type": { "type": "string", "enum": ["REG_SZ", "REG_DWORD", "REG_QWORD", "REG_BINARY", "REG_MULTI_SZ", "REG_EXPAND_SZ"] },
+        "operation": { "type": "string", "enum": ["read", "create", "modify", "delete"] },
+        "backup_command": { "type": "string", "description": "PowerShell command to backup before modification" },
+        "rollback_command": { "type": "string" },
+        "destructive": { "type": "boolean" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "PerformanceMetric": {
+      "type": "object",
+      "required": ["metric", "current_value", "threshold", "status"],
+      "properties": {
+        "metric": { "type": "string" },
+        "current_value": { "type": "number" },
+        "unit": { "type": "string" },
+        "threshold": { "type": "number" },
+        "status": { "type": "string", "enum": ["normal", "warning", "critical"] },
+        "recommendation": { "type": "string" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "SecurityFinding": {
+      "type": "object",
+      "required": ["category", "finding", "severity", "remediation"],
+      "properties": {
+        "category": { "type": "string", "enum": ["authentication", "firewall", "encryption", "update", "antivirus", "permissions", "network", "policy", "audit"] },
+        "finding": { "type": "string" },
+        "severity": { "type": "string", "enum": ["critical", "high", "medium", "low", "info"] },
+        "cis_benchmark": { "type": "string", "description": "CIS benchmark control ID if applicable" },
+        "remediation": { "type": "string" },
+        "powershell_fix": { "type": "string" },
+        "requires_reboot": { "type": "boolean" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "DriverEntry": {
+      "type": "object",
+      "required": ["device", "driver_name", "version", "status"],
+      "properties": {
+        "device": { "type": "string" },
+        "driver_name": { "type": "string" },
+        "version": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "provider": { "type": "string" },
+        "status": { "type": "string", "enum": ["current", "outdated", "missing", "corrupted", "incompatible"] },
+        "action": { "type": "string" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "Win11Input": {
+      "type": "object",
+      "required": ["task_type", "context"],
+      "properties": {
+        "task_type": {
+          "type": "string",
+          "enum": [
+            "system_diagnostics",
+            "performance_optimization",
+            "security_hardening",
+            "driver_management",
+            "registry_operation",
+            "powershell_automation",
+            "group_policy",
+            "update_management",
+            "network_troubleshooting",
+            "backup_recovery",
+            "bsod_analysis"
+          ]
+        },
+        "context": { "type": "string" },
+        "system_info": { "type": "string", "description": "Output of systeminfo or winver" },
+        "event_logs": { "type": "string" },
+        "energy_level": { "type": "string", "enum": ["high", "medium", "low", "crash"] }
+      }
+    },
+    "Win11Output": {
+      "type": "object",
+      "required": ["task_type", "result", "claim_summary"],
+      "properties": {
+        "task_type": { "type": "string" },
+        "result": {
+          "type": "object",
+          "properties": {
+            "diagnostics": { "type": "array", "items": { "$ref": "#/definitions/DiagnosticEntry" } },
+            "performance": { "type": "array", "items": { "$ref": "#/definitions/PerformanceMetric" } },
+            "security_findings": { "type": "array", "items": { "$ref": "#/definitions/SecurityFinding" } },
+            "drivers": { "type": "array", "items": { "$ref": "#/definitions/DriverEntry" } },
+            "registry_ops": { "type": "array", "items": { "$ref": "#/definitions/RegistryOperation" } },
+            "powershell_scripts": { "type": "array", "items": { "type": "string" } },
+            "remediation_plan": { "type": "string" }
+          }
+        },
+        "claim_summary": {
+          "type": "object",
+          "properties": {
+            "obs_count": { "type": "integer" },
+            "drv_count": { "type": "integer" },
+            "gen_count": { "type": "integer" },
+            "spec_count": { "type": "integer" },
+            "unverified_claims": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "safety_flags": {
+          "type": "object",
+          "properties": {
+            "destructive_operations": { "type": "integer" },
+            "reboot_required": { "type": "boolean" },
+            "backup_commands_generated": { "type": "integer" }
+          }
+        },
+        "energy_used": { "type": "string", "enum": ["high", "medium", "low", "crash"] },
+        "handoff": {
+          "type": "object",
+          "properties": {
+            "target_agent": { "type": "string" },
+            "reason": { "type": "string" },
+            "context_payload": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "agent": "win11_pc_engineer",
+  "examples": [
+    {
+      "id": "EX-WIN-001",
+      "title": "BSOD Diagnosis from Stop Code",
+      "description": "Diagnose a recurring BSOD from stop code and recent system changes.",
+      "input": {
+        "task_type": "bsod_analysis",
+        "context": "User reports IRQL_NOT_LESS_OR_EQUAL (0x0000000A) occurring 3 times in past week. Started after installing new USB Wi-Fi adapter. Windows 11 23H2, Build 22631.3737.",
+        "energy_level": "high"
+      },
+      "expected_output": {
+        "diagnostics_table": "| Component | Status | Evidence | Action |\n|---|---|---|---|\n| USB Wi-Fi adapter driver | Suspect [DRV] | Timing correlation with install | Verify driver version, check vendor site |\n| Kernel IRQL | Elevated [DRV] | Stop code 0x0A indicates driver IRQL violation | Driver verifier on suspect device |\n| System stability | Degraded [OBS] | 3 BSODs in 7 days | Immediate investigation required |",
+        "remediation": "1. Run `verifier /standard /driver usbwifi.sys` to enable Driver Verifier [GEN]\n2. Check Device Manager for driver version and date [OBS]\n3. Download latest driver from vendor site [GEN]\n4. If persists, remove adapter and test stability [DRV]",
+        "claim_summary": { "obs_count": 2, "drv_count": 4, "gen_count": 3, "spec_count": 0 },
+        "audhd_markers": ["table_first_output", "numbered_remediation", "evidence_cited", "one_branch_at_a_time"]
+      }
+    },
+    {
+      "id": "EX-WIN-002",
+      "title": "Performance Optimization for Slow Boot",
+      "description": "Diagnose and optimize slow boot time on Windows 11 system.",
+      "input": {
+        "task_type": "performance_optimization",
+        "context": "Boot time increased from 15s to 90s+ over past month. SSD system drive (NVMe). 16GB RAM. i7-12700K. Multiple startup programs. Windows 11 23H2.",
+        "energy_level": "medium"
+      },
+      "expected_output": {
+        "performance_table": "| Metric | Current | Threshold | Status | Action |\n|---|---|---|---|---|\n| Boot time | 90s+ [OBS] | <30s | Critical | Investigate startup items |\n| Startup programs | Unknown | <10 | Warning | Run `Get-CimInstance Win32_StartupCommand` [GEN] |\n| SSD health | Unknown | >90% | Check | Run `Get-PhysicalDisk | Get-StorageReliabilityCounter` [GEN] |\n| Fast Startup | Unknown | Enabled | Check | Verify in Power Options [GEN] |",
+        "powershell_diagnostic": "```powershell\n# Boot time diagnostic script\nGet-WinEvent -LogName 'Microsoft-Windows-Diagnostics-Performance/Operational' -MaxEvents 10 |\n  Where-Object { $_.Id -eq 100 } |\n  Select-Object TimeCreated, @{N='BootTime_ms';E={$_.Properties[1].Value}} |\n  Format-Table -AutoSize\n```",
+        "claim_summary": { "obs_count": 1, "drv_count": 0, "gen_count": 5, "spec_count": 0 },
+        "audhd_markers": ["metric_table", "threshold_comparison", "powershell_diagnostic", "one_metric_at_a_time"]
+      }
+    },
+    {
+      "id": "EX-WIN-003",
+      "title": "Security Hardening Quick Check (Low Energy)",
+      "description": "Quick security posture check at low energy level.",
+      "input": {
+        "task_type": "security_hardening",
+        "context": "Quick check on security basics. Windows 11 Home edition. Single user. No domain.",
+        "energy_level": "low"
+      },
+      "expected_output": {
+        "quick_check_table": "| Check | Command | Expected | Claim |\n|---|---|---|---|\n| Windows Defender | `Get-MpComputerStatus` | RealTimeProtection: True | [GEN] |\n| Firewall | `Get-NetFirewallProfile` | All profiles enabled | [GEN] |\n| BitLocker | `Get-BitLockerVolume` | Protection: On | [GEN] |\n| Windows Update | `Get-WindowsUpdate` | No critical pending | [GEN] |",
+        "energy_note": "Low energy mode: quick check table only. No deep audit. Escalate if any check fails.",
+        "audhd_markers": ["quick_check_table", "command_per_row", "energy_gated", "binary_pass_fail"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "agent": "win11_pc_engineer",
+  "domain": "windows_11_administration",
+  "reality_skill_version": "1.0.0",
+  "claim_tags": ["OBS", "DRV", "GEN", "SPEC"],
+  "validation_rules": {
+    "diagnostics": [
+      { "rule": "evidence_required", "description": "Every diagnostic conclusion must cite specific evidence (event ID, counter value, log entry)", "severity": "error" },
+      { "rule": "stop_code_accuracy", "description": "BSOD stop codes must match known Microsoft documentation or be tagged [SPEC]", "severity": "error" },
+      { "rule": "version_verification", "description": "All referenced Windows versions, build numbers, and KB articles must be verifiable", "severity": "warning" }
+    ],
+    "registry": [
+      { "rule": "path_validation", "description": "All registry paths must follow valid HKEY structure and be verified before modification", "severity": "error" },
+      { "rule": "backup_mandatory", "description": "Every registry write operation must include a backup command", "severity": "critical" },
+      { "rule": "destructive_tagging", "description": "All destructive operations must be tagged [DESTRUCTIVE]", "severity": "critical" }
+    ],
+    "security": [
+      { "rule": "cis_benchmark_accuracy", "description": "CIS benchmark control IDs must match actual CIS Windows 11 benchmark or be tagged [SPEC]", "severity": "warning" },
+      { "rule": "no_security_downgrade", "description": "Never recommend disabling security features without explicit justification and [DESTRUCTIVE] tag", "severity": "critical" }
+    ],
+    "general": [
+      { "rule": "no_untagged_claims", "description": "Every factual assertion must have a claim tag", "severity": "error" },
+      { "rule": "spec_gating", "description": "[SPEC] claims must never be presented as [OBS] or [DRV]", "severity": "critical" },
+      { "rule": "externalization_check", "description": "Complex state must be in tables or diagnostic trees, not prose paragraphs", "severity": "warning" }
+    ]
+  },
+  "output_gating": {
+    "pre_output_checks": ["All claims tagged", "No [SPEC] presented as [OBS]", "Tables used for multi-item data", "Registry operations include backup commands", "Destructive operations tagged [DESTRUCTIVE]", "PowerShell scripts include error handling"],
+    "block_on_failure": ["no_untagged_claims", "spec_gating", "backup_mandatory", "no_security_downgrade"],
+    "warn_on_failure": ["externalization_check", "version_verification", "cis_benchmark_accuracy"]
+  },
+  "model_profiles": {
+    "gemini-3.1-pro-preview": {
+      "hallucination_risk": "low",
+      "strengths": ["Deep diagnostic reasoning", "Strong event log correlation", "Good registry knowledge"],
+      "known_drift_patterns": [
+        { "pattern": "over_diagnosis", "description": "May identify more issues than actually present, creating false positives from normal system state", "frequency": "occasional", "mitigation": "Require specific evidence for each finding. Cross-reference against known-good baselines." },
+        { "pattern": "version_conflation", "description": "May mix Windows 10 and Windows 11 specific guidance", "frequency": "rare", "mitigation": "Always verify OS version applicability. Tag version-specific advice." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Excellent for full system diagnostic. Keep scope explicit.", "externalization_support": "Generates structured diagnostic tables well.", "monotropism_alignment": "One subsystem at a time. Explicit scope boundaries." }
+    },
+    "gemini-3.1-flash-lite-preview": {
+      "hallucination_risk": "low",
+      "strengths": ["Fast triage", "Quick registry lookups", "Efficient driver checks"],
+      "known_drift_patterns": [
+        { "pattern": "shallow_triage", "description": "May miss secondary symptoms in rapid triage mode", "frequency": "occasional", "mitigation": "Flag if symptoms suggest multiple root causes. Escalate to gemini-3.1-pro-preview." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Good for single-component focus.", "externalization_support": "Maintains table format.", "monotropism_alignment": "Perfect for medium-energy bounded tasks." }
+    },
+    "gpt-5.4": {
+      "hallucination_risk": "medium",
+      "strengths": ["Creative solution paths", "Good optimization strategies", "Strong migration planning"],
+      "known_drift_patterns": [
+        { "pattern": "registry_path_fabrication", "description": "May generate plausible but non-existent registry paths", "frequency": "occasional", "mitigation": "Validate all registry paths against known HKEY structure. Tag unverified paths as [SPEC]." },
+        { "pattern": "cmdlet_invention", "description": "May reference PowerShell cmdlets that do not exist", "frequency": "rare", "mitigation": "Verify cmdlet existence against known module list. Prefer well-established cmdlets." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Good for bounded solution design.", "externalization_support": "Generates structured option lists.", "monotropism_alignment": "Divergent phase only. Switch to convergent model after." }
+    },
+    "gpt-5.4-pro": {
+      "hallucination_risk": "low",
+      "strengths": ["Deep remediation planning", "Strong GPO reasoning", "Good consensus partner"],
+      "known_drift_patterns": [
+        { "pattern": "over_planning", "description": "May create unnecessarily complex remediation plans for simple issues", "frequency": "rare", "mitigation": "Set explicit complexity threshold. Prefer simplest effective solution." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Excellent for full remediation scope.", "externalization_support": "Strong structured plan output.", "monotropism_alignment": "Good for deep single-thread planning." }
+    },
+    "gpt-5.3-codex": {
+      "hallucination_risk": "low",
+      "strengths": ["Strong PowerShell generation", "Good Pester test output", "Reliable WMI queries"],
+      "known_drift_patterns": [
+        { "pattern": "deprecated_api_usage", "description": "May use deprecated WMI classes instead of CIM equivalents", "frequency": "occasional", "mitigation": "Prefer Get-CimInstance over Get-WmiObject. Flag deprecated usage." },
+        { "pattern": "missing_error_handling", "description": "May omit try/catch blocks in complex scripts", "frequency": "rare", "mitigation": "Enforce error handling template. Require -ErrorAction Stop on critical commands." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Good for focused scripting tasks.", "externalization_support": "Code is inherently structured.", "monotropism_alignment": "Perfect for medium-energy script sprints." }
+    },
+    "o4-mini": {
+      "hallucination_risk": "medium",
+      "strengths": ["Fast verification", "Good binary health checks"],
+      "known_drift_patterns": [
+        { "pattern": "confirmation_bias", "description": "May verify configurations as correct based on common patterns rather than specific context", "frequency": "occasional", "mitigation": "Never sole verifier for security-critical configurations. Cross-validate." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Minimal. Single check.", "externalization_support": "JSON output.", "monotropism_alignment": "Low-energy verification." }
+    }
+  },
+  "error_handling": {
+    "on_hallucination_detected": "Tag as [SPEC], flag to operator, do not present as fact",
+    "on_verification_failure": "Block output, request additional context",
+    "on_energy_crash": "Route to nano model, JSON-only, binary output, escalate immediately",
+    "on_destructive_operation": "Require explicit operator confirmation before proceeding"
+  }
+}

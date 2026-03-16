@@ -1,0 +1,146 @@
+{
+  "agent": "win11_pc_engineer",
+  "version": "1.0.0",
+  "providers": {
+    "google": {
+      "enabled": true,
+      "model_count": 7,
+      "models": {
+        "gemini-3.1-pro-preview": {
+          "role": "deep_diagnostics",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.3, "top_p": 0.95 },
+          "capabilities": ["deep_reasoning", "structured_output", "function_calling", "long_context"],
+          "task_routing": ["complex_diagnostics", "security_audit", "registry_deep_dive", "gpo_conflict_resolution", "bsod_analysis"],
+          "energy_requirement": "high",
+          "cost_tier": "premium"
+        },
+        "gemini-2.5-pro": {
+          "role": "multimodal_analysis",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.3, "top_p": 0.95 },
+          "capabilities": ["multimodal", "deep_reasoning", "structured_output"],
+          "task_routing": ["screenshot_analysis", "error_dialog_parsing", "device_manager_review", "visual_troubleshooting"],
+          "energy_requirement": "high",
+          "cost_tier": "premium"
+        },
+        "gemini-3.1-flash-lite-preview": {
+          "role": "rapid_triage",
+          "tier": 2,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.3, "top_p": 0.95 },
+          "capabilities": ["fast_inference", "structured_output", "function_calling"],
+          "task_routing": ["quick_diagnostics", "driver_version_check", "registry_lookup", "update_status"],
+          "energy_requirement": "medium",
+          "cost_tier": "standard"
+        },
+        "gemini-3-flash-preview": {
+          "role": "fallback_fast",
+          "tier": 3,
+          "parameters": { "max_output_tokens": 16384, "temperature": 0.2, "top_p": 0.9 },
+          "capabilities": ["fast_inference", "structured_output"],
+          "task_routing": ["binary_health_check", "status_verification", "simple_lookup"],
+          "energy_requirement": "low",
+          "cost_tier": "economy"
+        },
+        "nano-banana-pro": {
+          "role": "crash_triage",
+          "tier": 4,
+          "parameters": { "max_output_tokens": 2048, "temperature": 0.1 },
+          "capabilities": ["classification", "edge_inference"],
+          "task_routing": ["bsod_severity_classification", "boot_failure_triage"],
+          "energy_requirement": "crash",
+          "cost_tier": "minimal"
+        },
+        "nano-banana-2": {
+          "role": "crash_classification",
+          "tier": 4,
+          "parameters": { "max_output_tokens": 2048, "temperature": 0.1 },
+          "capabilities": ["classification"],
+          "task_routing": ["crash_classification"],
+          "energy_requirement": "crash",
+          "cost_tier": "minimal"
+        },
+        "nano-banana": {
+          "role": "crash_binary",
+          "tier": 4,
+          "parameters": { "max_output_tokens": 1024, "temperature": 0.1 },
+          "capabilities": ["binary_classification"],
+          "task_routing": ["binary_decision"],
+          "energy_requirement": "crash",
+          "cost_tier": "minimal"
+        }
+      }
+    },
+    "openai": {
+      "enabled": true,
+      "model_count": 5,
+      "models": {
+        "gpt-5.4": {
+          "role": "solution_architect",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.4, "top_p": 0.95 },
+          "capabilities": ["creative_generation", "structured_output", "function_calling"],
+          "task_routing": ["solution_design", "optimization_strategy", "migration_planning", "alternative_fixes"],
+          "energy_requirement": "medium",
+          "cost_tier": "premium"
+        },
+        "gpt-5.4-pro": {
+          "role": "deep_planner",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.3, "top_p": 0.95 },
+          "capabilities": ["deep_reasoning", "structured_output", "function_calling", "long_context"],
+          "task_routing": ["multi_step_remediation", "gpo_architecture", "security_roadmap", "consensus_with_gpro31"],
+          "energy_requirement": "high",
+          "cost_tier": "premium"
+        },
+        "gpt-5.3": {
+          "role": "solution_fallback",
+          "tier": 2,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.4, "top_p": 0.95 },
+          "capabilities": ["creative_generation", "structured_output", "function_calling"],
+          "task_routing": ["fallback_solution", "overflow_drafting"],
+          "energy_requirement": "medium",
+          "cost_tier": "standard"
+        },
+        "gpt-5.3-codex": {
+          "role": "script_automator",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.2, "top_p": 0.9 },
+          "capabilities": ["code_generation", "code_editing", "test_generation", "structured_output"],
+          "task_routing": ["powershell_scripting", "registry_scripts", "wmi_queries", "scheduled_tasks", "pester_tests"],
+          "energy_requirement": "medium",
+          "cost_tier": "premium"
+        },
+        "o4-mini": {
+          "role": "rapid_verifier",
+          "tier": 3,
+          "parameters": { "max_output_tokens": 8192, "temperature": 0.2, "top_p": 0.9 },
+          "capabilities": ["fast_inference", "verification", "classification"],
+          "task_routing": ["config_verification", "post_remediation_check", "binary_health_decision"],
+          "energy_requirement": "low",
+          "cost_tier": "economy"
+        }
+      }
+    },
+    "anthropic": {
+      "enabled": false,
+      "note": "Claude is offline by default. Only activated if operator explicitly declares Claude usage at runtime.",
+      "runtime_detection": true,
+      "models": {}
+    }
+  },
+  "routing": {
+    "strategy": "energy_aware_dual_provider_with_fallback",
+    "cross_provider_consensus": {
+      "enabled": true,
+      "pairs": [
+        { "google": "gemini-3.1-pro-preview", "openai": "gpt-5.4-pro" }
+      ],
+      "trigger": "T4_T5_tasks_or_conflicting_results"
+    },
+    "circuit_breaker": {
+      "consecutive_failures": 3,
+      "action": "failover_to_other_provider_same_tier"
+    }
+  }
+}
