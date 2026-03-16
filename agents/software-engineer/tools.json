@@ -1,0 +1,130 @@
+{
+  "agent": "software-engineer",
+  "tools": {
+    "code_generation": [
+      {
+        "id": "TL-IMPLEMENT",
+        "name": "code_generator",
+        "description": "Generate production-grade code from spec or task description.",
+        "input_schema": {
+          "task": "string",
+          "language": "string",
+          "framework": "string (optional)",
+          "existing_code": "array<CodeBlock> (optional)",
+          "output_format": "string (full|diff)"
+        },
+        "output_schema": {
+          "code_blocks": "array<CodeBlock>",
+          "test_blocks": "array<CodeBlock>"
+        }
+      },
+      {
+        "id": "TL-TESTGEN",
+        "name": "test_generator",
+        "description": "Generate test suite for given code.",
+        "input_schema": {
+          "code": "CodeBlock",
+          "test_types": "array<string> (unit|integration|e2e|performance|security)",
+          "framework": "string (pytest|jest|mocha|etc)"
+        },
+        "output_schema": {
+          "test_cases": "array<TestCase>",
+          "coverage_estimate": "object"
+        }
+      },
+      {
+        "id": "TL-REFACTOR",
+        "name": "refactoring_engine",
+        "description": "Plan and generate refactored code with diffs.",
+        "input_schema": {
+          "code": "array<CodeBlock>",
+          "goals": "array<string>",
+          "constraints": "array<string> (optional)"
+        },
+        "output_schema": {
+          "refactor_plan": "RefactorPlan",
+          "diffs": "array<CodeBlock>"
+        }
+      }
+    ],
+    "analysis": [
+      {
+        "id": "TL-REVIEW",
+        "name": "code_reviewer",
+        "description": "Review code for issues across all categories.",
+        "input_schema": {
+          "code": "array<CodeBlock>",
+          "focus": "array<string> (bug|security|performance|style|maintainability) (optional)"
+        },
+        "output_schema": {
+          "findings": "array<CodeReviewFinding>",
+          "summary": "object"
+        }
+      },
+      {
+        "id": "TL-DEBUG",
+        "name": "debugger",
+        "description": "Diagnose bugs from error context.",
+        "input_schema": {
+          "error_message": "string",
+          "stack_trace": "string (optional)",
+          "code": "array<CodeBlock> (optional)",
+          "reproduction_steps": "string (optional)"
+        },
+        "output_schema": {
+          "hypotheses": "array<{hypothesis, evidence, confidence, claim_tag}>",
+          "root_cause": "string",
+          "fix": "CodeBlock",
+          "verification_test": "TestCase"
+        }
+      },
+      {
+        "id": "TL-DEPAUDIT",
+        "name": "dependency_auditor",
+        "description": "Audit project dependencies for security, compatibility, and freshness.",
+        "input_schema": {
+          "manifest": "string (file content)",
+          "manifest_type": "string (requirements.txt|pyproject.toml|package.json|go.mod)"
+        },
+        "output_schema": {
+          "dependencies": "array<DependencyEntry>",
+          "risk_summary": "object"
+        }
+      }
+    ],
+    "pipeline": [
+      {
+        "id": "TL-CICD",
+        "name": "pipeline_generator",
+        "description": "Generate CI/CD pipeline configuration.",
+        "input_schema": {
+          "platform": "string (github_actions|gitlab_ci|circleci|jenkins)",
+          "stages": "array<string>",
+          "language": "string",
+          "deploy_target": "string (optional)"
+        },
+        "output_schema": {
+          "config_file": "CodeBlock",
+          "stage_descriptions": "array<{stage, trigger, steps}>"
+        }
+      }
+    ],
+    "integration": [
+      {
+        "id": "TL-HANDOFF",
+        "name": "agent_handoff",
+        "description": "Prepare structured handoff payload for specialist agent.",
+        "input_schema": {
+          "target_agent": "string",
+          "task": "string",
+          "context": "string",
+          "code_context": "array<CodeBlock> (optional)"
+        },
+        "output_schema": {
+          "handoff_payload": "object",
+          "format": "HANDOFF"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "agent": "data-engineer",
+  "skills": {
+    "always_on": [
+      {
+        "id": "SK-REALITY",
+        "name": "reality_check",
+        "description": "Tag all claims [OBS/DRV/GEN/SPEC]. Gate output. Verify before asserting. Extra vigilance on row counts, schema types, and performance claims.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-ENERGY",
+        "name": "energy_routing",
+        "description": "Route tasks to appropriate model tier based on current energy level.",
+        "trigger": "every_input",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-EXTERN",
+        "name": "externalization",
+        "description": "Externalize all state to schema definitions, pipeline configs, lineage maps. Never hold data state in prose.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-LINEAGE",
+        "name": "lineage_guard",
+        "description": "Trace every output field to its source. Flag unmapped fields. Detect PII propagation. Mandatory on all pipeline outputs.",
+        "trigger": "every_pipeline_output",
+        "cognitive_load": "background"
+      }
+    ],
+    "domain": [
+      {
+        "id": "SK-PIPELINE",
+        "name": "pipeline_design",
+        "description": "Design end-to-end data pipelines: extraction, transformation, loading, validation, monitoring.",
+        "input": "source systems, target systems, SLA, volume",
+        "output": "pipeline DAG (mermaid), stage table, orchestrator config",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Stage table: Stage | Type | Input | Output | Engine | SLA | Dependencies. DAG mermaid follows."
+      },
+      {
+        "id": "SK-ETL",
+        "name": "etl_elt",
+        "description": "Build ETL/ELT pipelines: Airflow, Dagster, Prefect, dbt, custom Python.",
+        "input": "source, target, transformations, schedule",
+        "output": "pipeline code, DAG config, dbt models, quality checks",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Transformation table: Source Column | Transform | Target Column | Type | Nullable | Tag. Code follows."
+      },
+      {
+        "id": "SK-WAREHOUSE",
+        "name": "data_warehousing",
+        "description": "Design data warehouses: Kimball, Inmon, Data Vault, One Big Table. Star/snowflake schemas.",
+        "input": "business requirements, source systems, query patterns",
+        "output": "schema design, table definitions, materialization strategy",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Schema table: Table | Type (fact/dim/staging) | Columns | Keys | Partitioning. ERD mermaid follows."
+      },
+      {
+        "id": "SK-DATALAKE",
+        "name": "data_lake",
+        "description": "Configure data lakes: S3/GCS/ADLS, Iceberg/Delta/Hudi table formats, cataloging.",
+        "input": "storage requirements, file formats, query patterns",
+        "output": "lake config, table format config, compaction policy",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Format comparison: Format | ACID | Time Travel | Partitioning | Engine Compat | Tag."
+      },
+      {
+        "id": "SK-FEATURE",
+        "name": "feature_store",
+        "description": "Configure feature stores: Feast, Tecton, Hopsworks. Online/offline serving.",
+        "input": "ML features, latency requirements, serving patterns",
+        "output": "feature definitions, materialization config, serving config",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Feature table: Feature | Type | Entity | Source | Freshness | Online/Offline | Tag."
+      },
+      {
+        "id": "SK-QUALITY",
+        "name": "data_quality",
+        "description": "Design data quality frameworks: Great Expectations, dbt tests, Soda, custom validators.",
+        "input": "tables, business rules, SLAs",
+        "output": "quality check config, test suite, alerting rules",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Quality table: Check | Rule | Threshold | Severity | Action. Config follows."
+      },
+      {
+        "id": "SK-GOVERN",
+        "name": "data_governance",
+        "description": "Design governance frameworks: access control, PII detection, retention policies, audit logging.",
+        "input": "compliance requirements, data catalog, team structure",
+        "output": "governance policy, access control matrix, PII inventory",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Access matrix: Role | Dataset | Permission | PII Access | Audit. Policy follows."
+      },
+      {
+        "id": "SK-STREAM",
+        "name": "stream_processing",
+        "description": "Design streaming pipelines: Kafka, Flink, Spark Streaming, Pub/Sub.",
+        "input": "event sources, processing requirements, latency targets",
+        "output": "stream config, consumer code, schema registry setup",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Stream comparison: Platform | Latency | Throughput | Guarantee | Cost | Tag."
+      },
+      {
+        "id": "SK-BATCH",
+        "name": "batch_processing",
+        "description": "Design batch pipelines: Spark, dbt, Dataflow, custom Python.",
+        "input": "data volume, schedule, transformations",
+        "output": "batch config, processing code, schedule config",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Batch config table: Job | Schedule | Input | Output | Duration | Cost. Code follows."
+      },
+      {
+        "id": "SK-MODEL",
+        "name": "data_modeling",
+        "description": "Design data models: ER diagrams, dimensional models, graph models.",
+        "input": "business entities, relationships, query patterns",
+        "output": "data model, schema DDL, ERD mermaid",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Entity table: Entity | Attributes | Keys | Relationships. ERD mermaid follows."
+      },
+      {
+        "id": "SK-SCHEMA",
+        "name": "schema_design",
+        "description": "Design and evolve schemas: DDL, migrations, versioning, backward compatibility.",
+        "input": "requirements, existing schema, evolution needs",
+        "output": "DDL, migration scripts, compatibility check",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Migration table: Version | Change | Backward Compatible | Rollback | Tag. DDL follows."
+      },
+      {
+        "id": "SK-CATALOG",
+        "name": "data_cataloging",
+        "description": "Configure data catalogs: DataHub, Amundsen, OpenMetadata, custom.",
+        "input": "data assets, metadata requirements, team structure",
+        "output": "catalog config, metadata schema, ingestion setup",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Catalog table: Asset | Type | Owner | Description | Tags | Freshness."
+      }
+    ]
+  }
+}

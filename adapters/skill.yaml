@@ -1,6 +1,6 @@
 id: engineering-adapter-layer
 name: LLM Adapter Layer
-description: Manages provider-specific API adapters for Anthropic, OpenAI, and Google with failover routing and cost tracking.
+description: Manages provider-specific API adapters for OpenAI and Google with failover routing and cost tracking.
 version: 1.0.0
 tags:
   - engineering
@@ -10,7 +10,7 @@ tags:
 models:
   primary: O-CDX
   fallback:
-    - C-SN46
+    - G-PRO31
     - G-PRO
 capabilities:
   primary: orchestrate
@@ -19,11 +19,11 @@ inputs:
   - name: provider
     type: string
     required: true
-    description: "Target provider (anthropic, openai, google)."
+    description: "Target provider (openai, google)."
   - name: model_id
     type: string
     required: true
-    description: "Model identifier from agent registry (e.g., C-OP46, G-PRO)."
+    description: "Model identifier from agent registry (e.g., G-PRO31, G-PRO, O-54)."
   - name: payload
     type: object
     required: true

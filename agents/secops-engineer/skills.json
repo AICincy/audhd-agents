@@ -1,0 +1,241 @@
+{
+  "$schema": "agents/secops-engineer/skills.json",
+  "agent": "secops-engineer",
+  "version": "1.0.0",
+  "skill_merge_strategy": "union_with_priority",
+  "reality_check_mode": "always_on",
+  "skills": [
+    {
+      "id": "engineering-security-engineer",
+      "version": "1.0.0",
+      "priority": 1,
+      "capabilities": {
+        "threat_modeling": {
+          "description": "Full STRIDE threat modeling with decomposition, DFD analysis, and trust boundary mapping",
+          "energy_requirement": "high",
+          "preferred_models": ["gemini-3.1-pro-preview", "gemini-2.5-pro"],
+          "hooks": ["SK-GATE", "SK-VERIFY", "SK-DECOMP"],
+          "inputs": ["target_system", "scope", "existing_controls"],
+          "outputs": ["stride_threats", "attack_surface_map", "risk_matrix"],
+          "audhd_adaptations": {
+            "externalize": "Full threat table always visible, assumptions numbered at top",
+            "monotropism": "One component at a time through STRIDE categories",
+            "pattern_compression": "Highest-risk threat first, then descending"
+          }
+        },
+        "vulnerability_assessment": {
+          "description": "Vulnerability identification, CVSS scoring, EPSS correlation, KEV cross-reference",
+          "energy_requirement": "medium",
+          "preferred_models": ["gemini-3.1-pro-preview", "gemini-3.1-flash-lite-preview"],
+          "hooks": ["SK-GATE", "SK-VERIFY"],
+          "inputs": ["target_system", "code", "scan_results"],
+          "outputs": ["findings", "prioritized_vulns", "remediation_plan"],
+          "audhd_adaptations": {
+            "externalize": "Severity-sorted table, one finding per row",
+            "monotropism": "Process one finding fully before next",
+            "pattern_compression": "Critical count first: 'X critical, Y high, Z medium'"
+          }
+        },
+        "secure_code_review": {
+          "description": "Language-aware code review mapping to OWASP Top 10 and CWE",
+          "energy_requirement": "high",
+          "preferred_models": ["gemini-3.1-pro-preview"],
+          "hooks": ["SK-CODEREVIEW", "SK-GATE"],
+          "inputs": ["code"],
+          "outputs": ["findings", "cwe_mappings", "fix_recommendations"],
+          "audhd_adaptations": {
+            "externalize": "Finding table with line numbers, CWE, severity",
+            "monotropism": "One file/function at a time",
+            "pattern_compression": "Worst finding first with fix"
+          }
+        },
+        "security_architecture_review": {
+          "description": "Zero trust, defense in depth, least privilege assessment",
+          "energy_requirement": "high",
+          "preferred_models": ["gemini-3.1-pro-preview", "gemini-2.5-pro"],
+          "hooks": ["SK-DECOMP", "SK-VERIFY"],
+          "inputs": ["target_system", "scope"],
+          "outputs": ["architecture_findings", "control_gaps", "recommendations"]
+        },
+        "compliance_mapping": {
+          "description": "Map controls to compliance frameworks (SOC2, ISO27001, NIST CSF, etc.)",
+          "energy_requirement": "medium",
+          "preferred_models": ["gemini-3.1-pro-preview", "gemini-3.1-flash-lite-preview"],
+          "hooks": ["SK-VERIFY"],
+          "inputs": ["existing_controls", "compliance_targets"],
+          "outputs": ["compliance_matrix", "gap_analysis", "remediation_priorities"]
+        },
+        "risk_quantification": {
+          "description": "Likelihood x impact scoring, FAIR methodology option",
+          "energy_requirement": "medium",
+          "preferred_models": ["gemini-3.1-pro-preview"],
+          "hooks": ["SK-GATE"],
+          "inputs": ["stride_threats", "findings"],
+          "outputs": ["risk_scores", "risk_matrix", "treatment_plan"]
+        }
+      }
+    },
+    {
+      "id": "engineering-incident-response-commander",
+      "version": "1.0.0",
+      "priority": 2,
+      "capabilities": {
+        "incident_triage": {
+          "description": "Rapid severity classification and initial containment planning",
+          "energy_requirement": "medium",
+          "preferred_models": ["gemini-3.1-flash-lite-preview", "nano-banana-pro"],
+          "hooks": ["SK-GATE"],
+          "inputs": ["incident_input"],
+          "outputs": ["severity_classification", "initial_actions", "escalation_path"],
+          "audhd_adaptations": {
+            "externalize": "Status block: SEVERITY | STATUS | NEXT ACTION | ETA",
+            "monotropism": "Triage is single-threaded. No parallel investigation until classified.",
+            "pattern_compression": "SEV first, then one-line impact, then action"
+          }
+        },
+        "containment_coordination": {
+          "description": "Plan and track containment actions with owners and ETAs",
+          "energy_requirement": "medium",
+          "preferred_models": ["gemini-3.1-flash-lite-preview", "gemini-3.1-pro-preview"],
+          "hooks": ["SK-DECOMP"],
+          "inputs": ["incident_input", "severity"],
+          "outputs": ["containment_checklist", "owner_assignments", "communication_plan"]
+        },
+        "timeline_reconstruction": {
+          "description": "Build evidence-chain timeline from indicators and logs",
+          "energy_requirement": "high",
+          "preferred_models": ["gemini-3.1-pro-preview"],
+          "hooks": ["SK-VERIFY", "SK-GATE"],
+          "inputs": ["indicators", "timeline_events"],
+          "outputs": ["reconstructed_timeline", "evidence_gaps", "attribution_assessment"]
+        },
+        "post_mortem": {
+          "description": "Blameless post-mortem with contributing factors, action items, systemic improvements",
+          "energy_requirement": "high",
+          "preferred_models": ["gemini-3.1-pro-preview"],
+          "hooks": ["SK-DECOMP", "SK-VERIFY"],
+          "inputs": ["incident_input", "reconstructed_timeline"],
+          "outputs": ["post_mortem_doc", "action_items", "systemic_improvements"]
+        },
+        "communication_management": {
+          "description": "Draft severity-appropriate updates for stakeholders",
+          "energy_requirement": "low",
+          "preferred_models": ["gemini-3.1-flash-lite-preview", "gemini-2.5-tts"],
+          "hooks": ["SK-GATE"],
+          "inputs": ["incident_input", "severity", "audience"],
+          "outputs": ["status_update", "customer_notification", "exec_briefing"]
+        },
+        "runbook_execution": {
+          "description": "Select and track execution of incident runbooks",
+          "energy_requirement": "low",
+          "preferred_models": ["gemini-3.1-flash-lite-preview", "nano-banana-2"],
+          "hooks": [],
+          "inputs": ["incident_type", "severity"],
+          "outputs": ["selected_runbook", "execution_checklist", "completion_status"]
+        }
+      }
+    },
+    {
+      "id": "testing-reality-checker",
+      "version": "1.0.0",
+      "priority": 0,
+      "always_on": true,
+      "capabilities": {
+        "claim_verification": {
+          "description": "Tag every factual claim with source and confidence",
+          "energy_requirement": "low",
+          "preferred_models": ["all"],
+          "hooks": ["SK-GATE"],
+          "activation": "automatic_every_output",
+          "audhd_adaptations": {
+            "externalize": "Tag inline: [OBS], [DRV], [GEN], [SPEC]",
+            "pattern_compression": "Tags are the compression. No separate verification section unless conflict found."
+          }
+        },
+        "hallucination_gating": {
+          "description": "Detect and gate fabricated CVEs, tool capabilities, version numbers, compliance claims",
+          "energy_requirement": "low",
+          "preferred_models": ["all"],
+          "hooks": ["SK-GATE", "SK-VERIFY"],
+          "activation": "automatic_every_output",
+          "security_specific_checks": [
+            "CVE format validation (CVE-YYYY-NNNNN)",
+            "CVSS score range validation (0.0-10.0)",
+            "CWE ID format validation",
+            "Known framework version cross-check",
+            "Compliance control ID format validation"
+          ]
+        },
+        "assumption_validation": {
+          "description": "Surface and validate all assumptions in analysis",
+          "energy_requirement": "medium",
+          "preferred_models": ["gemini-3.1-pro-preview", "gemini-3.1-flash-lite-preview"],
+          "hooks": ["SK-VERIFY"],
+          "activation": "on_analysis_output"
+        },
+        "drift_detection": {
+          "description": "Flag when response drifts from original question scope",
+          "energy_requirement": "low",
+          "preferred_models": ["all"],
+          "hooks": ["SK-GATE"],
+          "activation": "continuous"
+        },
+        "confidence_calibration": {
+          "description": "Calibrate confidence levels across claims",
+          "energy_requirement": "low",
+          "preferred_models": ["all"],
+          "hooks": ["SK-GATE"],
+          "confidence_levels": {
+            "high": "Multiple independent sources, directly verified",
+            "medium": "Single authoritative source, plausible inference",
+            "low": "Inference only, no direct source, or single non-authoritative source"
+          }
+        }
+      }
+    },
+    {
+      "id": "testing-tool-evaluator",
+      "version": "1.0.0",
+      "priority": 3,
+      "capabilities": {
+        "decision_matrix": {
+          "description": "Construct weighted decision matrix for tool/vendor comparison",
+          "energy_requirement": "medium",
+          "preferred_models": ["gemini-3.1-pro-preview", "gemini-3.1-flash-lite-preview"],
+          "hooks": ["SK-GATE", "SK-VERIFY"],
+          "inputs": ["options", "criteria", "constraints"],
+          "outputs": ["decision_matrix", "recommendation", "sensitivity_analysis"],
+          "audhd_adaptations": {
+            "externalize": "Full matrix table always visible",
+            "monotropism": "Score all options on one criterion before moving to next",
+            "pattern_compression": "Winner first, then delta from runner-up"
+          }
+        },
+        "poc_assessment": {
+          "description": "Scope, plan, and evaluate proof-of-concept",
+          "energy_requirement": "medium",
+          "preferred_models": ["gemini-3.1-pro-preview"],
+          "hooks": ["SK-VERIFY"],
+          "inputs": ["options", "constraints"],
+          "outputs": ["poc_plan", "success_criteria", "go_nogo_threshold"]
+        },
+        "build_vs_buy": {
+          "description": "Total cost of ownership analysis for build vs buy decisions",
+          "energy_requirement": "high",
+          "preferred_models": ["gemini-3.1-pro-preview"],
+          "hooks": ["SK-GATE", "SK-VERIFY"],
+          "inputs": ["options", "constraints"],
+          "outputs": ["tco_comparison", "risk_assessment", "recommendation"]
+        },
+        "integration_risk": {
+          "description": "Assess integration complexity and risk for security tools",
+          "energy_requirement": "medium",
+          "preferred_models": ["gemini-3.1-flash-lite-preview"],
+          "hooks": ["SK-VERIFY"],
+          "inputs": ["options", "existing_stack"],
+          "outputs": ["integration_complexity", "risk_factors", "migration_path"]
+        }
+      }
+    }
+  ]
+}

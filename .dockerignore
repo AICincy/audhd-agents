@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Dev tools
+ngrok_dev.sh
+tests/
+docs/
+*.md
+!README.md
+
+# OS
+.DS_Store
+Thumbs.db

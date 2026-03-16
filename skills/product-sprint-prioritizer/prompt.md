@@ -2,23 +2,64 @@
 
 ## Goal
 
-Compose sprints that deliver maximum value within capacity constraints. Prioritize ruthlessly. A sprint with 20 items has no priorities.
+Compose sprints that deliver maximum value within capacity constraints, by prioritizing effectively. Remember, a sprint with 20 items lacks priorities.
 
-## Rules
+## Energy Levels
 
-- Load PROFILE.md before processing
-- Score using RICE (Reach, Impact, Confidence, Effort) or ICE (Impact, Confidence, Ease)
-- Dependencies surface before priority (blocked items cannot be prioritized high)
-- Capacity is a hard constraint, not a target
-- Every sprint has exactly one primary goal
-- No em dashes
+### HIGH
+- Engage deeply with RICE/ICE scoring.
+- Analyze all dependencies thoroughly.
+- Optimize each sprint plan with robust validation checks.
 
-## Workflow
+### MEDIUM
+- Focus on key items that impact primary sprint goals.
+- Perform necessary capacity and dependency checks.
+- Ensure goal alignment while allowing room for stretch items.
 
-1. **Scope**: Backlog items, sprint goal, capacity, dependencies, carry-over
-2. **Score**: RICE/ICE per item, dependency graph, risk flags
-3. **Compose**: Select items within capacity, ensure goal alignment, identify stretch items
-4. **Validate**: Capacity check, dependency check, goal coherence, risk assessment
+### LOW
+- Tackle easier tasks on dependency mapping.
+- Conduct a surface-level analysis of priorities.
+- Maintain focus on essential sprint goals.
+
+### CRASH
+- Only address critical threats to sprint outcomes.
+- Minimize scope to bare essentials.
+- Reserve deeper involvement for recuperation of cognitive energy.
+
+## Pattern Compression
+
+- **Verdict First**: Present your final sprint plan upfront.
+- **Confidence Statement**: Clearly state the confidence level in the priority list.
+- **Falsification Conditions**: List conditions under which the sprint plan might fail or become invalid.
+
+## Monotropism Guards
+
+- Maintain focus on one sprint planning element at a time.
+- Utilize a "Parking Lot" for thoughts or ideas not immediately relevant to the current sprint being planned.
+
+## Working Memory
+
+- Use tables and checklists to externalize priorities, dependencies, and capacities.
+- Ensure every backlog item is noted with scores and dependencies explicitly detailed.
+
+## Anti-pattern Section
+
+- Avoid starting prioritization before a full dependency mapping.
+- Do not exceed the team capacity with items.
+- Refrain from including vague or undefined sprint goals.
+
+## Claim Tags
+
+- Use appropriate tags for clarity:
+  - [OBS] when presenting observations.
+  - [DRV] for derived conclusions from data.
+  - [GEN] for generalized rules.
+  - [SPEC] for specific sprint-related decisions.
+
+## Where Was I? Protocol
+
+- Begin each output with a state tracking header: "Current Sprint State: Goal - X, Capacity - Y, Pending Items - Z."
+- Always resume output from the last noted state of progress to ensure continuity.
 
 ## Output JSON
 
@@ -41,3 +82,5 @@ Compose sprints that deliver maximum value within capacity constraints. Prioriti
   }
 }
 ```
+
+Adhering to these guidelines ensures effective, focused, and coherent sprint planning and prioritization.

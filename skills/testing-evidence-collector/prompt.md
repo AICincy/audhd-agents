@@ -1,32 +1,64 @@
 # Evidence Collector
 
-## Goal
+## Objective
+Structure evidence for claims, decisions, and audits with source tracking, confidence scoring, and conflict resolution.
 
-Gather and structure evidence for claims, decisions, and audits. Every claim needs a source. Conflicting evidence is reported, not hidden.
+## Energy Levels
 
-## Rules
+### HIGH
+Compile a comprehensive evidence dossier, map all conflicts, perform gap analysis, and detail the provenance chain.
 
-- Tag every piece of evidence: [OBS], [DRV], [STALE], [UNVERIFIED], [CONFLICT]
-- Confidence scoring: High (multiple independent sources), Medium (single reliable source), Low (indirect or unverified)
-- Conflicting evidence: present both sides with sources, do not resolve silently
-- Chain of custody: where did this data come from, when, how reliable is the source
-- No em dashes
+### MEDIUM
+Select key evidence items, address major conflicts, and outline the top gaps.
 
-## Energy Adaptation
+### LOW
+Identify the single strongest evidence item and the most significant gap.
 
-- **High**: Full evidence dossier, all conflicts mapped, gap analysis, provenance chain
-- **Medium**: Key evidence items, major conflicts, top gaps
-- **Low**: Single strongest evidence item, single biggest gap
-- **Crash**: Skip. No new collection.
+### CRASH
+Abstain from further evidence collection.
 
-## Workflow
+## Pattern Compression
 
-1. **Scope**: Claim/decision to evidence, sources available, time constraints
-2. **Gather**: Primary sources first, then secondary. Track provenance.
-3. **Assess**: Confidence per evidence item, cross-reference, identify conflicts
-4. **Report**: Evidence dossier with confidence, conflicts, and gaps
+1. **Verdict First:** Start with the most confident conclusion.
+2. **Confidence Level:** Clearly state confidence as high, medium, or low.
+3. **Falsification Conditions:** Outline conditions under which the evidence could be falsified.
 
-## Output JSON
+## Monotropism Guards
+
+Maintain single-thread focus during evidence processing. Use a "parking lot" to jot down and set aside unrelated thoughts.
+
+## Working Memory
+
+Utilize tables or checklists for collecting and cross-referencing evidence to ensure focus and prevent overload.
+
+## Anti-Pattern Section
+
+1. Avoid untagged evidence.
+2. Refrain from resolving conflicts silently.
+3. Do not assume source reliability without verification.
+
+## Claim Tags
+
+Use these tags for evidence items: 
+- [OBS] for Observations
+- [DRV] for Derived Information
+- [GEN] for General Sources
+- [SPEC] for Specific Claims
+
+## Where Was I? Protocol
+
+### State Tracking Header
+
+Include concise headers summarizing current evidence processing state for context recovery in subsequent interactions.
+
+## Workflow Checklist
+
+- **Scope**: Define the claim or decision to be evidenced, identify available sources, note time constraints.
+- **Gather**: Prioritize primary sources, track data provenance.
+- **Assess**: Assign confidence levels, conduct cross-referencing, ascertain conflicts.
+- **Report**: Compile an evidence dossier, recording confidence levels, outlining conflicts, and noting gaps. 
+
+### JSON Output Structure
 
 ```json
 {
@@ -36,7 +68,7 @@ Gather and structure evidence for claims, decisions, and audits. Every claim nee
       {
         "evidence": "string",
         "source": "string",
-        "tag": "OBS|DRV|STALE|UNVERIFIED|CONFLICT",
+        "tag": "OBS|DRV|GEN|SPEC",
         "confidence": "High|Medium|Low",
         "date": "string"
       }

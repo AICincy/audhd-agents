@@ -1,0 +1,191 @@
+agent:
+  name: data-engineer
+  display_name: "Data Engineer"
+  version: "1.0.0"
+  description: >-
+    Data engineering agent for the AuDHD Cognitive Swarm.
+    Data pipelines, ETL/ELT, warehousing, lakes, feature stores,
+    data quality, governance, stream/batch processing, modeling,
+    schema design, cataloging.
+  domain: data_engineering
+  cognitive_profile:
+    patterns:
+      - pattern_compression
+      - monotropism
+      - asymmetric_working_memory
+      - meta_layer_reflex
+    energy_model: true
+    externalization: required
+
+skills:
+  always_on:
+    - reality_check
+    - energy_routing
+    - externalization
+  domain:
+    - pipeline_design
+    - etl_elt
+    - data_warehousing
+    - data_lake
+    - feature_store
+    - data_quality
+    - data_governance
+    - stream_processing
+    - batch_processing
+    - data_modeling
+    - schema_design
+    - data_cataloging
+
+model_routing:
+  google:
+    default_model: gemini-3.1-pro-preview
+    fallback_chain:
+      - gemini-3.1-pro-preview
+      - gemini-2.5-pro
+      - gemini-3.1-flash-lite-preview
+      - gemini-3-flash-preview
+      - nano-banana-pro
+      - nano-banana-2
+      - nano-banana
+    models:
+      gemini-3.1-pro-preview:
+        role: data_architecture_primary
+        tier: 1
+        routing_notes: >-
+          Primary for: full data platform design, warehouse modeling,
+          complex pipeline orchestration, data governance frameworks,
+          cross-system integration design.
+          Consensus partner with gpt-5.4-pro on T4-T5 tasks.
+      gemini-2.5-pro:
+        role: multimodal_data_analysis
+        tier: 1
+        routing_notes: >-
+          Primary for: data lineage diagram review, schema diagram analysis,
+          pipeline DAG visualization, dashboard mockup review.
+          Multimodal input required.
+      gemini-3.1-flash-lite-preview:
+        role: rapid_query_iteration
+        tier: 2
+        routing_notes: >-
+          Primary for: quick SQL generation, single-table schema fixes,
+          fast config generation, query optimization suggestions.
+      gemini-3-flash-preview:
+        role: fallback_fast
+        tier: 3
+        routing_notes: >-
+          Fallback for: simple schema lookups, basic SQL validation,
+          config syntax checks.
+      nano-banana-pro:
+        role: crash_triage
+        tier: 4
+        routing_notes: "JSON-only. Pipeline failure severity. Binary rollback."
+      nano-banana-2:
+        role: crash_classification
+        tier: 4
+        routing_notes: "JSON-only. Crash type classification."
+      nano-banana:
+        role: crash_binary
+        tier: 4
+        routing_notes: "JSON-only. Binary yes/no."
+  openai:
+    default_model: gpt-5.3-codex
+    fallback_chain:
+      - gpt-5.3-codex
+      - gpt-5.4
+      - gpt-5.4-pro
+      - gpt-5.3
+      - o4-mini
+    models:
+      gpt-5.3-codex:
+        api_model_id: gpt-5.3-codex
+        role: data_code_primary
+        tier: 1
+        routing_notes: >-
+          Primary for: SQL (complex joins, CTEs, window functions),
+          Python data pipelines (Airflow, Dagster, Prefect),
+          Spark/PySpark, dbt models, schema migrations,
+          streaming code (Kafka, Flink, Pub/Sub).
+          Code-first. Production-grade. Tests alongside.
+      gpt-5.4:
+        api_model_id: gpt-5.4
+        role: data_ideation
+        tier: 1
+        routing_notes: >-
+          Primary for: data modeling brainstorming, schema evolution
+          strategies, novel partitioning approaches, cost optimization ideas.
+          Tag creative suggestions [DRV] or [SPEC].
+      gpt-5.4-pro:
+        api_model_id: gpt-5.4-pro
+        role: deep_data_planning
+        tier: 1
+        routing_notes: >-
+          Primary for: multi-system data platform design, migration
+          planning, data mesh architecture, complex governance frameworks.
+          Consensus with gemini-3.1-pro-preview on T4-T5.
+      gpt-5.3:
+        api_model_id: gpt-5.3
+        role: code_fallback
+        tier: 2
+        routing_notes: "Same constraints as gpt-5.3-codex. Fallback path."
+      o4-mini:
+        api_model_id: o4-mini
+        role: rapid_verifier
+        tier: 3
+        routing_notes: >-
+          VERIFIED / UNVERIFIED / ESCALATE. Max 512 tokens.
+          Hard ESCALATE on: schema ambiguity, potential data loss,
+          missing foreign keys, partition key mismatches.
+  anthropic:
+    enabled: false
+    note: "Claude offline by default. Runtime detection only."
+
+energy_routing:
+  high:
+    google_primary: gemini-3.1-pro-preview
+    openai_primary: gpt-5.4-pro
+    tasks:
+      - full_data_platform_design
+      - warehouse_modeling
+      - data_mesh_architecture
+      - migration_planning
+      - governance_framework
+      - cross_system_integration
+  medium:
+    google_primary: gemini-3.1-flash-lite-preview
+    openai_primary: gpt-5.3-codex
+    tasks:
+      - etl_pipeline
+      - dbt_model
+      - spark_job
+      - schema_migration
+      - stream_processor
+      - quality_check
+      - feature_store_config
+  low:
+    google_primary: gemini-3-flash-preview
+    openai_primary: o4-mini
+    tasks:
+      - sql_lookup
+      - schema_validation
+      - config_check
+  crash:
+    google_primary: nano-banana-pro
+    openai_primary: null
+    tasks:
+      - pipeline_failure_severity
+      - binary_rollback_decision
+
+handoff:
+  accepts_from:
+    - engineer
+    - ai_ml_engineer
+    - software_engineer
+    - devops_engineer
+  delegates_to:
+    - ai_ml_engineer: ["feature_engineering", "training_data", "model_serving_data"]
+    - devops_engineer: ["pipeline_infra", "cluster_management", "container_orchestration"]
+    - software_engineer: ["api_data_layer", "orm_design", "sdk_data_access"]
+    - secops_engineer: ["data_encryption", "pii_detection", "access_control"]
+    - engineer: ["architecture_decisions", "cross_discipline_coordination"]
+  protocol: HANDOFF
+  format: structured_yaml

@@ -1,0 +1,120 @@
+{
+  "agent": "software-engineer",
+  "skills": {
+    "always_on": [
+      {
+        "id": "SK-REALITY",
+        "name": "reality_check",
+        "description": "Tag all claims [OBS/DRV/GEN/SPEC]. Gate output. Verify before asserting.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-ENERGY",
+        "name": "energy_routing",
+        "description": "Route tasks to appropriate model tier based on current energy level.",
+        "trigger": "every_input",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-EXTERN",
+        "name": "externalization",
+        "description": "Externalize all state to code, tests, structured output. Never hold state in prose.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      }
+    ],
+    "domain": [
+      {
+        "id": "SK-CODEARCH",
+        "name": "code_architecture",
+        "description": "Design module structure, API interfaces, data models, and component boundaries.",
+        "input": "requirements or design spec",
+        "output": "module map, interface definitions, data models",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Module table: Module | Responsibility | Dependencies | Public API. Mermaid class diagram."
+      },
+      {
+        "id": "SK-IMPL",
+        "name": "implementation",
+        "description": "Write production-grade code with error handling, logging, type hints, and documentation.",
+        "input": "spec, interface definition, or task description",
+        "output": "code blocks with file paths, inline documentation",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "One file per code block. File path as first comment. Tests in separate block. No inline prose."
+      },
+      {
+        "id": "SK-CODEREVIEW",
+        "name": "code_review",
+        "description": "Review code for bugs, security issues, performance, maintainability, and style.",
+        "input": "code blocks or PR diff",
+        "output": "findings table sorted by severity, fix suggestions with code",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Findings table: Severity | Category | File:Line | Description | Fix. Code diffs for fixes."
+      },
+      {
+        "id": "SK-TEST",
+        "name": "testing_strategy",
+        "description": "Design and generate test suites: unit, integration, e2e, performance, security.",
+        "input": "code to test, coverage requirements",
+        "output": "test cases with code, coverage matrix",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Coverage matrix: Function | Unit | Integration | Edge Cases | Security. Test code follows."
+      },
+      {
+        "id": "SK-DEBUG",
+        "name": "debugging",
+        "description": "Diagnose bugs from error messages, logs, stack traces, or behavioral descriptions.",
+        "input": "error context, stack trace, reproduction steps",
+        "output": "root cause analysis, fix code, verification test",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Table: Hypothesis | Evidence | Confidence | Claim Tag. Fix code + verification test."
+      },
+      {
+        "id": "SK-REFACTOR",
+        "name": "refactoring",
+        "description": "Plan and execute code refactoring with explicit steps and rollback paths.",
+        "input": "code to refactor, goals",
+        "output": "refactor plan with ordered steps, risk assessment, before/after diffs",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Ordered step table: Step | Files | Change | Risk | Reversible. Diff per step."
+      },
+      {
+        "id": "SK-CICD",
+        "name": "ci_cd_pipeline",
+        "description": "Configure CI/CD pipelines, GitHub Actions, build configs, deployment manifests.",
+        "input": "pipeline requirements, target platform",
+        "output": "pipeline config files, stage descriptions",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Stage table: Stage | Trigger | Steps | Timeout | Failure Action. Config file follows."
+      },
+      {
+        "id": "SK-DEPMGMT",
+        "name": "dependency_management",
+        "description": "Audit, update, and manage project dependencies. Security and compatibility checks.",
+        "input": "requirements.txt, pyproject.toml, or package.json",
+        "output": "dependency audit table, update recommendations",
+        "energy_tier": ["medium", "low"],
+        "audhd_adaptation": "Audit table: Package | Current | Latest | Security | Action. No prose."
+      },
+      {
+        "id": "SK-PERFOPT",
+        "name": "performance_optimization",
+        "description": "Profile, identify bottlenecks, and optimize code performance.",
+        "input": "code, profiling data, performance targets",
+        "output": "bottleneck table, optimization plan, before/after benchmarks",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Bottleneck table: Function | Time% | Calls | Optimization | Expected Gain. Code diffs."
+      },
+      {
+        "id": "SK-DOCGEN",
+        "name": "documentation_generation",
+        "description": "Generate API docs, README sections, docstrings, and inline documentation.",
+        "input": "code blocks, documentation style guide",
+        "output": "documentation content with proper formatting",
+        "energy_tier": ["medium", "low"],
+        "audhd_adaptation": "Docstring format per language convention. API docs as table: Endpoint | Method | Params | Returns."
+      }
+    ]
+  }
+}

@@ -2,32 +2,74 @@
 
 ## Goal
 
-Design performance tests that find bottlenecks before users do. Benchmarks without acceptance criteria are just numbers.
+Design performance tests to identify system bottlenecks proactively. Benchmarks lacking acceptance criteria are merely numerical data.
 
-## Rules
+## Energy Levels
 
-- Define acceptance criteria before running tests
-- Realistic load profiles based on production traffic patterns
-- Test types: baseline, load, stress, soak, spike
-- Measure: latency (p50, p95, p99), throughput, error rate, resource utilization
-- No em dashes
-- Tag claims: [OBS] for measured data, [DRV] for extrapolated estimates, [SPEC] for untested predictions
+### HIGH
+Conduct full benchmark suite using all test types. Execute comprehensive bottleneck analysis and develop a capacity model.
 
-## Energy Adaptation
+### MEDIUM
+Perform baseline and load tests. Focus on identifying the top 3 bottlenecks and verify pre-defined acceptance criteria.
 
-- **High**: Full benchmark suite, all test types, bottleneck analysis, capacity model
-- **Medium**: Baseline + load test, top 3 bottlenecks, acceptance criteria check
-- **Low**: Single baseline measurement, single bottleneck
-- **Crash**: Skip. No new benchmarks.
+### LOW
+Execute a single baseline measurement with a focus on identifying the most critical bottleneck.
+
+### CRASH
+Disengage from testing. Do not initiate new benchmark processes.
+
+## Pattern Compression
+
+- **Verdict First**: Present conclusions immediately.
+- **Confidence Stance**: Indicate the level of certainty regarding conclusions.
+- **Falsification Conditions**: Clearly outline conditions that would invalidate the conclusions.
+
+## Monotropism Guards
+
+Maintain unbroken focus on performance benchmarking. Use a "parking lot" to temporarily note and set aside tangential thoughts for later.
+
+## Working Memory Utilization
+
+Externalize all working memory using structured tables or checklists to track:
+- Test types, profiles, and scenarios
+- Acceptance criteria metrics
+- Resource allocation and results
+
+## Anti-patterns to Avoid
+
+1. Commencing tests without pre-determined acceptance criteria.
+2. Using unrealistic load profiles that do not align with actual traffic patterns.
+3. Overcomplicating scenarios with untested predictions [SPEC] that have no data backing.
+
+## Claim Tags
+
+Apply appropriate tags in reports:
+- [OBS] Observations: for all measured data.
+- [DRV] Derivations: for data-dependent extrapolations.
+- [GEN] Generalizations: for broad, experience-based insights.
+- [SPEC] Speculations: for untested, forward-looking predictions.
+
+## Where Was I? Protocol
+
+### Context Recovery Header
+
+Maintain a tracking header that clearly states:
+- Current benchmark phase
+- Test type in progress
+- System component under analysis
 
 ## Workflow
 
-1. **Scope**: System, SLAs, traffic patterns, resource constraints, known bottlenecks
-2. **Design**: Load profiles, test scenarios, acceptance criteria, tooling
-3. **Execute**: Baseline first, then incremental load, monitor resources
-4. **Report**: Results vs criteria, bottlenecks found, capacity limits, recommendations
+1. **Scope**
+   - Define: System parameters, SLAs, traffic patterns, resource constraints, known bottlenecks
+2. **Design**
+   - Develop: Load profiles, test scenarios, acceptance criteria, tooling requirements
+3. **Execute**
+   - Implement: Start with baseline measurement, proceed with incremental load testing, monitor resource consumption
+4. **Report**
+   - Document: Results against criteria, detected bottlenecks, capacity limitations, and recommended actions
 
-## Output JSON
+## JSON Output Format
 
 ```json
 {
@@ -41,10 +83,19 @@ Design performance tests that find bottlenecks before users do. Benchmarks witho
         "ramp": "string"
       }
     ],
-    "criteria": {"p95_latency": "string", "error_rate": "string", "throughput": "string"},
+    "criteria": {
+      "p95_latency": "string",
+      "error_rate": "string",
+      "throughput": "string"
+    },
     "tools": ["string"],
-    "bottlenecks": [{"component": "string", "limit": "string", "fix": "string"}],
+    "bottlenecks": [
+      {
+        "component": "string",
+        "limit": "string",
+        "fix": "string"
+      }
+    ],
     "capacity_estimate": "string"
   }
 }
-```

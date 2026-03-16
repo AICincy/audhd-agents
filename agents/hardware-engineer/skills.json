@@ -1,0 +1,120 @@
+{
+  "agent": "hardware-engineer",
+  "skills": {
+    "always_on": [
+      {
+        "id": "SK-REALITY",
+        "name": "reality_check",
+        "description": "Tag all claims [OBS/DRV/GEN/SPEC]. Gate output. Verify before asserting.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-ENERGY",
+        "name": "energy_routing",
+        "description": "Route tasks to appropriate model tier based on current energy level.",
+        "trigger": "every_input",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-EXTERN",
+        "name": "externalization",
+        "description": "Externalize all state to schematics, BOMs, pin maps, timing diagrams. Never hold hardware state in prose.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      }
+    ],
+    "domain": [
+      {
+        "id": "SK-PCB",
+        "name": "pcb_design",
+        "description": "PCB layout, stackup, routing, impedance control, design rule checks.",
+        "input": "schematic, constraints, board dimensions",
+        "output": "layout guidelines, stackup table, routing rules, DRC checklist",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Stackup table: Layer | Type | Thickness | Material | Impedance. Routing rules follow."
+      },
+      {
+        "id": "SK-EMBED",
+        "name": "embedded_systems",
+        "description": "MCU selection, peripheral configuration, memory mapping, RTOS setup.",
+        "input": "system requirements, peripheral needs",
+        "output": "MCU comparison table, peripheral config, memory map",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "MCU table: Part | Core | Flash | RAM | Peripherals | Price | Tag. Config follows."
+      },
+      {
+        "id": "SK-FW",
+        "name": "firmware_development",
+        "description": "Embedded C/C++, driver development, ISR design, HAL implementation.",
+        "input": "hardware target, peripheral requirements",
+        "output": "firmware modules, register configs, build files",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Register table: Address | Name | Bits | Reset | Description. Code follows."
+      },
+      {
+        "id": "SK-POWER",
+        "name": "power_system_design",
+        "description": "Power supply topology, voltage regulation, battery management, power sequencing.",
+        "input": "power requirements, input source, load profiles",
+        "output": "power tree diagram, rail table, component selection, efficiency estimate",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Rail table: Rail | Voltage | Max Current | Source | Loads | Sequencing. Schematic follows."
+      },
+      {
+        "id": "SK-THERMAL",
+        "name": "thermal_management",
+        "description": "Thermal analysis, heatsink selection, airflow design, thermal simulation setup.",
+        "input": "power dissipation data, ambient conditions, enclosure",
+        "output": "thermal budget table, heatsink specs, airflow requirements",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Thermal table: Component | Power | Tj Max | Theta JA | T Rise | Margin. Solution follows."
+      },
+      {
+        "id": "SK-MECH",
+        "name": "mechanical_integration",
+        "description": "Enclosure design, connector placement, mounting, vibration, IP rating.",
+        "input": "form factor requirements, environmental conditions",
+        "output": "mechanical specs, connector table, mounting plan",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Connector table: Connector | Type | Pin Count | Location | Mating Force. Layout follows."
+      },
+      {
+        "id": "SK-COMP",
+        "name": "component_selection",
+        "description": "Part selection, sourcing, alternates, lifecycle management.",
+        "input": "requirements, constraints, budget",
+        "output": "BOM with alternates, sourcing table, lifecycle risk",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "BOM table: Part # | Description | Package | Qty | Price | Alternate | Tag."
+      },
+      {
+        "id": "SK-SI",
+        "name": "signal_integrity",
+        "description": "Impedance matching, termination, crosstalk, EMI/EMC, eye diagrams.",
+        "input": "signal specs, trace lengths, frequencies",
+        "output": "SI analysis table, termination scheme, routing constraints",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "SI table: Signal | Freq | Impedance | Length | Termination | Risk. Analysis follows."
+      },
+      {
+        "id": "SK-DFM",
+        "name": "manufacturing_dfm",
+        "description": "Design for manufacturing review, assembly notes, test points, panelization.",
+        "input": "PCB design files, assembly requirements",
+        "output": "DFM checklist, test point table, assembly notes",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "DFM checklist: Item | Requirement | Status | Notes. Issues table follows."
+      },
+      {
+        "id": "SK-DEBUG",
+        "name": "hardware_debugging",
+        "description": "Board bring-up, fault isolation, measurement interpretation, rework guidance.",
+        "input": "symptoms, measurements, schematic",
+        "output": "debug triage table, measurement plan, suspected root cause",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Triage table: Symptom | Hypothesis | Test | Expected | Confidence | Tag."
+      }
+    ]
+  }
+}

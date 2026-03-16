@@ -4,6 +4,8 @@ import os
 import time
 from typing import Optional
 
+from pydantic import SecretStr
+
 try:
     from openai import AsyncOpenAI
 except ImportError:
@@ -15,10 +17,11 @@ from .base import BaseAdapter
 class OpenAIAdapter(BaseAdapter):
     """Adapter for OpenAI models (GPT-5.x, GPT-5 Codex, GPT Max, o4-mini)."""
 
-    def __init__(self, api_key: Optional[str] = None, config: dict = None):
-        api_key = api_key or os.getenv("OPENAI_API_KEY")
-        super().__init__(api_key=api_key, config=config or {})
-        if AsyncOpenAI:
+    def __init__(self, api_key: Optional[SecretStr] = None, config: dict = None):
+        raw = os.getenv("OPENAI_API_KEY")
+        key = api_key or (SecretStr(raw) if raw else None)
+        super().__init__(api_key=key, config=config or {})
+        if AsyncOpenAI and self.api_key:
             self.client = AsyncOpenAI(api_key=self.api_key)
         else:
             self.client = None

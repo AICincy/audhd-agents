@@ -37,7 +37,13 @@ Maps all 51 skills to 10 atomic capabilities. Each skill has one primary capabil
 | Capability definitions | Done | 10 capabilities defined in `capabilities/` |
 | Graph and routing rules | Done | `graphs/capability_graph.yaml`, `graphs/routing_rules.yaml` |
 | Skill mapping (51 skills) | Done | All skills have `skill.yaml`, `prompt.md`, `schema.json`, `examples.json` |
-| API validation | Not started | Validate skills with real API calls |
-| Runtime planner | Not started | Build planner/executor in `runtime/` |
-| Capability-aware routing | Not started | Migrate `adapters/router.py` to use capability graph |
-| Skill-level capability tags | Not started | Add `capabilities:` field to each `skill.yaml` |
+| Skill-level capability tags | Done | All 51 `skill.yaml` files have `capabilities:` field |
+| Runtime planner | Done | `runtime/planner.py` with trigger matching and chain resolution |
+| Capability-aware routing | Done | `adapters/router.py` supports `execute_chain` for capability chains |
+| API validation (live calls) | Partial | Config validation passes; full live skill validation in progress |
+| Cognitive pipeline | Done | `runtime/cognitive.py`, `runtime/hooks.py`, `runtime/validation.py` |
+| FastAPI runtime | Done | `runtime/app.py` with `/healthz`, `/readyz`, `/execute` |
+| Provider adapters | Done | Google and OpenAI active (Anthropic removed) |
+| CI pipeline | Done | `.github/workflows/python-package.yml` |
+| CD pipeline | Done | `.github/workflows/deploy-cloud-run.yml` |
+

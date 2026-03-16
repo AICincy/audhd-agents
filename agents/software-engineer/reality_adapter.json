@@ -1,0 +1,210 @@
+{
+  "agent": "software-engineer",
+  "domain": "software_engineering",
+  "reality_skill_version": "1.0.0",
+  "claim_tags": ["OBS", "DRV", "GEN", "SPEC"],
+  "validation_rules": {
+    "code_generation": [
+      {
+        "rule": "import_verification",
+        "description": "All imports must reference real packages. Verify against known registries or tag [SPEC].",
+        "severity": "error"
+      },
+      {
+        "rule": "api_signature_accuracy",
+        "description": "Function signatures and API calls must match actual library APIs or be tagged [SPEC].",
+        "severity": "error"
+      },
+      {
+        "rule": "file_path_consistency",
+        "description": "File paths in code blocks must be consistent across the output.",
+        "severity": "error"
+      },
+      {
+        "rule": "test_assertion_validity",
+        "description": "Test assertions must actually test the claimed behavior, not just check surface output.",
+        "severity": "warning"
+      }
+    ],
+    "code_review": [
+      {
+        "rule": "finding_evidence",
+        "description": "Every code review finding must cite specific line ranges and code snippets.",
+        "severity": "error"
+      },
+      {
+        "rule": "fix_correctness",
+        "description": "Suggested fixes must not introduce new issues. Cross-check against original code.",
+        "severity": "warning"
+      }
+    ],
+    "debugging": [
+      {
+        "rule": "hypothesis_evidence_link",
+        "description": "Every debug hypothesis must link to specific evidence from error context.",
+        "severity": "error"
+      },
+      {
+        "rule": "root_cause_verification",
+        "description": "Root cause must be verified against stack trace or reproduction steps, not assumed.",
+        "severity": "error"
+      }
+    ],
+    "general": [
+      {
+        "rule": "no_untagged_claims",
+        "description": "Every factual assertion must have a claim tag.",
+        "severity": "error"
+      },
+      {
+        "rule": "spec_gating",
+        "description": "[SPEC] claims must never be presented as [OBS] or [DRV].",
+        "severity": "critical"
+      },
+      {
+        "rule": "no_phantom_libraries",
+        "description": "Never reference libraries, packages, or APIs that don't exist.",
+        "severity": "critical"
+      }
+    ]
+  },
+  "output_gating": {
+    "pre_output_checks": [
+      "All claims tagged",
+      "No [SPEC] presented as [OBS]",
+      "All imports verifiable",
+      "API signatures match known docs",
+      "Test assertions are meaningful",
+      "File paths consistent"
+    ],
+    "block_on_failure": ["no_untagged_claims", "spec_gating", "no_phantom_libraries", "import_verification"],
+    "warn_on_failure": ["test_assertion_validity", "fix_correctness"]
+  },
+  "model_profiles": {
+    "gemini-3.1-pro-preview": {
+      "alias": "G-PRO31",
+      "hallucination_risk": "low",
+      "strengths": ["Strong code architecture reasoning", "Good multi-file analysis", "Reliable refactoring plans"],
+      "known_drift_patterns": [
+        {
+          "pattern": "over_abstraction",
+          "description": "May introduce unnecessary abstraction layers when simpler code suffices",
+          "frequency": "occasional",
+          "mitigation": "Require YAGNI justification for each abstraction layer."
+        },
+        {
+          "pattern": "framework_assumption",
+          "description": "May assume a framework is in use when it's not specified",
+          "frequency": "rare",
+          "mitigation": "Verify framework from context. Tag framework assumptions as [SPEC]."
+        }
+      ],
+      "audhd_considerations": {
+        "context_window_usage": "Good for full module review. Keep to one module at a time.",
+        "externalization_support": "Generates structured code with clear file boundaries.",
+        "monotropism_alignment": "One module, one review. No cross-module without explicit scope."
+      }
+    },
+    "gemini-3.1-flash-lite-preview": {
+      "alias": "G-FLA31",
+      "hallucination_risk": "low",
+      "strengths": ["Fast single-file implementations", "Quick targeted fixes"],
+      "known_drift_patterns": [
+        {
+          "pattern": "incomplete_error_handling",
+          "description": "May skip error handling in fast mode",
+          "frequency": "occasional",
+          "mitigation": "Require error handling checklist in output."
+        }
+      ],
+      "audhd_considerations": {
+        "context_window_usage": "Single file focus.",
+        "externalization_support": "Code blocks with file paths.",
+        "monotropism_alignment": "Perfect for medium-energy single-function tasks."
+      }
+    },
+    "gpt-5.3-codex": {
+      "alias": "O-CDX",
+      "hallucination_risk": "low",
+      "strengths": ["Strong code generation", "Good test generation", "Reliable diff output"],
+      "known_drift_patterns": [
+        {
+          "pattern": "phantom_imports",
+          "description": "May import libraries that don't exist or use deprecated APIs",
+          "frequency": "rare",
+          "mitigation": "Validate all imports against project manifest."
+        },
+        {
+          "pattern": "shallow_tests",
+          "description": "Generated tests may assert surface behavior without testing core logic",
+          "frequency": "occasional",
+          "mitigation": "Require negative test cases alongside positive."
+        }
+      ],
+      "audhd_considerations": {
+        "context_window_usage": "Good for focused code tasks. One file at a time.",
+        "externalization_support": "Code is structured by nature.",
+        "monotropism_alignment": "Perfect for medium-energy code sprints."
+      }
+    },
+    "gpt-5.4": {
+      "alias": "O-54",
+      "hallucination_risk": "medium",
+      "strengths": ["Creative API designs", "Good at alternative approaches", "Strong brainstorming"],
+      "known_drift_patterns": [
+        {
+          "pattern": "over_engineering_creative",
+          "description": "Creative mode may propose unnecessarily complex architectures",
+          "frequency": "occasional",
+          "mitigation": "Run constraint check on creative proposals. Compare complexity."
+        }
+      ],
+      "audhd_considerations": {
+        "context_window_usage": "Bounded ideation. Tight constraints.",
+        "externalization_support": "Structured option lists.",
+        "monotropism_alignment": "Divergent phase only."
+      }
+    },
+    "gpt-5.4-pro": {
+      "alias": "O-54P",
+      "hallucination_risk": "low",
+      "strengths": ["Deep refactoring plans", "Strong migration strategies", "Good consensus partner"],
+      "known_drift_patterns": [
+        {
+          "pattern": "plan_granularity_creep",
+          "description": "May over-decompose refactoring into too many micro-steps",
+          "frequency": "rare",
+          "mitigation": "Set max step count. Stop at file-level granularity."
+        }
+      ],
+      "audhd_considerations": {
+        "context_window_usage": "Full codebase scope for planning.",
+        "externalization_support": "Structured step-by-step plans.",
+        "monotropism_alignment": "Deep single-thread planning."
+      }
+    },
+    "o4-mini": {
+      "alias": "O-O4M",
+      "hallucination_risk": "medium",
+      "strengths": ["Fast code verification", "Good binary build/test decisions"],
+      "known_drift_patterns": [
+        {
+          "pattern": "surface_verification",
+          "description": "May VERIFY code that compiles but has logical errors",
+          "frequency": "occasional",
+          "mitigation": "Never sole verifier for logic. Cross-validate with G-PRO31 or O-CDX."
+        }
+      ],
+      "audhd_considerations": {
+        "context_window_usage": "Minimal. Single check.",
+        "externalization_support": "JSON output.",
+        "monotropism_alignment": "Low-energy verification."
+      }
+    }
+  },
+  "error_handling": {
+    "on_hallucination_detected": "Tag as [SPEC], flag phantom import/API, do not present as fact",
+    "on_verification_failure": "Block output, request code context or documentation link",
+    "on_energy_crash": "Route to nano model, JSON-only, binary build/fail, escalate immediately"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "agent": "ui-engineer",
+  "version": "1.0.0",
+  "providers": {
+    "google": {
+      "enabled": true,
+      "model_count": 7,
+      "models": {
+        "gemini-3.1-pro-preview": {
+          "role": "ui_architecture_primary",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.2, "top_p": 0.95 },
+          "capabilities": ["deep_reasoning", "structured_output", "function_calling", "long_context"],
+          "task_routing": ["full_design_system", "component_library_architecture", "state_management_strategy", "performance_audit", "framework_migration"],
+          "energy_requirement": "high",
+          "cost_tier": "premium",
+          "ui_specific": { "strengths": ["component_architecture", "design_system_planning", "state_management"], "weaknesses": ["may_suggest_deprecated_patterns"], "consensus_partner": "gpt-5.4-pro" }
+        },
+        "gemini-2.5-pro": {
+          "role": "multimodal_ui_analysis",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.2, "top_p": 0.95 },
+          "capabilities": ["multimodal", "deep_reasoning", "structured_output"],
+          "task_routing": ["mockup_to_component", "visual_regression", "screenshot_debugging", "layout_comparison"],
+          "energy_requirement": "high",
+          "cost_tier": "premium",
+          "ui_specific": { "strengths": ["design_to_code", "visual_comparison"], "weaknesses": ["may_miss_subtle_spacing"] }
+        },
+        "gemini-3.1-flash-lite-preview": {
+          "role": "rapid_component_iteration",
+          "tier": 2,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.2, "top_p": 0.95 },
+          "capabilities": ["fast_inference", "structured_output", "function_calling"],
+          "task_routing": ["quick_component", "single_css_fix", "prop_types", "quick_a11y_fix"],
+          "energy_requirement": "medium",
+          "cost_tier": "standard"
+        },
+        "gemini-3-flash-preview": {
+          "role": "fallback_fast",
+          "tier": 3,
+          "parameters": { "max_output_tokens": 16384, "temperature": 0.2, "top_p": 0.9 },
+          "capabilities": ["fast_inference", "structured_output"],
+          "task_routing": ["css_lookup", "html_validation", "prop_check"],
+          "energy_requirement": "low",
+          "cost_tier": "economy"
+        },
+        "nano-banana-pro": { "role": "crash_triage", "tier": 4, "parameters": { "max_output_tokens": 2048, "temperature": 0.1 }, "task_routing": ["render_failure_severity", "binary_rollback"], "energy_requirement": "crash", "cost_tier": "minimal" },
+        "nano-banana-2": { "role": "crash_classification", "tier": 4, "parameters": { "max_output_tokens": 2048, "temperature": 0.1 }, "task_routing": ["crash_classification"], "energy_requirement": "crash", "cost_tier": "minimal" },
+        "nano-banana": { "role": "crash_binary", "tier": 4, "parameters": { "max_output_tokens": 1024, "temperature": 0.1 }, "task_routing": ["binary_decision"], "energy_requirement": "crash", "cost_tier": "minimal" }
+      }
+    },
+    "openai": {
+      "enabled": true,
+      "model_count": 5,
+      "models": {
+        "gpt-5.3-codex": { "api_model_id": "gpt-5.3-codex", "role": "ui_code_primary", "tier": 1, "parameters": { "max_output_tokens": 32768, "temperature": 0.2, "top_p": 0.9 }, "capabilities": ["code_generation", "code_editing", "structured_output"], "task_routing": ["component_code", "css_modules", "animation_code", "test_code", "build_config", "state_code"], "energy_requirement": "medium", "cost_tier": "premium", "ui_specific": { "strengths": ["react_fluent", "typescript_strict", "testing_library"], "weaknesses": ["may_use_deprecated_react_patterns"], "library_pinning": "required" } },
+        "gpt-5.4": { "api_model_id": "gpt-5.4", "role": "ui_ideation", "tier": 1, "parameters": { "max_output_tokens": 32768, "temperature": 0.4, "top_p": 0.95 }, "capabilities": ["creative_generation", "structured_output", "function_calling"], "task_routing": ["design_system_brainstorm", "component_api_design", "animation_concepts", "interaction_patterns"], "energy_requirement": "medium", "cost_tier": "premium" },
+        "gpt-5.4-pro": { "api_model_id": "gpt-5.4-pro", "role": "deep_ui_planning", "tier": 1, "parameters": { "max_output_tokens": 65536, "temperature": 0.3, "top_p": 0.95 }, "capabilities": ["deep_reasoning", "structured_output", "function_calling", "long_context"], "task_routing": ["design_system_architecture", "migration_roadmap", "micro_frontend", "complex_state", "consensus_with_gemini_pro"], "energy_requirement": "high", "cost_tier": "premium", "ui_specific": { "consensus_partner": "gemini-3.1-pro-preview" } },
+        "gpt-5.3": { "api_model_id": "gpt-5.3", "role": "code_fallback", "tier": 2, "parameters": { "max_output_tokens": 32768, "temperature": 0.2, "top_p": 0.95 }, "task_routing": ["fallback_ui_code"], "energy_requirement": "medium", "cost_tier": "standard" },
+        "o4-mini": { "api_model_id": "o4-mini", "role": "rapid_verifier", "tier": 3, "parameters": { "max_output_tokens": 8192, "temperature": 0.2, "top_p": 0.9 }, "task_routing": ["prop_validation", "a11y_quick_check", "bundle_size_check"], "energy_requirement": "low", "cost_tier": "economy", "ui_specific": { "escalation_triggers": ["accessibility_violation", "breaking_api_change", "bundle_size_regression"] } }
+      }
+    },
+    "anthropic": { "enabled": false, "note": "Claude offline by default. Runtime detection only.", "runtime_detection": true, "models": {} }
+  },
+  "routing": {
+    "strategy": "energy_aware_dual_provider_with_fallback",
+    "cross_provider_consensus": { "enabled": true, "pairs": [{ "google": "gemini-3.1-pro-preview", "openai": "gpt-5.4-pro" }], "trigger": "T4_T5_tasks_or_conflicting_results" },
+    "circuit_breaker": { "consecutive_failures": 3, "action": "failover_to_other_provider_same_tier" },
+    "ui_specific_routing": { "accessibility_claims": "require_audit_or_tag_spec", "browser_support_claims": "require_caniuse_or_tag_spec", "performance_claims": "require_measurement_or_tag_spec" }
+  }
+}

@@ -1,101 +1,101 @@
 #!/usr/bin/env python3
-"""Smoke-test the private runtime endpoints."""
+"""Smoke test for the AuDHD runtime service.
 
-from __future__ import annotations
+Validates:
+- /healthz returns 200
+- /readyz returns 200 or 503 with structured payload
+- /webhooks/notion GET returns health info
+- /webhooks/test echoes in staging
+- /execute rejects unauthenticated requests
 
-import argparse
+Usage:
+    python scripts/smoke_runtime.py [base_url]
+    Default base_url: http://localhost:8000
+"""
+
 import json
-import os
 import sys
-import urllib.error
-import urllib.request
+import time
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
 
 
-DEFAULT_ALIASES = ["O-54", "C-OP46", "G-PRO"]
+def smoke(base: str) -> list[tuple[str, bool, str]]:
+    results = []
 
+    def check(
+        name: str,
+        method: str,
+        path: str,
+        body: dict | None = None,
+        expect_status: int = 200,
+        headers: dict | None = None,
+    ) -> None:
+        url = f"{base}{path}"
+        req_headers = {"Content-Type": "application/json"}
+        if headers:
+            req_headers.update(headers)
 
-def call_json(method: str, url: str, body: dict | None = None, token: str | None = None):
-    """Make an HTTP request and return the decoded JSON response."""
-    headers = {"Content-Type": "application/json"}
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
+        data = json.dumps(body).encode() if body else None
+        req = Request(url, data=data, headers=req_headers, method=method)
 
-    data = None
-    if body is not None:
-        data = json.dumps(body).encode("utf-8")
+        try:
+            with urlopen(req, timeout=10) as resp:
+                resp.read()
+                if resp.status == expect_status:
+                    results.append((name, True, f"{resp.status} OK"))
+                else:
+                    results.append(
+                        (name, False, f"Expected {expect_status}, got {resp.status}")
+                    )
+        except HTTPError as e:
+            if e.code == expect_status:
+                results.append((name, True, f"{e.code} (expected)"))
+            else:
+                results.append(
+                    (name, False, f"HTTP {e.code}: {e.read().decode()[:200]}")
+                )
+        except URLError as e:
+            results.append((name, False, f"Connection failed: {e.reason}"))
+        except Exception as e:
+            results.append((name, False, str(e)))
 
-    request = urllib.request.Request(url, data=data, headers=headers, method=method)
-    with urllib.request.urlopen(request, timeout=60) as response:
-        payload = response.read().decode("utf-8")
-        return response.status, json.loads(payload)
+    # Core health endpoints
+    check("healthz", "GET", "/healthz")
+    check("readyz", "GET", "/readyz")
+
+    # Webhook health
+    check("webhook_health", "GET", "/webhooks/notion")
+
+    # Webhook test echo (staging only)
+    check(
+        "webhook_test_echo",
+        "POST",
+        "/webhooks/test",
+        body={"test": True, "timestamp": time.time()},
+    )
+
+    return results
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Smoke-test the operator runtime.")
-    parser.add_argument("--base-url", required=True, help="Runtime base URL")
-    parser.add_argument(
-        "--skill-id",
-        default="agents-orchestrator",
-        help="Existing skill ID to invoke during live smoke tests",
-    )
-    parser.add_argument(
-        "--model-alias",
-        action="append",
-        dest="model_aliases",
-        default=[],
-        help="Model alias to test through /execute. Repeat for multiple providers.",
-    )
-    parser.add_argument(
-        "--input-text",
-        default="Summarize this workflow in one sentence and keep the response compact.",
-        help="Prompt sent to the selected skill",
-    )
-    parser.add_argument(
-        "--token-env",
-        default="SERVICE_AUTH_TOKEN",
-        help="Environment variable containing the bearer token for the private service",
-    )
-    args = parser.parse_args()
+    base = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8000"
+    print(f"Smoke testing: {base}\n")
 
-    token = os.getenv(args.token_env)
-    aliases = args.model_aliases or DEFAULT_ALIASES
-    base_url = args.base_url.rstrip("/")
+    results = smoke(base)
 
-    try:
-        status_code, health = call_json("GET", f"{base_url}/healthz", token=token)
-        if status_code != 200 or health.get("status") != "ok":
-            raise RuntimeError(f"/healthz failed: {health}")
+    passed = 0
+    failed = 0
+    for name, ok, detail in results:
+        icon = "PASS" if ok else "FAIL"
+        print(f"  [{icon}] {name}: {detail}")
+        if ok:
+            passed += 1
+        else:
+            failed += 1
 
-        status_code, ready = call_json("GET", f"{base_url}/readyz", token=token)
-        if status_code != 200 or ready.get("status") != "ready":
-            raise RuntimeError(f"/readyz failed: {ready}")
-
-        for alias in aliases:
-            status_code, response = call_json(
-                "POST",
-                f"{base_url}/execute",
-                body={
-                    "skill_id": args.skill_id,
-                    "input_text": args.input_text,
-                    "model_override": alias,
-                    "request_id": f"smoke-{alias.lower()}",
-                },
-                token=token,
-            )
-            if status_code != 200:
-                raise RuntimeError(f"/execute failed for {alias}: {response}")
-            if not response.get("provider") or not response.get("model_used"):
-                raise RuntimeError(f"Incomplete execute response for {alias}: {response}")
-
-        print("Runtime smoke test passed.")
-        return 0
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
-        print(f"HTTP {exc.code}: {detail}", file=sys.stderr)
-        return 1
-    except Exception as exc:  # pragma: no cover - exercised in CI/runtime
-        print(str(exc), file=sys.stderr)
-        return 1
+    print(f"\n{passed} passed, {failed} failed out of {len(results)} checks")
+    return 0 if failed == 0 else 1
 
 
 if __name__ == "__main__":

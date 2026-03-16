@@ -1,0 +1,250 @@
+{
+  "$schema": "agents/secops-engineer/tools.json",
+  "agent": "secops-engineer",
+  "version": "1.0.0",
+  "tool_registry": {
+    "security_analysis": [
+      {
+        "id": "stride_analyze",
+        "name": "STRIDE Threat Analysis",
+        "description": "Perform STRIDE threat modeling on a target system or component",
+        "skill": "engineering-security-engineer",
+        "hook": "SK-DECOMP",
+        "parameters": {
+          "target": { "type": "string", "required": true, "description": "System or component to analyze" },
+          "scope": { "type": "object", "required": false, "description": "Scope boundaries and exclusions" },
+          "depth": { "type": "string", "enum": ["full", "targeted", "quick"], "default": "full" },
+          "include_mitigations": { "type": "boolean", "default": true }
+        },
+        "returns": {
+          "threats": { "type": "array", "items": { "$ref": "#/definitions/stride_threat" } },
+          "attack_surface": { "type": "array" },
+          "risk_matrix": { "type": "object" }
+        },
+        "energy_cost": { "full": "high", "targeted": "medium", "quick": "low" },
+        "reality_check": "SK-GATE on all threat likelihood/impact assessments"
+      },
+      {
+        "id": "vuln_assess",
+        "name": "Vulnerability Assessment",
+        "description": "Assess vulnerabilities with CVSS scoring and prioritization",
+        "skill": "engineering-security-engineer",
+        "hook": "SK-VERIFY",
+        "parameters": {
+          "target": { "type": "string", "required": true },
+          "scan_results": { "type": "string", "required": false, "description": "Raw scan output to parse" },
+          "prioritize_by": { "type": "string", "enum": ["cvss", "epss", "kev", "business_impact"], "default": "cvss" }
+        },
+        "returns": {
+          "findings": { "type": "array", "items": { "$ref": "#/definitions/finding" } },
+          "summary": { "type": "object" }
+        },
+        "reality_check": "SK-VERIFY all CVE numbers against NVD format. SK-GATE any unverifiable CVSS scores."
+      },
+      {
+        "id": "code_review",
+        "name": "Secure Code Review",
+        "description": "Review code for security vulnerabilities with CWE mapping",
+        "skill": "engineering-security-engineer",
+        "hook": "SK-CODEREVIEW",
+        "parameters": {
+          "code": { "type": "string", "required": true },
+          "language": { "type": "string", "required": true },
+          "framework": { "type": "string", "required": false },
+          "focus": { "type": "array", "items": { "type": "string" }, "description": "Specific CWE categories or OWASP categories to focus on" }
+        },
+        "returns": {
+          "findings": { "type": "array", "items": { "$ref": "#/definitions/finding" } },
+          "owasp_mapping": { "type": "object" },
+          "fix_recommendations": { "type": "array" }
+        },
+        "reality_check": "SK-GATE: Only report findings with specific line references. No generic warnings."
+      },
+      {
+        "id": "compliance_map",
+        "name": "Compliance Mapping",
+        "description": "Map existing controls to compliance framework requirements",
+        "skill": "engineering-security-engineer",
+        "hook": "SK-VERIFY",
+        "parameters": {
+          "framework": { "type": "string", "required": true, "enum": ["SOC2", "ISO27001", "NIST_CSF", "FedRAMP", "HIPAA", "PCI_DSS"] },
+          "controls": { "type": "array", "required": true },
+          "scope": { "type": "string", "required": false }
+        },
+        "returns": {
+          "compliance_matrix": { "type": "object" },
+          "gaps": { "type": "array" },
+          "remediation_priorities": { "type": "array" }
+        },
+        "reality_check": "SK-VERIFY all control IDs against framework standard. Tag [SPEC] any uncertain mappings."
+      }
+    ],
+    "incident_response": [
+      {
+        "id": "incident_triage",
+        "name": "Incident Triage",
+        "description": "Classify severity and generate initial response plan",
+        "skill": "engineering-incident-response-commander",
+        "hook": "SK-GATE",
+        "parameters": {
+          "indicators": { "type": "array", "required": true },
+          "affected_systems": { "type": "array", "required": false },
+          "initial_report": { "type": "string", "required": false }
+        },
+        "returns": {
+          "severity": { "type": "string", "enum": ["SEV1", "SEV2", "SEV3", "SEV4"] },
+          "classification": { "type": "string" },
+          "initial_actions": { "type": "array" },
+          "escalation": { "type": "object" },
+          "communication_plan": { "type": "object" }
+        },
+        "energy_cost": "medium",
+        "reality_check": "SK-GATE severity classification. Must cite specific indicators supporting severity level."
+      },
+      {
+        "id": "timeline_build",
+        "name": "Timeline Reconstruction",
+        "description": "Build evidence-chain timeline from indicators and logs",
+        "skill": "engineering-incident-response-commander",
+        "hook": "SK-VERIFY",
+        "parameters": {
+          "events": { "type": "array", "required": true },
+          "indicators": { "type": "array", "required": false },
+          "log_sources": { "type": "array", "required": false }
+        },
+        "returns": {
+          "timeline": { "type": "array" },
+          "gaps": { "type": "array" },
+          "confidence_per_event": { "type": "object" }
+        },
+        "reality_check": "SK-VERIFY each timeline event. Tag confidence. Flag gaps explicitly."
+      },
+      {
+        "id": "post_mortem_generate",
+        "name": "Post-Mortem Generator",
+        "description": "Generate blameless post-mortem with contributing factors and action items",
+        "skill": "engineering-incident-response-commander",
+        "hook": "SK-DECOMP",
+        "parameters": {
+          "incident_id": { "type": "string", "required": true },
+          "timeline": { "type": "array", "required": true },
+          "resolution": { "type": "string", "required": true },
+          "impact": { "type": "object", "required": true }
+        },
+        "returns": {
+          "post_mortem": { "type": "object" },
+          "action_items": { "type": "array" },
+          "systemic_improvements": { "type": "array" }
+        },
+        "reality_check": "SK-GATE: Contributing factors must be evidence-backed. No speculation in root cause."
+      },
+      {
+        "id": "status_broadcast",
+        "name": "Incident Status Broadcast",
+        "description": "Generate severity-appropriate status update for specified audience",
+        "skill": "engineering-incident-response-commander",
+        "parameters": {
+          "incident_id": { "type": "string", "required": true },
+          "severity": { "type": "string", "required": true },
+          "audience": { "type": "string", "required": true, "enum": ["engineering", "executive", "customer", "all_hands"] },
+          "format": { "type": "string", "enum": ["text", "voice"], "default": "text" }
+        },
+        "returns": {
+          "message": { "type": "string" },
+          "voice_output": { "type": "string", "description": "Only when format=voice, uses G-TTS25" }
+        }
+      }
+    ],
+    "reality_checking": [
+      {
+        "id": "reality_gate",
+        "name": "Reality Gate",
+        "description": "Validate claims before output. Always-on hook.",
+        "skill": "testing-reality-checker",
+        "hook": "SK-GATE",
+        "activation": "automatic",
+        "parameters": {
+          "claims": { "type": "array", "required": true },
+          "context": { "type": "string", "required": false }
+        },
+        "returns": {
+          "validated_claims": { "type": "array" },
+          "gated_claims": { "type": "array" },
+          "hallucination_flags": { "type": "array" }
+        }
+      },
+      {
+        "id": "drift_check",
+        "name": "Drift Detection",
+        "description": "Check if current output has drifted from original request scope",
+        "skill": "testing-reality-checker",
+        "activation": "automatic",
+        "parameters": {
+          "original_request": { "type": "string", "required": true },
+          "current_output": { "type": "string", "required": true }
+        },
+        "returns": {
+          "drift_detected": { "type": "boolean" },
+          "drift_description": { "type": "string" },
+          "correction_suggestion": { "type": "string" }
+        }
+      }
+    ],
+    "tool_evaluation": [
+      {
+        "id": "decision_matrix_build",
+        "name": "Decision Matrix Builder",
+        "description": "Build weighted decision matrix for security tool comparison",
+        "skill": "testing-tool-evaluator",
+        "hook": "SK-VERIFY",
+        "parameters": {
+          "options": { "type": "array", "required": true },
+          "criteria": { "type": "array", "required": true },
+          "constraints": { "type": "object", "required": false }
+        },
+        "returns": {
+          "matrix": { "type": "object" },
+          "recommendation": { "type": "string" },
+          "sensitivity": { "type": "object" }
+        },
+        "reality_check": "SK-VERIFY tool capabilities claimed. Tag [SPEC] any unverified vendor claims."
+      },
+      {
+        "id": "poc_plan",
+        "name": "POC Planner",
+        "description": "Plan bounded proof-of-concept with success criteria and go/no-go threshold",
+        "skill": "testing-tool-evaluator",
+        "parameters": {
+          "tool": { "type": "string", "required": true },
+          "evaluation_goals": { "type": "array", "required": true },
+          "constraints": { "type": "object", "required": false }
+        },
+        "returns": {
+          "poc_plan": { "type": "object" },
+          "success_criteria": { "type": "array" },
+          "go_nogo": { "type": "object" },
+          "revert_path": { "type": "string" }
+        }
+      },
+      {
+        "id": "build_vs_buy_analyze",
+        "name": "Build vs Buy Analysis",
+        "description": "TCO comparison with integration risk and vendor lock-in assessment",
+        "skill": "testing-tool-evaluator",
+        "hook": "SK-GATE",
+        "parameters": {
+          "build_option": { "type": "object", "required": true },
+          "buy_options": { "type": "array", "required": true },
+          "evaluation_period": { "type": "string", "default": "3_years" }
+        },
+        "returns": {
+          "tco_comparison": { "type": "object" },
+          "risk_comparison": { "type": "object" },
+          "recommendation": { "type": "string" },
+          "confidence": { "type": "string" }
+        },
+        "reality_check": "SK-GATE all cost estimates. Tag [SPEC] any projected costs. Require source for vendor pricing."
+      }
+    ]
+  }
+}

@@ -1,0 +1,147 @@
+agent:
+  name: hardware-engineer
+  display_name: "Hardware Engineer"
+  version: "1.0.0"
+  description: >-
+    Hardware engineering agent for the AuDHD Cognitive Swarm.
+    PCB design, embedded systems, firmware, power systems,
+    thermal management, component selection, signal integrity,
+    manufacturing/DFM, hardware debugging.
+  domain: hardware_engineering
+  cognitive_profile:
+    patterns:
+      - pattern_compression
+      - monotropism
+      - asymmetric_working_memory
+      - meta_layer_reflex
+    energy_model: true
+    externalization: required
+
+skills:
+  always_on:
+    - reality_check
+    - energy_routing
+    - externalization
+  domain:
+    - pcb_design
+    - embedded_systems
+    - firmware_development
+    - power_system_design
+    - thermal_management
+    - mechanical_integration
+    - component_selection
+    - signal_integrity
+    - manufacturing_dfm
+    - hardware_debugging
+
+model_routing:
+  google:
+    default_model: gemini-3.1-pro-preview
+    fallback_chain:
+      - gemini-3.1-pro-preview
+      - gemini-2.5-pro
+      - gemini-3.1-flash-lite-preview
+      - gemini-3-flash-preview
+      - nano-banana-pro
+      - nano-banana-2
+      - nano-banana
+    models:
+      gemini-3.1-pro-preview:
+        role: hardware_architecture_primary
+        tier: 1
+      gemini-2.5-pro:
+        role: schematic_diagram_analysis
+        tier: 1
+      gemini-3.1-flash-lite-preview:
+        role: rapid_component_lookup
+        tier: 2
+      gemini-3-flash-preview:
+        role: fallback_fast
+        tier: 3
+      nano-banana-pro:
+        role: crash_triage
+        tier: 4
+      nano-banana-2:
+        role: crash_classification
+        tier: 4
+      nano-banana:
+        role: crash_binary
+        tier: 4
+  openai:
+    default_model: gpt-5.3-codex
+    fallback_chain:
+      - gpt-5.3-codex
+      - gpt-5.4
+      - gpt-5.4-pro
+      - gpt-5.3
+      - o4-mini
+    models:
+      gpt-5.3-codex:
+        api_model_id: gpt-5.3-codex
+        role: firmware_code_primary
+        tier: 1
+      gpt-5.4:
+        api_model_id: gpt-5.4
+        role: hardware_ideation
+        tier: 1
+      gpt-5.4-pro:
+        api_model_id: gpt-5.4-pro
+        role: deep_hardware_planning
+        tier: 1
+      gpt-5.3:
+        api_model_id: gpt-5.3
+        role: code_fallback
+        tier: 2
+      o4-mini:
+        api_model_id: o4-mini
+        role: rapid_verifier
+        tier: 3
+  anthropic:
+    enabled: false
+    note: "Claude offline by default. Runtime detection only."
+
+energy_routing:
+  high:
+    google_primary: gemini-3.1-pro-preview
+    openai_primary: gpt-5.4-pro
+    tasks:
+      - full_system_architecture
+      - multi_board_design
+      - power_budget_analysis
+      - signal_integrity_analysis
+      - dfm_review
+  medium:
+    google_primary: gemini-3.1-flash-lite-preview
+    openai_primary: gpt-5.3-codex
+    tasks:
+      - firmware_module
+      - component_selection
+      - schematic_review
+      - thermal_calculation
+      - pin_assignment
+  low:
+    google_primary: gemini-3-flash-preview
+    openai_primary: o4-mini
+    tasks:
+      - datasheet_lookup
+      - unit_conversion
+      - pin_count_check
+  crash:
+    google_primary: nano-banana-pro
+    openai_primary: null
+    tasks:
+      - failure_severity_classification
+      - binary_go_no_go
+
+handoff:
+  accepts_from:
+    - engineer
+    - network_engineer
+    - devops_engineer
+  delegates_to:
+    - engineer: ["architecture_decisions", "cross_discipline_coordination"]
+    - software_engineer: ["driver_development", "os_integration"]
+    - network_engineer: ["physical_cabling", "phy_configuration"]
+    - secops_engineer: ["hardware_security_module", "tamper_detection"]
+  protocol: HANDOFF
+  format: structured_yaml

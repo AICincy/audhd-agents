@@ -1,6 +1,6 @@
 [
   {
-    "description": "Compare Claude vs GPT vs Gemini on code review skill",
+    "description": "Compare GPT vs Gemini on code review skill",
     "input": {
       "input_text": "Run engineering-code-reviewer prompt across all 3 LLM providers with identical SQL injection test case. Evaluate: finding accuracy, severity classification, fix quality, format compliance.",
       "evaluation_type": "model-comparison"

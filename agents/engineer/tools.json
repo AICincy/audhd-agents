@@ -1,0 +1,124 @@
+{
+  "agent": "engineer",
+  "tools": {
+    "analysis": [
+      {
+        "id": "TL-SYSDECOMP",
+        "name": "system_decomposition",
+        "description": "Decompose a system description into components, interfaces, and data flows.",
+        "input_schema": {
+          "system_description": "string",
+          "granularity": "string (high|medium|low)",
+          "focus_area": "string (optional)"
+        },
+        "output_schema": {
+          "components": "array<ComponentEntry>",
+          "interfaces": "array<InterfaceEntry>",
+          "data_flows": "array<DataFlowEntry>",
+          "mermaid": "string"
+        }
+      },
+      {
+        "id": "TL-DEPGRAPH",
+        "name": "dependency_graph",
+        "description": "Generate dependency graph from component list. Detect cycles.",
+        "input_schema": {
+          "components": "array<string>",
+          "relationships": "array<{from, to, type}>"
+        },
+        "output_schema": {
+          "graph": "string (mermaid)",
+          "cycles": "array<array<string>>",
+          "critical_path": "array<string>"
+        }
+      },
+      {
+        "id": "TL-FMEA",
+        "name": "fmea_generator",
+        "description": "Generate FMEA table for a component or system.",
+        "input_schema": {
+          "component": "string",
+          "context": "string",
+          "known_failure_modes": "array<string> (optional)"
+        },
+        "output_schema": {
+          "failure_modes": "array<FailureModeEntry>",
+          "top_rpn": "FailureModeEntry"
+        }
+      },
+      {
+        "id": "TL-TRADEOFF",
+        "name": "tradeoff_analyzer",
+        "description": "Generate weighted tradeoff matrix for design options.",
+        "input_schema": {
+          "options": "array<string>",
+          "criteria": "array<{name, weight}>",
+          "scores": "object (optional, model generates if missing)"
+        },
+        "output_schema": {
+          "matrix": "array<TradeoffEntry>",
+          "dominant_option": "string",
+          "sensitivity": "object"
+        }
+      }
+    ],
+    "generation": [
+      {
+        "id": "TL-ADR",
+        "name": "adr_generator",
+        "description": "Generate Architecture Decision Record.",
+        "input_schema": {
+          "title": "string",
+          "context": "string",
+          "options": "array<string>",
+          "constraints": "array<string> (optional)"
+        },
+        "output_schema": {
+          "adr": "ArchitectureDecisionRecord"
+        }
+      },
+      {
+        "id": "TL-RACI",
+        "name": "raci_generator",
+        "description": "Generate RACI matrix for cross-discipline coordination.",
+        "input_schema": {
+          "deliverables": "array<string>",
+          "agents": "array<string>"
+        },
+        "output_schema": {
+          "raci_matrix": "array<{deliverable, responsible, accountable, consulted, informed}>"
+        }
+      },
+      {
+        "id": "TL-CONCHECK",
+        "name": "constraint_checker",
+        "description": "Check design against constraint list. Return pass/fail per constraint.",
+        "input_schema": {
+          "design": "string",
+          "constraints": "array<ConstraintEntry>"
+        },
+        "output_schema": {
+          "results": "array<{constraint, met, evidence, gap}>",
+          "pass_rate": "number"
+        }
+      }
+    ],
+    "integration": [
+      {
+        "id": "TL-HANDOFF",
+        "name": "agent_handoff",
+        "description": "Prepare structured handoff payload for specialist agent.",
+        "input_schema": {
+          "target_agent": "string",
+          "task": "string",
+          "context": "string",
+          "constraints": "array<string>"
+        },
+        "output_schema": {
+          "handoff_payload": "object",
+          "format": "HANDOFF"
+        }
+      }
+    ]
+  }
+}

@@ -1,10 +1,14 @@
 [
   {
-    "description": "Review certification marketing imagery",
+    "description": "Audit certification marketing image set",
     "input": {
-      "input_text": "Marketing image set for cloud certification program: 5 stock photos showing people studying. All appear to be young white males in Silicon Valley-style offices.",
-      "context": "Global cloud education platform targeting professionals ages 22-55",
-      "cognitive_state": {"energy_level": "medium", "active_mode": "review", "task_tier": "T2"}
+      "input_text": "Set of 12 marketing images for cloud certification program: 8 show young white men at laptops, 2 show young women, 2 show older professionals. No visible disabilities. All in modern office settings.",
+      "context": "Global marketing campaign for Google Cloud certification program",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "review",
+        "task_tier": "T3"
+      }
     }
   }
 ]

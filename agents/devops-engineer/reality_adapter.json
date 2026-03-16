@@ -1,0 +1,150 @@
+{
+  "agent": "devops-engineer",
+  "domain": "devops_engineering",
+  "reality_skill_version": "1.0.0",
+  "claim_tags": ["OBS", "DRV", "GEN", "SPEC"],
+  "validation_rules": {
+    "infrastructure": [
+      {
+        "rule": "provider_resource_verification",
+        "description": "All Terraform resources/providers must reference real cloud resources. Verify provider docs or tag [SPEC].",
+        "severity": "error"
+      },
+      {
+        "rule": "image_tag_verification",
+        "description": "Container image tags must reference real images or be tagged [SPEC].",
+        "severity": "error"
+      },
+      {
+        "rule": "cli_flag_accuracy",
+        "description": "CLI flags and arguments must match real tool documentation.",
+        "severity": "error"
+      },
+      {
+        "rule": "config_syntax_validity",
+        "description": "All generated config must be syntactically valid for the declared format.",
+        "severity": "error"
+      }
+    ],
+    "deployment": [
+      {
+        "rule": "rollback_plan_required",
+        "description": "Every deployment strategy must include an explicit rollback plan.",
+        "severity": "error"
+      },
+      {
+        "rule": "health_check_defined",
+        "description": "Every deployment must define health check criteria.",
+        "severity": "warning"
+      }
+    ],
+    "general": [
+      {
+        "rule": "no_untagged_claims",
+        "description": "Every factual assertion must have a claim tag.",
+        "severity": "error"
+      },
+      {
+        "rule": "spec_gating",
+        "description": "[SPEC] claims must never be presented as [OBS] or [DRV].",
+        "severity": "critical"
+      },
+      {
+        "rule": "no_phantom_services",
+        "description": "Never reference cloud services, APIs, or CLI tools that don't exist.",
+        "severity": "critical"
+      }
+    ]
+  },
+  "output_gating": {
+    "pre_output_checks": [
+      "All claims tagged",
+      "No [SPEC] presented as [OBS]",
+      "All provider resources verifiable",
+      "Config syntax valid",
+      "Rollback plan present for deployments",
+      "Image tags verifiable"
+    ],
+    "block_on_failure": ["no_untagged_claims", "spec_gating", "no_phantom_services"],
+    "warn_on_failure": ["health_check_defined", "config_syntax_validity"]
+  },
+  "model_profiles": {
+    "gemini-3.1-pro-preview": {
+      "hallucination_risk": "low",
+      "strengths": ["Strong infra architecture reasoning", "Good multi-cloud analysis", "Reliable DR planning"],
+      "known_drift_patterns": [
+        {
+          "pattern": "cloud_feature_assumption",
+          "description": "May assume cloud features exist that are region-specific or in preview",
+          "frequency": "occasional",
+          "mitigation": "Verify feature availability against region. Tag region-specific features."
+        }
+      ]
+    },
+    "gemini-3.1-flash-lite-preview": {
+      "hallucination_risk": "low",
+      "strengths": ["Fast config generation", "Quick targeted fixes"],
+      "known_drift_patterns": [
+        {
+          "pattern": "incomplete_config",
+          "description": "May skip optional but important config fields in fast mode",
+          "frequency": "occasional",
+          "mitigation": "Checklist validation of required + recommended fields."
+        }
+      ]
+    },
+    "gpt-5.3-codex": {
+      "hallucination_risk": "low",
+      "strengths": ["Strong IaC generation", "Good Dockerfile optimization", "Reliable pipeline configs"],
+      "known_drift_patterns": [
+        {
+          "pattern": "deprecated_resource_type",
+          "description": "May use deprecated Terraform resource types or provider versions",
+          "frequency": "rare",
+          "mitigation": "Verify resource types against latest provider docs."
+        }
+      ]
+    },
+    "gpt-5.4": {
+      "hallucination_risk": "medium",
+      "strengths": ["Creative infrastructure options", "Good cost optimization ideas"],
+      "known_drift_patterns": [
+        {
+          "pattern": "service_name_fabrication",
+          "description": "May invent plausible cloud service names that don't exist",
+          "frequency": "occasional",
+          "mitigation": "Verify all service names against cloud provider catalog."
+        }
+      ]
+    },
+    "gpt-5.4-pro": {
+      "hallucination_risk": "low",
+      "strengths": ["Deep migration planning", "Strong DR strategy", "Good consensus partner"],
+      "known_drift_patterns": [
+        {
+          "pattern": "over_planned_migration",
+          "description": "May create unnecessarily complex migration phases",
+          "frequency": "rare",
+          "mitigation": "Set max phase count. Justify each phase."
+        }
+      ]
+    },
+    "o4-mini": {
+      "hallucination_risk": "medium",
+      "strengths": ["Fast config verification", "Good binary deploy decisions"],
+      "known_drift_patterns": [
+        {
+          "pattern": "surface_config_check",
+          "description": "May VERIFY configs that pass syntax but have logical errors",
+          "frequency": "occasional",
+          "mitigation": "Never sole verifier for production deployments."
+        }
+      ]
+    }
+  },
+  "error_handling": {
+    "on_hallucination_detected": "Tag as [SPEC], flag phantom service/resource, do not present as fact",
+    "on_verification_failure": "Block output, request cloud provider documentation link",
+    "on_energy_crash": "Route to nano model, JSON-only, binary rollback/hold, escalate immediately"
+  }
+}

@@ -5,12 +5,14 @@ from dataclasses import dataclass, field
 from typing import Optional
 import time
 
+from pydantic import SecretStr
+
 
 @dataclass
 class SkillRequest:
     """Incoming skill execution request."""
 
-    skill_id: str
+    skill_id: Optional[str]
     input_text: str
     options: dict = field(default_factory=dict)
     model_override: Optional[str] = None
@@ -50,7 +52,7 @@ class CircuitBreaker:
         self.failure_threshold = failure_threshold
         self.recovery_timeout = recovery_timeout
         self.failure_count = 0
-        self.last_failure_time = 0
+        self.last_failure_time: float = 0.0
         self.state = "closed"  # closed, open, half-open
 
     def record_failure(self):
@@ -77,13 +79,21 @@ class CircuitBreaker:
 class BaseAdapter(ABC):
     """Base adapter all providers must implement."""
 
-    def __init__(self, api_key: str, config: dict):
-        self.api_key = api_key
+    def __init__(self, api_key: Optional[SecretStr], config: dict):
+        self._api_key = api_key
         self.config = config
         self.circuit_breaker = CircuitBreaker(
             failure_threshold=config.get("failure_threshold", 3),
             recovery_timeout=config.get("recovery_timeout", 60),
         )
+
+    @property
+    def api_key(self) -> str:
+        """Return the raw API key string. Use only when passing to SDK clients."""
+        key = self._api_key
+        if key is None:
+            return ""
+        return key.get_secret_value()
 
     @abstractmethod
     async def execute(

@@ -1,9 +1,27 @@
 [
   {
-    "description": "Orchestrate full skill rewrite across 51 skills",
+    "description": "Orchestrate a full OSINT investigation",
     "input": {
-      "input_text": "Rewrite all 51 skills to integrate with cognitive architecture: update schema.json (allOf base), prompt.md (remove PROFILE.md reference), examples.json (add cognitive_state). Batch by category.",
-      "cognitive_state": {"energy_level": "high", "active_mode": "execute", "task_tier": "T4"}
+      "input_text": "Run full OSINT investigation on domain example.com: WHOIS, DNS, SSL history, linked entities, then cross-reference with business filings",
+      "agents": "O-54P, G-PRO, O-O4M",
+      "constraints": "Medium budget, 2 hour window",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "execute",
+        "task_tier": "T4"
+      }
+    }
+  },
+  {
+    "description": "Multi-agent document review pipeline",
+    "input": {
+      "input_text": "Review 50-page RFP: extract requirements, assess compliance gaps, draft response sections, verify claims",
+      "agents": "all",
+      "cognitive_state": {
+        "energy_level": "medium",
+        "active_mode": "review",
+        "task_tier": "T3"
+      }
     }
   }
 ]

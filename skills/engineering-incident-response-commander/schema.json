@@ -6,11 +6,11 @@
       "properties": {
         "input_text": {
           "type": "string",
-          "description": "Incident description, error logs, or outage report"
+          "description": "Incident details, error logs, or alert"
         },
         "severity": {
           "type": "string",
-          "description": "Incident severity",
+          "description": "Initial severity",
           "enum": ["SEV1", "SEV2", "SEV3", "SEV4"]
         }
       },

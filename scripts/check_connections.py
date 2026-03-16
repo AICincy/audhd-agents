@@ -24,7 +24,6 @@ VALIDATION_MAX_TOKENS = {
 }
 DEFAULT_MODELS = {
     "openai": "gpt-5.4",
-    "anthropic": "claude-opus-4-6",
     "google": "gemini-2.5-pro",
 }
 
@@ -48,8 +47,7 @@ def classify_live_validation_error(exc) -> str:
 
     if "invalid x-api-key" in lowered or "authentication_error" in lowered:
         return (
-            "Credential rejected by provider. Replace the API key in .env and rerun. "
-            "For Anthropic, verify this is a standard API key, not an admin or console credential."
+            "Credential rejected by provider. Replace the API key in .env and rerun."
         )
     if "api key not valid" in lowered or "invalid api key" in lowered:
         return "Credential rejected by provider. Replace the configured API key and rerun."
@@ -154,7 +152,6 @@ def validate_instruction_stack() -> bool:
         Path("SKILL.md"),
         Path("TOOL.md"),
         Path("models/OPENAI.md"),
-        Path("models/ANTHROPIC.md"),
         Path("models/GEMINI.md"),
     ]
 

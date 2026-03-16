@@ -1,0 +1,163 @@
+{
+  "agent": "software-engineer",
+  "version": "1.0.0",
+  "providers": {
+    "google": {
+      "enabled": true,
+      "model_count": 7,
+      "models": {
+        "gemini-3.1-pro-preview": {
+          "alias": "G-PRO31",
+          "role": "code_architecture_primary",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.2, "top_p": 0.95 },
+          "capabilities": ["deep_reasoning", "structured_output", "function_calling", "long_context", "code_generation"],
+          "task_routing": ["full_code_architecture", "complex_refactoring", "cross_module_review", "performance_deep_analysis"],
+          "energy_requirement": "high",
+          "cost_tier": "premium"
+        },
+        "gemini-2.5-pro": {
+          "alias": "G-PRO",
+          "role": "multimodal_code_analysis",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.2, "top_p": 0.95 },
+          "capabilities": ["multimodal", "deep_reasoning", "code_generation"],
+          "task_routing": ["diagram_to_code", "visual_spec_implementation", "uml_generation"],
+          "energy_requirement": "high",
+          "cost_tier": "premium"
+        },
+        "gemini-3.1-flash-lite-preview": {
+          "alias": "G-FLA31",
+          "role": "rapid_code_iteration",
+          "tier": 2,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.2, "top_p": 0.95 },
+          "capabilities": ["fast_inference", "code_generation", "function_calling"],
+          "task_routing": ["quick_implementation", "targeted_fix", "single_function_review", "test_generation"],
+          "energy_requirement": "medium",
+          "cost_tier": "standard"
+        },
+        "gemini-3-flash-preview": {
+          "alias": "G-FLA30",
+          "role": "fallback_fast",
+          "tier": 3,
+          "parameters": { "max_output_tokens": 16384, "temperature": 0.2, "top_p": 0.9 },
+          "capabilities": ["fast_inference", "code_generation"],
+          "task_routing": ["syntax_check", "lint_verification", "simple_code_question"],
+          "energy_requirement": "low",
+          "cost_tier": "economy"
+        },
+        "nano-banana-pro": {
+          "alias": "G-NANOP",
+          "role": "crash_triage",
+          "tier": 4,
+          "parameters": { "max_output_tokens": 2048, "temperature": 0.1 },
+          "capabilities": ["classification", "edge_inference"],
+          "task_routing": ["build_break_triage", "binary_pass_fail"],
+          "energy_requirement": "crash",
+          "cost_tier": "minimal"
+        },
+        "nano-banana-2": {
+          "alias": "G-NANO2",
+          "role": "crash_classification",
+          "tier": 4,
+          "parameters": { "max_output_tokens": 2048, "temperature": 0.1 },
+          "capabilities": ["classification"],
+          "task_routing": ["crash_classification"],
+          "energy_requirement": "crash",
+          "cost_tier": "minimal"
+        },
+        "nano-banana": {
+          "alias": "G-NANO",
+          "role": "crash_binary",
+          "tier": 4,
+          "parameters": { "max_output_tokens": 1024, "temperature": 0.1 },
+          "capabilities": ["binary_classification"],
+          "task_routing": ["binary_decision"],
+          "energy_requirement": "crash",
+          "cost_tier": "minimal"
+        }
+      }
+    },
+    "openai": {
+      "enabled": true,
+      "model_count": 5,
+      "models": {
+        "gpt-5.3-codex": {
+          "alias": "O-CDX",
+          "api_model_id": "gpt-5.3-codex",
+          "role": "code_primary",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.2, "top_p": 0.9 },
+          "capabilities": ["code_generation", "code_editing", "test_generation", "structured_output"],
+          "task_routing": ["feature_implementation", "refactoring_execution", "test_writing", "automation_scripts"],
+          "energy_requirement": "medium",
+          "cost_tier": "premium"
+        },
+        "gpt-5.4": {
+          "alias": "O-54",
+          "api_model_id": "gpt-5.4",
+          "role": "ideation_architecture",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.4, "top_p": 0.95 },
+          "capabilities": ["creative_generation", "structured_output", "function_calling"],
+          "task_routing": ["api_design_brainstorm", "alternative_approaches", "creative_problem_solving"],
+          "energy_requirement": "medium",
+          "cost_tier": "premium"
+        },
+        "gpt-5.4-pro": {
+          "alias": "O-54P",
+          "api_model_id": "gpt-5.4-pro",
+          "role": "deep_code_planning",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.3, "top_p": 0.95 },
+          "capabilities": ["deep_reasoning", "structured_output", "function_calling", "long_context"],
+          "task_routing": ["complex_refactoring_plan", "migration_strategy", "performance_optimization_plan", "consensus_with_gpro31"],
+          "energy_requirement": "high",
+          "cost_tier": "premium"
+        },
+        "gpt-5.3": {
+          "alias": "O-53",
+          "api_model_id": "gpt-5.3",
+          "role": "code_fallback",
+          "tier": 2,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.2, "top_p": 0.95 },
+          "capabilities": ["code_generation", "structured_output", "function_calling"],
+          "task_routing": ["fallback_implementation", "secondary_code_generation"],
+          "energy_requirement": "medium",
+          "cost_tier": "standard"
+        },
+        "o4-mini": {
+          "alias": "O-O4M",
+          "api_model_id": "o4-mini",
+          "role": "rapid_verifier",
+          "tier": 3,
+          "parameters": { "max_output_tokens": 8192, "temperature": 0.2, "top_p": 0.9 },
+          "capabilities": ["fast_inference", "verification", "classification"],
+          "task_routing": ["code_correctness_check", "post_generation_verify", "binary_build_test"],
+          "energy_requirement": "low",
+          "cost_tier": "economy"
+        }
+      }
+    },
+    "anthropic": {
+      "enabled": false,
+      "note": "Claude is offline by default. Only activated if operator explicitly declares Claude usage at runtime.",
+      "runtime_detection": true,
+      "models": {}
+    }
+  },
+  "routing": {
+    "strategy": "energy_aware_dual_provider_with_fallback",
+    "cross_provider_consensus": {
+      "enabled": true,
+      "pairs": [
+        { "google": "gemini-3.1-pro-preview", "openai": "gpt-5.4-pro" }
+      ],
+      "trigger": "T4_T5_tasks_or_conflicting_results"
+    },
+    "circuit_breaker": {
+      "consecutive_failures": 3,
+      "action": "failover_to_other_provider_same_tier"
+    }
+  }
+}

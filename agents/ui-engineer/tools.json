@@ -1,0 +1,136 @@
+{
+  "agent": "ui-engineer",
+  "tools": {
+    "component": [
+      {
+        "id": "TL-COMPGEN",
+        "name": "component_generator",
+        "description": "Generate production-grade UI components with types, tests, stories, and accessibility.",
+        "input_schema": {
+          "name": "string",
+          "framework": "string (react|vue|svelte|angular)",
+          "props": "array<ComponentProp>",
+          "variants": "array<string> (optional)",
+          "wcag_level": "string (optional)"
+        },
+        "output_schema": {
+          "component_code": "string",
+          "type_definitions": "string",
+          "test_code": "string",
+          "story_code": "string"
+        },
+        "reality_checks": [
+          "Verify framework API compatibility with specified version",
+          "Accessibility audit: ARIA roles, keyboard handling, focus management",
+          "Check for deprecated lifecycle methods or patterns",
+          "Validate prop types against TypeScript strictness"
+        ]
+      },
+      {
+        "id": "TL-DESIGNSYS",
+        "name": "design_system_generator",
+        "description": "Generate design system foundations: tokens, primitives, documentation.",
+        "input_schema": {
+          "brand_colors": "object",
+          "typography": "object",
+          "spacing_scale": "string",
+          "framework": "string"
+        },
+        "output_schema": {
+          "tokens": "array<DesignToken>",
+          "theme_config": "object",
+          "css_variables": "string"
+        },
+        "reality_checks": [
+          "Color contrast ratios meet WCAG AA minimum (4.5:1 normal text, 3:1 large text)",
+          "Typography scale is mathematically consistent",
+          "Spacing scale follows consistent progression"
+        ]
+      }
+    ],
+    "performance": [
+      {
+        "id": "TL-PERFAUDIT",
+        "name": "performance_audit_generator",
+        "description": "Generate performance optimization plan with budgets and implementation.",
+        "input_schema": {
+          "current_metrics": "object (optional)",
+          "target_metrics": "object",
+          "framework": "string",
+          "bundle_size": "string (optional)"
+        },
+        "output_schema": {
+          "budget": "array<PerformanceBudget>",
+          "optimizations": "array<object>",
+          "code_splits": "array<string>"
+        },
+        "reality_checks": [
+          "All metrics tagged [OBS] if measured, [SPEC] if estimated",
+          "Bundle size claims must reference actual analysis tool output",
+          "Core Web Vitals targets must be realistic for the framework"
+        ]
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "TL-A11YAUDIT",
+        "name": "accessibility_audit_generator",
+        "description": "Generate accessibility audit with violations, fixes, and keyboard interaction maps.",
+        "input_schema": {
+          "component": "ComponentSpec",
+          "wcag_level": "string (A|AA|AAA)",
+          "existing_violations": "array<string> (optional)"
+        },
+        "output_schema": {
+          "audit": "AccessibilityAudit",
+          "fix_code": "array<object>",
+          "keyboard_map": "array<object>"
+        },
+        "reality_checks": [
+          "WCAG compliance claims tagged [SPEC] unless from actual axe/lighthouse audit",
+          "Color contrast ratios must be calculated, not guessed",
+          "Screen reader behavior tagged [SPEC] unless actually tested"
+        ]
+      }
+    ],
+    "state": [
+      {
+        "id": "TL-STATEGEN",
+        "name": "state_management_generator",
+        "description": "Generate state management configuration with stores, selectors, and side effects.",
+        "input_schema": {
+          "library": "string",
+          "stores": "array<object>",
+          "side_effect_pattern": "string (optional)"
+        },
+        "output_schema": {
+          "config": "StateManagementConfig",
+          "store_code": "array<object>",
+          "selector_code": "array<object>"
+        },
+        "reality_checks": [
+          "Verify library API matches specified version",
+          "Check for unnecessary re-renders in selector patterns",
+          "Bundle size impact tagged [SPEC] unless measured"
+        ]
+      }
+    ],
+    "integration": [
+      {
+        "id": "TL-HANDOFF",
+        "name": "agent_handoff",
+        "description": "Prepare structured handoff payload for specialist agent.",
+        "input_schema": {
+          "target_agent": "string",
+          "task": "string",
+          "context": "string",
+          "ui_context": "object (optional)"
+        },
+        "output_schema": {
+          "handoff_payload": "object",
+          "format": "HANDOFF"
+        }
+      }
+    ]
+  }
+}

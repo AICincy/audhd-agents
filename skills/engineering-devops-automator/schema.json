@@ -6,12 +6,12 @@
       "properties": {
         "input_text": {
           "type": "string",
-          "description": "DevOps task, pipeline definition, or infrastructure requirement"
+          "description": "DevOps requirements or pipeline to improve"
         },
         "platform": {
           "type": "string",
           "description": "Target platform",
-          "enum": ["gcp", "aws", "azure", "github-actions", "gitlab-ci", "docker", "kubernetes"]
+          "enum": ["gcp", "aws", "azure", "hybrid", "local"]
         }
       },
       "required": ["input_text"]

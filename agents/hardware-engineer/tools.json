@@ -1,0 +1,111 @@
+{
+  "agent": "hardware-engineer",
+  "tools": {
+    "design": [
+      {
+        "id": "TL-BOMGEN",
+        "name": "bom_generator",
+        "description": "Generate or validate a Bill of Materials with alternates and sourcing.",
+        "input_schema": {
+          "requirements": "array<{function, specs, constraints}>",
+          "budget": "string (optional)"
+        },
+        "output_schema": {
+          "bom": "array<Component>",
+          "total_cost_estimate": "string"
+        }
+      },
+      {
+        "id": "TL-PWRTREE",
+        "name": "power_tree_generator",
+        "description": "Generate power tree with rails, sequencing, and load analysis.",
+        "input_schema": {
+          "input_source": "object ({type, voltage, current})",
+          "rails": "array<{voltage, loads}>"
+        },
+        "output_schema": {
+          "power_rails": "array<PowerRail>",
+          "total_power": "string",
+          "efficiency_estimate": "string"
+        }
+      },
+      {
+        "id": "TL-PINMAP",
+        "name": "pin_map_generator",
+        "description": "Generate MCU/FPGA pin assignments from peripheral requirements.",
+        "input_schema": {
+          "target_device": "string",
+          "peripherals": "array<{type, count, requirements}>"
+        },
+        "output_schema": {
+          "pin_map": "array<PinMapping>",
+          "conflicts": "array<string>",
+          "unused_pins": "integer"
+        }
+      }
+    ],
+    "firmware": [
+      {
+        "id": "TL-FWGEN",
+        "name": "firmware_generator",
+        "description": "Generate firmware modules for embedded targets.",
+        "input_schema": {
+          "target_mcu": "string",
+          "module_type": "string (driver|hal|app|isr|config)",
+          "peripheral": "string",
+          "requirements": "string"
+        },
+        "output_schema": {
+          "firmware": "array<FirmwareModule>",
+          "register_table": "array<object>"
+        }
+      }
+    ],
+    "analysis": [
+      {
+        "id": "TL-THERMAL",
+        "name": "thermal_analyzer",
+        "description": "Analyze thermal budget and recommend cooling solutions.",
+        "input_schema": {
+          "components": "array<{name, power_dissipation, theta_ja, tj_max}>",
+          "ambient_temp": "number",
+          "airflow": "string (natural|forced|none)"
+        },
+        "output_schema": {
+          "thermal_budget": "array<{component, t_rise, margin, status}>",
+          "recommendations": "array<string>"
+        }
+      },
+      {
+        "id": "TL-SIGINT",
+        "name": "signal_integrity_analyzer",
+        "description": "Analyze signal integrity for high-speed interfaces.",
+        "input_schema": {
+          "signals": "array<{name, frequency, impedance, trace_length}>",
+          "stackup": "object"
+        },
+        "output_schema": {
+          "analysis": "array<{signal, risk, termination, routing_constraint}>",
+          "recommendations": "array<string>"
+        }
+      }
+    ],
+    "integration": [
+      {
+        "id": "TL-HANDOFF",
+        "name": "agent_handoff",
+        "description": "Prepare structured handoff payload for specialist agent.",
+        "input_schema": {
+          "target_agent": "string",
+          "task": "string",
+          "context": "string",
+          "hardware_context": "array<Component> (optional)"
+        },
+        "output_schema": {
+          "handoff_payload": "object",
+          "format": "HANDOFF"
+        }
+      }
+    ]
+  }
+}

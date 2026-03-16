@@ -2,7 +2,7 @@
   {
     "description": "Architecture for multi-LLM skill execution platform",
     "input": {
-      "input_text": "Design architecture for audhd-agents: 51 skills, 3 LLM providers (Claude, GPT, Gemini), per-skill model routing, prompt adaptation layer, cost tracking. Solo developer, needs to scale to team later.",
+      "input_text": "Design architecture for audhd-agents: 51 skills, 3 LLM providers (GPT, Gemini), per-skill model routing, prompt adaptation layer, cost tracking. Solo developer, needs to scale to team later.",
       "constraints": "Python, GCP preferred, budget under $500/month at current usage",
       "cognitive_state": {
         "energy_level": "high",

@@ -6,16 +6,10 @@ description: >
 version: "1.0.0"
 category: product
 capabilities:
-  - backlog-prioritization
-  - sprint-planning
-  - dependency-mapping
-  - capacity-planning
+  - plan
 models:
-  primary: G-PRO
-  fallback: [C-OP46, C-SN46]
-  openai: gpt-5.4-pro
-  anthropic: claude-opus-4-6
-  gemini: gemini-2.5-pro
+  primary: G-PRO31
+  fallback: [G-PRO, O-54P]
 sk_hooks:
   - SK-DECOMP
   - SK-GATE

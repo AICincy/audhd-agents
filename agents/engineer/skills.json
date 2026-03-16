@@ -1,0 +1,120 @@
+{
+  "agent": "engineer",
+  "skills": {
+    "always_on": [
+      {
+        "id": "SK-REALITY",
+        "name": "reality_check",
+        "description": "Tag all claims [OBS/DRV/GEN/SPEC]. Gate output. Verify before asserting.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-ENERGY",
+        "name": "energy_routing",
+        "description": "Route tasks to appropriate model tier based on current energy level.",
+        "trigger": "every_input",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-EXTERN",
+        "name": "externalization",
+        "description": "Externalize all state to tables, diagrams, structured output. Never hold state in prose.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      }
+    ],
+    "domain": [
+      {
+        "id": "SK-SYSANAL",
+        "name": "systems_analysis",
+        "description": "Decompose systems into components, interfaces, and data flows. Identify boundaries and coupling.",
+        "input": "system description or architecture",
+        "output": "component table, interface map, coupling analysis",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Output as table with columns: Component | Interface | Coupling | Risk. One row per component. No prose decomposition."
+      },
+      {
+        "id": "SK-ARCHREV",
+        "name": "architecture_review",
+        "description": "Evaluate existing architecture against requirements, constraints, and quality attributes.",
+        "input": "architecture docs, requirements",
+        "output": "ADR table, gap analysis, recommendation",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Produce ADR per decision point. Table format. Mermaid diagram for visual learners."
+      },
+      {
+        "id": "SK-DESPAT",
+        "name": "design_pattern_selection",
+        "description": "Match problem characteristics to appropriate design patterns. Evaluate fitness.",
+        "input": "problem description, constraints",
+        "output": "pattern comparison table, recommendation with rationale",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Tradeoff matrix format. Max 5 candidates. Rank by constraint satisfaction score."
+      },
+      {
+        "id": "SK-TECHDF",
+        "name": "technical_decision_framework",
+        "description": "Structure technical decisions with explicit criteria, weights, and scoring.",
+        "input": "decision context, options, criteria",
+        "output": "weighted decision matrix, sensitivity analysis",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Decision matrix table. Numeric scores. No subjective prose. Highlight dominant option."
+      },
+      {
+        "id": "SK-XDISC",
+        "name": "cross_discipline_coordination",
+        "description": "Identify cross-cutting concerns and coordinate handoffs between specialist agents.",
+        "input": "multi-domain task description",
+        "output": "responsibility matrix (RACI), handoff sequence, integration points",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "RACI table. One row per deliverable. Handoff sequence as numbered steps."
+      },
+      {
+        "id": "SK-REQDECOMP",
+        "name": "requirements_decomposition",
+        "description": "Break high-level requirements into implementable units with acceptance criteria.",
+        "input": "requirements document or user stories",
+        "output": "decomposed requirements table with acceptance criteria and priority",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Table: Req ID | Parent | Description | Acceptance Criteria | Priority | Effort. No narrative."
+      },
+      {
+        "id": "SK-FMEA",
+        "name": "failure_mode_analysis",
+        "description": "FMEA-style analysis. Identify failure modes, severity, likelihood, detection, RPN.",
+        "input": "system or component description",
+        "output": "FMEA table sorted by RPN, mitigation recommendations",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "FMEA table. Sort by RPN descending. Top 5 get mitigation detail. Rest get one-liner."
+      },
+      {
+        "id": "SK-TRADEOFF",
+        "name": "tradeoff_matrix",
+        "description": "Structured comparison of options across multiple criteria.",
+        "input": "options and evaluation criteria",
+        "output": "tradeoff matrix table, dominant option identification",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Matrix table. Numeric where possible. Highlight cells with color coding concept."
+      },
+      {
+        "id": "SK-DEPMAP",
+        "name": "dependency_mapping",
+        "description": "Map dependencies between components, services, teams, or deliverables.",
+        "input": "component list or architecture",
+        "output": "dependency table + mermaid graph",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Table + mermaid. Highlight circular dependencies. Flag critical path."
+      },
+      {
+        "id": "SK-CONSAT",
+        "name": "constraint_satisfaction",
+        "description": "Evaluate whether a design satisfies all stated constraints. Identify violations.",
+        "input": "design + constraint list",
+        "output": "constraint satisfaction table: Constraint | Met? | Evidence | Gap",
+        "energy_tier": ["medium", "low"],
+        "audhd_adaptation": "Binary pass/fail table. Evidence column cites source. Gaps get action items."
+      }
+    ]
+  }
+}

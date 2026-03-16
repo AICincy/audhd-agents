@@ -1,0 +1,138 @@
+agent:
+  name: win11_pc_engineer
+  display_name: "Windows 11 PC Engineer"
+  version: "1.0.0"
+  description: >-
+    Windows 11 PC engineering agent for the AuDHD Cognitive Swarm.
+    System administration, troubleshooting, performance optimization,
+    security hardening, driver management, PowerShell automation,
+    Group Policy, Windows Update management.
+  domain: windows_11_administration
+  cognitive_profile:
+    patterns:
+      - pattern_compression
+      - monotropism
+      - asymmetric_working_memory
+      - meta_layer_reflex
+    energy_model: true
+    externalization: required
+
+skills:
+  always_on:
+    - reality_check
+    - energy_routing
+    - externalization
+  domain:
+    - system_diagnostics
+    - performance_optimization
+    - security_hardening
+    - driver_management
+    - registry_operations
+    - powershell_automation
+    - group_policy_management
+    - update_management
+    - network_troubleshooting
+    - backup_recovery
+
+model_routing:
+  google:
+    default_model: gemini-3.1-pro-preview
+    fallback_chain:
+      - gemini-3.1-pro-preview
+      - gemini-2.5-pro
+      - gemini-3.1-flash-lite-preview
+      - gemini-3-flash-preview
+      - nano-banana-pro
+      - nano-banana-2
+      - nano-banana
+    models:
+      gemini-3.1-pro-preview:
+        role: deep_diagnostics
+        tier: 1
+      gemini-2.5-pro:
+        role: multimodal_analysis
+        tier: 1
+      gemini-3.1-flash-lite-preview:
+        role: rapid_triage
+        tier: 2
+      gemini-3-flash-preview:
+        role: fallback_fast
+        tier: 3
+      nano-banana-pro:
+        role: crash_triage
+        tier: 4
+      nano-banana-2:
+        role: crash_classification
+        tier: 4
+      nano-banana:
+        role: crash_binary
+        tier: 4
+  openai:
+    default_model: gpt-5.4
+    fallback_chain:
+      - gpt-5.4
+      - gpt-5.4-pro
+      - gpt-5.3
+      - gpt-5.3-codex
+      - o4-mini
+    models:
+      gpt-5.4:
+        role: solution_architect
+        tier: 1
+      gpt-5.4-pro:
+        role: deep_planner
+        tier: 1
+      gpt-5.3:
+        role: solution_fallback
+        tier: 2
+      gpt-5.3-codex:
+        role: script_automator
+        tier: 1
+      o4-mini:
+        role: rapid_verifier
+        tier: 3
+
+energy_routing:
+  high:
+    google_primary: gemini-3.1-pro-preview
+    openai_primary: gpt-5.4-pro
+    tasks:
+      - deep_system_diagnostics
+      - security_hardening_audit
+      - full_registry_analysis
+      - group_policy_architecture
+  medium:
+    google_primary: gemini-3.1-flash-lite-preview
+    openai_primary: gpt-5.4
+    tasks:
+      - driver_troubleshooting
+      - performance_tuning
+      - update_management
+      - network_diagnostics
+  low:
+    google_primary: gemini-3-flash-preview
+    openai_primary: o4-mini
+    tasks:
+      - status_check
+      - binary_health_verify
+      - quick_setting_lookup
+  crash:
+    google_primary: nano-banana-pro
+    openai_primary: null
+    tasks:
+      - bsod_severity_classification
+      - boot_failure_triage
+
+handoff:
+  accepts_from:
+    - engineer
+    - software_engineer
+    - network_engineer
+    - secops_engineer
+  delegates_to:
+    - network_engineer: ["advanced_networking", "dns_infrastructure"]
+    - secops_engineer: ["malware_analysis", "incident_response"]
+    - software_engineer: ["application_debugging", "code_level_issues"]
+    - hardware_engineer: ["hardware_failure_diagnosis"]
+  protocol: HANDOFF
+  format: structured_yaml

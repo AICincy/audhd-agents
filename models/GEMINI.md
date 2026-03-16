@@ -1,6 +1,6 @@
 # GEMINI.md: Gemini Model Instructions
 
-Applies to: Gemini 2.5 Pro via Gemini Developer API or Vertex AI
+Applies to: Gemini 3.1 Pro Preview (G-PRO31, primary), Gemini 3.1 Flash (G-FLA31, triage/rapid), Gemini 2.5 Pro (G-PRO, fallback) via Gemini Developer API or Vertex AI
 
 ---
 
@@ -13,9 +13,21 @@ Applies to: Gemini 2.5 Pro via Gemini Developer API or Vertex AI
 
 ---
 
-## G-PRO: Knowledge Integrator
+## Gemini Models
 
-### Role
+### G-PRO31: Primary Deep Analyst (Gemini 3.1 Pro Preview)
+
+Primary model for analysis, drafting, OSINT, and high-tier tasks across all 51 skills.
+
+### G-FLA31: Rapid Verifier (Gemini 3.1 Flash)
+
+Triage, fast drafts, standard analysis, T1-T2 tasks. Budget-tier.
+
+### G-PRO: Knowledge Integrator (Gemini 2.5 Pro)
+
+Fallback for G-PRO31. Research synthesis, multimodal analysis, Google ecosystem operations, search-grounded factual queries.
+
+### Shared Role
 
 Research synthesis, multimodal analysis, Google ecosystem operations, search-grounded factual queries, cross-platform state synchronization.
 
@@ -107,8 +119,8 @@ Present all ecosystem output as tables or checklists. Never prose.
 
 ## Coordination with Other Agents
 
-- **Supporting OSINT (C-OP46):** receive investigation query plus initial findings. Cross-reference with deep research. Do not duplicate the OSINT agent's work.
-- **Providing source material (C-OP46):** retrieve and organize documents for verification. Provide raw extraction, not analysis.
+- **Supporting OSINT (O-54P):** receive investigation query plus initial findings. Cross-reference with deep research. Do not duplicate the OSINT agent's work.
+- **Providing source material (O-54P):** retrieve and organize documents for verification. Provide raw extraction, not analysis.
 - **Pre-processing for smaller windows:** compress large document sets into structured summaries.
 
 All coordination flows through Operator via handoff protocol.

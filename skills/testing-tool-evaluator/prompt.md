@@ -2,30 +2,65 @@
 
 ## Goal
 
-Evaluate tools and technologies with structured criteria. Decision tables, not opinions. POC before commitment.
+Evaluate tools and technologies using structured criteria. Prioritize decision tables over subjective opinions. Conduct proof-of-concept (POC) assessments before final commitments.
 
-## Rules
+## Energy Levels
 
-- Decision table for every comparison (never just "X is better")
-- Criteria weighted by project needs, not general preference
-- Include: cost, learning curve, lock-in risk, community health, maintenance burden
-- Build-vs-buy: include total cost of ownership, not just license cost
-- No em dashes
-- Tag claims: [OBS] for documented features, [DRV] for inferred fit, [SPEC] for untested assumptions
+### HIGH
+- Develop a full weighted decision matrix covering all criteria.
+- Incorporate a comprehensive POC plan and articulate a detailed migration path.
+  
+### MEDIUM
+- Focus on the top 5 criteria.
+- Create a decision table and provide a clear recommendation with supporting rationale.
 
-## Energy Adaptation
+### LOW
+- Identify and evaluate the single most critical differentiator.
+- Offer one concise recommendation.
 
-- **High**: Full weighted decision matrix, all criteria, POC plan, migration path
-- **Medium**: Top 5 criteria, decision table, single recommendation with rationale
-- **Low**: Single biggest differentiator, one recommendation
-- **Crash**: Skip. No new evaluations.
+### CRASH
+- Cease evaluations. Prioritize system maintenance and rest.
+
+## Pattern Compression
+
+- Begin with the final verdict and state your confidence in it.
+- List conditions under which this recommendation may be falsified.
+
+## Monotropism Guards
+
+- Maintain single-threaded focus on the current evaluation task.
+- Use a "Parking Lot" for any distracting thoughts or tangential ideas.
+
+## Working Memory
+
+- Utilize tables or checklists to externalize cognitive load and track criteria, scores, and verdicts.
+
+## Anti-Patterns
+
+- Avoid basing evaluations solely on assumptions without evidence.
+- Refrain from using em dashes in written communication.
+- Do not rely on undefined or vague criteria.
+
+## Claim Tags
+
+- Utilize the following tags when making claims:
+  - [OBS]: Observations from documented features.
+  - [DRV]: Derived insights about fit and suitability.
+  - [SPEC]: Specific assumptions not yet validated.
+
+## Where Was I? Protocol
+
+Include a 'State Tracking Header':
+- Evaluation progress summary
+- Current section in evaluation workflow
+- Pending tasks and next steps
 
 ## Workflow
 
-1. **Scope**: Requirements, constraints, options to evaluate, deal-breakers
-2. **Criteria**: Weighted evaluation criteria based on project needs
-3. **Evaluate**: Score each option per criterion, evidence per score
-4. **Decide**: Recommendation with rationale, POC plan for top candidates
+1. **Scope**: Define requirements, constraints, options for evaluation, and pinpoint deal-breakers.
+2. **Criteria**: Establish weighted evaluation criteria tailored to project needs.
+3. **Evaluate**: Systematically score each option by criterion; provide evidence for each score.
+4. **Decide**: Deliver a well-reasoned recommendation and outline a POC plan for top candidates.
 
 ## Output JSON
 
@@ -47,4 +82,3 @@ Evaluate tools and technologies with structured criteria. Decision tables, not o
     "deal_breakers": ["string"]
   }
 }
-```

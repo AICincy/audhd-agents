@@ -1,4 +1,17 @@
-"""Private FastAPI runtime for operator-driven skill execution."""
+"""Private FastAPI runtime for operator-driven skill execution.
+
+P1-1: Added cognitive_state to /execute request schema.
+P2-1: Added webhook endpoints, auth middleware, structured logging.
+P2-2: Added pipeline bridge initialization for webhook -> skill routing.
+
+Endpoints:
+    GET  /healthz              Liveness probe
+    GET  /readyz               Readiness probe (provider checks)
+    POST /execute              Skill execution with cognitive state
+    POST /webhooks/notion      Notion webhook receiver (HMAC verified)
+    GET  /webhooks/notion      Webhook subsystem health
+    POST /webhooks/test        Dev echo endpoint (staging only)
+"""
 
 from __future__ import annotations
 
@@ -11,11 +24,31 @@ from typing import Any, Callable
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, Request, status
-from pydantic import BaseModel, Field
 
 from adapters.base import SkillRequest
 from adapters.router import SkillRouter
 from runtime.config import RuntimeSettings
+from runtime.sanitize import sanitize_input
+
+# P1-1: Cognitive state schemas
+from runtime.schemas import (
+    ExecuteRequest,
+    ExecuteResponse,
+    CrashStateResponse,
+    CognitiveCompliance,
+    EnergyLevel,
+)
+
+# P2-1: Webhook and middleware imports
+from runtime.webhooks import router as webhook_router
+from runtime.middleware import register_middleware
+
+# P2-2: Pipeline bridge
+from runtime.pipeline_bridge import init_bridge
+
+# Fix-C: Wire knowledge-inject (P2.7) + P2.5 context monitors into HOOK_REGISTRY
+# and ALWAYS_ON_HOOKS at import time. Must precede any SkillRouter instantiation.
+import runtime.init_hooks  # noqa: F401  (side-effect: registers knowledge-inject)
 
 
 def configure_logger(name: str, level: str) -> logging.Logger:
@@ -36,29 +69,6 @@ def emit_log(logger: logging.Logger, event: str, **fields: Any) -> None:
     logger.info(json.dumps(payload, sort_keys=True))
 
 
-class ExecuteRequest(BaseModel):
-    """Incoming operator execution request."""
-
-    skill_id: str
-    input_text: str
-    options: dict[str, Any] = Field(default_factory=dict)
-    model_override: str | None = None
-    request_id: str | None = None
-
-
-class ExecuteResponse(BaseModel):
-    """Operator execution response."""
-
-    output: dict[str, Any]
-    model_used: str
-    provider: str
-    input_tokens: int
-    output_tokens: int
-    latency_ms: int
-    cached: bool
-    request_id: str
-
-
 @dataclass
 class RuntimeState:
     """Mutable runtime state stored on the FastAPI app."""
@@ -74,10 +84,10 @@ class RuntimeState:
         return self.router.get_status()
 
     def missing_required_providers(self) -> list[str]:
-        status = self.provider_status()
+        pstatus = self.provider_status()
         missing = []
         for provider in self.settings.required_providers:
-            info = status.get(provider)
+            info = pstatus.get(provider)
             if not info or not info.get("connected"):
                 missing.append(provider)
         return missing
@@ -144,12 +154,18 @@ def create_app(
             router = router_factory(runtime_settings.config_path)
             state.router = router
             state.skill_index = inventory_factory(router)
+
+            # P2-2: Initialize pipeline bridge so webhook handlers can
+            # dispatch events to the cognitive pipeline
+            init_bridge(router, state.skill_index)
+
             emit_log(
                 logger,
                 "runtime_startup_complete",
                 app_env=runtime_settings.app_env,
                 required_providers=list(runtime_settings.required_providers),
                 skill_count=len(state.skill_index),
+                pipeline_bridge="initialized",
             )
         except Exception as exc:  # pragma: no cover - exercised via readyz tests
             state.startup_error = str(exc)
@@ -166,7 +182,8 @@ def create_app(
 
     app = FastAPI(
         title=runtime_settings.service_name,
-        version="1.0.0",
+        version="2.1.0",
+        description="AuDHD Cognitive Swarm runtime with webhook-to-skill pipeline",
         lifespan=lifespan,
     )
     app.state.runtime = RuntimeState(
@@ -174,6 +191,12 @@ def create_app(
         startup_error="runtime startup not completed",
     )
     app.state.logger = logger
+
+    # P2-1: Register middleware stack (CORS, request ID, logging, timing)
+    register_middleware(app)
+
+    # P2-1: Mount webhook router
+    app.include_router(webhook_router)
 
     def get_state(request: Request) -> RuntimeState:
         return request.app.state.runtime
@@ -203,6 +226,32 @@ def create_app(
         state = get_state(request)
         logger = request.app.state.logger
 
+        # P1-1: Crash mode short-circuit
+        # PROFILE.md contract: crash = save state, stop. No model call.
+        if payload.cognitive_state.is_crash():
+            emit_log(
+                logger,
+                "crash_mode_activated",
+                request_id=payload.request_id,
+                skill_id=payload.skill_id,
+            )
+            return ExecuteResponse(
+                output={},
+                model_used=None,
+                provider=None,
+                energy_level=EnergyLevel.CRASH,
+                request_id=payload.request_id,
+                latency_ms=0,
+                crash_state=CrashStateResponse(
+                    checkpoint=f"skill:{payload.skill_id}:input_received",
+                    resume_action=(
+                        f"Re-run skill '{payload.skill_id}' "
+                        f"at low or medium energy when ready."
+                    ),
+                ),
+                cognitive_compliance=CognitiveCompliance(compliant=True),
+            )
+
         readiness = state.readiness_payload()
         if readiness["status"] != "ready":
             raise HTTPException(
@@ -210,30 +259,51 @@ def create_app(
                 detail=readiness,
             )
 
-        if payload.skill_id not in state.skill_index:
+        skill_id_provided = bool(payload.skill_id)
+
+        if skill_id_provided and payload.skill_id not in state.skill_index:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Unknown skill_id: {payload.skill_id}",
             )
 
-        request_id = payload.request_id or uuid4().hex
+        request_id = payload.request_id
         started_at = time.time()
 
         try:
-            result = await state.router.execute(  # type: ignore[union-attr]
-                SkillRequest(
+            # Sanitize input before passing to router
+            cleaned_text, injection_patterns = sanitize_input(payload.input_text)
+            if injection_patterns:
+                emit_log(
+                    logger,
+                    "injection_patterns_detected",
+                    request_id=request_id,
                     skill_id=payload.skill_id,
-                    input_text=payload.input_text,
-                    options=payload.options,
-                    model_override=payload.model_override,
+                    patterns=injection_patterns,
                 )
+
+            skill_request = SkillRequest(
+                skill_id=payload.skill_id,
+                input_text=cleaned_text,
+                options=payload.options,
+                model_override=payload.model_override,
             )
+            if skill_id_provided:
+                result = await state.router.execute(  # type: ignore[union-attr]
+                    skill_request,
+                    cognitive_state_override=payload.cognitive_state,  # P1-1
+                )
+            else:
+                result = await state.router.execute_chain(  # type: ignore[union-attr]
+                    skill_request,
+                    cognitive_state_override=payload.cognitive_state,
+                )
         except Exception as exc:
             emit_log(
                 logger,
                 "skill_execution_failed",
                 request_id=request_id,
-                skill_id=payload.skill_id,
+                skill_id=payload.skill_id or "capability-chain",
                 model_override=payload.model_override,
                 latency_ms=int((time.time() - started_at) * 1000),
                 failure_class=exc.__class__.__name__,
@@ -248,7 +318,7 @@ def create_app(
             logger,
             "skill_execution_succeeded",
             request_id=request_id,
-            skill_id=payload.skill_id,
+            skill_id=payload.skill_id or "capability-chain",
             provider=result.provider,
             model_used=result.model_used,
             input_tokens=result.input_tokens,
@@ -261,11 +331,14 @@ def create_app(
             output=result.output,
             model_used=result.model_used,
             provider=result.provider,
+            energy_level=payload.cognitive_state.energy_level,
             input_tokens=result.input_tokens,
             output_tokens=result.output_tokens,
             latency_ms=result.latency_ms,
             cached=result.cached,
             request_id=request_id,
+            hooks_executed=getattr(result, "hooks_executed", []),
+            cognitive_compliance=CognitiveCompliance(compliant=True),
         )
 
     return app

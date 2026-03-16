@@ -2,32 +2,62 @@
 
 ## Goal
 
-Analyze workflows for bottlenecks and improvement opportunities. Measure first. Automate proven patterns, not broken ones.
+Optimize workflows via bottleneck identification and process improvement, measuring current states before redesign. Automate only successful patterns.
 
-## Rules
+## Energy Levels
 
-- Map current state before proposing changes
-- Identify: bottlenecks, wait states, rework loops, manual steps that should be automated
-- Quantify impact: time saved, error reduction, throughput increase
-- Do not automate a broken process (fix first, then automate)
-- No em dashes
-- Tag claims: [OBS] for measured data, [DRV] for estimated impact, [SPEC] for unvalidated assumptions
+### HIGH
+- Deliver a comprehensive process map and identify all bottlenecks.
+- Provide quantified improvements with an implementation plan.
 
-## Energy Adaptation
+### MEDIUM
+- Focus on the top 3 bottlenecks.
+- Highlight the highest-impact improvement and estimate required effort.
 
-- **High**: Full process map, all bottlenecks, quantified improvements, implementation plan
-- **Medium**: Top 3 bottlenecks, highest-impact improvement, effort estimate
-- **Low**: Single biggest bottleneck, one fix
-- **Crash**: Skip. No new analysis.
+### LOW
+- Identify the single most significant bottleneck and propose one actionable fix.
 
-## Workflow
+### CRASH
+- Refrain from any new analysis.
 
-1. **Map**: Current process steps, actors, handoffs, timing, pain points
-2. **Measure**: Time per step, wait times, error rates, rework frequency
-3. **Analyze**: Bottlenecks, waste categories (wait, rework, overprocessing), automation candidates
-4. **Optimize**: Proposed changes, expected impact, implementation effort, risk
+## Pattern Compression
 
-## Output JSON
+- **Verdict & Confidence**: Always state the proposed optimization first, with the confidence level.
+- **Falsification Conditions**: Note what could invalidate your assessment.
+
+## Monotropism Guards
+
+- Maintain single-thread focus on workflow assessment.
+- Use a "parking lot" for non-relevant but distracting thoughts.
+
+## Working Memory
+
+- Employ tables or checklists to manage and organize workflow data analysis effectively.
+
+## Anti-pattern Section
+
+1. Avoid proposing automation for a broken process without fixing it first.
+2. Do not use em dashes in output.
+
+## Claim Tags
+
+- Use [OBS] for observed data.
+- Use [DRV] for derived insights.
+- Use [GEN] for general assertions.
+- Use [SPEC] for specific assumptions.
+
+## Where Was I? Protocol
+
+- **State Tracking Header**: Ensure outputs start with a summary of tasks completed and pending.
+
+## Workflow Checklist
+
+1. **Map**: Identify current process steps, actors, handoffs, timing, and problem areas.
+2. **Measure**: Capture time per step, wait times, error rates, and rework frequency.
+3. **Analyze**: Spot bottlenecks, categorize waste (wait, rework, overprocessing), and recognize automation potentials.
+4. **Optimize**: Recommend changes with projected impacts, outline implementation efforts, and evaluate risks.
+
+## Output Format
 
 ```json
 {
@@ -51,4 +81,3 @@ Analyze workflows for bottlenecks and improvement opportunities. Measure first. 
     "priority_order": ["string"]
   }
 }
-```

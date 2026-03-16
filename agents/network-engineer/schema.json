@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NetworkEngineerAgentSchema",
+  "description": "Domain-specific I/O schema for the Network Engineer agent.",
+  "type": "object",
+  "extends": "../../_base/schema_base.json",
+  "definitions": {
+    "NetworkConfig": {
+      "type": "object",
+      "required": ["device", "vendor", "config_type", "content"],
+      "properties": {
+        "device": { "type": "string" },
+        "vendor": { "type": "string", "enum": ["cisco", "juniper", "palo_alto", "fortinet", "arista", "generic", "linux", "other"] },
+        "config_type": { "type": "string", "enum": ["routing", "switching", "firewall", "acl", "dns", "dhcp", "vpn", "load_balancer", "wireless", "sdn"] },
+        "content": { "type": "string" },
+        "is_diff": { "type": "boolean", "default": false },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "SubnetEntry": {
+      "type": "object",
+      "required": ["cidr", "purpose"],
+      "properties": {
+        "cidr": { "type": "string" },
+        "vlan_id": { "type": "integer" },
+        "purpose": { "type": "string" },
+        "gateway": { "type": "string" },
+        "usable_hosts": { "type": "integer" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "FirewallRule": {
+      "type": "object",
+      "required": ["rule_number", "action", "source", "destination", "port", "protocol"],
+      "properties": {
+        "rule_number": { "type": "integer" },
+        "action": { "type": "string", "enum": ["allow", "deny", "drop", "reject", "log"] },
+        "source": { "type": "string" },
+        "destination": { "type": "string" },
+        "port": { "type": "string" },
+        "protocol": { "type": "string" },
+        "logging": { "type": "boolean", "default": false },
+        "description": { "type": "string" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "TopologyNode": {
+      "type": "object",
+      "required": ["name", "type", "interfaces"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["router", "switch", "firewall", "load_balancer", "server", "ap", "cloud_gateway", "endpoint"] },
+        "interfaces": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "ip": { "type": "string" }, "subnet": { "type": "string" }, "status": { "type": "string" } } } },
+        "protocols": { "type": "array", "items": { "type": "string" } },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "NetworkInput": {
+      "type": "object",
+      "required": ["task_type", "context"],
+      "properties": {
+        "task_type": {
+          "type": "string",
+          "enum": [
+            "network_architecture",
+            "routing_config",
+            "switching_config",
+            "firewall_policy",
+            "dns_config",
+            "vpn_config",
+            "load_balancer_config",
+            "network_monitoring",
+            "wireless_design",
+            "sdn_automation",
+            "zero_trust_design",
+            "subnet_planning",
+            "troubleshooting"
+          ]
+        },
+        "context": { "type": "string" },
+        "vendor": { "type": "string" },
+        "existing_topology": { "type": "array", "items": { "$ref": "#/definitions/TopologyNode" } },
+        "energy_level": { "type": "string", "enum": ["high", "medium", "low", "crash"] }
+      }
+    },
+    "NetworkOutput": {
+      "type": "object",
+      "required": ["task_type", "result", "claim_summary"],
+      "properties": {
+        "task_type": { "type": "string" },
+        "result": {
+          "type": "object",
+          "properties": {
+            "configs": { "type": "array", "items": { "$ref": "#/definitions/NetworkConfig" } },
+            "subnets": { "type": "array", "items": { "$ref": "#/definitions/SubnetEntry" } },
+            "firewall_rules": { "type": "array", "items": { "$ref": "#/definitions/FirewallRule" } },
+            "topology": { "type": "array", "items": { "$ref": "#/definitions/TopologyNode" } },
+            "mermaid_diagram": { "type": "string" }
+          }
+        },
+        "claim_summary": {
+          "type": "object",
+          "properties": {
+            "obs_count": { "type": "integer" },
+            "drv_count": { "type": "integer" },
+            "gen_count": { "type": "integer" },
+            "spec_count": { "type": "integer" }
+          }
+        },
+        "energy_used": { "type": "string" },
+        "handoff": { "type": "object" }
+      }
+    }
+  }
+}

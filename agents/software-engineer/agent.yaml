@@ -1,0 +1,158 @@
+agent:
+  name: software-engineer
+  display_name: "Software Engineer"
+  version: "1.0.0"
+  description: >-
+    Software engineering agent for the AuDHD Cognitive Swarm.
+    Code architecture, implementation, testing, debugging,
+    refactoring, code review, CI/CD, language-specific patterns.
+  domain: software_engineering
+  cognitive_profile:
+    patterns:
+      - pattern_compression
+      - monotropism
+      - asymmetric_working_memory
+      - meta_layer_reflex
+    energy_model: true
+    externalization: required
+
+skills:
+  always_on:
+    - reality_check
+    - energy_routing
+    - externalization
+  domain:
+    - code_architecture
+    - implementation
+    - code_review
+    - testing_strategy
+    - debugging
+    - refactoring
+    - ci_cd_pipeline
+    - dependency_management
+    - performance_optimization
+    - documentation_generation
+
+model_routing:
+  google:
+    default_model: gemini-3.1-pro-preview
+    fallback_chain:
+      - gemini-3.1-pro-preview
+      - gemini-2.5-pro
+      - gemini-3.1-flash-lite-preview
+      - gemini-3-flash-preview
+      - nano-banana-pro
+      - nano-banana-2
+      - nano-banana
+    models:
+      gemini-3.1-pro-preview:
+        alias: G-PRO31
+        role: code_architecture_primary
+        tier: 1
+      gemini-2.5-pro:
+        alias: G-PRO
+        role: multimodal_code_analysis
+        tier: 1
+      gemini-3.1-flash-lite-preview:
+        alias: G-FLA31
+        role: rapid_code_iteration
+        tier: 2
+      gemini-3-flash-preview:
+        alias: G-FLA30
+        role: fallback_fast
+        tier: 3
+      nano-banana-pro:
+        alias: G-NANOP
+        role: crash_triage
+        tier: 4
+      nano-banana-2:
+        alias: G-NANO2
+        role: crash_classification
+        tier: 4
+      nano-banana:
+        alias: G-NANO
+        role: crash_binary
+        tier: 4
+  openai:
+    default_model: gpt-5.3-codex
+    fallback_chain:
+      - gpt-5.3-codex
+      - gpt-5.4
+      - gpt-5.4-pro
+      - gpt-5.3
+      - o4-mini
+    models:
+      gpt-5.3-codex:
+        alias: O-CDX
+        api_model_id: gpt-5.3-codex
+        role: code_primary
+        tier: 1
+      gpt-5.4:
+        alias: O-54
+        api_model_id: gpt-5.4
+        role: ideation_architecture
+        tier: 1
+      gpt-5.4-pro:
+        alias: O-54P
+        api_model_id: gpt-5.4-pro
+        role: deep_code_planning
+        tier: 1
+      gpt-5.3:
+        alias: O-53
+        api_model_id: gpt-5.3
+        role: code_fallback
+        tier: 2
+      o4-mini:
+        alias: O-O4M
+        api_model_id: o4-mini
+        role: rapid_verifier
+        tier: 3
+
+energy_routing:
+  high:
+    google_primary: gemini-3.1-pro-preview
+    openai_primary: gpt-5.4-pro
+    tasks:
+      - full_code_architecture
+      - complex_refactoring
+      - cross_module_redesign
+      - performance_deep_analysis
+  medium:
+    google_primary: gemini-3.1-flash-lite-preview
+    openai_primary: gpt-5.3-codex
+    tasks:
+      - feature_implementation
+      - code_review
+      - test_generation
+      - targeted_refactoring
+      - dependency_update
+  low:
+    google_primary: gemini-3-flash-preview
+    openai_primary: o4-mini
+    tasks:
+      - syntax_check
+      - lint_verification
+      - binary_code_decision
+  crash:
+    google_primary: nano-banana-pro
+    openai_primary: null
+    tasks:
+      - severity_classification
+      - binary_build_break
+
+handoff:
+  accepts_from:
+    - engineer
+    - devops_engineer
+    - ai_ml_engineer
+    - data_engineer
+    - ui_engineer
+    - secops_engineer
+  delegates_to:
+    - engineer: ["architecture_decisions", "cross_discipline_coordination"]
+    - devops_engineer: ["deployment_config", "pipeline_setup"]
+    - secops_engineer: ["security_review", "vuln_assessment"]
+    - data_engineer: ["data_layer_implementation"]
+    - ui_engineer: ["frontend_implementation"]
+  protocol: HANDOFF
+  format: structured_yaml

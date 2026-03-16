@@ -1,0 +1,145 @@
+{
+  "agent": "ui-engineer",
+  "skills": {
+    "always_on": [
+      {
+        "id": "SK-REALITY",
+        "name": "reality_check",
+        "description": "Tag all claims [OBS/DRV/GEN/SPEC]. Gate output. Verify before asserting. Extra vigilance on browser support and performance claims.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-ENERGY",
+        "name": "energy_routing",
+        "description": "Route tasks to appropriate model tier based on current energy level.",
+        "trigger": "every_input",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-EXTERN",
+        "name": "externalization",
+        "description": "Externalize all state to component specs, design tokens, storybook. Never hold UI state in prose.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-A11Y",
+        "name": "accessibility_guard",
+        "description": "Check every component output for accessibility: ARIA roles, keyboard handling, focus management, color contrast, screen reader text. Flag violations automatically.",
+        "trigger": "every_component_output",
+        "cognitive_load": "background"
+      }
+    ],
+    "domain": [
+      {
+        "id": "SK-COMPONENT",
+        "name": "component_architecture",
+        "description": "Design component hierarchies: atomic design, compound components, render props, HOCs, hooks.",
+        "input": "design specs, requirements, framework",
+        "output": "component tree (mermaid), prop tables, code",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Prop table: Prop | Type | Default | Required | Description. Component code follows."
+      },
+      {
+        "id": "SK-DESIGN",
+        "name": "design_system",
+        "description": "Build design systems: tokens, primitives, patterns, documentation.",
+        "input": "brand guidelines, component inventory, framework",
+        "output": "token table, component library spec, storybook config",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Token table: Token | Value | Usage | Category. Component inventory follows."
+      },
+      {
+        "id": "SK-RESPONSIVE",
+        "name": "responsive_layout",
+        "description": "Implement responsive layouts: CSS Grid, Flexbox, container queries, media queries.",
+        "input": "design mockups, breakpoints, content requirements",
+        "output": "layout code, breakpoint table, responsive testing notes",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Breakpoint table: Name | Min Width | Max Width | Layout Changes. CSS follows."
+      },
+      {
+        "id": "SK-STATE",
+        "name": "state_management",
+        "description": "Design state management: Redux, Zustand, Jotai, XState, Context API.",
+        "input": "app complexity, data flow requirements, team preferences",
+        "output": "state config, store definitions, selector patterns",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "State comparison: Library | Bundle Size | DX | Performance | Complexity | Tag. Config follows."
+      },
+      {
+        "id": "SK-A11Y-IMPL",
+        "name": "accessibility_implementation",
+        "description": "Implement WCAG compliance: ARIA, keyboard navigation, focus management, color contrast, screen readers.",
+        "input": "component, WCAG level target, audit results",
+        "output": "accessible component code, keyboard interaction table, ARIA mapping",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Keyboard table: Key | Action | Context. ARIA table: Element | Role | Attributes. Code follows."
+      },
+      {
+        "id": "SK-PERF",
+        "name": "performance_optimization",
+        "description": "Optimize frontend performance: code splitting, lazy loading, image optimization, caching, Core Web Vitals.",
+        "input": "performance audit, bundle analysis, Lighthouse scores",
+        "output": "optimization plan, budget table, implementation code",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Budget table: Metric | Target | Current | Status | Tag. Optimization list follows."
+      },
+      {
+        "id": "SK-CSS",
+        "name": "css_styling",
+        "description": "CSS architecture: modules, Tailwind, styled-components, vanilla extract, CSS-in-JS.",
+        "input": "design specs, framework, styling approach",
+        "output": "styling code, token mapping, utility class config",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Approach comparison: Method | Bundle Impact | DX | Runtime Cost | Tag. Code follows."
+      },
+      {
+        "id": "SK-ANIM",
+        "name": "animation",
+        "description": "Implement animations: Framer Motion, GSAP, CSS transitions, Spring physics.",
+        "input": "interaction spec, performance budget, framework",
+        "output": "animation code, performance notes, reduced motion handling",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Animation spec: Trigger | Duration | Easing | Reduced Motion Fallback. Code follows."
+      },
+      {
+        "id": "SK-BROWSER",
+        "name": "cross_browser",
+        "description": "Ensure cross-browser compatibility: feature detection, polyfills, progressive enhancement.",
+        "input": "browser support matrix, features used",
+        "output": "compatibility table, polyfill config, fallback code",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Browser table: Feature | Chrome | Firefox | Safari | Edge | Fallback | Tag."
+      },
+      {
+        "id": "SK-PWA",
+        "name": "pwa",
+        "description": "Configure PWAs: service workers, manifest, offline support, push notifications.",
+        "input": "app requirements, offline needs, push requirements",
+        "output": "service worker config, manifest, caching strategy",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Caching table: Resource | Strategy | TTL | Offline Fallback. Config follows."
+      },
+      {
+        "id": "SK-TEST",
+        "name": "frontend_testing",
+        "description": "Frontend testing: unit (Vitest), component (Testing Library), E2E (Playwright), visual regression.",
+        "input": "component specs, test requirements, CI setup",
+        "output": "test suite, coverage config, CI integration",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Test matrix: Component | Unit | Integration | E2E | Visual | A11y. Test code follows."
+      },
+      {
+        "id": "SK-BUILD",
+        "name": "build_tooling",
+        "description": "Configure build tools: Vite, Webpack, Turbopack, ESBuild, SWC.",
+        "input": "project requirements, framework, target environments",
+        "output": "build config, optimization settings, bundle analysis",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Build comparison: Tool | Dev Speed | Build Speed | Config Complexity | Ecosystem | Tag."
+      }
+    ]
+  }
+}

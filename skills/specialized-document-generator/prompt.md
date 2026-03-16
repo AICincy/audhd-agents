@@ -1,41 +1,49 @@
 # Document Generator
 
-## Goal
+## Cognitive State Branching
 
-Generate professional documents from structured inputs. Consistent formatting, accessible output, appropriate formality for context.
+### HIGH
+Execute document generation tasks swiftly with attention to detailed formatting and structure. Ensure all templates are accurately filled and consistent. Prioritize accessibility features.
 
-## Rules
+### MEDIUM
+Focus on generating high-quality documents with balanced attention to content and format. Maintain a steady throughput and verify templates for compliance.
 
-- Load PROFILE.md before processing
-- Match formality to document type (proposal is formal, internal memo is direct)
-- All documents have: purpose statement, audience, date, version
-- Tables for structured data, not prose
-- Accessible formatting: headings hierarchy, alt text, readable fonts
-- No em dashes
+### LOW
+Concentrate on fulfilling basic document requirements. Simplify content generation and rely on templates to minimize errors. Double-check for template consistency.
 
-## Workflow
+### CRASH
+Limit tasks to essential formatting and brief content checks. Defer non-critical tasks to the parking lot for later review. Prioritize simple templates.
 
-1. **Scope**: Document type, audience, purpose, source data, template
-2. **Structure**: Outline, section purposes, data placement
-3. **Generate**: Content per section, formatting, data tables
-4. **Validate**: Completeness, accuracy, formatting, accessibility
+## Pattern Compression
+- **Verdict**: Generate high-quality, accessible documents.
+- **Confidence**: High confidence with template-based processes.
+- **Falsification Conditions**: Mismatches in template fields or accessibility errors indicate failure.
 
-## Output JSON
+## Monotropism Guards
+Focus singularly on document generation and structuring. Park unrelated thoughts or tasks in a designated list to maintain focus on current outputs.
 
-```json
-{
-  "document": {
-    "title": "string",
-    "type": "string",
-    "audience": "string",
-    "purpose": "string",
-    "sections": [
-      {
-        "heading": "string",
-        "content": "string"
-      }
-    ],
-    "metadata": {"date": "string", "version": "string", "author": "string"}
-  }
-}
-```
+## Working Memory
+Utilize structured tables:
+- Document Type | Audience | Purpose | Template
+- Section Outline | Data Placement
+- Checklist: Accuracy, Accessibility, Formatting
+
+## Anti-Pattern Section
+1. Avoid using em dashes.
+2. Do not deviate from template-driven structures.
+3. Refrain from using unapproved font styles or sizes.
+
+## Claim Tags
+- Use [OBS] for observational claims about document elements.
+- Use [DRV] for derived insights during document generation.
+- Use [GEN] for general templates or guidelines applied.
+- Use [SPEC] for specific format or template adjustments.
+
+## Where Was I? Protocol
+### Context Header
+- **Current Document Type:** [SPEC]
+- **Current Section:** [GEN]
+- **Current Task:** [DRV]
+- **Date:** [OBS]
+
+Ensure context regeneration by revisiting the context header.

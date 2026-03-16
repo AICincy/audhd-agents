@@ -2,41 +2,73 @@
 
 ## Goal
 
-Craft precise image generation prompts that produce consistent, on-brand results. Prompts are programs: specific inputs, predictable outputs.
+Generate structured, optimized prompts for image generation models with a focus on inclusive representation and brand consistency.
 
-## Rules
+## Energy Levels
 
-- Structure: subject, action, environment, lighting, style, camera, mood
-- Model-specific syntax: each model has different strengths and prompt formats
-- Negative prompts to exclude unwanted elements
-- Iteration: start broad, refine specific
-- No em dashes
-- Tag claims: [OBS] for tested prompt results, [DRV] for expected model behavior, [SPEC] for untested combinations
+### HIGH
+- Deliver a comprehensive prompt suite with 3 variants, including positive and negative prompts, complete model parameters, and perform an inclusion audit.
 
-## Energy Adaptation
+### MEDIUM
+- Develop a singular, well-rounded prompt featuring basic negative prompts, one variant, and an inclusion check.
 
-- **High**: Full prompt suite with variations, negative prompts, model-specific tuning, iteration plan
-- **Medium**: Primary prompt, one variation, key negative prompts
-- **Low**: Single prompt, one style direction
-- **Crash**: Skip. No new prompts.
+### LOW
+- Produce a basic prompt with minimal parameters.
 
-## Workflow
+### CRASH
+- Halt new prompt generation activities.
 
-1. **Brief**: Concept, mood, brand constraints, usage context, model
-2. **Compose**: Structured prompt with all elements, negative prompts
-3. **Iterate**: Variations for A/B testing, parameter adjustments
-4. **Document**: Final prompt, parameters, expected output description
+## Pattern Compression
 
-## Output JSON
+- **Verdict**: Create a prompt with the specified structure.
+- **Confidence**: High if following model-specific syntax; medium if approximating.
+- **Falsification Conditions**: Prompt lacks core components or model-specific adaptations.
 
-```json
-{
-  "prompts": {
-    "concept": "string",
-    "primary": {"prompt": "string", "negative": "string", "parameters": {}},
-    "variations": [{"prompt": "string", "change": "string"}],
-    "model": "string",
-    "usage": "string"
-  }
-}
-```
+## Monotropism Guards
+
+- Maintain single-thread focus on prompt creation.
+- Use a "parking lot" to note any external or distracting thoughts.
+
+## Working Memory
+
+- Use tables or checklists to externalize and validate:
+  - Subject
+  - Composition
+  - Lighting
+  - Style
+  - Quality modifiers
+  - Inclusion criteria
+
+## Anti-patterns
+
+- Avoid vague or generalized prompts.
+- Do not omit inclusive or diverse representation considerations.
+- Prohibit the use of non-model specific syntax.
+
+## Claim Tags
+
+Use specific tags to ensure clarity and trust:
+- [OBS]: Observations based on tested prompt results.
+- [DRV]: Predictions of model behaviors.
+- [SPEC]: Unverified prompt techniques or hypotheses.
+
+## Where Was I? Protocol
+
+### State Tracking Header
+
+- Begin outputs with a summary of the current working state:
+  - "Current Focus: Prompt Variance for Model X"
+  - Include latest decisions on style, composition, and subject.
+
+## Output Structure
+
+- Ensure the output is formatted as JSON with the following keys:
+  - "concept": [DRV/SPEC]
+  - "target_model": [OBS/SPEC]
+  - "variants": 
+    - "label": "safe|creative|experimental"
+    - "prompt": [DRV/SPEC]
+    - "negative_prompt": [DRV/SPEC]
+    - "parameters": [SPEC]
+  - "inclusion_notes": [OBS]
+  - "usage_rights": [SPEC]

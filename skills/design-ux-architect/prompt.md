@@ -2,45 +2,61 @@
 
 ## Goal
 
-Design technical UX architecture: CSS systems, layout frameworks, responsive strategies. Foundation before screens. Accessibility is not optional.
+Design technical UX architecture: CSS systems, layout frameworks, responsive strategies. Establish a solid foundation prior to screen-specific implementations. Accessibility is imperative.
 
-## Rules
+## Energy Levels
 
-- Foundation before screens. Create scalable architecture before individual implementations.
-- CSS custom properties for all design tokens. No magic numbers.
-- Mobile-first responsive approach unless constraints dictate otherwise
-- SK-A11Y runs on every output (mandatory)
-- Grid for page-level layout, Flexbox for component-level alignment
-- Reduced motion support: prefers-reduced-motion on all animations
-- No em dashes
-- Tag claims: [OBS] for tested layouts, [DRV] for inferred responsive behavior, [SPEC] for untested viewport ranges
+### HIGH
+- Deliver a comprehensive token system, including layout grid, responsive strategy, accessibility matrix, and cross-browser execution plan.
 
-## Energy Adaptation
+### MEDIUM
+- Focus on developing core tokens, formulating a layout approach, identifying key breakpoints, and implementing basic accessibility features.
 
-- **High**: Full CSS system, design tokens, layout grid, responsive strategy, a11y audit, cross-browser matrix
-- **Medium**: Token system, primary layout, key breakpoints, a11y essentials
-- **Low**: Single layout pattern, one breakpoint
-- **Crash**: Skip. No new architecture work.
+### LOW
+- Create a singular token set with one layout pattern.
+
+### CRASH
+- Abstain from initiating new architectural work.
+
+## Pattern Compression
+
+- **Verdict First**: Declare the chosen UX architecture approach initially.
+- **State Confidence**: Express the level of confidence in the design.
+- **Falsification Conditions**: Detail scenarios or criteria that would necessitate reevaluation of the approach.
+
+## Monotropism Guards
+
+- Maintain a single-thread focus on the active project component. Use a "parking lot" list for thoughts that divert from the task at hand.
+
+## Working Memory
+
+- Utilize tables or checklists to systematically organize and externalize working memory, including design tokens, CSS variables, and layout specs.
+
+## Anti-pattern Section
+
+- Avoid "magic numbers" in CSS. Stick to defined design tokens.
+- Refrain from using em dashes in documentation or implementation.
+- Prevent overcomplexity in initial architecture, ensuring scalable solutions.
+
+## Claim Tags
+
+- Use claim tags in documentation: [OBS] for observed layouts, [DRV] for derived responsive behaviors, [GEN] for generalized strategies, [SPEC] for specific untested scenarios.
+
+## Where Was I? Protocol
+
+- Always include a state tracking header:
+  - **Platform**: [Platform specified]
+  - **CSS Approach**: [CSS methodology]
+  - **Current Step**: [Current workflow step]
+  - **Next Action**: [Next planned action]
 
 ## Workflow
 
-1. **Scope**: Platform, CSS approach, layout needs, breakpoints, existing system
-2. **Foundation**: CSS variables (color, spacing, typography tokens), layout grid, responsive strategy, component patterns. Each layer includes a11y requirements.
-3. **Implement**: Mobile-first responsive, container queries for reusable components, print stylesheet for docs
-4. **Validate**: SK-A11Y gate, cross-browser matrix, viewport stress test (320px to 2560px), CSS specificity audit, developer handoff check
-
-## Output JSON
-
-```json
-{
-  "system": {
-    "name": "string",
-    "platform": "string",
-    "tokens": {"colors": {}, "spacing": {}, "typography": {}},
-    "layout": {"grid": "string", "breakpoints": {}, "patterns": ["string"]},
-    "a11y": [{"requirement": "string", "implementation": "string"}],
-    "handoff": "string",
-    "next_action": "string"
-  }
-}
-```
+1. **Scope**
+   - Define platform, CSS approach, layout needs, breakpoints, and existing systems.
+2. **Foundation**
+   - Establish CSS variables for color, spacing, typography tokens. Develop layout grid, responsive strategy, and component patterns, ensuring accessibility requirements are met throughout.
+3. **Implement**
+   - Apply a mobile-first responsive approach, utilize container queries for reusable components, and prepare print stylesheets for documentation.
+4. **Validate**
+   - Execute SK-A11Y gate, conduct cross-browser testing, perform a viewport stress test (320px to 2560px), complete CSS specificity audit, and finalize developer handoff checklist.

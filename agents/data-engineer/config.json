@@ -1,0 +1,70 @@
+{
+  "agent": "data-engineer",
+  "version": "1.0.0",
+  "providers": {
+    "google": {
+      "enabled": true,
+      "model_count": 7,
+      "models": {
+        "gemini-3.1-pro-preview": {
+          "role": "data_architecture_primary",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.2, "top_p": 0.95 },
+          "capabilities": ["deep_reasoning", "structured_output", "function_calling", "long_context"],
+          "task_routing": ["full_data_platform_design", "warehouse_modeling", "data_mesh_architecture", "migration_planning", "governance_framework"],
+          "energy_requirement": "high",
+          "cost_tier": "premium",
+          "data_specific": { "strengths": ["schema_design", "pipeline_architecture", "governance_frameworks"], "weaknesses": ["may_assume_engine_features"], "consensus_partner": "gpt-5.4-pro" }
+        },
+        "gemini-2.5-pro": {
+          "role": "multimodal_data_analysis",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.2, "top_p": 0.95 },
+          "capabilities": ["multimodal", "deep_reasoning", "structured_output"],
+          "task_routing": ["lineage_diagram_review", "schema_visualization", "pipeline_dag_review", "dashboard_interpretation"],
+          "energy_requirement": "high",
+          "cost_tier": "premium"
+        },
+        "gemini-3.1-flash-lite-preview": {
+          "role": "rapid_query_iteration",
+          "tier": 2,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.2, "top_p": 0.95 },
+          "capabilities": ["fast_inference", "structured_output", "function_calling"],
+          "task_routing": ["quick_sql", "single_table_fix", "config_generation", "query_optimization"],
+          "energy_requirement": "medium",
+          "cost_tier": "standard"
+        },
+        "gemini-3-flash-preview": {
+          "role": "fallback_fast",
+          "tier": 3,
+          "parameters": { "max_output_tokens": 16384, "temperature": 0.2, "top_p": 0.9 },
+          "capabilities": ["fast_inference", "structured_output"],
+          "task_routing": ["schema_lookup", "sql_validation", "config_check"],
+          "energy_requirement": "low",
+          "cost_tier": "economy"
+        },
+        "nano-banana-pro": { "role": "crash_triage", "tier": 4, "parameters": { "max_output_tokens": 2048, "temperature": 0.1 }, "task_routing": ["pipeline_failure_severity", "binary_rollback"], "energy_requirement": "crash", "cost_tier": "minimal" },
+        "nano-banana-2": { "role": "crash_classification", "tier": 4, "parameters": { "max_output_tokens": 2048, "temperature": 0.1 }, "task_routing": ["crash_classification"], "energy_requirement": "crash", "cost_tier": "minimal" },
+        "nano-banana": { "role": "crash_binary", "tier": 4, "parameters": { "max_output_tokens": 1024, "temperature": 0.1 }, "task_routing": ["binary_decision"], "energy_requirement": "crash", "cost_tier": "minimal" }
+      }
+    },
+    "openai": {
+      "enabled": true,
+      "model_count": 5,
+      "models": {
+        "gpt-5.3-codex": { "api_model_id": "gpt-5.3-codex", "role": "data_code_primary", "tier": 1, "parameters": { "max_output_tokens": 32768, "temperature": 0.2, "top_p": 0.9 }, "capabilities": ["code_generation", "code_editing", "structured_output"], "task_routing": ["sql_generation", "pipeline_code", "dbt_models", "spark_jobs", "schema_migrations", "streaming_code"], "energy_requirement": "medium", "cost_tier": "premium", "data_specific": { "strengths": ["complex_sql", "airflow_dags", "dbt_fluent"], "weaknesses": ["may_use_engine_specific_syntax_on_wrong_engine"], "library_pinning": "required" } },
+        "gpt-5.4": { "api_model_id": "gpt-5.4", "role": "data_ideation", "tier": 1, "parameters": { "max_output_tokens": 32768, "temperature": 0.4, "top_p": 0.95 }, "capabilities": ["creative_generation", "structured_output", "function_calling"], "task_routing": ["modeling_brainstorm", "partitioning_strategy", "schema_evolution", "cost_optimization"], "energy_requirement": "medium", "cost_tier": "premium" },
+        "gpt-5.4-pro": { "api_model_id": "gpt-5.4-pro", "role": "deep_data_planning", "tier": 1, "parameters": { "max_output_tokens": 65536, "temperature": 0.3, "top_p": 0.95 }, "capabilities": ["deep_reasoning", "structured_output", "function_calling", "long_context"], "task_routing": ["multi_system_platform", "migration_planning", "data_mesh", "complex_governance", "consensus_with_gemini_pro"], "energy_requirement": "high", "cost_tier": "premium", "data_specific": { "consensus_partner": "gemini-3.1-pro-preview" } },
+        "gpt-5.3": { "api_model_id": "gpt-5.3", "role": "code_fallback", "tier": 2, "parameters": { "max_output_tokens": 32768, "temperature": 0.2, "top_p": 0.95 }, "task_routing": ["fallback_data_code"], "energy_requirement": "medium", "cost_tier": "standard" },
+        "o4-mini": { "api_model_id": "o4-mini", "role": "rapid_verifier", "tier": 3, "parameters": { "max_output_tokens": 8192, "temperature": 0.2, "top_p": 0.9 }, "task_routing": ["schema_validation", "sql_sanity_check", "config_verification"], "energy_requirement": "low", "cost_tier": "economy", "data_specific": { "escalation_triggers": ["schema_ambiguity", "potential_data_loss", "missing_foreign_keys", "partition_mismatch"] } }
+      }
+    },
+    "anthropic": { "enabled": false, "note": "Claude offline by default. Runtime detection only.", "runtime_detection": true, "models": {} }
+  },
+  "routing": {
+    "strategy": "energy_aware_dual_provider_with_fallback",
+    "cross_provider_consensus": { "enabled": true, "pairs": [{ "google": "gemini-3.1-pro-preview", "openai": "gpt-5.4-pro" }], "trigger": "T4_T5_tasks_or_conflicting_results" },
+    "circuit_breaker": { "consecutive_failures": 3, "action": "failover_to_other_provider_same_tier" },
+    "data_specific_routing": { "schema_changes": "require_dual_verification", "migration_plans": "require_rollback_at_every_step", "lineage_tracking": "always_on" }
+  }
+}

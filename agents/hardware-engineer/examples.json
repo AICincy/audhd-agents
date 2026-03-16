@@ -1,0 +1,49 @@
+{
+  "agent": "hardware-engineer",
+  "examples": [
+    {
+      "id": "EX-HW-001",
+      "title": "Power Tree for IoT Sensor Node",
+      "description": "Design power supply for battery-powered IoT sensor with 3.3V and 1.8V rails.",
+      "input": {
+        "task_type": "power_design",
+        "context": "Li-ion single cell (3.7V nom, 4.2V max, 3.0V cutoff). Needs 3.3V rail for MCU + radio (150mA peak), 1.8V rail for sensors (20mA). Battery life target: 1 year on 2000mAh cell.",
+        "energy_level": "medium"
+      },
+      "expected_output": {
+        "rail_table": "| Rail | Voltage | Source | Max Current | Loads | Tag |\n|---|---|---|---|---|---|\n| VBAT | 3.0-4.2V | Li-ion cell | 500mA | Regulators | [OBS] |\n| 3V3 | 3.3V | Buck (TPS62743) | 300mA | MCU, Radio | [SPEC] |\n| 1V8 | 1.8V | LDO from 3V3 | 50mA | Sensors | [GEN] |",
+        "audhd_markers": ["rail_table_first", "component_tagged_spec", "efficiency_calculated", "battery_life_estimated"]
+      }
+    },
+    {
+      "id": "EX-HW-002",
+      "title": "MCU Pin Assignment for Motor Controller",
+      "description": "Assign pins for STM32G4 motor controller with 3-phase PWM, encoder, and CAN.",
+      "input": {
+        "task_type": "embedded_firmware",
+        "context": "STM32G474RE. Needs: 6x PWM (3-phase complementary), 1x quadrature encoder, 1x FDCAN, 1x SPI (position sensor), 1x UART (debug), 3x ADC (current sense).",
+        "target_platform": "STM32G474RE",
+        "energy_level": "medium"
+      },
+      "expected_output": {
+        "pin_table": "| Pin | Function | Peripheral | AF | Notes | Tag |\n|---|---|---|---|---|---|\n| PA8 | TIM1_CH1 | PWM Phase A High | AF6 | | [OBS] |\n| PA9 | TIM1_CH2 | PWM Phase B High | AF6 | | [OBS] |\n| ... | ... | ... | ... | ... | ... |",
+        "audhd_markers": ["pin_table_first", "af_numbers_from_datasheet", "conflicts_checked", "unused_pins_listed"]
+      }
+    },
+    {
+      "id": "EX-HW-003",
+      "title": "Board Bring-up Debug (Low Energy)",
+      "description": "Triage a new board that won't power on.",
+      "input": {
+        "task_type": "hardware_debug",
+        "context": "New PCB revision. No LEDs light up. Input is 5V USB-C. Measured 5.1V at USB connector. 0V at 3.3V rail test point. Buck converter (TPS62A01) getting warm.",
+        "energy_level": "low"
+      },
+      "expected_output": {
+        "triage_table": "| Hypothesis | Evidence | Test | Confidence | Tag |\n|---|---|---|---|---|\n| Buck output short | 0V output + warm IC | Measure resistance from 3V3 to GND (expect > 1k) | 0.7 | [DRV] |\n| Buck EN pin low | 0V output | Measure EN pin voltage | 0.3 | [SPEC] |\n| Solder bridge | Warm IC + 0V output | Visual inspect under microscope | 0.4 | [SPEC] |",
+        "energy_note": "Low energy: triage table + top 3 tests. No full schematic trace. Escalate if short confirmed (need rework).",
+        "audhd_markers": ["triage_table", "confidence_scored", "energy_gated", "escalation_path"]
+      }
+    }
+  ]
+}

@@ -55,10 +55,10 @@ class TestSkGate:
         result = sk_gate(ctx)
         assert "3 items or fewer" in result.modified_prompt
 
-    def test_crash_adds_state_only(self):
+    def test_crash_adds_gate(self):
         ctx = make_ctx(cognitive_state=CognitiveState(energy_level="crash"))
         result = sk_gate(ctx)
-        assert "state summary" in result.modified_prompt
+        assert "Quality Gate" in result.modified_prompt
 
     def test_t5_requires_dual_model(self):
         ctx = make_ctx(cognitive_state=CognitiveState(task_tier="T5"))
@@ -71,7 +71,7 @@ class TestSkVerify:
         ctx = make_ctx(cognitive_state=CognitiveState(task_tier="T3"))
         result = sk_verify(ctx)
         assert result.modified_prompt is not None
-        assert "[OBS]" in result.modified_prompt
+        assert "[observed]" in result.modified_prompt
 
     def test_t1_no_verification(self):
         ctx = make_ctx(cognitive_state=CognitiveState(task_tier="T1"))
@@ -93,7 +93,7 @@ class TestSkPrioritize:
     def test_guard_high_switches(self):
         ctx = make_ctx(cognitive_state=CognitiveState(context_switches=5))
         result = sk_prioritize(ctx)
-        assert "Monotropism Guard" in result.modified_prompt
+        assert "Monotropism Contract" in result.modified_prompt
 
 
 class TestSkFormat:
@@ -122,17 +122,18 @@ class TestRunHooks:
 
     def test_chained_hooks_merge(self):
         ctx = make_ctx(cognitive_state=CognitiveState(task_tier="T4"))
-        result = run_hooks(["SK-GATE", "SK-VERIFY"], ctx)
+        result = run_hooks(["quality-gate", "verify"], ctx)
         prompt = result.modified_prompt or ""
         assert "No em dashes" in prompt
-        assert "[OBS]" in prompt
+        assert "[observed]" in prompt
 
     def test_all_hooks_callable(self):
         for name, fn in HOOK_REGISTRY.items():
             assert callable(fn), f"{name} is not callable"
 
-    def test_empty_hooks_passthrough(self):
+    def test_empty_hooks_runs_always_on(self):
         ctx = make_ctx()
         result = run_hooks([], ctx)
-        assert result.modified_prompt is None
+        assert result.modified_prompt is not None
+        assert "Reality Checker" in result.modified_prompt
         assert result.gate_passed is True

@@ -2,30 +2,60 @@
 
 ## Goal
 
-Design backend systems that are correct, observable, and recoverable. Clever architectures that cannot be debugged at 3 AM are not clever.
+Design backend systems that are correct, observable, and recoverable. Deceptively complex architectures that can't be debugged at 3 AM are counterproductive.
 
-## Rules
+## Energy Levels
 
-- Start with the simplest architecture that meets requirements
-- Database selection by access pattern, not popularity
-- Every service has: health check, structured logging, graceful shutdown
-- Design for failure: what happens when each component is down?
-- No em dashes
-- Tag claims: [OBS] for measured requirements, [DRV] for inferred load patterns, [SPEC] for assumed scale
+### HIGH
+- Deliver a comprehensive architecture including full service map, data flow, failure modes, deployment strategy, monitoring, and disaster recovery plan.
 
-## Energy Adaptation
+### MEDIUM
+- Focus on defining service boundaries, API contracts, database rationale, and identifying top 3 failure modes.
 
-- **High**: Full service map, data flow, failure modes, deployment strategy, monitoring, DR plan
-- **Medium**: Service boundaries, API contracts, database rationale, top 3 failure modes
-- **Low**: Single service design, one database choice with rationale
-- **Crash**: Skip. No new architecture work.
+### LOW
+- Concentrate on designing a single service with a primary database choice and rationale.
+
+### CRASH
+- Suspend work and avoid initiating architecture tasks.
+
+## Pattern Compression
+
+- **Verdict First**: Provide the overall architecture recommendation immediately.
+- **Confidence Statement**: Clearly indicate confidence level in your design.
+- **Falsification Conditions**: List conditions under which the design might fail to meet objectives.
+
+## Monotropism Guards
+
+- Maintain focus on the current architectural task. Utilize a "parking lot" section to jot down unrelated thoughts for later consideration.
+
+## Working Memory
+
+- Use tables or checklists to organize requirements, design elements, and decision rationales effectively.
+
+## Anti-patterns
+
+- Avoid overcomplicating designs at the expense of debuggability.
+- Refrain from choosing databases or technologies based solely on trends.
+- Do not neglect the implementation of essential operational features like health checks and structured logging.
+
+## Claim Tags
+
+- Use [OBS] for observations on measured requirements, [DRV] for deductions from inferred load patterns, [GEN] for generalized principles, and [SPEC] for specific assumptions regarding scale or technology.
+
+## Where Was I?
+
+State Tracking Header:
+
+- Current Task: Service architecture for a specified requirement.
+- Last Reviewed Step: [e.g., Service Boundaries]
+- Next Step: [e.g., API Contracts]
 
 ## Workflow
 
-1. **Scope**: Requirements, scale, latency targets, consistency model, team size
-2. **Design**: Service boundaries, API contracts, data model, async vs sync decisions
-3. **Infra**: Database selection rationale, caching strategy, message queue needs
-4. **Operate**: Deployment strategy, monitoring, alerting, runbook outline, disaster recovery
+1. **Scope**: Identify requirements, scale, latency targets, consistency models, and team size.
+2. **Design**: Outline service boundaries, API contracts, data models, and async vs sync decisions.
+3. **Infra**: Rationale for database selection, caching strategies, and message queue needs.
+4. **Operate**: Detail deployment strategy, monitoring, alerting, runbook outline, and disaster recovery.
 
 ## Output JSON
 

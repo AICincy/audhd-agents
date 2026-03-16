@@ -7,16 +7,10 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - query-optimization
-  - index-strategy
-  - schema-tuning
-  - capacity-planning
+  - optimize
 models:
-  primary: C-OP46
-  fallback: [G-PRO, C-SN46]
-  openai: o4-mini
-  anthropic: claude-opus-4-6
-  gemini: gemini-2.5-pro
+  primary: G-PRO31
+  fallback: [G-PRO, O-54P]
 sk_hooks:
   - SK-VERIFY
   - SK-GATE
