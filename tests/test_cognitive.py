@@ -52,6 +52,10 @@ class TestInferMode:
     def test_write_triggers_draft(self):
         assert infer_mode("Write me a proposal") == "draft"
 
+    def test_rewrite_triggers_rewrite(self):
+        """F8 regression: 'rewrite' must not false-match 'write' -> draft."""
+        assert infer_mode("Rewrite this paragraph") == "rewrite"
+
     def test_should_i_triggers_decide(self):
         assert infer_mode("Should I use React or Vue?") == "decide"
 
@@ -60,6 +64,14 @@ class TestInferMode:
 
     def test_investigate_triggers_osint(self):
         assert infer_mode("Investigate this email address") == "osint"
+
+    def test_generic_name_no_osint(self):
+        """F8 regression: generic 'name' removed from OSINT signals."""
+        assert infer_mode("What is the name of this function?") != "osint"
+
+    def test_generic_find_no_osint(self):
+        """F8 regression: generic 'find' removed from OSINT signals."""
+        assert infer_mode("Find the bug in this code") != "osint"
 
     def test_summarize_mode(self):
         assert infer_mode("Summarize the meeting notes") == "summarize"

@@ -10,10 +10,13 @@ Resolves:
 F5/F6 fix: CognitiveState imported from schemas.py (canonical).
 Duplicate dataclass removed. Low-energy pool corrected.
 F7 fix: filter_model_chain now resolves aliases before pool comparison.
+F8 fix: infer_mode uses word-boundary regex; rewrite before draft;
+OSINT signals scoped (removed generic 'name', 'find', 'domain').
 """
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from runtime.schemas import (
@@ -60,20 +63,29 @@ ENERGY_ROUTING: dict[str, dict[str, Any]] = {
     },
 }
 
+# Mode signal keywords (order matters: rewrite before draft to prevent
+# "write" in "rewrite" false match).  OSINT scoped to investigative
+# terms only -- generic "name", "find", "domain" removed (F8).
 MODE_SIGNALS: dict[str, list[str]] = {
     "osint": [
-        "name", "phone", "address", "username", "email", "domain",
+        "phone", "address", "username", "email",
         "investigate", "research", "who is", "locate", "trace",
-        "look into", "find",
+        "look into",
     ],
     "troubleshoot": ["error", "crash", "exit code", "broken", "failure"],
-    "draft": ["write", "draft", "compose"],
     "rewrite": ["fix", "edit", "rewrite", "update", "change"],
+    "draft": ["write", "draft", "compose"],
     "decide": ["should i", "compare", "which option", "which"],
     "design": ["build", "architect", "design"],
     "summarize": ["summarize", "condense", "tldr"],
     "review": ["review", "feedback", "check"],
     "chat": ["curious", "thinking", "wondering"],
+}
+
+# Pre-compiled word-boundary patterns for mode inference (F8)
+_MODE_PATTERNS: dict[str, list[re.Pattern[str]]] = {
+    mode: [re.compile(rf"\b{re.escape(sig)}\b", re.IGNORECASE) for sig in sigs]
+    for mode, sigs in MODE_SIGNALS.items()
 }
 
 
@@ -109,11 +121,14 @@ def get_output_mode(state: CognitiveState) -> str:
 
 
 def infer_mode(input_text: str) -> str:
-    """Infer PROFILE.md mode from natural language input."""
-    lower = input_text.lower()
-    for mode, signals in MODE_SIGNALS.items():
-        for signal in signals:
-            if signal in lower:
+    """Infer PROFILE.md mode from natural language input.
+
+    Uses pre-compiled word-boundary regex to prevent substring false
+    matches (e.g. 'write' inside 'rewrite').  F8 fix.
+    """
+    for mode, patterns in _MODE_PATTERNS.items():
+        for pat in patterns:
+            if pat.search(input_text):
                 return mode
     return "execute"
 
