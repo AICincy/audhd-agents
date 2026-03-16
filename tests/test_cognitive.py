@@ -1,9 +1,11 @@
 """Tests for runtime.cognitive module."""
 
 import pytest
+from pydantic import ValidationError
 from runtime.cognitive import (
     CognitiveState, infer_mode, filter_model_chain,
     build_cognitive_preamble, parse_cognitive_state,
+    tier_allowed,
 )
 
 
@@ -13,26 +15,26 @@ class TestCognitiveState:
         assert state.energy_level == "medium"
         assert state.active_mode == "execute"
         assert state.task_tier == "T3"
-        assert state.is_crash is False
-        assert state.tier_allowed is True
+        assert state.is_crash() is False
+        assert tier_allowed(state) is True
 
-    def test_invalid_energy_defaults_to_medium(self):
-        state = CognitiveState(energy_level="invalid")
-        assert state.energy_level == "medium"
+    def test_invalid_energy_rejected(self):
+        with pytest.raises(ValidationError):
+            CognitiveState(energy_level="invalid")
 
     def test_crash_mode(self):
         state = CognitiveState(energy_level="crash")
-        assert state.is_crash is True
+        assert state.is_crash() is True
         assert state.output_mode == "crash"
         assert state.max_tier_num == 1
 
     def test_low_energy_restricts_tier(self):
         state = CognitiveState(energy_level="low", task_tier="T4")
-        assert state.tier_allowed is False
+        assert tier_allowed(state) is False
 
     def test_high_energy_allows_all_tiers(self):
         state = CognitiveState(energy_level="high", task_tier="T5")
-        assert state.tier_allowed is True
+        assert tier_allowed(state) is True
 
     def test_invalid_tier_defaults(self):
         state = CognitiveState(task_tier="X9")
@@ -76,15 +78,19 @@ class TestFilterModelChain:
         assert filter_model_chain(chain, state, {}) == chain
 
     def test_low_energy_filters_to_fast_models(self):
+        alias_map = {
+            "O-54P": "openai/gpt-5.4-pro",
+            "G-PRO": "google/gemini-2.5-pro",
+            "O-O4M": "openai/o4-mini",
+        }
         chain = ["O-54P", "G-PRO", "O-O4M"]
         state = CognitiveState(energy_level="low")
-        result = filter_model_chain(chain, state, {})
+        result = filter_model_chain(chain, state, alias_map)
         assert "O-54P" not in result
         assert "O-O4M" in result
 
     def test_crash_returns_empty(self):
         chain = ["O-54P", "G-PRO"]
-        # both O-54P and G-PRO are checked. Wait, is G-PRO allowed in low? Yes.
         state = CognitiveState(energy_level="crash")
         assert filter_model_chain(chain, state, {}) == []
 
@@ -108,12 +114,13 @@ class TestBuildCognitivePreamble:
     def test_context_switch_warning(self):
         state = CognitiveState(context_switches=5)
         preamble = build_cognitive_preamble(state)
-        assert "context switches" in preamble
+        assert "Context switches" in preamble
 
-    def test_tier_blocked_warning(self):
+    def test_tier_info_shown(self):
         state = CognitiveState(energy_level="low", task_tier="T4")
         preamble = build_cognitive_preamble(state)
-        assert "TIER BLOCKED" in preamble
+        assert "Max tier" in preamble
+        assert "T2" in preamble
 
     def test_active_thread_shown(self):
         state = CognitiveState(active_thread="skill-rewrite")
@@ -122,8 +129,8 @@ class TestBuildCognitivePreamble:
 
 
 class TestParseCognitiveState:
-    def test_from_nested_object(self):
-        options = {"cognitive_state": {"energy_level": "low", "task_tier": "T2"}}
+    def test_from_flat_dict(self):
+        options = {"energy_level": "low", "task_tier": "T2"}
         state = parse_cognitive_state(options)
         assert state.energy_level == "low"
         assert state.task_tier == "T2"

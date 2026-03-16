@@ -196,7 +196,7 @@ def test_crash_mode_response_shape():
         assert crash is not None
         assert "checkpoint" in crash
         assert "resume_action" in crash
-        assert crash["message"] == "State saved. Nothing is urgent. Resume when ready."
+        assert crash["message"] == "Checkpoint saved. One action when ready."
         assert "testing-accessibility-auditor" in crash["checkpoint"]
 
         assert data["cognitive_compliance"]["compliant"] is True
