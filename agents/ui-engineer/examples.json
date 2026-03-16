@@ -1,0 +1,56 @@
+{
+  "agent": "ui-engineer",
+  "examples": [
+    {
+      "id": "EX-UI-001",
+      "title": "Accessible Modal Component",
+      "description": "Build an accessible modal dialog with focus trap, keyboard handling, and screen reader support.",
+      "input": {
+        "task_type": "component_build",
+        "context": "Need a reusable modal component for React. Must trap focus, close on Escape, restore focus on close. WCAG AA compliant.",
+        "constraints": {
+          "framework": "react",
+          "wcag_level": "AA"
+        },
+        "energy_level": "medium"
+      },
+      "expected_output": {
+        "prop_table": "| Prop | Type | Default | Required | Description |\n|---|---|---|---|---|\n| isOpen | boolean | false | yes | Controls modal visibility |\n| onClose | () => void | - | yes | Called on close action |\n| title | string | - | yes | Modal title (announced by screen reader) |\n| children | React.ReactNode | - | yes | Modal content |\n| size | 'sm' \\| 'md' \\| 'lg' | 'md' | no | Modal width variant |",
+        "keyboard_table": "| Key | Action | Context |\n|---|---|---|\n| Escape | Close modal | When modal is open |\n| Tab | Move focus to next focusable | Trapped within modal |\n| Shift+Tab | Move focus to previous focusable | Trapped within modal |",
+        "audhd_markers": ["prop_table_first", "keyboard_table", "aria_roles_documented", "focus_trap_implemented", "code_follows"]
+      }
+    },
+    {
+      "id": "EX-UI-002",
+      "title": "Design Token System",
+      "description": "Create a design token system for a new component library.",
+      "input": {
+        "task_type": "design_system",
+        "context": "Starting a new React component library. Need foundational design tokens: colors (primary, neutral, semantic), spacing (4px base), typography (Inter font family), and shadows.",
+        "constraints": {
+          "framework": "react"
+        },
+        "energy_level": "high"
+      },
+      "expected_output": {
+        "token_table": "| Token | Value | Usage | Category | Tag |\n|---|---|---|---|---|\n| --color-primary-500 | #3B82F6 | Primary actions, links | color | [GEN] |\n| --color-neutral-100 | #F3F4F6 | Backgrounds | color | [GEN] |\n| --spacing-md | 16px | Standard gap | spacing | [GEN] |\n| --font-family-base | 'Inter', sans-serif | Body text | typography | [GEN] |",
+        "audhd_markers": ["token_table_first", "consistent_scale", "contrast_ratios_noted", "css_variables_follow"]
+      }
+    },
+    {
+      "id": "EX-UI-003",
+      "title": "Performance Triage (Low Energy)",
+      "description": "Quick triage of a slow-loading page.",
+      "input": {
+        "task_type": "performance_optimization",
+        "context": "Dashboard page takes 8 seconds to load. Bundle is 2.4MB. No code splitting. 47 API calls on mount. Using Redux with everything in one store.",
+        "energy_level": "low"
+      },
+      "expected_output": {
+        "triage_table": "| Issue | Impact | Quick Fix | Confidence | Tag |\n|---|---|---|---|---|\n| No code splitting | 2.4MB bundle blocks render | React.lazy + Suspense on routes | 0.9 | [DRV] |\n| 47 API calls on mount | Network waterfall | Aggregate/batch, load on demand | 0.85 | [DRV] |\n| Single Redux store | Unnecessary re-renders | Split stores or switch to Zustand | 0.6 | [SPEC] |",
+        "energy_note": "Low energy: triage table + top 3 quick wins. No full audit. Escalate for Lighthouse run.",
+        "audhd_markers": ["triage_table", "confidence_scored", "energy_gated", "quick_wins_prioritized"]
+      }
+    }
+  ]
+}

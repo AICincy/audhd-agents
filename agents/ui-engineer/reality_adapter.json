@@ -1,0 +1,122 @@
+{
+  "agent": "ui-engineer",
+  "domain": "ui_engineering",
+  "reality_skill_version": "1.0.0",
+  "claim_tags": ["OBS", "DRV", "GEN", "SPEC"],
+  "validation_rules": {
+    "browser_support": [
+      { "rule": "no_fabricated_support", "description": "Never claim browser support without caniuse data or explicit testing. Tag [SPEC] if not verified.", "severity": "critical" },
+      { "rule": "css_property_verification", "description": "Verify CSS property support in target browsers. Do not assume new CSS features work everywhere.", "severity": "error" }
+    ],
+    "accessibility": [
+      { "rule": "a11y_audit_on_components", "description": "Every component output must include accessibility audit: ARIA roles, keyboard interactions, focus management.", "severity": "critical" },
+      { "rule": "color_contrast_check", "description": "All color combinations must meet WCAG AA contrast ratios (4.5:1 normal, 3:1 large). Tag [SPEC] if not calculated.", "severity": "error" },
+      { "rule": "reduced_motion", "description": "All animations must include prefers-reduced-motion handling.", "severity": "error" }
+    ],
+    "performance": [
+      { "rule": "no_fabricated_metrics", "description": "Never fabricate Lighthouse scores, bundle sizes, or Core Web Vitals.", "severity": "critical" },
+      { "rule": "bundle_size_tagged", "description": "Bundle size claims must be tagged [OBS] if measured, [SPEC] if estimated.", "severity": "error" }
+    ],
+    "code_quality": [
+      { "rule": "no_deprecated_patterns", "description": "Do not use deprecated React lifecycle methods, Vue Options API (unless requested), or outdated patterns.", "severity": "warning" },
+      { "rule": "type_safety", "description": "All TypeScript code must be strictly typed. No 'any' without documented justification.", "severity": "error" }
+    ],
+    "general": [
+      { "rule": "no_untagged_claims", "description": "Every factual assertion must have a claim tag.", "severity": "error" },
+      { "rule": "spec_gating", "description": "[SPEC] claims must never be presented as [OBS] or [DRV].", "severity": "critical" },
+      { "rule": "no_phantom_apis", "description": "Never reference framework APIs, hooks, or components that don't exist.", "severity": "critical" }
+    ]
+  },
+  "output_gating": {
+    "pre_output_checks": [
+      "All claims tagged",
+      "No [SPEC] presented as [OBS]",
+      "Accessibility audit included for components",
+      "Browser support claims verified or tagged [SPEC]",
+      "Performance metrics tagged appropriately",
+      "No deprecated patterns without justification",
+      "TypeScript types are strict"
+    ],
+    "block_on_failure": ["no_untagged_claims", "spec_gating", "no_phantom_apis", "no_fabricated_metrics", "no_fabricated_support"],
+    "warn_on_failure": ["a11y_audit_on_components", "reduced_motion", "no_deprecated_patterns", "type_safety"]
+  },
+  "model_profiles": {
+    "gemini-3.1-pro-preview": {
+      "hallucination_risk": "low",
+      "strengths": ["Strong component architecture", "Good design system planning", "Reliable state management advice"],
+      "known_drift_patterns": [
+        {
+          "pattern": "deprecated_lifecycle",
+          "description": "May suggest componentDidMount or other class-based patterns",
+          "frequency": "rare",
+          "mitigation": "Verify patterns against current framework version."
+        }
+      ]
+    },
+    "gemini-2.5-pro": {
+      "hallucination_risk": "low",
+      "strengths": ["Excellent design-to-code mapping", "Good visual regression analysis"],
+      "known_drift_patterns": [
+        {
+          "pattern": "spacing_estimation",
+          "description": "May estimate pixel values from screenshots rather than measuring",
+          "frequency": "occasional",
+          "mitigation": "Cross-reference visual estimates against design tokens."
+        }
+      ]
+    },
+    "gpt-5.3-codex": {
+      "hallucination_risk": "low",
+      "strengths": ["Strong React/TypeScript", "Good testing patterns", "Reliable accessibility code"],
+      "known_drift_patterns": [
+        {
+          "pattern": "library_version_mismatch",
+          "description": "May use API from different library version than specified",
+          "frequency": "occasional",
+          "mitigation": "Pin library versions. Verify API against specific version docs."
+        }
+      ]
+    },
+    "gpt-5.4": {
+      "hallucination_risk": "medium",
+      "strengths": ["Creative component APIs", "Good animation concepts"],
+      "known_drift_patterns": [
+        {
+          "pattern": "phantom_css_feature",
+          "description": "May reference CSS features that are only in spec drafts or behind flags",
+          "frequency": "occasional",
+          "mitigation": "Verify all CSS features against caniuse.com."
+        }
+      ]
+    },
+    "gpt-5.4-pro": {
+      "hallucination_risk": "low",
+      "strengths": ["Deep architecture planning", "Strong migration strategies", "Good consensus partner"],
+      "known_drift_patterns": [
+        {
+          "pattern": "over_abstracted_design",
+          "description": "May create unnecessarily abstract component hierarchies",
+          "frequency": "rare",
+          "mitigation": "Validate each abstraction layer against actual reuse need."
+        }
+      ]
+    },
+    "o4-mini": {
+      "hallucination_risk": "medium",
+      "strengths": ["Fast prop validation", "Good accessibility quick checks"],
+      "known_drift_patterns": [
+        {
+          "pattern": "false_a11y_pass",
+          "description": "May VERIFY components that have subtle accessibility issues (e.g., missing focus trap)",
+          "frequency": "occasional",
+          "mitigation": "Never sole verifier for accessibility compliance."
+        }
+      ]
+    }
+  },
+  "error_handling": {
+    "on_hallucination_detected": "Tag as [SPEC], flag phantom API/feature, do not present as fact",
+    "on_verification_failure": "Block output, request framework documentation link",
+    "on_energy_crash": "Route to nano model, JSON-only, binary rollback/hold, escalate immediately"
+  }
+}

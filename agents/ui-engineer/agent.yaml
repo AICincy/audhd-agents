@@ -1,0 +1,192 @@
+agent:
+  name: ui-engineer
+  display_name: "UI Engineer"
+  version: "1.0.0"
+  description: >-
+    UI engineering agent for the AuDHD Cognitive Swarm.
+    Frontend development, component architecture, design systems,
+    responsive layouts, state management, accessibility implementation,
+    performance optimization, CSS/styling, animation, testing.
+  domain: ui_engineering
+  cognitive_profile:
+    patterns:
+      - pattern_compression
+      - monotropism
+      - asymmetric_working_memory
+      - meta_layer_reflex
+    energy_model: true
+    externalization: required
+
+skills:
+  always_on:
+    - reality_check
+    - energy_routing
+    - externalization
+  domain:
+    - component_architecture
+    - design_system
+    - responsive_layout
+    - state_management
+    - accessibility_implementation
+    - performance_optimization
+    - css_styling
+    - animation
+    - cross_browser
+    - pwa
+    - frontend_testing
+    - build_tooling
+
+model_routing:
+  google:
+    default_model: gemini-3.1-pro-preview
+    fallback_chain:
+      - gemini-3.1-pro-preview
+      - gemini-2.5-pro
+      - gemini-3.1-flash-lite-preview
+      - gemini-3-flash-preview
+      - nano-banana-pro
+      - nano-banana-2
+      - nano-banana
+    models:
+      gemini-3.1-pro-preview:
+        role: ui_architecture_primary
+        tier: 1
+        routing_notes: >-
+          Primary for: full design system architecture, complex component
+          hierarchies, state management strategy, performance audit planning,
+          cross-framework migration.
+          Consensus partner with gpt-5.4-pro on T4-T5 tasks.
+      gemini-2.5-pro:
+        role: multimodal_ui_analysis
+        tier: 1
+        routing_notes: >-
+          Primary for: design mockup to component mapping, visual regression
+          analysis, screenshot-based debugging, layout comparison review.
+          Multimodal input required.
+      gemini-3.1-flash-lite-preview:
+        role: rapid_component_iteration
+        tier: 2
+        routing_notes: >-
+          Primary for: quick component generation, single CSS fix,
+          fast prop type generation, quick accessibility fix.
+      gemini-3-flash-preview:
+        role: fallback_fast
+        tier: 3
+        routing_notes: >-
+          Fallback for: simple CSS lookups, basic HTML validation,
+          prop type checks.
+      nano-banana-pro:
+        role: crash_triage
+        tier: 4
+        routing_notes: "JSON-only. Render failure severity. Binary rollback."
+      nano-banana-2:
+        role: crash_classification
+        tier: 4
+        routing_notes: "JSON-only. Crash type classification."
+      nano-banana:
+        role: crash_binary
+        tier: 4
+        routing_notes: "JSON-only. Binary yes/no."
+  openai:
+    default_model: gpt-5.3-codex
+    fallback_chain:
+      - gpt-5.3-codex
+      - gpt-5.4
+      - gpt-5.4-pro
+      - gpt-5.3
+      - o4-mini
+    models:
+      gpt-5.3-codex:
+        api_model_id: gpt-5.3-codex
+        role: ui_code_primary
+        tier: 1
+        routing_notes: >-
+          Primary for: React/Vue/Svelte/Angular components, CSS modules,
+          Tailwind configs, state management (Redux, Zustand, Jotai),
+          animation code (Framer Motion, GSAP), testing (Vitest, Playwright),
+          build configs (Vite, Webpack, Turbopack).
+          Code-first. Production-grade. Tests alongside.
+      gpt-5.4:
+        api_model_id: gpt-5.4
+        role: ui_ideation
+        tier: 1
+        routing_notes: >-
+          Primary for: design system brainstorming, component API design,
+          animation concepts, interaction patterns, novel layout approaches.
+          Tag creative suggestions [DRV] or [SPEC].
+      gpt-5.4-pro:
+        api_model_id: gpt-5.4-pro
+        role: deep_ui_planning
+        tier: 1
+        routing_notes: >-
+          Primary for: full design system architecture, complex state
+          management strategy, performance optimization planning,
+          migration roadmaps, micro-frontend architecture.
+          Consensus with gemini-3.1-pro-preview on T4-T5.
+      gpt-5.3:
+        api_model_id: gpt-5.3
+        role: code_fallback
+        tier: 2
+        routing_notes: "Same constraints as gpt-5.3-codex. Fallback path."
+      o4-mini:
+        api_model_id: o4-mini
+        role: rapid_verifier
+        tier: 3
+        routing_notes: >-
+          VERIFIED / UNVERIFIED / ESCALATE. Max 512 tokens.
+          Hard ESCALATE on: accessibility violations, breaking API changes,
+          bundle size regressions.
+  anthropic:
+    enabled: false
+    note: "Claude offline by default. Runtime detection only."
+
+energy_routing:
+  high:
+    google_primary: gemini-3.1-pro-preview
+    openai_primary: gpt-5.4-pro
+    tasks:
+      - full_design_system
+      - component_library_architecture
+      - state_management_strategy
+      - performance_audit
+      - framework_migration
+      - micro_frontend_architecture
+  medium:
+    google_primary: gemini-3.1-flash-lite-preview
+    openai_primary: gpt-5.3-codex
+    tasks:
+      - component_implementation
+      - css_module
+      - animation_code
+      - test_suite
+      - build_config
+      - responsive_layout
+      - accessibility_fix
+  low:
+    google_primary: gemini-3-flash-preview
+    openai_primary: o4-mini
+    tasks:
+      - css_lookup
+      - prop_type_check
+      - html_validation
+  crash:
+    google_primary: nano-banana-pro
+    openai_primary: null
+    tasks:
+      - render_failure_severity
+      - binary_rollback_decision
+
+handoff:
+  accepts_from:
+    - engineer
+    - software_engineer
+    - ux_engineer
+    - accessibility_engineer
+  delegates_to:
+    - ux_engineer: ["user_research", "interaction_design", "usability_testing"]
+    - accessibility_engineer: ["wcag_audit", "screen_reader_testing", "compliance"]
+    - software_engineer: ["api_integration", "backend_for_frontend", "graphql_schema"]
+    - devops_engineer: ["ci_cd_frontend", "cdn_config", "edge_functions"]
+    - engineer: ["architecture_decisions", "cross_discipline_coordination"]
+  protocol: HANDOFF
+  format: structured_yaml
