@@ -5,7 +5,12 @@
       "id": "EX-NET-001",
       "title": "Firewall Rule Set for DMZ Web Server",
       "description": "Generate firewall rules for a DMZ-hosted web application with backend database access.",
-      "input": { "task_type": "firewall_policy", "context": "Web server in DMZ needs HTTPS from internet, HTTP redirect, access to backend DB on port 5432 in internal zone. Management via SSH from admin VLAN only.", "vendor": "palo_alto", "energy_level": "medium" },
+      "input": {
+        "task_type": "firewall_policy",
+        "context": "Web server in DMZ needs HTTPS from internet, HTTP redirect, access to backend DB on port 5432 in internal zone. Management via SSH from admin VLAN only.",
+        "vendor": "palo_alto",
+        "energy_level": "medium"
+      },
       "expected_output": {
         "rule_table": "| # | Action | Src | Dst | Port | Proto | Log | Tag |\n|---|---|---|---|---|---|---|---|\n| 1 | allow | any | dmz-web | 443 | tcp | yes | [GEN] |\n| 2 | allow | any | dmz-web | 80 | tcp | yes | [GEN] |\n| 3 | allow | dmz-web | internal-db | 5432 | tcp | yes | [GEN] |\n| 4 | allow | admin-vlan | dmz-web | 22 | tcp | yes | [GEN] |\n| 5 | deny | any | any | any | any | yes | [GEN] |",
         "audhd_markers": ["rule_table_first", "config_follows", "deny_all_present", "logging_on_all"]
@@ -15,7 +20,12 @@
       "id": "EX-NET-002",
       "title": "BGP Peering Configuration",
       "description": "Configure eBGP peering between two sites with route filtering.",
-      "input": { "task_type": "routing_config", "context": "Site A (AS 65001) peering with ISP (AS 64512). Advertise only 10.0.0.0/16 aggregate. Accept default route + specific prefixes. IOS-XE router.", "vendor": "cisco", "energy_level": "medium" },
+      "input": {
+        "task_type": "routing_config",
+        "context": "Site A (AS 65001) peering with ISP (AS 64512). Advertise only 10.0.0.0/16 aggregate. Accept default route + specific prefixes. IOS-XE router.",
+        "vendor": "cisco",
+        "energy_level": "medium"
+      },
       "expected_output": {
         "neighbor_table": "| Peer | AS | Interface | Prefixes Out | Prefixes In | Tag |\n|---|---|---|---|---|---|\n| 203.0.113.1 | 64512 | Gi0/0 | 10.0.0.0/16 (aggregate) | default + specifics | [OBS] |",
         "audhd_markers": ["neighbor_table_first", "config_follows", "route_filter_explicit", "vendor_declared"]
@@ -25,7 +35,11 @@
       "id": "EX-NET-003",
       "title": "Network Outage Triage (Low Energy)",
       "description": "Triage intermittent connectivity loss between two sites.",
-      "input": { "task_type": "troubleshooting", "context": "Site B reports intermittent packet loss to Site A. Ping shows 15% loss, traceroute shows hop 3 (WAN link) with 200ms+ latency. BGP session flapping every 10 minutes.", "energy_level": "low" },
+      "input": {
+        "task_type": "troubleshooting",
+        "context": "Site B reports intermittent packet loss to Site A. Ping shows 15% loss, traceroute shows hop 3 (WAN link) with 200ms+ latency. BGP session flapping every 10 minutes.",
+        "energy_level": "low"
+      },
       "expected_output": {
         "triage_table": "| Hypothesis | Evidence | Confidence | Tag |\n|---|---|---|---|\n| WAN link degradation | 200ms+ at hop 3 + 15% loss | 0.85 | [DRV] |\n| BGP timer mismatch | Flap every 10min (default hold = 180s) | 0.3 | [SPEC] |\n| Interface errors/CRC | Intermittent loss pattern | 0.4 | [SPEC] |",
         "quick_commands": "show interface counters errors, show ip bgp summary, show ip sla statistics [GEN]",

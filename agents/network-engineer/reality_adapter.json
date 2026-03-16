@@ -5,33 +5,142 @@
   "claim_tags": ["OBS", "DRV", "GEN", "SPEC"],
   "validation_rules": {
     "configuration": [
-      { "rule": "vendor_command_verification", "description": "All CLI commands must match real vendor syntax. Verify against vendor docs or tag [SPEC].", "severity": "error" },
-      { "rule": "ip_address_verification", "description": "IP addresses for live systems must come from provided context [OBS] or be explicitly generated [DRV]. Never fabricate IPs for live networks.", "severity": "critical" },
-      { "rule": "protocol_feature_verification", "description": "Protocol features must reference real RFCs or vendor implementations.", "severity": "error" },
-      { "rule": "config_syntax_validity", "description": "All generated config must be syntactically valid for the declared vendor platform.", "severity": "error" }
+      {
+        "rule": "vendor_command_verification",
+        "description": "All CLI commands must match real vendor syntax. Verify against vendor docs or tag [SPEC].",
+        "severity": "error"
+      },
+      {
+        "rule": "ip_address_verification",
+        "description": "IP addresses for live systems must come from provided context [OBS] or be explicitly generated [DRV]. Never fabricate IPs for live networks.",
+        "severity": "critical"
+      },
+      {
+        "rule": "protocol_feature_verification",
+        "description": "Protocol features must reference real RFCs or vendor implementations.",
+        "severity": "error"
+      },
+      {
+        "rule": "config_syntax_validity",
+        "description": "All generated config must be syntactically valid for the declared vendor platform.",
+        "severity": "error"
+      }
     ],
     "security": [
-      { "rule": "deny_all_default", "description": "Every firewall policy must end with explicit deny-all unless documented exception.", "severity": "error" },
-      { "rule": "no_any_any_allow", "description": "Never generate allow-any-any rules without explicit justification and [SPEC] tag.", "severity": "critical" }
+      {
+        "rule": "deny_all_default",
+        "description": "Every firewall policy must end with explicit deny-all unless documented exception.",
+        "severity": "error"
+      },
+      {
+        "rule": "no_any_any_allow",
+        "description": "Never generate allow-any-any rules without explicit justification and [SPEC] tag.",
+        "severity": "critical"
+      }
     ],
     "general": [
-      { "rule": "no_untagged_claims", "description": "Every factual assertion must have a claim tag.", "severity": "error" },
-      { "rule": "spec_gating", "description": "[SPEC] claims must never be presented as [OBS] or [DRV].", "severity": "critical" },
-      { "rule": "no_phantom_protocols", "description": "Never reference protocols, RFCs, or vendor features that don't exist.", "severity": "critical" }
+      {
+        "rule": "no_untagged_claims",
+        "description": "Every factual assertion must have a claim tag.",
+        "severity": "error"
+      },
+      {
+        "rule": "spec_gating",
+        "description": "[SPEC] claims must never be presented as [OBS] or [DRV].",
+        "severity": "critical"
+      },
+      {
+        "rule": "no_phantom_protocols",
+        "description": "Never reference protocols, RFCs, or vendor features that don't exist.",
+        "severity": "critical"
+      }
     ]
   },
   "output_gating": {
-    "pre_output_checks": ["All claims tagged", "No [SPEC] presented as [OBS]", "All vendor commands verifiable", "Config syntax valid for target platform", "Deny-all present on firewall policies", "No any-any allow rules without justification"],
+    "pre_output_checks": [
+      "All claims tagged",
+      "No [SPEC] presented as [OBS]",
+      "All vendor commands verifiable",
+      "Config syntax valid for target platform",
+      "Deny-all present on firewall policies",
+      "No any-any allow rules without justification"
+    ],
     "block_on_failure": ["no_untagged_claims", "spec_gating", "no_phantom_protocols", "ip_address_verification", "no_any_any_allow"],
     "warn_on_failure": ["config_syntax_validity", "deny_all_default"]
   },
   "model_profiles": {
-    "gemini-3.1-pro-preview": { "hallucination_risk": "low", "strengths": ["Strong network topology reasoning", "Good multi-site architecture", "Reliable BGP policy design"], "known_drift_patterns": [{ "pattern": "vendor_syntax_mix", "description": "May mix Cisco and Juniper syntax in same config block", "frequency": "rare", "mitigation": "Always declare target vendor. Validate syntax against vendor reference." }] },
-    "gemini-3.1-flash-lite-preview": { "hallucination_risk": "low", "strengths": ["Fast config generation", "Quick ACL modifications"], "known_drift_patterns": [{ "pattern": "incomplete_acl", "description": "May omit implicit deny or logging on ACL entries", "frequency": "occasional", "mitigation": "Always verify deny-all and logging requirements." }] },
-    "gpt-5.3-codex": { "hallucination_risk": "low", "strengths": ["Strong firewall rule generation", "Good routing config", "Reliable DNS zones"], "known_drift_patterns": [{ "pattern": "deprecated_command", "description": "May use deprecated IOS commands instead of IOS-XE equivalents", "frequency": "rare", "mitigation": "Verify commands against target platform version." }] },
-    "gpt-5.4": { "hallucination_risk": "medium", "strengths": ["Creative network design options", "Good technology comparisons"], "known_drift_patterns": [{ "pattern": "feature_fabrication", "description": "May invent plausible protocol features or vendor capabilities", "frequency": "occasional", "mitigation": "Verify all feature claims against vendor/RFC docs." }] },
-    "gpt-5.4-pro": { "hallucination_risk": "low", "strengths": ["Deep migration planning", "Strong zero-trust design", "Good consensus partner"], "known_drift_patterns": [{ "pattern": "over_segmented_design", "description": "May create unnecessarily granular micro-segmentation", "frequency": "rare", "mitigation": "Set max zone count. Justify each trust boundary." }] },
-    "o4-mini": { "hallucination_risk": "medium", "strengths": ["Fast config verification", "Good ACL syntax checks"], "known_drift_patterns": [{ "pattern": "surface_validation", "description": "May VERIFY configs that pass syntax but have logical routing errors", "frequency": "occasional", "mitigation": "Never sole verifier for production network changes." }] }
+    "gemini-3.1-pro-preview": {
+      "hallucination_risk": "low",
+      "strengths": ["Strong network topology reasoning", "Good multi-site architecture", "Reliable BGP policy design"],
+      "known_drift_patterns": [
+        {
+          "pattern": "vendor_syntax_mix",
+          "description": "May mix Cisco and Juniper syntax in same config block",
+          "frequency": "rare",
+          "mitigation": "Always declare target vendor. Validate syntax against vendor reference."
+        }
+      ]
+    },
+    "gemini-3.1-flash-lite-preview": {
+      "hallucination_risk": "low",
+      "strengths": ["Fast config generation", "Quick ACL modifications"],
+      "known_drift_patterns": [
+        {
+          "pattern": "incomplete_acl",
+          "description": "May omit implicit deny or logging on ACL entries",
+          "frequency": "occasional",
+          "mitigation": "Always verify deny-all and logging requirements."
+        }
+      ]
+    },
+    "gpt-5.3-codex": {
+      "hallucination_risk": "low",
+      "strengths": ["Strong firewall rule generation", "Good routing config", "Reliable DNS zones"],
+      "known_drift_patterns": [
+        {
+          "pattern": "deprecated_command",
+          "description": "May use deprecated IOS commands instead of IOS-XE equivalents",
+          "frequency": "rare",
+          "mitigation": "Verify commands against target platform version."
+        }
+      ]
+    },
+    "gpt-5.4": {
+      "hallucination_risk": "medium",
+      "strengths": ["Creative network design options", "Good technology comparisons"],
+      "known_drift_patterns": [
+        {
+          "pattern": "feature_fabrication",
+          "description": "May invent plausible protocol features or vendor capabilities",
+          "frequency": "occasional",
+          "mitigation": "Verify all feature claims against vendor/RFC docs."
+        }
+      ]
+    },
+    "gpt-5.4-pro": {
+      "hallucination_risk": "low",
+      "strengths": ["Deep migration planning", "Strong zero-trust design", "Good consensus partner"],
+      "known_drift_patterns": [
+        {
+          "pattern": "over_segmented_design",
+          "description": "May create unnecessarily granular micro-segmentation",
+          "frequency": "rare",
+          "mitigation": "Set max zone count. Justify each trust boundary."
+        }
+      ]
+    },
+    "o4-mini": {
+      "hallucination_risk": "medium",
+      "strengths": ["Fast config verification", "Good ACL syntax checks"],
+      "known_drift_patterns": [
+        {
+          "pattern": "surface_validation",
+          "description": "May VERIFY configs that pass syntax but have logical routing errors",
+          "frequency": "occasional",
+          "mitigation": "Never sole verifier for production network changes."
+        }
+      ]
+    }
   },
   "error_handling": {
     "on_hallucination_detected": "Tag as [SPEC], flag phantom protocol/feature, do not present as fact",

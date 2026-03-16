@@ -62,10 +62,19 @@
         "task_type": {
           "type": "string",
           "enum": [
-            "network_architecture", "routing_config", "switching_config",
-            "firewall_policy", "dns_config", "vpn_config",
-            "load_balancer_config", "network_monitoring", "wireless_design",
-            "sdn_automation", "zero_trust_design", "subnet_planning", "troubleshooting"
+            "network_architecture",
+            "routing_config",
+            "switching_config",
+            "firewall_policy",
+            "dns_config",
+            "vpn_config",
+            "load_balancer_config",
+            "network_monitoring",
+            "wireless_design",
+            "sdn_automation",
+            "zero_trust_design",
+            "subnet_planning",
+            "troubleshooting"
           ]
         },
         "context": { "type": "string" },

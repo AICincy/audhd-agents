@@ -25,16 +25,96 @@
       }
     ],
     "domain": [
-      { "id": "SK-NETARCH", "name": "network_architecture", "description": "Design network topologies. Campus, data center, WAN, cloud hybrid. Layer 2/3 design.", "input": "requirements, site count, bandwidth needs, redundancy targets", "output": "topology diagram (mermaid), subnet plan, device list, protocol selection", "energy_tier": ["high"], "audhd_adaptation": "Subnet table first: Subnet | CIDR | VLAN | Purpose | Gateway. Topology mermaid follows." },
-      { "id": "SK-ROUTE", "name": "routing_switching", "description": "Configure OSPF, BGP, EIGRP, static routes, VLANs, STP, LACP.", "input": "routing requirements, current topology, vendor", "output": "routing/switching config, neighbor tables, verification commands", "energy_tier": ["high", "medium"], "audhd_adaptation": "Neighbor table: Peer | AS | State | Prefixes | Interface. Config follows." },
-      { "id": "SK-FIREWALL", "name": "firewall_policy", "description": "Write firewall rules, security zones, NAT policies. Palo Alto, Fortinet, iptables, cloud security groups.", "input": "security requirements, traffic flows, compliance constraints", "output": "firewall rule table, zone config, NAT rules", "energy_tier": ["high", "medium"], "audhd_adaptation": "Rule table: # | Action | Src | Dst | Port | Proto | Log | Tag. Config follows." },
-      { "id": "SK-DNS", "name": "dns_dhcp", "description": "DNS zone management, DHCP scopes, split-horizon DNS, DNSSEC.", "input": "domain requirements, zone structure", "output": "zone files, DHCP scope config, delegation records", "energy_tier": ["medium"], "audhd_adaptation": "Record table: Name | Type | Value | TTL | Tag. Zone file follows." },
-      { "id": "SK-VPN", "name": "vpn_tunneling", "description": "Site-to-site VPN, remote access VPN, IPsec, WireGuard, SSL VPN.", "input": "VPN requirements, endpoints, encryption needs", "output": "VPN config, tunnel parameters, phase 1/2 proposals", "energy_tier": ["medium"], "audhd_adaptation": "Tunnel table: Tunnel | Local | Remote | IKE | ESP | Status. Config follows." },
-      { "id": "SK-LB", "name": "load_balancing", "description": "L4/L7 load balancing, health checks, SSL termination, traffic distribution.", "input": "application requirements, backend pool, health criteria", "output": "LB config, pool definition, health check config, persistence rules", "energy_tier": ["medium"], "audhd_adaptation": "Pool table: VIP | Backend | Port | Health Check | Weight. Config follows." },
-      { "id": "SK-NETMON", "name": "network_monitoring", "description": "SNMP, NetFlow, sFlow, network dashboards, alerting, SLA monitoring.", "input": "monitoring requirements, device inventory", "output": "SNMP config, flow export config, alert thresholds", "energy_tier": ["medium"], "audhd_adaptation": "SLA table: Interface | Metric | Threshold | Alert | Escalation. Config follows." },
-      { "id": "SK-WIFI", "name": "wireless_design", "description": "Wireless site surveys, AP placement, channel planning, WLAN security.", "input": "coverage requirements, building layout, density targets", "output": "AP placement plan, channel map, SSID config, security config", "energy_tier": ["high", "medium"], "audhd_adaptation": "AP table: Location | Channel | Power | SSID | Security | Band. Coverage map follows." },
-      { "id": "SK-SDN", "name": "sdn_automation", "description": "SDN controllers, network automation, Ansible network modules, YANG models, RESTCONF/NETCONF.", "input": "automation requirements, target devices, current management", "output": "automation playbooks, YANG models, API configs", "energy_tier": ["high", "medium"], "audhd_adaptation": "Automation table: Task | Target | Method | Frequency | Rollback. Playbook follows." },
-      { "id": "SK-ZT", "name": "zero_trust_networking", "description": "Zero-trust architecture, micro-segmentation, identity-aware proxies, ZTNA.", "input": "current architecture, trust boundaries, compliance needs", "output": "zero-trust design, segmentation policy, identity integration plan", "energy_tier": ["high"], "audhd_adaptation": "Trust boundary table: Zone | Assets | Access Policy | Verification | Tag. Architecture follows." }
+      {
+        "id": "SK-NETARCH",
+        "name": "network_architecture",
+        "description": "Design network topologies. Campus, data center, WAN, cloud hybrid. Layer 2/3 design.",
+        "input": "requirements, site count, bandwidth needs, redundancy targets",
+        "output": "topology diagram (mermaid), subnet plan, device list, protocol selection",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Subnet table first: Subnet | CIDR | VLAN | Purpose | Gateway. Topology mermaid follows."
+      },
+      {
+        "id": "SK-ROUTE",
+        "name": "routing_switching",
+        "description": "Configure OSPF, BGP, EIGRP, static routes, VLANs, STP, LACP.",
+        "input": "routing requirements, current topology, vendor",
+        "output": "routing/switching config, neighbor tables, verification commands",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Neighbor table: Peer | AS | State | Prefixes | Interface. Config follows."
+      },
+      {
+        "id": "SK-FIREWALL",
+        "name": "firewall_policy",
+        "description": "Write firewall rules, security zones, NAT policies. Palo Alto, Fortinet, iptables, cloud security groups.",
+        "input": "security requirements, traffic flows, compliance constraints",
+        "output": "firewall rule table, zone config, NAT rules",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Rule table: # | Action | Src | Dst | Port | Proto | Log | Tag. Config follows."
+      },
+      {
+        "id": "SK-DNS",
+        "name": "dns_dhcp",
+        "description": "DNS zone management, DHCP scopes, split-horizon DNS, DNSSEC.",
+        "input": "domain requirements, zone structure",
+        "output": "zone files, DHCP scope config, delegation records",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Record table: Name | Type | Value | TTL | Tag. Zone file follows."
+      },
+      {
+        "id": "SK-VPN",
+        "name": "vpn_tunneling",
+        "description": "Site-to-site VPN, remote access VPN, IPsec, WireGuard, SSL VPN.",
+        "input": "VPN requirements, endpoints, encryption needs",
+        "output": "VPN config, tunnel parameters, phase 1/2 proposals",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Tunnel table: Tunnel | Local | Remote | IKE | ESP | Status. Config follows."
+      },
+      {
+        "id": "SK-LB",
+        "name": "load_balancing",
+        "description": "L4/L7 load balancing, health checks, SSL termination, traffic distribution.",
+        "input": "application requirements, backend pool, health criteria",
+        "output": "LB config, pool definition, health check config, persistence rules",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Pool table: VIP | Backend | Port | Health Check | Weight. Config follows."
+      },
+      {
+        "id": "SK-NETMON",
+        "name": "network_monitoring",
+        "description": "SNMP, NetFlow, sFlow, network dashboards, alerting, SLA monitoring.",
+        "input": "monitoring requirements, device inventory",
+        "output": "SNMP config, flow export config, alert thresholds",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "SLA table: Interface | Metric | Threshold | Alert | Escalation. Config follows."
+      },
+      {
+        "id": "SK-WIFI",
+        "name": "wireless_design",
+        "description": "Wireless site surveys, AP placement, channel planning, WLAN security.",
+        "input": "coverage requirements, building layout, density targets",
+        "output": "AP placement plan, channel map, SSID config, security config",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "AP table: Location | Channel | Power | SSID | Security | Band. Coverage map follows."
+      },
+      {
+        "id": "SK-SDN",
+        "name": "sdn_automation",
+        "description": "SDN controllers, network automation, Ansible network modules, YANG models, RESTCONF/NETCONF.",
+        "input": "automation requirements, target devices, current management",
+        "output": "automation playbooks, YANG models, API configs",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Automation table: Task | Target | Method | Frequency | Rollback. Playbook follows."
+      },
+      {
+        "id": "SK-ZT",
+        "name": "zero_trust_networking",
+        "description": "Zero-trust architecture, micro-segmentation, identity-aware proxies, ZTNA.",
+        "input": "current architecture, trust boundaries, compliance needs",
+        "output": "zero-trust design, segmentation policy, identity integration plan",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Trust boundary table: Zone | Assets | Access Policy | Verification | Tag. Architecture follows."
+      }
     ]
   }
 }
