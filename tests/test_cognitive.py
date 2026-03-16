@@ -5,7 +5,7 @@ from pydantic import ValidationError
 from runtime.cognitive import (
     CognitiveState, infer_mode, filter_model_chain,
     build_cognitive_preamble, parse_cognitive_state,
-    tier_allowed,
+    tier_allowed, get_output_mode, get_max_tier_num,
 )
 
 
@@ -25,8 +25,8 @@ class TestCognitiveState:
     def test_crash_mode(self):
         state = CognitiveState(energy_level="crash")
         assert state.is_crash() is True
-        assert state.output_mode == "crash"
-        assert state.max_tier_num == 1
+        assert get_output_mode(state) == "crash"
+        assert get_max_tier_num(state) == 1
 
     def test_low_energy_restricts_tier(self):
         state = CognitiveState(energy_level="low", task_tier="T4")
