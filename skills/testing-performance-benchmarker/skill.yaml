@@ -9,11 +9,8 @@ category: testing
 capabilities:
   - evaluate
 models:
-  primary: C-SN46
-  fallback: [C-OP46, G-PRO]
-  openai: o4-mini
-  anthropic: claude-sonnet-4-6
-  gemini: gemini-2.5-pro
+  primary: G-PRO31
+  fallback: [G-PRO, O-54P]
 sk_hooks:
   - SK-VERIFY
   - SK-GATE

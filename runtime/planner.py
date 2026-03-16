@@ -54,8 +54,8 @@ class RuntimePlanner:
         for rule in self.rules:
             triggers = rule.get("trigger", [])
             for trigger in triggers:
-                # Use word boundary matching to prevent trigger ambiguity
-                if re.search(r'\b' + re.escape(trigger.lower()) + r'\b', input_lower):
+                # Use word boundary matching that handles punctuation bypass edge cases
+                if re.search(r'(?<!\w)' + re.escape(trigger.lower()) + r'(?!\w)', input_lower):
                     start_cap = rule.get("start_capability")
                     default_chain_name = rule.get("default_chain")
                     

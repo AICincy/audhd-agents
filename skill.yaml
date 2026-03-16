@@ -7,9 +7,9 @@ tags:
   - routing
   - cognitive-support
 models:
-  primary: C-SN46
+  primary: G-PRO
   fallback:
-    - C-OP46
+    - O-54P
     - G-PRO
 capabilities:
   primary: orchestrate

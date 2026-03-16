@@ -8,11 +8,11 @@ Loaded on first tool invocation. Defines what each tool does, when to use it, an
 
 | Category | Tools | Primary Models |
 | --- | --- | --- |
-| Search and Research | Web search, WHOIS, DNS scan, document retrieval | G-PRO, C-OP46 |
+| Search and Research | Web search, WHOIS, DNS scan, document retrieval | G-PRO, O-54P |
 | Code Execution | Code interpreter, filesystem tools, git operations | O-CDX |
-| Document Operations | Read, write, edit, create pages and databases | C-SN46, C-OP46 |
-| Communication | Draft emails, messages, stakeholder comms | O-54, C-OP46 |
-| Analysis | Data extraction, comparison, synthesis | C-OP46, G-PRO |
+| Document Operations | Read, write, edit, create pages and databases | O-O4M, G-PRO |
+| Communication | Draft emails, messages, stakeholder comms | O-54, G-PRO |
+| Analysis | Data extraction, comparison, synthesis | G-PRO, O-54P |
 | Multimodal | Image analysis, diagram interpretation, screenshot reading | G-PRO |
 
 ---
@@ -116,7 +116,7 @@ VALIDATION: [how to verify result]
 
 | Platform | Available Tools | Notes |
 | --- | --- | --- |
-| Claude (Anthropic) | Web search, code execution (artifacts), document analysis | Extended thinking available for Opus |
+
 | Gemini (Google) | Google Search, code execution, Google Workspace, multimodal | Search grounding built-in |
 | ChatGPT (OpenAI) | Web browsing, code interpreter, DALL-E, file analysis | Canvas for iterative editing |
 | Codex (OpenAI) | Code execution, file I/O, git operations | Sandbox environment |

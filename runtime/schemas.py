@@ -72,6 +72,8 @@ class CognitiveState(BaseModel):
     Without it, skills are generic LLM templates.
     With it, every skill adapts to the user's current capacity.
     """
+    model_config = ConfigDict(frozen=True)
+    
     energy_level: EnergyLevel = Field(
         default=EnergyLevel.MEDIUM,
         description="Current energy/capacity level. Controls model selection and output density."
@@ -155,12 +157,16 @@ class ExecuteRequest(BaseModel):
 
 class CognitiveCompliance(BaseModel):
     """Output validation results against the cognitive contract."""
+    model_config = ConfigDict(frozen=True)
+    
     compliant: bool = True
     violations: list[str] = Field(default_factory=list)
 
 
 class CrashStateResponse(BaseModel):
     """Response shape for crash mode. No model was called."""
+    model_config = ConfigDict(frozen=True)
+    
     checkpoint: str = Field(
         ...,
         description="What was in progress when crash mode activated"

@@ -2,51 +2,7 @@
 # Model routing and capability mapping
 
 providers:
-  anthropic:
-    env_key: ANTHROPIC_API_KEY
-    base_url: https://api.anthropic.com/v1
-    models:
-      claude-opus-4-6:
-        id: claude-opus-4-6
-        alias: C-OP46
-        tier: T4
-        context_window: 200000
-        max_output: 32000
-        strengths:
-          - complex-reasoning
-          - code-generation
-          - long-context
-          - multi-step-analysis
-      claude-opus-4-5-20251101:
-        id: claude-opus-4-5-20251101
-        alias: C-OP45
-        tier: T4
-        context_window: 200000
-        max_output: 32000
-        strengths:
-          - complex-reasoning
-          - code-generation
-          - long-context
-      claude-sonnet-4-6:
-        id: claude-sonnet-4-6
-        alias: C-SN46
-        tier: T2
-        context_window: 200000
-        max_output: 16000
-        strengths:
-          - fast-execution
-          - code-generation
-          - balanced-cost
-      claude-sonnet-4-5-20250929:
-        id: claude-sonnet-4-5-20250929
-        alias: C-SN45
-        tier: T2
-        context_window: 200000
-        max_output: 16000
-        strengths:
-          - fast-execution
-          - code-generation
-          - balanced-cost
+
 
   openai:
     env_key: OPENAI_API_KEY
@@ -136,13 +92,30 @@ providers:
           - multimodal
           - data-analysis
           - cost-effective
+      gemini-3.1-pro-preview:
+        id: gemini-3.1-pro-preview
+        alias: G-PRO31
+        tier: T3
+        context_window: 1048576
+        max_output: 65536
+        production_fallback: gemini-2.5-pro
+        strengths:
+          - deep-reasoning
+          - complex-analysis
+      gemini-3.1-flash:
+        id: gemini-3.1-flash
+        alias: G-FLA31
+        tier: T1
+        context_window: 1048576
+        max_output: 8192
+        strengths:
+          - fast-cheap
+          - triage
+          - rapid-drafting
 
 # Alias resolution map (used by skill.yaml model references)
 alias_map:
-  C-OP46: anthropic/claude-opus-4-6
-  C-OP45: anthropic/claude-opus-4-5-20251101
-  C-SN46: anthropic/claude-sonnet-4-6
-  C-SN45: anthropic/claude-sonnet-4-5-20250929
+
   O-54: openai/gpt-5.4
   O-53: openai/gpt-5.3
   O-54P: openai/gpt-5.4-pro
@@ -150,6 +123,8 @@ alias_map:
   O-MAX: openai/gpt-max
   O-O4M: openai/o4-mini
   G-PRO: google/gemini-2.5-pro
+  G-PRO31: google/gemini-3.1-pro-preview
+  G-FLA31: google/gemini-3.1-flash
 
 # Circuit breakers (applied to all provider adapters)
 circuit_breaker:

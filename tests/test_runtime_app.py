@@ -67,8 +67,8 @@ def test_healthz_returns_process_status():
 
 def test_readyz_fails_when_required_provider_missing():
     with make_client(
-        status_payload={"openai": {"connected": True}},
-        required_providers=("openai", "anthropic"),
+        status_payload={"openai": {"connected": False}},
+        required_providers=("openai",),
         response_payload=SkillResponse(
             output={"status": "ok"},
             model_used="gpt-5.4",
@@ -80,7 +80,7 @@ def test_readyz_fails_when_required_provider_missing():
         assert response.status_code == 503
         detail = response.json()["detail"]
         assert detail["status"] == "not_ready"
-        assert detail["missing_required_providers"] == ["anthropic"]
+        assert detail["missing_required_providers"] == ["openai"]
 
 
 def test_execute_returns_structured_response():

@@ -17,7 +17,6 @@ except ImportError:
     load_dotenv = None
 
 from .base import SkillRequest, SkillResponse, CostRecord
-from .anthropic_adapter import AnthropicAdapter
 from .openai_adapter import OpenAIAdapter
 from .google_adapter import GoogleAdapter
 
@@ -104,17 +103,14 @@ class SkillRouter:
             cfg.setdefault("failure_threshold", cb_cfg.get("failure_threshold", 3))
             cfg.setdefault("recovery_timeout", cb_cfg.get("recovery_timeout", 60))
 
-        if "anthropic" in providers:
-            cfg = providers["anthropic"]
-            key = os.getenv(cfg.get("env_key", "ANTHROPIC_API_KEY"))
-            if key:
-                self.adapters["anthropic"] = AnthropicAdapter(api_key=key, config=cfg)
-
         if "openai" in providers:
             cfg = providers["openai"]
-            key = os.getenv(cfg.get("env_key", "OPENAI_API_KEY"))
-            if key:
-                self.adapters["openai"] = OpenAIAdapter(api_key=key, config=cfg)
+            raw_key = os.getenv(cfg.get("env_key", "OPENAI_API_KEY"))
+            if raw_key:
+                from pydantic import SecretStr
+                self.adapters["openai"] = OpenAIAdapter(
+                    api_key=SecretStr(raw_key), config=cfg
+                )
 
         if "google" in providers:
             cfg = providers["google"]
@@ -128,10 +124,25 @@ class SkillRouter:
                     )
 
     def resolve_alias(self, alias: str) -> tuple:
-        """Resolve model alias to (provider, model_id)."""
+        """Resolve model alias to (provider, model_id).
+
+        In production (APP_ENV=production), if the resolved model has a
+        production_fallback configured, transparently swap to the stable model.
+        """
         full = self.alias_map.get(alias, alias)
         if "/" in full:
             provider, model = full.split("/", 1)
+            # Auto-downgrade preview models in production
+            if os.getenv("APP_ENV") == "production":
+                provider_cfg = self.config.get("providers", {}).get(provider, {})
+                model_cfg = provider_cfg.get("models", {}).get(model, {})
+                fallback = model_cfg.get("production_fallback")
+                if fallback:
+                    logger.info(
+                        "Production fallback: %s -> %s (preview model downgraded)",
+                        model, fallback,
+                    )
+                    model = fallback
             return provider, model
         raise ValueError(f"Could not resolve alias '{alias}' to a provider/model pair. Check alias_map in config.yaml.")
 
@@ -188,7 +199,6 @@ class SkillRouter:
         """Load provider-specific model instructions (e.g., models/OPENAI.md)."""
         model_map = {
             "openai": "models/OPENAI.md",
-            "anthropic": "models/ANTHROPIC.md",
             "google": "models/GEMINI.md",
         }
         path_str = model_map.get(provider.lower())
@@ -406,7 +416,8 @@ class SkillRouter:
             system_prompt = cognitive_preamble + "\n\n" + system_prompt
 
             # Audit correlation ID (uniqueness fix)
-            audit_id = f"audit-{request.skill_id}-{os.getpid()}-{str(uuid.uuid4())[:8]}"
+            hex_id = uuid.uuid4().hex
+            audit_id = f"audit-{request.skill_id}-{os.getpid()}-{hex_id[0:8]}"
             user_prompt = f"[AUDIT_ID: {audit_id}]\n{request.input_text}"
             
             # Deep copy to prevent state pollution across failovers
@@ -431,8 +442,29 @@ class SkillRouter:
                 content = result.get("content", "").strip()
                 output = {"raw": content}
 
-                # Robust JSON regex extraction
-                json_content = re.sub(r"^```(?:json)?|```$", "", content, flags=re.IGNORECASE).strip()
+                # Robust multi-strategy JSON extraction
+                # Strategy 1: Extract from markdown code blocks (```json ... ```)
+                json_content = None
+                json_match = re.search(r'```(?:json)?\s*([\s\S]*?)\s*```', content, flags=re.IGNORECASE)
+                if json_match:
+                    json_content = json_match.group(1).strip()
+
+                # Strategy 2: Bracket-match fallback (first '{' to last '}')
+                if not json_content or not json_content.startswith(("{", "[")):
+                    first_brace = content.find("{")
+                    first_bracket = content.find("[")
+                    candidates = [i for i in (first_brace, first_bracket) if i >= 0]
+                    if candidates:
+                        start_idx = min(candidates)
+                        open_char = content[start_idx]
+                        close_char = "}" if open_char == "{" else "]"
+                        last_close = content.rfind(close_char)
+                        if last_close > start_idx:
+                            json_content = content[start_idx:last_close + 1].strip()
+
+                # Strategy 3: Fall through to raw content
+                if not json_content:
+                    json_content = content.strip()
 
                 if json_content.startswith(("{", "[")):
                     try:

@@ -88,8 +88,8 @@ def default_router(**kwargs):
                 "single_next_action": "Proceed.",
                 "parking_lot": [],
             },
-            model_used="claude-3-sonnet",
-            provider="anthropic",
+            model_used="gpt-5.4",
+            provider="openai",
             input_tokens=150,
             output_tokens=50,
             latency_ms=25,
@@ -120,8 +120,8 @@ def test_execute_accepts_full_cognitive_state():
         assert response.status_code == 200
         data = response.json()
         assert data["energy_level"] == "high"
-        assert data["model_used"] == "claude-3-sonnet"
-        assert data["provider"] == "anthropic"
+        assert data["model_used"] == "gpt-5.4"
+        assert data["provider"] == "openai"
         assert router.execute_called
         assert router.last_cognitive_state is not None
         assert router.last_cognitive_state.energy_level.value == "high"

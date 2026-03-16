@@ -10,7 +10,7 @@ Route incoming tasks to the optimal model based on complexity tier, domain, ener
 2. Match domain to routing matrix in AGENT.md.
 3. Apply energy-adaptive constraints: low energy caps at T2, crash mode halts new work.
 4. Prefer cheapest model that meets tier requirement.
-5. Never route T1 tasks to premium models (C-OP46, C-OP45, O-54P).
+5. Never route T1 tasks to premium models (O-54P, G-PRO31).
 6. Carry full state in every handoff: goal, constraints, partial results, evidence, next action.
 7. Circuit breakers override normal routing on error spike, rate limit cascade, or cost ceiling.
 

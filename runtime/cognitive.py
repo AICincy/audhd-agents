@@ -30,7 +30,7 @@ ENERGY_ROUTING: dict[str, dict[str, Any]] = {
     },
     "low": {
         "max_tier": "T2",
-        "model_pool": ["C-SN46", "C-SN45", "G-PRO"],
+        "model_pool": ["G-PRO", "G-PRO31", "G-FLA31", "O-O4M"],
         "behavior": "micro_steps",
         "output_mode": "minimal",
     },

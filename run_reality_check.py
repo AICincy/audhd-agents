@@ -1,5 +1,6 @@
 import asyncio
 import json
+import dataclasses
 from adapters.router import SkillRouter
 from runtime.schemas import ExecuteRequest
 
@@ -12,10 +13,10 @@ async def main():
     req = ExecuteRequest(
         skill_id="testing-reality-checker",
         input_text=f"Please reality check the following work regarding codebase enhancements and security fixes:\n\n{work_summary}",
-        model_override="C-OP46"
+        model_override="G-PRO31"
     )
     res = await router.execute(req)
-    print(json.dumps(res.model_dump(), indent=2))
+    print(json.dumps(dataclasses.asdict(res), indent=2))
 
 if __name__ == "__main__":
     asyncio.run(main())

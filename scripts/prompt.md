@@ -18,7 +18,7 @@ Execute build and diagnostic scripts for the audhd-agents system. Generate dist/
 
 1. Scan `skills/` directory for all `skill.yaml` files.
 2. Validate each against schema.
-3. Generate provider-specific manifests (Anthropic, OpenAI, Google).
+3. Generate provider-specific manifests (OpenAI, Google).
 4. Write to `dist/` directory.
 5. Report: skills processed, manifests generated, any validation errors.
 

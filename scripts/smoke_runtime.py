@@ -11,7 +11,7 @@ import urllib.error
 import urllib.request
 
 
-DEFAULT_ALIASES = ["O-54", "C-OP46", "G-PRO"]
+DEFAULT_ALIASES = ["G-PRO31", "G-FLA31", "O-54"]
 
 
 def call_json(method: str, url: str, body: dict | None = None, token: str | None = None):

@@ -4,12 +4,12 @@
   "properties": {
     "provider": {
       "type": "string",
-      "enum": ["anthropic", "openai", "google"],
+      "enum": ["openai", "google"],
       "description": "Target LLM provider."
     },
     "model_id": {
       "type": "string",
-      "description": "Model identifier from agent registry (e.g., C-OP46, G-PRO, O-54)."
+      "description": "Model identifier from agent registry (e.g., G-PRO31, G-PRO, O-54)."
     },
     "payload": {
       "type": "object",

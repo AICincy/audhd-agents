@@ -22,6 +22,7 @@ from fastapi import FastAPI, HTTPException, Request, status
 from adapters.base import SkillRequest
 from adapters.router import SkillRouter
 from runtime.config import RuntimeSettings
+from runtime.sanitize import sanitize_input
 
 # P1-1: Cognitive state schemas
 from runtime.schemas import (
@@ -240,9 +241,20 @@ def create_app(
         started_at = time.time()
 
         try:
+            # Sanitize input before passing to router
+            cleaned_text, injection_patterns = sanitize_input(payload.input_text)
+            if injection_patterns:
+                emit_log(
+                    logger,
+                    "injection_patterns_detected",
+                    request_id=request_id,
+                    skill_id=payload.skill_id,
+                    patterns=injection_patterns,
+                )
+
             skill_request = SkillRequest(
                 skill_id=payload.skill_id,
-                input_text=payload.input_text,
+                input_text=cleaned_text,
                 options=payload.options,
                 model_override=payload.model_override,
             )

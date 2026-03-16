@@ -22,7 +22,7 @@ except ImportError:
 
 SKILLS_DIR = Path("skills")
 DIST_DIR = Path("dist")
-ADAPTERS = ["openai", "anthropic", "gemini"]
+ADAPTERS = ["openai", "gemini"]
 
 
 def load_skill(skill_dir: Path) -> dict:
@@ -72,19 +72,6 @@ def build_openai(skill: dict) -> dict:
     }
 
 
-def build_anthropic(skill: dict) -> dict:
-    """Generate Anthropic/Claude tool definition."""
-    schema = skill.get("schema", {})
-    return {
-        "name": skill["name"],
-        "description": skill.get("description", "").strip(),
-        "input_schema": {
-            "type": "object",
-            "properties": schema.get("properties", {}),
-            "required": schema.get("required", []),
-        },
-    }
-
 
 def _convert_gemini_property(val: dict) -> dict:
     """Recursively convert a JSON Schema property to Gemini format."""
@@ -127,7 +114,6 @@ def build_gemini(skill: dict) -> dict:
 
 BUILDERS = {
     "openai": build_openai,
-    "anthropic": build_anthropic,
     "gemini": build_gemini,
 }
 
