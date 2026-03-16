@@ -29,7 +29,7 @@ Produce documentation that is actively used. Documentation should be scannable a
 - Do not omit code examples where practical.
 
 ## Claim Tags
-- Use [OBS] for validated observations, [DRV] for derived insights, [GEN] for general assertions, and [SPEC] for specific claims without available documentation.
+- Use [observed] for validated observations, [inferred] for derived insights, [general] for general assertions, and [unverified] for specific claims without available documentation.
 
 ## Where Was I? Protocol
 - Document state tracking at the beginning of the output to ensure clear context recovery for the reader and writer.

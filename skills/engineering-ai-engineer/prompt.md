@@ -41,10 +41,10 @@ Design production-grade ML systems. Emphasize deployment-ready solutions over pr
 
 ## Claim Tags
 
-- Use [OBS] for claims based on observed, benchmarked results.
-- Use [DRV] for claims regarding derived or estimated performance improvements.
-- Use [SPEC] for speculative or theoretical architectural claims.
-- Use [GEN] for general industry practices.
+- Use [observed] for claims based on observed, benchmarked results.
+- Use [inferred] for claims regarding derived or estimated performance improvements.
+- Use [unverified] for speculative or theoretical architectural claims.
+- Use [general] for general industry practices.
 
 ## Where Was I? Protocol
 
@@ -52,7 +52,7 @@ Ensure each stage of your output includes a state tracking header that recaps cu
 
 ## Workflow
 
-1. **Frame**: [OBS] Determine if ML is applicable: problem type, success criteria, current baseline.
-2. **Design**: [DRV] Define data pipeline, determine model and features, develop training strategy.
-3. **Deploy**: [SPEC] Establish serving architecture, plan A/B tests or canary releases, setup thorough monitoring.
-4. **Operate**: [GEN] Implement retraining triggers, develop incident responses, track costs and maintain a detailed model card.
+1. **Frame**: [observed] Determine if ML is applicable: problem type, success criteria, current baseline.
+2. **Design**: [inferred] Define data pipeline, determine model and features, develop training strategy.
+3. **Deploy**: [unverified] Establish serving architecture, plan A/B tests or canary releases, setup thorough monitoring.
+4. **Operate**: [general] Implement retraining triggers, develop incident responses, track costs and maintain a detailed model card.

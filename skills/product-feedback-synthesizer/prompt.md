@@ -43,10 +43,10 @@
 ## Claim Tags
 
 - Use the following tags for clarity:
-  - [OBS] for direct observations or quotes.
-  - [DRV] for derived themes or insights.
-  - [GEN] for general comments or unsupported assertions.
-  - [SPEC] for specific extrapolated recommendations.
+  - [observed] for direct observations or quotes.
+  - [inferred] for derived themes or insights.
+  - [general] for general comments or unsupported assertions.
+  - [unverified] for specific extrapolated recommendations.
 
 ## Where Was I? Protocol
 

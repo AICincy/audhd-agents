@@ -37,10 +37,10 @@ Utilize tables or checklists for endpoint and test management. Externalize memor
 ## Claim Tags
 
 When documenting findings or assumptions, apply tags appropriately:
-- [OBS] for observed behavior
-- [DRV] for inferred risks
-- [GEN] for general information
-- [SPEC] for specific, untested assumptions
+- [observed] for observed behavior
+- [inferred] for inferred risks
+- [general] for general information
+- [unverified] for specific, untested assumptions
 
 ## Where Was I? Protocol
 

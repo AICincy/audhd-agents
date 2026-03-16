@@ -36,7 +36,7 @@
 
 ## Claim Tags
 
-- Use [OBS] for observations, [DRV] for derived insights, [GEN] for general knowledge, and [SPEC] for specific scenarios when making claims.
+- Use [observed] for observations, [inferred] for derived insights, [general] for general knowledge, and [unverified] for specific scenarios when making claims.
 
 ## Where Was I? Protocol
 

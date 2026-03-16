@@ -39,9 +39,9 @@ Use tables or checklists to track and organize pipeline components, ensuring cla
 ## Claim Tags
 
 Utilize specific tags for claims:
-- [OBS] for observed measurements, e.g., throughput.
-- [DRV] for derived or estimated values, e.g., capacity.
-- [SPEC] for speculative or untested designs.
+- [observed] for observed measurements, e.g., throughput.
+- [inferred] for derived or estimated values, e.g., capacity.
+- [unverified] for speculative or untested designs.
 
 ## Where Was I? Protocol
 

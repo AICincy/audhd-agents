@@ -47,9 +47,9 @@ Manage production incidents from detection through post-mortem efficiently. Prio
 
 ## Claim Tags
 
-- Apply [OBS] to confirmed observations or symptoms.
-- Use [DRV] for derived insights or presumed root causes.
-- Tag [SPEC] on speculative connections.
+- Apply [observed] to confirmed observations or symptoms.
+- Use [inferred] for derived insights or presumed root causes.
+- Tag [unverified] on speculative connections.
 
 ## Where Was I? Protocol
 

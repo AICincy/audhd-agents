@@ -40,10 +40,10 @@ Utilize tables or checklists for collecting and cross-referencing evidence to en
 ## Claim Tags
 
 Use these tags for evidence items: 
-- [OBS] for Observations
-- [DRV] for Derived Information
-- [GEN] for General Sources
-- [SPEC] for Specific Claims
+- [observed] for Observations
+- [inferred] for Derived Information
+- [general] for General Sources
+- [unverified] for Specific Claims
 
 ## Where Was I? Protocol
 

@@ -40,7 +40,7 @@ Design technical UX architecture: CSS systems, layout frameworks, responsive str
 
 ## Claim Tags
 
-- Use claim tags in documentation: [OBS] for observed layouts, [DRV] for derived responsive behaviors, [GEN] for generalized strategies, [SPEC] for specific untested scenarios.
+- Use claim tags in documentation: [observed] for observed layouts, [inferred] for derived responsive behaviors, [general] for generalized strategies, [unverified] for specific untested scenarios.
 
 ## Where Was I? Protocol
 

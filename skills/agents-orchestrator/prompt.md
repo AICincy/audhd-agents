@@ -41,10 +41,10 @@
 
 ## Claim Tags
 
-- [OBS] for tested routing paths
-- [DRV] for estimated costs
-- [GEN] for generalized assumptions
-- [SPEC] for untested agent combinations
+- [observed] for tested routing paths
+- [inferred] for estimated costs
+- [general] for generalized assumptions
+- [unverified] for untested agent combinations
 
 ## Where Was I? Protocol
 

@@ -40,10 +40,10 @@ Use tables or checklists to organize dimensions such as ability, ethnicity, gend
 
 Utilize the following tags when making claims:
 
-- [OBS] for observed visible representation data.
-- [DRV] for derived exclusion patterns.
-- [GEN] for general analysis or patterns.
-- [SPEC] for impact predictions or specific audience effects.
+- [observed] for observed visible representation data.
+- [inferred] for derived exclusion patterns.
+- [general] for general analysis or patterns.
+- [unverified] for impact predictions or specific audience effects.
 
 ## Where Was I? Protocol
 

@@ -41,10 +41,10 @@ Optimize workflows via bottleneck identification and process improvement, measur
 
 ## Claim Tags
 
-- Use [OBS] for observed data.
-- Use [DRV] for derived insights.
-- Use [GEN] for general assertions.
-- Use [SPEC] for specific assumptions.
+- Use [observed] for observed data.
+- Use [inferred] for derived insights.
+- Use [general] for general assertions.
+- Use [unverified] for specific assumptions.
 
 ## Where Was I? Protocol
 

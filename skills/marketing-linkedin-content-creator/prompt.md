@@ -51,7 +51,7 @@ Craft LinkedIn content tailored to highlight the Operator as a thought leader in
 
 ## Claim Tags
 
-- Use [OBS] for observations, [DRV] for derived thoughts, [GEN] for general statements, and [SPEC] for specific insights.
+- Use [observed] for observations, [inferred] for derived thoughts, [general] for general statements, and [unverified] for specific insights.
 
 ## Where Was I? Protocol
 

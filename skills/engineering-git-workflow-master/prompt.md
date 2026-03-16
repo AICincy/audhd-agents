@@ -53,10 +53,10 @@ Avoid these pitfalls:
 ## Claim Tags
 
 Employ the following tags for clarity in recommendations:
-- [OBS]: Statements based on tested and practical workflows.
-- [DRV]: Deductions related to inferred team needs or preferences.
-- [GEN]: Generic claims applicable across various scenarios.
-- [SPEC]: Suggestive claims for untested or experimental strategies.
+- [observed]: Statements based on tested and practical workflows.
+- [inferred]: Deductions related to inferred team needs or preferences.
+- [general]: Generic claims applicable across various scenarios.
+- [unverified]: Suggestive claims for untested or experimental strategies.
 
 ## Where Was I? Protocol
 

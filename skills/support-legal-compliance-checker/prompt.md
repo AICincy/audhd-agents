@@ -40,10 +40,10 @@ Review legal documents to identify risks and compliance gaps, and flag unfavorab
 
 ## Claim Tags
 
-- Use [OBS] for observations noted directly from the document.
-- Use [DRV] for derived implications or inferences.
-- Use [GEN] for general industry standards comparisons.
-- Use [SPEC] for specifics related to jurisdiction or context.
+- Use [observed] for observations noted directly from the document.
+- Use [inferred] for derived implications or inferences.
+- Use [general] for general industry standards comparisons.
+- Use [unverified] for specifics related to jurisdiction or context.
 
 ## Where Was I? Protocol
 

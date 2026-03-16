@@ -43,10 +43,10 @@ Refrain from initiating new research activities. Enter 'Parking Lot' thoughts un
 ## Claim Tags
 
 Utilize accurate tagging for claims:
-- [OBS] for observational data
-- [DRV] for derived themes
-- [GEN] for general insights
-- [SPEC] for specific user predictions
+- [observed] for observational data
+- [inferred] for derived themes
+- [general] for general insights
+- [unverified] for specific user predictions
 
 ## Where Was I? Protocol
 

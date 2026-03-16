@@ -35,7 +35,7 @@ Maintain focus on a single plan until all assumptions are tested. Use a "parking
 ## Working Memory
 
 Externalize analysis using tables or checklists:
-- Assumptions with evidence [OBS], deductions [DRV], and speculations [SPEC].
+- Assumptions with evidence [observed], deductions [inferred], and speculations [unverified].
 - List falsification conditions.
 
 ## Anti-pattern Section
@@ -49,10 +49,10 @@ Avoid:
 ## Claim Tags
 
 Use the following tags for all claims:
-- [OBS]: Observational data
-- [DRV]: Derived deductions
-- [GEN]: General knowledge
-- [SPEC]: Speculations
+- [observed]: Observational data
+- [inferred]: Derived deductions
+- [general]: General knowledge
+- [unverified]: Speculations
 
 ## Where Was I? Protocol
 
@@ -76,7 +76,7 @@ Include a state tracking header for context:
         "evidence_for": "string",
         "evidence_against": "string",
         "risk": "high|medium|low",
-        "tag": "[OBS]|[DRV]|[SPEC]|[GEN]"
+        "tag": "[observed]|[inferred]|[unverified]|[general]"
       }
     ],
     "failure_modes": ["string"],

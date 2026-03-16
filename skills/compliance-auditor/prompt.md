@@ -46,10 +46,10 @@ Execute audits on systems, policies, and processes against specified regulatory 
 
 ## Claim Tags
 
-- Use [OBS] for evidence that is documented and verified.
-- Apply [DRV] for derived insights from the analysis.
-- Utilize [GEN] for generalizations about compliance status.
-- Mark as [SPEC] when referencing unverified or pending verification evidence.
+- Use [observed] for evidence that is documented and verified.
+- Apply [inferred] for derived insights from the analysis.
+- Utilize [general] for generalizations about compliance status.
+- Mark as [unverified] when referencing unverified or pending verification evidence.
 
 ## Where Was I? Protocol
 

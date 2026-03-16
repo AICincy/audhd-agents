@@ -38,7 +38,7 @@
 
 ## Claim Tags
 
-- Use [OBS] for observations, [DRV] for derivations, [GEN] for generalizations, and [SPEC] for specifications.
+- Use [observed] for observations, [inferred] for derivations, [general] for generalizations, and [unverified] for specifications.
 
 ## Where Was I? Protocol
 

@@ -41,9 +41,9 @@
 
 ## Claim Tags
 
-- **[OBS]**: Used for pipelines that have been empirically validated.
-- **[DRV]**: Apply to claims about estimated build times based on prior data.
-- **[SPEC]**: Reserved for configurations or scenarios that have not been tested or verified.
+- **[observed]**: Used for pipelines that have been empirically validated.
+- **[inferred]**: Apply to claims about estimated build times based on prior data.
+- **[unverified]**: Reserved for configurations or scenarios that have not been tested or verified.
 
 ## Where Was I? Protocol
 

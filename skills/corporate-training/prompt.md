@@ -31,10 +31,10 @@ Utilize tables and checklists to keep track of the development progress, module 
 3. Stay away from misalignment where assessments do not reflect module objectives.
 
 ## Claim Tags
-- [OBS]: Observable data or student performance metrics.
-- [DRV]: Design rationale or decisions influenced by ecological psychology.
-- [GEN]: Generic principles applicable across domains.
-- [SPEC]: Specific instructional design elements tied to cloud education pathways.
+- [observed]: Observable data or student performance metrics.
+- [inferred]: Design rationale or decisions influenced by ecological psychology.
+- [general]: Generic principles applicable across domains.
+- [unverified]: Specific instructional design elements tied to cloud education pathways.
 
 ## Where Was I? Protocol
 Include headers such as "Current Focus:" and list the active design component (e.g., "Objective Alignment") to assist in quick context recovery if interrupted. Track any changes or shifts in focus within this header for seamless transitions.

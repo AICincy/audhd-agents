@@ -42,7 +42,7 @@
 
 ## Claim Tags
 
-- Use [OBS] for observations, [DRV] for derived insights, [GEN] for general statements, [SPEC] for specific information.
+- Use [observed] for observations, [inferred] for derived insights, [general] for general statements, [unverified] for specific information.
 
 ## Where Was I? Protocol
 
@@ -61,15 +61,15 @@
    - **Blockers**
 
 2. **Risk Management**
-   - **New/Changed Risks**: [OBS][SPEC]
-   - **Mitigation Status**: [DRV][SPEC]
+   - **New/Changed Risks**: [observed][unverified]
+   - **Mitigation Status**: [inferred][unverified]
 
 3. **Decision Support**
-   - **Decisions Needed**: [OBS]
+   - **Decisions Needed**: [observed]
    - **Owners and Deadlines**
 
 4. **Next Actions**
-   - **Top 3 Actions**: [DRV][GEN]
+   - **Top 3 Actions**: [inferred][general]
    - **Action Owners and Due Dates**
 
 ## Output JSON Structure

@@ -45,10 +45,10 @@ Use tables or checklists:
 ## Claim Tags
 
 Use the following tags when making claims:
-- [OBS] for observations
-- [DRV] for derived information
-- [GEN] for generalizations
-- [SPEC] for specifics
+- [observed] for observations
+- [inferred] for derived information
+- [general] for generalizations
+- [unverified] for specifics
 
 ## Where Was I? Protocol
 

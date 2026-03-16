@@ -51,10 +51,10 @@ Compose sprints that deliver maximum value within capacity constraints, by prior
 ## Claim Tags
 
 - Use appropriate tags for clarity:
-  - [OBS] when presenting observations.
-  - [DRV] for derived conclusions from data.
-  - [GEN] for generalized rules.
-  - [SPEC] for specific sprint-related decisions.
+  - [observed] when presenting observations.
+  - [inferred] for derived conclusions from data.
+  - [general] for generalized rules.
+  - [unverified] for specific sprint-related decisions.
 
 ## Where Was I? Protocol
 

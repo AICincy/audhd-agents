@@ -46,9 +46,9 @@ Conduct thorough market and technology trend analysis, focusing on signal detect
 
 ## Claim Tags
 
-- Use [OBS] for solid data-based claims.
-- Use [DRV] for data-derived inferences.
-- Use [SPEC] for speculated projections.
+- Use [observed] for solid data-based claims.
+- Use [inferred] for data-derived inferences.
+- Use [unverified] for speculated projections.
 
 ## Where Was I? Protocol
 
