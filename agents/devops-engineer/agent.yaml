@@ -1,0 +1,147 @@
+agent:
+  name: devops-engineer
+  display_name: "DevOps Engineer"
+  version: "1.0.0"
+  description: >-
+    DevOps engineering agent for the AuDHD Cognitive Swarm.
+    Infrastructure automation, CI/CD, container orchestration,
+    IaC, monitoring, deployment, cloud platforms, SRE.
+  domain: devops_engineering
+  cognitive_profile:
+    patterns:
+      - pattern_compression
+      - monotropism
+      - asymmetric_working_memory
+      - meta_layer_reflex
+    energy_model: true
+    externalization: required
+
+skills:
+  always_on:
+    - reality_check
+    - energy_routing
+    - externalization
+  domain:
+    - ci_cd_design
+    - infrastructure_as_code
+    - container_orchestration
+    - monitoring_observability
+    - deployment_strategy
+    - cloud_architecture
+    - incident_response_infra
+    - cost_optimization
+    - secret_management
+    - disaster_recovery
+
+model_routing:
+  google:
+    default_model: gemini-3.1-pro-preview
+    fallback_chain:
+      - gemini-3.1-pro-preview
+      - gemini-2.5-pro
+      - gemini-3.1-flash-lite-preview
+      - gemini-3-flash-preview
+      - nano-banana-pro
+      - nano-banana-2
+      - nano-banana
+    models:
+      gemini-3.1-pro-preview:
+        role: infra_architecture_primary
+        tier: 1
+      gemini-2.5-pro:
+        role: multimodal_infra_analysis
+        tier: 1
+      gemini-3.1-flash-lite-preview:
+        role: rapid_infra_iteration
+        tier: 2
+      gemini-3-flash-preview:
+        role: fallback_fast
+        tier: 3
+      nano-banana-pro:
+        role: crash_triage
+        tier: 4
+      nano-banana-2:
+        role: crash_classification
+        tier: 4
+      nano-banana:
+        role: crash_binary
+        tier: 4
+  openai:
+    default_model: gpt-5.3-codex
+    fallback_chain:
+      - gpt-5.3-codex
+      - gpt-5.4
+      - gpt-5.4-pro
+      - gpt-5.3
+      - o4-mini
+    models:
+      gpt-5.3-codex:
+        api_model_id: gpt-5.3-codex
+        role: iac_code_primary
+        tier: 1
+      gpt-5.4:
+        api_model_id: gpt-5.4
+        role: infra_ideation
+        tier: 1
+      gpt-5.4-pro:
+        api_model_id: gpt-5.4-pro
+        role: deep_infra_planning
+        tier: 1
+      gpt-5.3:
+        api_model_id: gpt-5.3
+        role: code_fallback
+        tier: 2
+      o4-mini:
+        api_model_id: o4-mini
+        role: rapid_verifier
+        tier: 3
+  anthropic:
+    enabled: false
+    note: "Claude offline by default. Runtime detection only."
+
+energy_routing:
+  high:
+    google_primary: gemini-3.1-pro-preview
+    openai_primary: gpt-5.4-pro
+    tasks:
+      - full_infra_architecture
+      - multi_cloud_design
+      - disaster_recovery_planning
+      - complex_pipeline_redesign
+  medium:
+    google_primary: gemini-3.1-flash-lite-preview
+    openai_primary: gpt-5.3-codex
+    tasks:
+      - pipeline_config
+      - terraform_module
+      - dockerfile_optimization
+      - monitoring_setup
+      - deployment_config
+  low:
+    google_primary: gemini-3-flash-preview
+    openai_primary: o4-mini
+    tasks:
+      - config_validation
+      - binary_deploy_decision
+      - status_check
+  crash:
+    google_primary: nano-banana-pro
+    openai_primary: null
+    tasks:
+      - severity_classification
+      - binary_rollback_decision
+
+handoff:
+  accepts_from:
+    - engineer
+    - software_engineer
+    - secops_engineer
+    - network_engineer
+    - data_engineer
+  delegates_to:
+    - engineer: ["architecture_decisions", "cross_discipline_coordination"]
+    - software_engineer: ["application_code_changes"]
+    - secops_engineer: ["security_review", "secret_rotation"]
+    - network_engineer: ["network_config", "dns_management"]
+  protocol: HANDOFF
+  format: structured_yaml

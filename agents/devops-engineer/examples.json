@@ -1,0 +1,51 @@
+{
+  "agent": "devops-engineer",
+  "examples": [
+    {
+      "id": "EX-DEVOPS-001",
+      "title": "GitHub Actions Pipeline for Python FastAPI",
+      "description": "Design CI/CD pipeline for a Python FastAPI application with testing, linting, and deployment.",
+      "input": {
+        "task_type": "pipeline_design",
+        "context": "Python FastAPI app, pytest for tests, deployed to GCP Cloud Run. Needs lint, test, build, deploy stages. Branch protection on main.",
+        "cloud_provider": "gcp",
+        "energy_level": "medium"
+      },
+      "expected_output": {
+        "stage_table": "| Stage | Trigger | Steps | Timeout | Failure |\n|---|---|---|---|---|\n| Lint | push to any | ruff check, mypy | 5m | stop [GEN] |\n| Test | push to any | pytest --cov | 10m | stop [GEN] |\n| Build | push to main | docker build, push to GAR | 10m | stop [GEN] |\n| Deploy | push to main (after build) | gcloud run deploy | 5m | rollback [GEN] |",
+        "audhd_markers": ["stage_table_first", "config_follows", "failure_actions_explicit", "rollback_defined"]
+      }
+    },
+    {
+      "id": "EX-DEVOPS-002",
+      "title": "Terraform GCP Module with Cost Estimate",
+      "description": "Create Terraform module for GCP Cloud Run service with VPC connector.",
+      "input": {
+        "task_type": "iac_module",
+        "context": "Deploy FastAPI container to Cloud Run. Needs VPC connector for private DB access. Minimum 1 instance, max 10. Custom domain.",
+        "cloud_provider": "gcp",
+        "energy_level": "medium"
+      },
+      "expected_output": {
+        "resource_table": "| Resource | Type | Dependencies | Est. Monthly Cost |\n|---|---|---|---|\n| Cloud Run Service | google_cloud_run_v2_service | VPC Connector | ~$30 [SPEC] |\n| VPC Connector | google_vpc_access_connector | VPC | ~$7 [SPEC] |\n| Custom Domain | google_cloud_run_domain_mapping | Cloud Run | $0 [GEN] |",
+        "audhd_markers": ["resource_table_first", "hcl_follows", "cost_tagged_spec", "variables_documented"]
+      }
+    },
+    {
+      "id": "EX-DEVOPS-003",
+      "title": "Incident Triage (Low Energy)",
+      "description": "Triage a Cloud Run service returning 503 errors.",
+      "input": {
+        "task_type": "incident_response",
+        "context": "Cloud Run service 'agents-api' returning 503 since 02:15 UTC. Container logs show OOM kills. Current memory: 512MB. Traffic spike from 100 to 2000 rps.",
+        "energy_level": "low"
+      },
+      "expected_output": {
+        "triage_table": "| Hypothesis | Evidence | Confidence | Tag |\n|---|---|---|---|\n| OOM from traffic spike | OOM kills + 20x traffic increase | 0.9 | [DRV] |\n| Memory leak | OOM kills | 0.3 | [SPEC] |",
+        "quick_fix": "Increase memory to 1Gi, set max-instances to 20. [GEN]",
+        "energy_note": "Low energy: triage table + quick fix. No deep profiling. Escalate if OOM persists after memory increase.",
+        "audhd_markers": ["triage_table", "confidence_scored", "energy_gated", "escalation_path"]
+      }
+    }
+  ]
+}
