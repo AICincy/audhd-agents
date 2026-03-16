@@ -1,0 +1,197 @@
+{
+  "$schema": "agents/secops-engineer/config.json",
+  "agent": "secops-engineer",
+  "version": "1.0.0",
+  "providers": {
+    "google": {
+      "enabled": true,
+      "model_count": 8,
+      "models": {
+        "gemini-3.1-pro-preview": {
+          "alias": "G-PRO31",
+          "api_model_id": "gemini-3.1-pro-preview",
+          "role": "primary_deep_analysis",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.3, "top_p": 0.95, "top_k": 40 },
+          "capabilities": ["long_context", "structured_output", "grounding", "code_execution"],
+          "task_routing": ["threat_model_full", "architecture_review", "post_mortem_deep", "stride_complete", "secure_code_review_full", "compliance_mapping_full", "build_vs_buy_analysis"],
+          "energy_requirement": "high",
+          "cost_tier": "premium"
+        },
+        "gemini-2.5-pro": {
+          "alias": "G-PRO25",
+          "api_model_id": "gemini-2.5-pro",
+          "role": "secondary_multimodal",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.3, "top_p": 0.95, "top_k": 40 },
+          "capabilities": ["multimodal", "image_understanding", "structured_output", "grounding"],
+          "task_routing": ["architecture_diagram_review", "visual_security_audit", "network_diagram_threat_model", "screenshot_analysis"],
+          "energy_requirement": "high",
+          "cost_tier": "premium"
+        },
+        "gemini-3.1-flash-lite-preview": {
+          "alias": "G-FLA31",
+          "api_model_id": "gemini-3.1-flash-lite-preview",
+          "role": "triage_fast",
+          "tier": 2,
+          "parameters": { "max_output_tokens": 16384, "temperature": 0.2, "top_p": 0.9, "top_k": 30 },
+          "capabilities": ["fast_inference", "structured_output"],
+          "task_routing": ["incident_triage", "vuln_prioritization", "rapid_tool_comparison", "targeted_code_review", "status_updates", "containment_coordination"],
+          "energy_requirement": "medium",
+          "cost_tier": "standard"
+        },
+        "gemini-3-flash-preview": {
+          "alias": "G-FLA30",
+          "api_model_id": "gemini-3-flash-preview",
+          "role": "fallback_fast",
+          "tier": 3,
+          "parameters": { "max_output_tokens": 16384, "temperature": 0.2, "top_p": 0.9, "top_k": 30 },
+          "capabilities": ["fast_inference"],
+          "task_routing": ["status_check", "runbook_step", "quick_lookup", "checklist_verify", "basic_classification"],
+          "energy_requirement": "low",
+          "cost_tier": "economy"
+        },
+        "gemini-2.5-tts": {
+          "alias": "G-TTS25",
+          "api_model_id": "gemini-2.5-tts",
+          "role": "voice_output",
+          "tier": 2,
+          "parameters": { "max_output_tokens": 8192, "temperature": 0.4 },
+          "capabilities": ["text_to_speech", "natural_language"],
+          "task_routing": ["incident_status_broadcast_voice", "verbal_briefing", "accessibility_output"],
+          "energy_requirement": "low",
+          "cost_tier": "standard"
+        },
+        "nano-banana": {
+          "alias": "G-NANO",
+          "api_model_id": "nano-banana",
+          "role": "edge_lightweight",
+          "tier": 3,
+          "parameters": { "max_output_tokens": 256, "temperature": 0.2 },
+          "capabilities": ["classification", "on_device"],
+          "task_routing": ["binary_severity_classify", "single_field_classify", "escalate_yn"],
+          "energy_requirement": "crash",
+          "cost_tier": "minimal"
+        },
+        "nano-banana-2": {
+          "alias": "G-NANO2",
+          "api_model_id": "nano-banana-2",
+          "role": "edge_standard",
+          "tier": 3,
+          "parameters": { "max_output_tokens": 512, "temperature": 0.2 },
+          "capabilities": ["classification", "brief_rationale", "on_device"],
+          "task_routing": ["classification_with_rationale", "checklist_step_verify", "status_poll"],
+          "energy_requirement": "crash",
+          "cost_tier": "minimal"
+        },
+        "nano-banana-pro": {
+          "alias": "G-NANOP",
+          "api_model_id": "nano-banana-pro",
+          "role": "edge_premium",
+          "tier": 2,
+          "parameters": { "max_output_tokens": 1024, "temperature": 0.25 },
+          "capabilities": ["classification", "brief_analysis", "multi_step_triage", "on_device"],
+          "task_routing": ["crash_energy_triage", "edge_threat_assessment", "incident_note_summary", "quick_tool_compare_2options"],
+          "energy_requirement": "low",
+          "cost_tier": "economy"
+        }
+      }
+    },
+    "openai": {
+      "enabled": true,
+      "model_count": 5,
+      "models": {
+        "gpt-5.4": {
+          "alias": "O-54",
+          "api_model_id": "gpt-5.4",
+          "role": "ideation_primary",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.4, "top_p": 0.95 },
+          "capabilities": ["creative_generation", "structured_output", "function_calling"],
+          "task_routing": ["threat_scenario_ideation", "mitigation_brainstorm", "incident_comm_draft", "attack_vector_generation", "tool_comparison_creative"],
+          "energy_requirement": "medium",
+          "cost_tier": "premium"
+        },
+        "gpt-5.4-pro": {
+          "alias": "O-54P",
+          "api_model_id": "gpt-5.4-pro",
+          "role": "deep_planner_analyst",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 65536, "temperature": 0.3, "top_p": 0.95 },
+          "capabilities": ["deep_reasoning", "structured_output", "function_calling", "long_context"],
+          "task_routing": ["multi_step_response_plan", "compliance_cross_reference", "risk_analysis_complex", "consensus_with_gpro31", "contingency_tree_generation"],
+          "energy_requirement": "high",
+          "cost_tier": "premium"
+        },
+        "gpt-5.3": {
+          "alias": "O-53",
+          "api_model_id": "gpt-5.3",
+          "role": "ideation_fallback",
+          "tier": 2,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.4, "top_p": 0.95 },
+          "capabilities": ["creative_generation", "structured_output", "function_calling"],
+          "task_routing": ["fallback_ideation", "overflow_drafting", "secondary_comm_draft"],
+          "energy_requirement": "medium",
+          "cost_tier": "standard"
+        },
+        "gpt-5.3-codex": {
+          "alias": "O-CDX",
+          "api_model_id": "gpt-5.3-codex",
+          "role": "code_automator",
+          "tier": 1,
+          "parameters": { "max_output_tokens": 32768, "temperature": 0.2, "top_p": 0.9 },
+          "capabilities": ["code_generation", "code_editing", "test_generation", "structured_output"],
+          "task_routing": ["vuln_fix_implementation", "secure_code_generation", "runbook_automation", "test_generation_security", "code_refactor_security"],
+          "energy_requirement": "medium",
+          "cost_tier": "premium"
+        },
+        "o4-mini": {
+          "alias": "O-O4M",
+          "api_model_id": "o4-mini",
+          "role": "rapid_verifier",
+          "tier": 3,
+          "parameters": { "max_output_tokens": 8192, "temperature": 0.2, "top_p": 0.9 },
+          "capabilities": ["fast_inference", "verification", "classification"],
+          "task_routing": ["claim_verification", "severity_confirm", "binary_security_check", "post_output_sanity"],
+          "energy_requirement": "low",
+          "cost_tier": "economy"
+        }
+      }
+    },
+    "anthropic": {
+      "enabled": false,
+      "note": "Claude is offline by default. Only activated if operator explicitly declares Claude usage at runtime.",
+      "runtime_detection": true,
+      "models": {}
+    }
+  },
+  "routing": {
+    "strategy": "energy_aware_dual_provider_with_fallback",
+    "google_fallback_chain": [
+      "gemini-3.1-pro-preview", "gemini-2.5-pro", "gemini-3.1-flash-lite-preview",
+      "gemini-3-flash-preview", "nano-banana-pro", "nano-banana-2", "nano-banana"
+    ],
+    "openai_fallback_chain": [
+      "gpt-5.4", "gpt-5.4-pro", "gpt-5.3",
+      "gpt-5.3-codex", "o4-mini"
+    ],
+    "cross_provider_consensus": {
+      "enabled": true,
+      "pairs": [
+        { "google": "gemini-3.1-pro-preview", "openai": "gpt-5.4-pro" }
+      ],
+      "trigger": "T4_T5_tasks_or_conflicting_results",
+      "agreement_required": "claim_tags_and_conclusions"
+    },
+    "escalation_rules": [
+      { "condition": "confidence < 0.7 AND tier >= 2", "action": "escalate_to_tier_1_same_provider" },
+      { "condition": "security_critical AND tier == 3", "action": "escalate_to_tier_2_minimum" },
+      { "condition": "provider_down", "action": "failover_to_other_provider_same_tier" }
+    ],
+    "cost_optimization": {
+      "prefer_lower_tier_when_sufficient": true,
+      "cache_classification_results": true,
+      "batch_similar_queries": true
+    }
+  }
+}

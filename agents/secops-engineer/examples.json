@@ -1,0 +1,168 @@
+{
+  "$schema": "agents/secops-engineer/examples.json",
+  "agent": "secops-engineer",
+  "version": "1.0.0",
+  "examples": [
+    {
+      "id": "ex-threat-model-api",
+      "title": "STRIDE Threat Model: REST API Gateway",
+      "skill": "engineering-security-engineer",
+      "capability": "threat_modeling",
+      "model": "gemini-3.1-pro-preview",
+      "energy_level": "high",
+      "input": {
+        "cognitive_state": {
+          "energy_level": "high",
+          "active_mode": "threat_model",
+          "task_tier": 1,
+          "active_thread": "tm-api-gateway-001",
+          "context_switches": 0
+        },
+        "security_input": {
+          "target_system": "Public REST API Gateway",
+          "scope": {
+            "boundaries": ["API Gateway", "Auth Service", "Rate Limiter", "Backend Services"],
+            "trust_boundaries": ["Internet to API Gateway", "API Gateway to Auth Service", "Auth Service to Backend"],
+            "data_flows": ["Client -> API Gateway -> Auth -> Backend -> DB"],
+            "exclusions": ["Internal admin APIs", "Database internals"]
+          },
+          "compliance_targets": ["SOC2", "PCI_DSS"],
+          "existing_controls": [
+            { "control_id": "WAF-01", "description": "AWS WAF with OWASP ruleset", "effectiveness": "partial" },
+            { "control_id": "AUTH-01", "description": "OAuth2 + JWT with RS256", "effectiveness": "effective" },
+            { "control_id": "RATE-01", "description": "Token bucket rate limiter, 100 req/min", "effectiveness": "effective" }
+          ]
+        }
+      },
+      "expected_output": {
+        "format": "threat_model_skeleton",
+        "must_include": [
+          "All 6 STRIDE categories addressed",
+          "Each threat tagged with confidence [OBS/DRV/SPEC]",
+          "Attack surface table with entry points and trust boundaries",
+          "Risk matrix with likelihood and impact",
+          "Compliance mapping to SOC2 and PCI-DSS controls",
+          "Assumptions numbered and tagged at top",
+          "Pressure test section challenging assumptions",
+          "Single next action identified"
+        ],
+        "sample_threat": {
+          "id": 1,
+          "category": "Spoofing",
+          "description": "JWT token forgery via weak key rotation. If RSA keys are not rotated and revocation is not enforced, a compromised key allows indefinite token forgery. [DRV]",
+          "likelihood": "medium",
+          "impact": "critical",
+          "risk_score": 8.5,
+          "mitigation": "Implement key rotation (90-day max). Add JTI claim for token revocation. Monitor for anomalous token patterns.",
+          "status": "open",
+          "confidence_tag": "DRV"
+        },
+        "audhd_markers": [
+          "Verdict first: highest risk threat leads the table",
+          "Single monotropic thread: completes all STRIDE for one component before moving to next",
+          "Externalized state: full threat table visible, assumptions numbered",
+          "Pattern compression: risk score descending, not alphabetical"
+        ]
+      }
+    },
+    {
+      "id": "ex-incident-triage-sev1",
+      "title": "SEV1 Incident Triage: Suspected Data Exfiltration",
+      "skill": "engineering-incident-response-commander",
+      "capability": "incident_triage",
+      "model": "gemini-3.1-flash-lite-preview",
+      "energy_level": "medium",
+      "input": {
+        "cognitive_state": {
+          "energy_level": "medium",
+          "active_mode": "incident_response",
+          "task_tier": 2,
+          "active_thread": "ir-exfil-001",
+          "context_switches": 0
+        },
+        "incident_input": {
+          "incident_id": "INC-2026-0847",
+          "indicators": [
+            { "type": "behavior", "value": "Unusual outbound data transfer 3.2TB to unknown IP", "source": "DLP alert", "timestamp": "2026-03-15T22:14:00Z", "confidence": "high" },
+            { "type": "ip", "value": "198.51.100.42", "source": "Firewall logs", "timestamp": "2026-03-15T22:14:00Z", "confidence": "high" },
+            { "type": "behavior", "value": "Service account auth from non-standard location", "source": "SIEM correlation", "timestamp": "2026-03-15T21:47:00Z", "confidence": "medium" }
+          ],
+          "affected_systems": ["prod-db-cluster-east", "analytics-pipeline"]
+        }
+      },
+      "expected_output": {
+        "format": "incident_response_skeleton",
+        "must_include": [
+          "Severity classification with cited indicators",
+          "Initial containment actions with owners",
+          "Communication plan by audience",
+          "Timeline reconstruction from indicators",
+          "Escalation criteria",
+          "Single next action"
+        ],
+        "audhd_markers": [
+          "SEV first, then one-line impact",
+          "Status block externalized",
+          "Single-threaded triage",
+          "Pattern compression: verdict then evidence"
+        ]
+      }
+    },
+    {
+      "id": "ex-tool-eval-siem",
+      "title": "Tool Evaluation: SIEM Platform Selection",
+      "skill": "testing-tool-evaluator",
+      "capability": "decision_matrix",
+      "model": "gemini-3.1-pro-preview",
+      "energy_level": "high",
+      "input": {
+        "cognitive_state": {
+          "energy_level": "high",
+          "active_mode": "tool_eval",
+          "task_tier": 1,
+          "active_thread": "te-siem-001",
+          "context_switches": 0
+        },
+        "tool_eval_input": {
+          "decision_context": "Select SIEM platform for 500-person SaaS company",
+          "options": [
+            { "name": "Splunk Enterprise Security", "vendor": "Splunk", "category": "SIEM" },
+            { "name": "Microsoft Sentinel", "vendor": "Microsoft", "category": "SIEM" },
+            { "name": "Elastic Security", "vendor": "Elastic", "category": "SIEM" }
+          ],
+          "criteria": [
+            { "name": "Detection capability", "weight": 0.25, "must_have": true },
+            { "name": "Total cost (3yr)", "weight": 0.20, "must_have": true },
+            { "name": "Integration depth", "weight": 0.20, "must_have": false },
+            { "name": "Staffing requirement", "weight": 0.15, "must_have": false },
+            { "name": "Compliance reporting", "weight": 0.10, "must_have": true },
+            { "name": "Vendor lock-in risk", "weight": 0.10, "must_have": false }
+          ],
+          "constraints": {
+            "budget": "$200K/year",
+            "timeline": "90 days to production",
+            "team_size": 3,
+            "compliance_requirements": ["SOC2", "HIPAA"]
+          }
+        }
+      },
+      "expected_output": {
+        "format": "tool_evaluation_skeleton",
+        "must_include": [
+          "Weighted decision matrix with all criteria scored",
+          "Winner with confidence tag",
+          "POC plan for top 2 options",
+          "Vendor lock-in assessment",
+          "Cost comparison tagged [SPEC] where estimated",
+          "Revert path if selected tool fails POC"
+        ],
+        "audhd_markers": [
+          "Winner first, then delta from runner-up",
+          "Full matrix table visible",
+          "Score one criterion across all options before next",
+          "Pattern compression: verdict then supporting data"
+        ]
+      }
+    }
+  ]
+}
