@@ -46,6 +46,10 @@ from runtime.middleware import register_middleware
 # P2-2: Pipeline bridge
 from runtime.pipeline_bridge import init_bridge
 
+# Fix-C: Wire knowledge-inject (P2.7) + P2.5 context monitors into HOOK_REGISTRY
+# and ALWAYS_ON_HOOKS at import time. Must precede any SkillRouter instantiation.
+import runtime.init_hooks  # noqa: F401  (side-effect: registers knowledge-inject)
+
 
 def configure_logger(name: str, level: str) -> logging.Logger:
     """Configure a stdout logger that emits JSON strings."""
