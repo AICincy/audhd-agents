@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "audhd-agents/schema-base",
-  "description": "Shared cognitive state schema. All skill schemas extend this base via allOf. Single source of truth per A-1.",
+  "description": "Shared cognitive state schema. All skill schemas extend this base via allOf. Single source of truth per A-1. Aligned with canonical CognitiveState in runtime/schemas.py.",
   "type": "object",
   "definitions": {
     "cognitive_state": {
@@ -14,6 +14,16 @@
           "default": "medium",
           "description": "Operator energy per AGENT.md energy-adaptive routing. Controls model pool, max tier, output density."
         },
+        "attention_state": {
+          "type": "string",
+          "enum": ["focused", "diffuse", "transitioning"],
+          "description": "Monotropism signal. Focused = single-thread strict. Diffuse = broader context. Transitioning = announce shift."
+        },
+        "session_context": {
+          "type": "string",
+          "enum": ["new", "resumed", "interrupted"],
+          "description": "Where Was I protocol. Controls session continuity behavior."
+        },
         "active_mode": {
           "type": "string",
           "enum": ["osint", "troubleshoot", "draft", "rewrite", "decide", "design", "summarize", "review", "chat", "execute"],
@@ -22,7 +32,7 @@
         },
         "task_tier": {
           "type": "string",
-          "enum": ["T1", "T2", "T3", "T4", "T5"],
+          "pattern": "^T[1-5]$",
           "default": "T3",
           "description": "AGENT.md complexity classification. Controls verification and model selection."
         },
@@ -33,11 +43,29 @@
         },
         "context_switches": {
           "type": "integer",
+          "minimum": 0,
           "default": 0,
           "description": "Topic switches in session. >2 triggers SK-PRIORITIZE monotropism guard."
+        },
+        "request_id": {
+          "type": "string",
+          "description": "Unique request identifier for tracing and resume context."
+        },
+        "resume_from": {
+          "type": "string",
+          "description": "Checkpoint ID to resume from. Only used when session_context is resumed or interrupted."
+        },
+        "resume_context": {
+          "type": "object",
+          "description": "Optional. State from previous execution for continuity.",
+          "properties": {
+            "last_action": { "type": "string" },
+            "pending_items": { "type": "array", "items": { "type": "string" } },
+            "checkpoint": { "type": "string" }
+          }
         }
       },
-      "required": ["energy_level"]
+      "required": ["energy_level", "attention_state"]
     }
   },
   "properties": {
@@ -47,6 +75,29 @@
     },
     "cognitive_state": {
       "$ref": "#/definitions/cognitive_state"
+    },
+    "skill_input": {
+      "type": "object",
+      "description": "Skill-specific input. Schema defined per skill."
+    },
+    "skill_output": {
+      "type": "object",
+      "description": "Skill-specific output. Must include cognitive_state echo.",
+      "properties": {
+        "cognitive_state_echo": {
+          "type": "object",
+          "description": "Echo back cognitive_state for orchestrator continuity tracking."
+        },
+        "result": {
+          "type": "object",
+          "description": "Skill-specific result payload."
+        },
+        "next_action": {
+          "type": "string",
+          "description": "Single highest-leverage next action. Always required."
+        }
+      },
+      "required": ["cognitive_state_echo", "next_action"]
     }
   },
   "required": ["input_text"]
