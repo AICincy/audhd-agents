@@ -2,13 +2,13 @@
 
 Hook registry (20 hooks):
   Original 6:
-    SK-DECOMP, SK-BRIDGE, SK-GATE, SK-VERIFY, SK-PRIORITIZE, SK-FORMAT
+    decompose, bridge, quality-gate, verify, focus, format
   F2 additions (11):
-    SK-REALITY, SK-ENERGY (always-on)
-    SK-EXTERN, SK-RESUME, SK-MICRO, SK-ANCHOR
-    SK-CODEREVIEW, SK-NUDGE, SK-A11Y, SK-SYS-AUDIT, SK-SYS-RECOVER
+    reality-check, energy-route (always-on)
+    load-skill, resume, micro-step, anchor
+    code-review, refocus, accessibility, system-audit, recover
   Enhancement additions (3):
-    SK-STT, SK-TTS, SK-TONE
+    speech-input, speech-output, tone
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ from runtime.cognitive import CognitiveState
 
 
 # Hooks that run on EVERY execution regardless of skill config
-ALWAYS_ON_HOOKS: list[str] = ["SK-REALITY", "SK-ENERGY"]
+ALWAYS_ON_HOOKS: list[str] = ["reality-check", "energy-route"]
 
 
 @dataclass
@@ -51,11 +51,11 @@ class HookResult:
 
 
 # ---------------------------------------------------------------------------
-# Original hooks (SK-DECOMP through SK-FORMAT)
+# Original hooks (decompose through format)
 # ---------------------------------------------------------------------------
 
 def sk_decomp(ctx: HookContext) -> HookResult:
-    """SK-DECOMP: Decompose T4+ input into parallel sub-tasks."""
+    """decompose: Decompose T4+ input into parallel sub-tasks."""
     result = HookResult()
     if ctx.cognitive_state.task_tier_num < 4:
         return result
@@ -72,15 +72,15 @@ def sk_decomp(ctx: HookContext) -> HookResult:
         task_list = "\n".join(f"  {i+1}. {t}" for i, t in enumerate(task_lines))
         result.modified_prompt = (
             ctx.prompt
-            + f"\n\n## Decomposed Sub-tasks (SK-DECOMP: {len(task_lines)} found)\n"
+            + f"\n\n## Decomposed Sub-tasks (decompose: {len(task_lines)} found)\n"
             + task_list
-            + "\n\nProcess independently where possible. Merge into single deliverable."
+            + "\nProcess independently where possible. Merge into single deliverable."
         )
     return result
 
 
 def sk_bridge(ctx: HookContext) -> HookResult:
-    """SK-BRIDGE: Carry state between skill handoffs per AGENT.md format.
+    """bridge: Carry state between skill handoffs per AGENT.md format.
 
     Enhanced: Supports structured context objects (dict-based partial_results)
     in addition to string-based context parsing.
@@ -127,17 +127,17 @@ def sk_bridge(ctx: HookContext) -> HookResult:
     if bridged_parts:
         result.bridged_context = "\n".join(bridged_parts)
         result.modified_prompt = (
-            ctx.prompt + f"\n\n## Bridged Context (SK-BRIDGE)\n{result.bridged_context}"
+            ctx.prompt + f"\n\n## Bridged Context (bridge)\n{result.bridged_context}"
         )
 
     return result
 
 
 def sk_gate(ctx: HookContext) -> HookResult:
-    """SK-GATE: Inject PROFILE.md constraint checklist into prompt."""
+    """quality-gate: Inject PROFILE.md constraint checklist into prompt."""
     result = HookResult()
     gate_lines = [
-        "\n\n## Quality Gate (SK-GATE: enforced at runtime)",
+        "\n\n## Quality Gate (quality-gate: enforced at runtime)",
         "Before producing final output, verify:",
     ]
     energy = ctx.cognitive_state.energy_level
@@ -160,7 +160,7 @@ def sk_gate(ctx: HookContext) -> HookResult:
     ])
     if ctx.cognitive_state.active_mode != "chat":
         gate_lines.append(
-            "- [ ] Claim tags on factual claims ([OBS], [DRV], [GEN], [SPEC])"
+            "- [ ] Claim tags on factual claims ([observed], [inferred], [general], [unverified])"
         )
     if ctx.cognitive_state.task_tier_num >= 5:
         gate_lines.append(
@@ -171,7 +171,7 @@ def sk_gate(ctx: HookContext) -> HookResult:
 
 
 def sk_verify(ctx: HookContext) -> HookResult:
-    """SK-VERIFY: Inject verification requirements by AGENT.md tier."""
+    """verify: Inject verification requirements by AGENT.md tier."""
     result = HookResult()
     tier = ctx.cognitive_state.task_tier_num
     if tier < 3:
@@ -179,10 +179,10 @@ def sk_verify(ctx: HookContext) -> HookResult:
     levels = {3: "optional", 4: "recommended", 5: "mandatory_dual_model"}
     level = levels.get(tier, "optional")
     verify_block = (
-        f"\n\n## Verification Requirements (SK-VERIFY: {level})\n"
-        "- Tag every factual claim with [OBS], [DRV], [GEN], or [SPEC]\n"
-        "- For [OBS] claims: cite the source\n"
-        "- For [SPEC] claims: state what would verify or falsify\n"
+        f"\n\n## Verification Requirements (verify: {level})\n"
+        "- Tag every factual claim with [observed], [inferred], [general], or [unverified]\n"
+        "- For [observed] claims: cite the source\n"
+        "- For [unverified] claims: state what would verify or falsify\n"
     )
     if level == "mandatory_dual_model":
         verify_block += (
@@ -196,11 +196,11 @@ def sk_verify(ctx: HookContext) -> HookResult:
 
 
 def sk_prioritize(ctx: HookContext) -> HookResult:
-    """SK-PRIORITIZE: Monotropism contract enforcement on high context switches."""
+    """focus: Monotropism contract enforcement on high context switches."""
     result = HookResult()
     if ctx.cognitive_state.context_switches > 2:
         result.modified_prompt = (ctx.prompt or "") + (
-            "\n\n## Monotropism Contract (SK-PRIORITIZE: active)\n"
+            "\n\n## Monotropism Contract (focus: active)\n"
             "Multiple context switches detected. Enforce:\n"
             "- Present exactly ONE result at a time\n"
             "- Do not scatter across tangents\n"
@@ -212,7 +212,7 @@ def sk_prioritize(ctx: HookContext) -> HookResult:
 
 
 def sk_format(ctx: HookContext) -> HookResult:
-    """SK-FORMAT: Inject PROFILE.md output template for active mode."""
+    """format: Inject PROFILE.md output template for active mode."""
     result = HookResult()
     mode = ctx.cognitive_state.active_mode
     templates = {
@@ -230,18 +230,18 @@ def sk_format(ctx: HookContext) -> HookResult:
     template = templates.get(mode)
     if template and mode != "chat":
         result.modified_prompt = (ctx.prompt or "") + (
-            f"\n\n## Output Template (SK-FORMAT: {mode} mode)\n"
+            f"\n\n## Output Template (format: {mode} mode)\n"
             f"Structure output as: {template}\n"
         )
     return result
 
 
 # ---------------------------------------------------------------------------
-# F2 hooks (SK-REALITY through SK-SYS-RECOVER)
+# F2 hooks (reality-check through recover)
 # ---------------------------------------------------------------------------
 
 def sk_reality(ctx: HookContext) -> HookResult:
-    """SK-REALITY: Reality checker. Validates claims, flags drift/hallucination.
+    """reality-check: Reality checker. Validates claims, flags drift/hallucination.
 
     Always-on hook.
     RC-001: Cross-reference claims against provided evidence
@@ -250,9 +250,9 @@ def sk_reality(ctx: HookContext) -> HookResult:
     """
     result = HookResult()
     reality_block = (
-        "\n\n## Reality Checker (SK-REALITY: always-on)\n"
+        "\n\n## Reality Checker (reality-check: always-on)\n"
         "Before finalizing output:\n"
-        "- RC-001: Every factual claim must reference provided evidence or be tagged [SPEC]\n"
+        "- RC-001: Every factual claim must reference provided evidence or be tagged [unverified]\n"
         "- RC-002: Speculative leaps must be flagged: 'This is inference, not confirmed'\n"
         "- RC-003: T3+ output with zero claim tags is non-compliant and must be revised\n"
         "- RC-004: If you cannot verify a claim, state so explicitly rather than asserting\n"
@@ -263,12 +263,12 @@ def sk_reality(ctx: HookContext) -> HookResult:
 
 
 def sk_energy(ctx: HookContext) -> HookResult:
-    """SK-ENERGY: Energy-adaptive routing enforcement. Always-on hook."""
+    """energy-route: Energy-adaptive routing enforcement. Always-on hook."""
     result = HookResult()
     energy = ctx.cognitive_state.energy_level
     if energy == "low":
         result.modified_prompt = (ctx.prompt or "") + (
-            "\n\n## Energy Routing (SK-ENERGY: low)\n"
+            "\n\n## Energy Routing (energy-route: low)\n"
             "- Maximum 3 items in output\n"
             "- Single micro-action as next step\n"
             "- No complex analysis or multi-part deliverables\n"
@@ -276,7 +276,7 @@ def sk_energy(ctx: HookContext) -> HookResult:
         )
     elif energy == "crash":
         result.modified_prompt = (ctx.prompt or "") + (
-            "\n\n## Energy Routing (SK-ENERGY: CRASH)\n"
+            "\n\n## Energy Routing (energy-route: CRASH)\n"
             "- OUTPUT ONLY: state checkpoint + single next action\n"
             "- NO inference. NO analysis. NO deliverables.\n"
             "- Save state and stop.\n"
@@ -285,26 +285,26 @@ def sk_energy(ctx: HookContext) -> HookResult:
 
 
 def sk_extern(ctx: HookContext) -> HookResult:
-    """SK-EXTERN: External VoltAgent skill loading bridge."""
+    """load-skill: External VoltAgent skill loading bridge."""
     result = HookResult()
     if ctx.options.get("external_skill") or "voltagent:" in ctx.input_text.lower():
         result.modified_prompt = (ctx.prompt or "") + (
-            "\n\n## External Skill Bridge (SK-EXTERN)\n"
+            "\n\n## External Skill Bridge (load-skill)\n"
             "This execution uses an external VoltAgent skill definition.\n"
             "- Apply the skill's prompt_base.md as system context\n"
             "- Validate input against the skill's schema_base.json\n"
-            "- Map model references to swarm aliases (G-PRO31, O-54, etc.)\n"
+            "- Map model references to provider names (gemini-2.5-pro, o1, etc.)\n"
         )
     return result
 
 
 def sk_resume(ctx: HookContext) -> HookResult:
-    """SK-RESUME: 'Where Was I?' session resumption protocol."""
+    """resume: 'Where Was I?' session resumption protocol."""
     result = HookResult()
     if ctx.cognitive_state.needs_resume():
         checkpoint = ctx.cognitive_state.resume_from or "unknown"
         result.modified_prompt = (ctx.prompt or "") + (
-            f"\n\n## Session Resume (SK-RESUME: checkpoint={checkpoint})\n"
+            f"\n\n## Session Resume (resume: checkpoint={checkpoint})\n"
             "Returning from interruption. Protocol:\n"
             "1. State what was in progress at checkpoint\n"
             "2. Summarize any partial results\n"
@@ -315,12 +315,12 @@ def sk_resume(ctx: HookContext) -> HookResult:
 
 
 def sk_micro(ctx: HookContext) -> HookResult:
-    """SK-MICRO: Micro-action decomposition for low-energy states."""
+    """micro-step: Micro-action decomposition for low-energy states."""
     result = HookResult()
     energy = ctx.cognitive_state.energy_level
     if energy == "low" and ctx.cognitive_state.task_tier_num >= 3:
         result.modified_prompt = (ctx.prompt or "") + (
-            "\n\n## Micro-Action Mode (SK-MICRO: active)\n"
+            "\n\n## Micro-Action Mode (micro-step: active)\n"
             "Task tier exceeds low-energy capacity. Decompose:\n"
             "- Extract the single smallest actionable step\n"
             "- Present ONLY that step\n"
@@ -331,7 +331,7 @@ def sk_micro(ctx: HookContext) -> HookResult:
 
 
 def sk_anchor(ctx: HookContext) -> HookResult:
-    """SK-ANCHOR: Context anchoring for monotropism contract.
+    """anchor: Context anchoring for monotropism contract.
 
     Enhanced: Maintains topic stack with recency tracking, attention decay
     calculation, and deferred topic queue.
@@ -341,7 +341,7 @@ def sk_anchor(ctx: HookContext) -> HookResult:
         return result
 
     anchor_lines = [
-        f"\n\n## Context Anchor (SK-ANCHOR: thread={ctx.cognitive_state.active_thread})",
+        f"\n\n## Context Anchor (anchor: thread={ctx.cognitive_state.active_thread})",
         "Monotropism contract active:",
         "- Stay on the declared thread objective",
         "- Do not introduce new topics without explicit announcement",
@@ -379,11 +379,11 @@ def sk_anchor(ctx: HookContext) -> HookResult:
 
 
 def sk_codereview(ctx: HookContext) -> HookResult:
-    """SK-CODEREVIEW: Code review quality gate."""
+    """code-review: Code review quality gate."""
     result = HookResult()
     if ctx.cognitive_state.active_mode in ("review", "rewrite") and ctx.options.get("code_review"):
         result.modified_prompt = (ctx.prompt or "") + (
-            "\n\n## Code Review Gate (SK-CODEREVIEW)\n"
+            "\n\n## Code Review Gate (code-review)\n"
             "Review checklist:\n"
             "- [ ] No import drift (all imports resolve)\n"
             "- [ ] No phantom functions (all calls have definitions)\n"
@@ -396,12 +396,12 @@ def sk_codereview(ctx: HookContext) -> HookResult:
 
 
 def sk_nudge(ctx: HookContext) -> HookResult:
-    """SK-NUDGE: Refocus to declared objective when output drifts."""
+    """refocus: Refocus to declared objective when output drifts."""
     result = HookResult()
     if ctx.options.get("nudge_target"):
         target = ctx.options["nudge_target"]
         result.modified_prompt = (ctx.prompt or "") + (
-            f"\n\n## Refocus (SK-NUDGE: target={target})\n"
+            f"\n\n## Refocus (refocus: target={target})\n"
             "Previous output drifted from objective. Correct course:\n"
             f"- Primary objective: {target}\n"
             "- Discard tangential content\n"
@@ -411,11 +411,11 @@ def sk_nudge(ctx: HookContext) -> HookResult:
 
 
 def sk_a11y(ctx: HookContext) -> HookResult:
-    """SK-A11Y: Accessibility compliance checker."""
+    """accessibility: Accessibility compliance checker."""
     result = HookResult()
     if ctx.options.get("a11y_check") or ctx.cognitive_state.active_mode == "design":
         result.modified_prompt = (ctx.prompt or "") + (
-            "\n\n## Accessibility Check (SK-A11Y)\n"
+            "\n\n## Accessibility Check (accessibility)\n"
             "Verify output meets accessibility standards:\n"
             "- Alt text for any visual content\n"
             "- Semantic structure (headings, lists) over visual formatting\n"
@@ -427,11 +427,11 @@ def sk_a11y(ctx: HookContext) -> HookResult:
 
 
 def sk_sys_audit(ctx: HookContext) -> HookResult:
-    """SK-SYS-AUDIT: System-level audit trigger for T4+."""
+    """system-audit: System-level audit trigger for T4+."""
     result = HookResult()
     if ctx.cognitive_state.task_tier_num >= 4:
         result.modified_prompt = (ctx.prompt or "") + (
-            "\n\n## System Audit (SK-SYS-AUDIT: T4+)\n"
+            "\n\n## System Audit (system-audit: T4+)\n"
             "Meta-layer reflex required:\n"
             "- What objective function is this system optimizing?\n"
             "- What constraints are active vs. assumed?\n"
@@ -443,12 +443,12 @@ def sk_sys_audit(ctx: HookContext) -> HookResult:
 
 
 def sk_sys_recover(ctx: HookContext) -> HookResult:
-    """SK-SYS-RECOVER: System recovery from failures."""
+    """recover: System recovery from failures."""
     result = HookResult()
     if ctx.options.get("recovery_from"):
         error_info = ctx.options["recovery_from"]
         result.modified_prompt = (ctx.prompt or "") + (
-            f"\n\n## Recovery Mode (SK-SYS-RECOVER)\n"
+            f"\n\n## Recovery Mode (recover)\n"
             f"Previous failure: {error_info}\n"
             "Recovery protocol:\n"
             "1. State the incorrect element and root cause\n"
@@ -460,7 +460,7 @@ def sk_sys_recover(ctx: HookContext) -> HookResult:
 
 
 # ===========================================================================
-# Enhanced SK-STT: Speech-to-Text Preprocessing (v2)
+# Enhanced speech-input: Speech-to-Text Preprocessing (v2)
 # ===========================================================================
 
 # Common STT misrecognitions in technical/AuDHD context
@@ -502,11 +502,11 @@ _STT_CORRECTIONS: dict[str, str] = {
     "hyper fixation": "hyperfixation",
     "stim": "stim",
     "masking": "masking",
-    # Swarm model names
-    "g pro 31": "G-PRO31",
-    "g flash 31": "G-FLA31",
-    "o 4 mini": "O-O4M",
-    "o 54": "O-54",
+    # Swarm model names (readable)
+    "g pro 31": "gemini-2.5-pro",
+    "g flash 31": "gemini-2.5-flash",
+    "o 4 mini": "o4-mini",
+    "o 54": "o1",
     "claude": "Claude",
     "gemini": "Gemini",
 }
@@ -707,7 +707,7 @@ def _stt_split_compressed_burst(text: str) -> list[str]:
 
 
 def sk_stt(ctx: HookContext) -> HookResult:
-    """SK-STT: Speech-to-text preprocessing for AuDHD speech patterns (v2).
+    """speech-input: Speech-to-text preprocessing for AuDHD speech patterns (v2).
 
     Pre-execute hook with full processing pipeline:
     1. Misrecognition correction (technical terms, model names)
@@ -828,7 +828,7 @@ def sk_stt(ctx: HookContext) -> HookResult:
 
 
 # ===========================================================================
-# Enhanced SK-TTS: Text-to-Speech Output Routing (v2)
+# Enhanced speech-output: Text-to-Speech Output Routing (v2)
 # ===========================================================================
 
 # Voice parameter presets by energy level
@@ -890,7 +890,7 @@ _TTS_CONTENT_PATTERNS: dict[str, re.Pattern] = {
     "table": re.compile(r"\|.*\|.*\||<table|<tr|<td"),
     "list": re.compile(r"^\s*[-*]\s+|^\s*\d+\.\s+", re.MULTILINE),
     "verdict": re.compile(r"\*\*(?:FIXED|DONE|PASS|FAIL|BLOCKED|CRITICAL|HIGH|LOW|MEDIUM)\*\*"),
-    "claim_tagged": re.compile(r"\[(?:OBS|DRV|GEN|SPEC)\]"),
+    "claim_tagged": re.compile(r"\[(?:observed|inferred|general|unverified)\]"),
 }
 
 
@@ -1008,8 +1008,8 @@ def _tts_build_content_directives(content_types: list[str], e_key: str) -> list[
 
     if "claim_tagged" in content_types:
         directives.extend([
-            "- Claim tags vocalized: [OBS]='This is observed:', [DRV]='This is inferred:'",
-            "  [SPEC]='This is unverified:', [GEN]=(omit, treat as default)",
+            "- Claim tags vocalized: [observed]=(read as-is), [inferred]='This is inferred:',",
+            "  [unverified]='This is unverified:', [general]=(omit, treat as default)",
         ])
 
     if "narrative" in content_types and len(content_types) == 1:
@@ -1019,7 +1019,7 @@ def _tts_build_content_directives(content_types: list[str], e_key: str) -> list[
 
 
 def sk_tts(ctx: HookContext) -> HookResult:
-    """SK-TTS: Text-to-speech output routing (v2).
+    """speech-output: Text-to-speech output routing (v2).
 
     Enhanced post-execute style hook with:
     - Content type detection (code, table, list, verdict, claim_tagged, narrative)
@@ -1044,7 +1044,7 @@ def sk_tts(ctx: HookContext) -> HookResult:
 
     # Build directives
     tts_lines = [
-        f"\n\n## Speech Output Mode (SK-TTS v2: {e_key}, types={','.join(content_types)})",
+        f"\n\n## Speech Output Mode (speech-output v2: {e_key}, types={','.join(content_types)})",
         "Output will be consumed as audio. Adapt for spoken delivery:",
         "",
         "### Structure Adaptation",
@@ -1090,7 +1090,7 @@ def sk_tts(ctx: HookContext) -> HookResult:
 
 
 # ===========================================================================
-# Enhanced SK-TONE: Tone and Register Adaptation (v2)
+# Enhanced tone: Tone and Register Adaptation (v2)
 # ===========================================================================
 
 # Full tone matrix with numeric personality/density scores
@@ -1229,7 +1229,7 @@ def _tone_get_blocked_flat() -> list[str]:
 
 
 def sk_tone(ctx: HookContext) -> HookResult:
-    """SK-TONE: Tone and register adaptation by mode and audience (v2).
+    """tone: Tone and register adaptation by mode and audience (v2).
 
     Enhanced zero-cost prompt injection with:
     - Compound mode blending (review+draft, design+execute, etc.)
@@ -1293,7 +1293,7 @@ def sk_tone(ctx: HookContext) -> HookResult:
 
     # --- Build directive ---
     tone_lines = [
-        f"\n\n## Tone Directive (SK-TONE v2: {tone['register']}{compound_label})",
+        f"\n\n## Tone Directive (tone v2: {tone['register']}{compound_label})",
         f"Audience: {audience} ({audience_source}). {audience_config['directive']}",
         f"Scores: density={density:.1f}, formality={formality:.1f}, personality={personality:.1f}",
         f"Valence: {effective_valence}",
@@ -1360,35 +1360,35 @@ def sk_tone(ctx: HookContext) -> HookResult:
 
 HOOK_REGISTRY: dict[str, Callable[[HookContext], HookResult]] = {
     # Original 6
-    "SK-DECOMP": sk_decomp,
-    "SK-BRIDGE": sk_bridge,
-    "SK-GATE": sk_gate,
-    "SK-VERIFY": sk_verify,
-    "SK-PRIORITIZE": sk_prioritize,
-    "SK-FORMAT": sk_format,
+    "decompose": sk_decomp,
+    "bridge": sk_bridge,
+    "quality-gate": sk_gate,
+    "verify": sk_verify,
+    "focus": sk_prioritize,
+    "format": sk_format,
     # F2 additions
-    "SK-REALITY": sk_reality,
-    "SK-ENERGY": sk_energy,
-    "SK-EXTERN": sk_extern,
-    "SK-RESUME": sk_resume,
-    "SK-MICRO": sk_micro,
-    "SK-ANCHOR": sk_anchor,
-    "SK-CODEREVIEW": sk_codereview,
-    "SK-NUDGE": sk_nudge,
-    "SK-A11Y": sk_a11y,
-    "SK-SYS-AUDIT": sk_sys_audit,
-    "SK-SYS-RECOVER": sk_sys_recover,
+    "reality-check": sk_reality,
+    "energy-route": sk_energy,
+    "load-skill": sk_extern,
+    "resume": sk_resume,
+    "micro-step": sk_micro,
+    "anchor": sk_anchor,
+    "code-review": sk_codereview,
+    "refocus": sk_nudge,
+    "accessibility": sk_a11y,
+    "system-audit": sk_sys_audit,
+    "recover": sk_sys_recover,
     # Enhancements (v2)
-    "SK-STT": sk_stt,
-    "SK-TTS": sk_tts,
-    "SK-TONE": sk_tone,
+    "speech-input": sk_stt,
+    "speech-output": sk_tts,
+    "tone": sk_tone,
 }
 
 
 def run_hooks(hook_names: list[str], ctx: HookContext) -> HookResult:
     """Execute hook chain in declared order, merging results.
 
-    Always-on hooks (SK-REALITY, SK-ENERGY) run first regardless of
+    Always-on hooks (reality-check, energy-route) run first regardless of
     whether they appear in hook_names.
     """
     # Prepend always-on hooks (deduplicate if already in list)
