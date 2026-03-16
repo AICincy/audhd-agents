@@ -146,7 +146,45 @@ def build_cognitive_preamble(state: CognitiveState) -> str:
     routing = get_routing(state)
     output_mode = routing["output_mode"]
     max_tier = routing["max_tier"]
+    e_key = _energy_key(state)
+    attention = state.attention_state.value if hasattr(state.attention_state, "value") else str(state.attention_state)
+    session = state.session_context.value if hasattr(state.session_context, "value") else str(state.session_context)
+
     lines = [
         "## Active Cognitive State (injected by runtime/cognitive.py)",
         "",
-        f"- **Energy level**: {_
+        f"- **Energy level**: {e_key}",
+        f"- **Output mode**: {output_mode}",
+        f"- **Max tier**: {max_tier}",
+        f"- **Active mode**: {state.active_mode}",
+        f"- **Attention**: {attention}",
+        f"- **Session**: {session}",
+        f"- **Context switches**: {state.context_switches}",
+    ]
+
+    if state.active_thread:
+        lines.append(f"- **Active thread**: {state.active_thread}")
+
+    if state.is_crash():
+        lines.extend([
+            "",
+            "**CRASH MODE ACTIVE**: No model calls. Save state checkpoint only.",
+        ])
+
+    if state.needs_resume():
+        lines.extend([
+            "",
+            f"**RESUME FROM**: {state.resume_from}",
+        ])
+
+    return "\n".join(lines)
+
+
+def parse_cognitive_state(data: dict[str, Any] | None = None) -> CognitiveState:
+    """Parse cognitive state from request data with safe defaults."""
+    if not data:
+        return CognitiveState()
+    try:
+        return CognitiveState(**data)
+    except (ValueError, TypeError):
+        return CognitiveState()
