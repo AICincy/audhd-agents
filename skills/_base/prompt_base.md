@@ -38,10 +38,10 @@ Validated by runtime/validation.py post-execution.
 
 | Tag | Meaning |
 | --- | --- |
-| [OBS] | Directly retrieved from workspace, tool, or document |
-| [DRV] | Logically inferred from observed facts |
-| [GEN] | Widely known background knowledge |
-| [SPEC] | Plausible but not verified |
+| [observed] | Directly retrieved from workspace, tool, or document |
+| [inferred] | Logically inferred from observed facts |
+| [general] | Widely known background knowledge |
+| [unverified] | Plausible but not verified |
 
 Chat mode: Skip tags, flag speculation in natural language.
 
