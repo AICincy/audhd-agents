@@ -26,6 +26,78 @@ DIST_DIR = Path("dist")
 ADAPTERS = ["openai", "gemini"]
 
 
+def resolve_schema(schema: dict, skill_dir: Path) -> dict:
+    """Resolve allOf/$ref in a skill schema to a flat schema.
+
+    Skills using allOf+$ref (e.g. referencing _base/schema_base.json)
+    produce schemas where properties/required are nested inside allOf
+    sub-schemas rather than at top level. build_openai/build_gemini only
+    read top-level schema["properties"] and schema["required"], so we
+    must merge everything up before handing off to builders.
+
+    Returns a new dict with merged properties/required at top level.
+    """
+    if "allOf" not in schema:
+        return schema
+
+    merged_properties = {}
+    merged_required = []
+
+    # Preserve top-level fields that aren't allOf
+    result = {}
+    for key, val in schema.items():
+        if key == "allOf":
+            continue
+        result[key] = val
+
+    for sub in schema["allOf"]:
+        resolved_sub = sub
+
+        # Resolve $ref to file path relative to skill directory
+        if "$ref" in sub:
+            ref_path = skill_dir / sub["$ref"]
+            if ref_path.exists():
+                with open(ref_path) as f:
+                    resolved_sub = json.load(f)
+            else:
+                # $ref target missing; skip with warning
+                print(f"  WARN: $ref target not found: {ref_path}")
+                continue
+
+        # Merge properties
+        if "properties" in resolved_sub:
+            merged_properties.update(resolved_sub["properties"])
+
+        # Merge required (deduplicate, preserve order)
+        if "required" in resolved_sub:
+            for req in resolved_sub["required"]:
+                if req not in merged_required:
+                    merged_required.append(req)
+
+        # Carry over definitions if present (e.g. from schema_base.json)
+        if "definitions" in resolved_sub and "definitions" not in result:
+            result["definitions"] = resolved_sub["definitions"]
+
+        # Resolve internal $ref in merged properties (e.g. {"$ref": "#/definitions/cognitive_state"})
+        if "definitions" in result:
+            for prop_key, prop_val in list(merged_properties.items()):
+                if isinstance(prop_val, dict) and "$ref" in prop_val:
+                    ref_str = prop_val["$ref"]
+                    if ref_str.startswith("#/definitions/"):
+                        def_name = ref_str.split("/")[-1]
+                        if def_name in result["definitions"]:
+                            merged_properties[prop_key] = result["definitions"][def_name]
+
+    result["properties"] = merged_properties
+    result["required"] = merged_required
+
+    # Ensure type is set
+    if "type" not in result:
+        result["type"] = "object"
+
+    return result
+
+
 def load_skill(skill_dir: Path) -> dict:
     """Load canonical skill files from a skill directory."""
     skill_yaml = skill_dir / "skill.yaml"
@@ -43,7 +115,8 @@ def load_skill(skill_dir: Path) -> dict:
 
     if schema_json.exists():
         with open(schema_json) as f:
-            skill["schema"] = json.load(f)
+            raw_schema = json.load(f)
+        skill["schema"] = resolve_schema(raw_schema, skill_dir)
     else:
         skill["schema"] = {}
 
@@ -90,7 +163,8 @@ def load_voltagent_skill(skill_dir: Path) -> dict:
 
     if schema_json.exists():
         with open(schema_json) as f:
-            skill["schema"] = json.load(f)
+            raw_schema = json.load(f)
+        skill["schema"] = resolve_schema(raw_schema, skill_dir)
 
     return skill
 
