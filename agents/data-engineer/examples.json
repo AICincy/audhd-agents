@@ -1,0 +1,51 @@
+{
+  "agent": "data-engineer",
+  "examples": [
+    {
+      "id": "EX-DATA-001",
+      "title": "ETL Pipeline for E-Commerce Analytics",
+      "description": "Design ETL pipeline from transactional DB to analytics warehouse.",
+      "input": {
+        "task_type": "pipeline_design",
+        "context": "E-commerce platform. Source: PostgreSQL (orders, customers, products). Target: BigQuery analytics warehouse. Daily refresh by 06:00 UTC. ~10M orders/day. Need star schema with fact_orders and dim_customer, dim_product, dim_date.",
+        "constraints": { "freshness_sla": "daily by 06:00 UTC", "data_volume": "10M rows/day", "cost_budget": "$500/mo compute" },
+        "energy_level": "high"
+      },
+      "expected_output": {
+        "schema_table": "| Table | Type | Key Columns | Partition | Cluster | Tag |\n|---|---|---|---|---|---|\n| fact_orders | fact | order_id, customer_key, product_key, date_key | order_date (DAY) | customer_key | [GEN] |\n| dim_customer | dimension | customer_key, customer_id | none | none | [GEN] |\n| dim_product | dimension | product_key, product_id | none | category | [GEN] |\n| dim_date | dimension | date_key, full_date | none | none | [GEN] |",
+        "pipeline_stages": "| Stage | Type | Input | Output | Engine | SLA |\n|---|---|---|---|---|---|\n| extract_orders | extract | pg.orders | gs://raw/orders/ | Airflow + pg_dump | 30min [SPEC] |\n| extract_customers | extract | pg.customers | gs://raw/customers/ | Airflow + pg_dump | 10min [SPEC] |\n| transform_star | transform | gs://raw/* | bq.staging.* | dbt | 45min [SPEC] |\n| quality_check | validate | bq.staging.* | quality_report | Great Expectations | 5min [SPEC] |\n| load_marts | load | bq.staging.* | bq.analytics.* | dbt | 15min [SPEC] |",
+        "lineage_audit": { "checked": true, "unmapped_fields": [], "pii_fields_flagged": ["customer_email", "customer_phone", "shipping_address"] },
+        "audhd_markers": ["schema_table_first", "pipeline_stages_table", "lineage_audit_present", "pii_flagged", "sla_tagged_spec"]
+      }
+    },
+    {
+      "id": "EX-DATA-002",
+      "title": "Kafka Streaming Pipeline",
+      "description": "Design real-time event streaming for clickstream analytics.",
+      "input": {
+        "task_type": "stream_processing",
+        "context": "Clickstream events from web app. ~50K events/sec peak. Need real-time sessionization and funnel analysis. Target: BigQuery for analytics, Redis for real-time dashboard.",
+        "energy_level": "medium"
+      },
+      "expected_output": {
+        "stream_comparison": "| Platform | Latency | Throughput | Guarantee | Cost/Mo | Tag |\n|---|---|---|---|---|---|\n| Kafka + Flink | <100ms [SPEC] | 100K/s [GEN] | exactly_once | ~$800 [SPEC] | |\n| Pub/Sub + Dataflow | <200ms [SPEC] | 100K/s [GEN] | at_least_once | ~$600 [SPEC] | |\n| Kafka + Spark Streaming | <500ms [SPEC] | 100K/s [GEN] | at_least_once | ~$700 [SPEC] | |",
+        "audhd_markers": ["comparison_table_first", "latency_tagged_spec", "throughput_tagged_gen", "cost_tagged_spec"]
+      }
+    },
+    {
+      "id": "EX-DATA-003",
+      "title": "Schema Validation (Low Energy)",
+      "description": "Quick schema check for a new staging table.",
+      "input": {
+        "task_type": "schema_design",
+        "context": "New staging table for user signups. Columns: user_id (INT64), email (STRING), created_at (TIMESTAMP), plan_type (STRING). BigQuery.",
+        "energy_level": "low"
+      },
+      "expected_output": {
+        "schema_table": "| Column | Type | Nullable | PII | Tag |\n|---|---|---|---|---|\n| user_id | INT64 | NO | No | [OBS] |\n| email | STRING | NO | **YES** | [OBS] |\n| created_at | TIMESTAMP | NO | No | [OBS] |\n| plan_type | STRING | YES | No | [OBS] |",
+        "notes": "PII flag: email column. Recommend: hash or tokenize before loading to analytics layer [GEN]. Partition by DATE(created_at) if query patterns filter by date [GEN].",
+        "audhd_markers": ["schema_table", "pii_flagged", "energy_gated", "recommendation_brief"]
+      }
+    }
+  ]
+}
