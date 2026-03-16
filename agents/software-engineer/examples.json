@@ -1,0 +1,73 @@
+{
+  "agent": "software-engineer",
+  "examples": [
+    {
+      "id": "EX-SWE-001",
+      "title": "FastAPI Endpoint Implementation with Tests",
+      "description": "Implement a REST endpoint with input validation, error handling, and test coverage.",
+      "input": {
+        "task_type": "implement",
+        "context": "Add a POST /api/v1/agents endpoint to the AuDHD agents API. Accepts agent config JSON. Validates against schema. Stores in SQLite. Returns 201 with agent ID.",
+        "language": "python",
+        "framework": "fastapi",
+        "energy_level": "medium"
+      },
+      "expected_output": {
+        "code_blocks": [
+          {
+            "file_path": "agents/api/routes/agents.py",
+            "language": "python",
+            "content": "# agents/api/routes/agents.py\nfrom fastapi import APIRouter, HTTPException, status\nfrom pydantic import BaseModel, validator\n# ... implementation with error handling, logging, type hints",
+            "claim_tag": "GEN"
+          }
+        ],
+        "test_blocks": [
+          {
+            "file_path": "tests/test_agents_route.py",
+            "language": "python",
+            "content": "# tests/test_agents_route.py\nimport pytest\nfrom httpx import AsyncClient\n# ... tests: happy path, validation error, duplicate, missing fields",
+            "claim_tag": "GEN"
+          }
+        ],
+        "audhd_markers": ["code_first", "file_path_header", "tests_alongside", "error_handling_included"]
+      }
+    },
+    {
+      "id": "EX-SWE-002",
+      "title": "Code Review with Security Focus",
+      "description": "Review a Python module for security issues and provide fix diffs.",
+      "input": {
+        "task_type": "code_review",
+        "context": "Review the authentication module for the agents API. Focus on security.",
+        "existing_code": [
+          {
+            "file_path": "agents/api/auth.py",
+            "language": "python",
+            "content": "# Example code with SQL injection vuln, weak hashing, missing rate limiting"
+          }
+        ],
+        "energy_level": "high"
+      },
+      "expected_output": {
+        "findings_table": "| Severity | Category | File:Line | Description | Fix |\n|---|---|---|---|---|\n| critical | security | auth.py:23-25 | SQL injection in user lookup [OBS] | Parameterized query |\n| high | security | auth.py:42 | MD5 hashing for passwords [OBS] | bcrypt or argon2 [GEN] |\n| medium | security | auth.py:1-60 | No rate limiting on auth endpoint [DRV] | Add rate limiter middleware [GEN] |",
+        "audhd_markers": ["findings_table", "severity_sorted", "line_references", "fix_diffs_included"]
+      }
+    },
+    {
+      "id": "EX-SWE-003",
+      "title": "Debug from Stack Trace (Low Energy)",
+      "description": "Diagnose a production error from a stack trace at low energy.",
+      "input": {
+        "task_type": "debug",
+        "context": "Production error: KeyError in agent routing. Stack trace shows failure in router.py line 87 when processing agent handoff.",
+        "energy_level": "low"
+      },
+      "expected_output": {
+        "hypothesis_table": "| Hypothesis | Evidence | Confidence | Tag |\n|---|---|---|---|\n| Missing agent key in routing table | KeyError at router.py:87 | 0.8 | [DRV] |\n| Agent config not loaded at startup | Handoff triggers dynamic lookup | 0.5 | [SPEC] |",
+        "quick_fix": "Add key existence check with default fallback at router.py:87. [GEN]",
+        "energy_note": "Low energy: hypothesis table + quick fix only. No deep trace analysis. Escalate if fix doesn't resolve.",
+        "audhd_markers": ["hypothesis_table", "confidence_scored", "energy_gated", "escalation_path"]
+      }
+    }
+  ]
+}

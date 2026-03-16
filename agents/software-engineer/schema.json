@@ -1,0 +1,143 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SoftwareEngineerAgentSchema",
+  "description": "Domain-specific I/O schema for the Software Engineer agent. Extends _base/schema_base.json.",
+  "type": "object",
+  "extends": "../../_base/schema_base.json",
+  "definitions": {
+    "CodeBlock": {
+      "type": "object",
+      "required": ["file_path", "language", "content"],
+      "properties": {
+        "file_path": { "type": "string" },
+        "language": { "type": "string" },
+        "content": { "type": "string" },
+        "is_diff": { "type": "boolean", "default": false },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "TestCase": {
+      "type": "object",
+      "required": ["name", "type", "target", "assertion"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["unit", "integration", "e2e", "performance", "security"] },
+        "target": { "type": "string", "description": "Function/module under test" },
+        "assertion": { "type": "string" },
+        "code": { "$ref": "#/definitions/CodeBlock" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "DependencyEntry": {
+      "type": "object",
+      "required": ["package", "version", "purpose"],
+      "properties": {
+        "package": { "type": "string" },
+        "version": { "type": "string" },
+        "purpose": { "type": "string" },
+        "alternatives": { "type": "array", "items": { "type": "string" } },
+        "security_status": { "type": "string", "enum": ["clean", "advisory", "vulnerable", "unknown"] },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "CodeReviewFinding": {
+      "type": "object",
+      "required": ["severity", "category", "file_path", "line_range", "description", "suggestion"],
+      "properties": {
+        "severity": { "type": "string", "enum": ["critical", "high", "medium", "low", "info"] },
+        "category": { "type": "string", "enum": ["bug", "security", "performance", "style", "maintainability", "correctness", "complexity"] },
+        "file_path": { "type": "string" },
+        "line_range": { "type": "string", "pattern": "^[0-9]+-[0-9]+$" },
+        "description": { "type": "string" },
+        "suggestion": { "type": "string" },
+        "fix_code": { "$ref": "#/definitions/CodeBlock" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "RefactorPlan": {
+      "type": "object",
+      "required": ["target", "strategy", "steps", "risk"],
+      "properties": {
+        "target": { "type": "string", "description": "File or module to refactor" },
+        "strategy": { "type": "string" },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "order": { "type": "integer" },
+              "description": { "type": "string" },
+              "files_affected": { "type": "array", "items": { "type": "string" } },
+              "tests_required": { "type": "boolean" },
+              "reversible": { "type": "boolean" }
+            }
+          }
+        },
+        "risk": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "SoftwareEngineerInput": {
+      "type": "object",
+      "required": ["task_type", "context"],
+      "properties": {
+        "task_type": {
+          "type": "string",
+          "enum": [
+            "implement",
+            "code_review",
+            "test_generation",
+            "debug",
+            "refactor",
+            "performance_optimize",
+            "dependency_audit",
+            "ci_cd_config",
+            "documentation",
+            "code_architecture"
+          ]
+        },
+        "context": { "type": "string" },
+        "existing_code": { "type": "array", "items": { "$ref": "#/definitions/CodeBlock" } },
+        "language": { "type": "string" },
+        "framework": { "type": "string" },
+        "energy_level": { "type": "string", "enum": ["high", "medium", "low", "crash"] }
+      }
+    },
+    "SoftwareEngineerOutput": {
+      "type": "object",
+      "required": ["task_type", "result", "claim_summary"],
+      "properties": {
+        "task_type": { "type": "string" },
+        "result": {
+          "type": "object",
+          "properties": {
+            "code_blocks": { "type": "array", "items": { "$ref": "#/definitions/CodeBlock" } },
+            "test_cases": { "type": "array", "items": { "$ref": "#/definitions/TestCase" } },
+            "review_findings": { "type": "array", "items": { "$ref": "#/definitions/CodeReviewFinding" } },
+            "refactor_plan": { "$ref": "#/definitions/RefactorPlan" },
+            "dependencies": { "type": "array", "items": { "$ref": "#/definitions/DependencyEntry" } }
+          }
+        },
+        "claim_summary": {
+          "type": "object",
+          "properties": {
+            "obs_count": { "type": "integer" },
+            "drv_count": { "type": "integer" },
+            "gen_count": { "type": "integer" },
+            "spec_count": { "type": "integer" },
+            "unverified_claims": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "energy_used": { "type": "string", "enum": ["high", "medium", "low", "crash"] },
+        "handoff": {
+          "type": "object",
+          "properties": {
+            "target_agent": { "type": "string" },
+            "reason": { "type": "string" },
+            "context_payload": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
