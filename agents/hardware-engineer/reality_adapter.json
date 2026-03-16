@@ -1,0 +1,145 @@
+{
+  "agent": "hardware-engineer",
+  "domain": "hardware_engineering",
+  "reality_skill_version": "1.0.0",
+  "claim_tags": ["OBS", "DRV", "GEN", "SPEC"],
+  "validation_rules": {
+    "components": [
+      {
+        "rule": "part_number_verification",
+        "description": "All component part numbers must reference real parts. Verify against manufacturer catalog or tag [SPEC].",
+        "severity": "critical"
+      },
+      {
+        "rule": "datasheet_spec_accuracy",
+        "description": "Voltage, current, temperature ratings must match datasheet. Tag source.",
+        "severity": "error"
+      },
+      {
+        "rule": "pin_assignment_verification",
+        "description": "Pin assignments must match datasheet pinout. Never guess pin functions.",
+        "severity": "critical"
+      }
+    ],
+    "calculations": [
+      {
+        "rule": "power_budget_accuracy",
+        "description": "Power calculations must show work and tag input values.",
+        "severity": "error"
+      },
+      {
+        "rule": "thermal_margin_required",
+        "description": "All thermal calculations must show safety margin. Flag designs within 10% of Tj max.",
+        "severity": "warning"
+      }
+    ],
+    "general": [
+      {
+        "rule": "no_untagged_claims",
+        "description": "Every factual assertion must have a claim tag.",
+        "severity": "error"
+      },
+      {
+        "rule": "spec_gating",
+        "description": "[SPEC] claims must never be presented as [OBS] or [DRV].",
+        "severity": "critical"
+      },
+      {
+        "rule": "no_phantom_components",
+        "description": "Never reference components, packages, or interfaces that don't exist.",
+        "severity": "critical"
+      }
+    ]
+  },
+  "output_gating": {
+    "pre_output_checks": [
+      "All claims tagged",
+      "No [SPEC] presented as [OBS]",
+      "All part numbers verifiable",
+      "Pin assignments match datasheet",
+      "Power calculations show work",
+      "Thermal margins documented"
+    ],
+    "block_on_failure": ["no_untagged_claims", "spec_gating", "no_phantom_components", "part_number_verification", "pin_assignment_verification"],
+    "warn_on_failure": ["thermal_margin_required", "power_budget_accuracy"]
+  },
+  "model_profiles": {
+    "gemini-3.1-pro-preview": {
+      "hallucination_risk": "low",
+      "strengths": ["Strong system-level reasoning", "Good power architecture", "Reliable DFM analysis"],
+      "known_drift_patterns": [
+        {
+          "pattern": "phantom_peripheral",
+          "description": "May assume MCU has peripherals that don't exist on the specific variant",
+          "frequency": "occasional",
+          "mitigation": "Always verify against specific MCU variant datasheet."
+        }
+      ]
+    },
+    "gemini-2.5-pro": {
+      "hallucination_risk": "low",
+      "strengths": ["Excellent schematic analysis", "Good visual documentation"],
+      "known_drift_patterns": [
+        {
+          "pattern": "component_value_misread",
+          "description": "May misread component values from schematic images",
+          "frequency": "rare",
+          "mitigation": "Cross-reference visual reads against BOM."
+        }
+      ]
+    },
+    "gpt-5.3-codex": {
+      "hallucination_risk": "low",
+      "strengths": ["Strong embedded C", "Good register-level code", "Reliable HAL generation"],
+      "known_drift_patterns": [
+        {
+          "pattern": "register_address_fabrication",
+          "description": "May generate plausible but incorrect register addresses",
+          "frequency": "occasional",
+          "mitigation": "Always verify register addresses against reference manual."
+        }
+      ]
+    },
+    "gpt-5.4": {
+      "hallucination_risk": "medium",
+      "strengths": ["Creative hardware options", "Good component trade studies"],
+      "known_drift_patterns": [
+        {
+          "pattern": "part_number_fabrication",
+          "description": "May invent plausible component part numbers that don't exist",
+          "frequency": "frequent",
+          "mitigation": "Always verify part numbers against distributor catalogs."
+        }
+      ]
+    },
+    "gpt-5.4-pro": {
+      "hallucination_risk": "low",
+      "strengths": ["Deep power analysis", "Strong EMC reasoning", "Good consensus partner"],
+      "known_drift_patterns": [
+        {
+          "pattern": "over_specified_design",
+          "description": "May add unnecessary protection circuits or redundancy",
+          "frequency": "rare",
+          "mitigation": "Validate each protection circuit against actual risk."
+        }
+      ]
+    },
+    "o4-mini": {
+      "hallucination_risk": "medium",
+      "strengths": ["Fast voltage/pin checks", "Good binary go/no-go"],
+      "known_drift_patterns": [
+        {
+          "pattern": "surface_check",
+          "description": "May VERIFY pin assignments that are subtly wrong (e.g., alternate function conflicts)",
+          "frequency": "occasional",
+          "mitigation": "Never sole verifier for pin assignments on new designs."
+        }
+      ]
+    }
+  },
+  "error_handling": {
+    "on_hallucination_detected": "Tag as [SPEC], flag phantom component/spec, do not present as fact",
+    "on_verification_failure": "Block output, request datasheet or reference manual link",
+    "on_energy_crash": "Route to nano model, JSON-only, binary go/no-go, escalate immediately"
+  }
+}

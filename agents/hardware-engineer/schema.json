@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HardwareEngineerAgentSchema",
+  "description": "Domain-specific I/O schema for the Hardware Engineer agent.",
+  "type": "object",
+  "extends": "../../_base/schema_base.json",
+  "definitions": {
+    "Component": {
+      "type": "object",
+      "required": ["part_number", "description", "package"],
+      "properties": {
+        "part_number": { "type": "string" },
+        "description": { "type": "string" },
+        "manufacturer": { "type": "string" },
+        "package": { "type": "string" },
+        "voltage_range": { "type": "string" },
+        "datasheet_url": { "type": "string" },
+        "quantity": { "type": "integer", "default": 1 },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "PinMapping": {
+      "type": "object",
+      "required": ["pin", "function", "direction"],
+      "properties": {
+        "pin": { "type": "string" },
+        "function": { "type": "string" },
+        "direction": { "type": "string", "enum": ["input", "output", "bidirectional", "power", "ground", "nc"] },
+        "voltage": { "type": "string" },
+        "notes": { "type": "string" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "PowerRail": {
+      "type": "object",
+      "required": ["rail_name", "voltage", "source"],
+      "properties": {
+        "rail_name": { "type": "string" },
+        "voltage": { "type": "string" },
+        "source": { "type": "string" },
+        "max_current": { "type": "string" },
+        "loads": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "current": { "type": "string" } } } },
+        "sequencing_order": { "type": "integer" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "FirmwareModule": {
+      "type": "object",
+      "required": ["file_path", "language", "content"],
+      "properties": {
+        "file_path": { "type": "string" },
+        "language": { "type": "string", "enum": ["c", "cpp", "python", "verilog", "vhdl", "rust", "assembly"] },
+        "content": { "type": "string" },
+        "target_mcu": { "type": "string" },
+        "is_diff": { "type": "boolean", "default": false },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "HardwareInput": {
+      "type": "object",
+      "required": ["task_type", "context"],
+      "properties": {
+        "task_type": {
+          "type": "string",
+          "enum": [
+            "pcb_design", "embedded_firmware", "power_design",
+            "thermal_analysis", "component_selection", "signal_integrity",
+            "manufacturing_review", "hardware_debug", "system_architecture",
+            "mechanical_integration"
+          ]
+        },
+        "context": { "type": "string" },
+        "target_platform": { "type": "string" },
+        "existing_bom": { "type": "array", "items": { "$ref": "#/definitions/Component" } },
+        "energy_level": { "type": "string", "enum": ["high", "medium", "low", "crash"] }
+      }
+    },
+    "HardwareOutput": {
+      "type": "object",
+      "required": ["task_type", "result", "claim_summary"],
+      "properties": {
+        "task_type": { "type": "string" },
+        "result": {
+          "type": "object",
+          "properties": {
+            "components": { "type": "array", "items": { "$ref": "#/definitions/Component" } },
+            "pin_map": { "type": "array", "items": { "$ref": "#/definitions/PinMapping" } },
+            "power_rails": { "type": "array", "items": { "$ref": "#/definitions/PowerRail" } },
+            "firmware": { "type": "array", "items": { "$ref": "#/definitions/FirmwareModule" } },
+            "mermaid_diagram": { "type": "string" }
+          }
+        },
+        "claim_summary": {
+          "type": "object",
+          "properties": {
+            "obs_count": { "type": "integer" },
+            "drv_count": { "type": "integer" },
+            "gen_count": { "type": "integer" },
+            "spec_count": { "type": "integer" }
+          }
+        },
+        "energy_used": { "type": "string" },
+        "handoff": { "type": "object" }
+      }
+    }
+  }
+}
