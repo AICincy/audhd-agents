@@ -6,16 +6,16 @@
       "properties": {
         "input_text": {
           "type": "string",
-          "description": "Content to document or documentation requirements"
+          "description": "Code, architecture, or system to document"
         },
         "doc_type": {
           "type": "string",
           "description": "Documentation type",
-          "enum": ["api", "architecture", "runbook", "tutorial", "reference", "decision-record"]
+          "enum": ["api-reference", "architecture", "runbook", "tutorial", "how-to", "explanation", "readme"]
         },
         "audience": {
           "type": "string",
-          "description": "Target audience"
+          "description": "Target reader"
         }
       },
       "required": ["input_text"]

@@ -6,11 +6,11 @@
       "properties": {
         "input_text": {
           "type": "string",
-          "description": "Visual content to review or inclusive design requirements"
+          "description": "Visual asset or design spec to audit"
         },
         "context": {
           "type": "string",
-          "description": "Usage context and audience"
+          "description": "Usage context for the visuals"
         }
       },
       "required": ["input_text"]

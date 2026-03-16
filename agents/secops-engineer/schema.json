@@ -1,0 +1,296 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "agents/secops-engineer/schema.json",
+  "title": "SecOps Engineer Agent Schema",
+  "description": "Unified I/O schema merging security-engineer, incident-response-commander, reality-checker, and tool-evaluator. Extends _base/schema_base.json.",
+  "allOf": [
+    {
+      "$ref": "../../_base/schema_base.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "cognitive_state": {
+          "type": "object",
+          "description": "AuDHD cognitive state tracking",
+          "properties": {
+            "energy_level": {
+              "type": "string",
+              "enum": ["high", "medium", "low", "crash"],
+              "default": "medium",
+              "description": "Current energy state. Determines model selection and task depth."
+            },
+            "active_mode": {
+              "type": "string",
+              "enum": ["threat_model", "incident_response", "code_review", "tool_eval", "triage", "monitor", "post_mortem"],
+              "description": "Current operational mode. One mode at a time (monotropism)."
+            },
+            "task_tier": {
+              "type": "integer",
+              "enum": [1, 2, 3],
+              "description": "Task complexity tier. 1=deep analysis, 2=standard, 3=quick/edge."
+            },
+            "active_thread": {
+              "type": "string",
+              "description": "Current monotropic focus thread ID. Only one active at a time."
+            },
+            "context_switches": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "description": "Number of context switches in current session. High count triggers energy degrade."
+            },
+            "externalized_state": {
+              "type": "object",
+              "description": "Aggressive externalization of working memory",
+              "properties": {
+                "active_assumptions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "text": { "type": "string" },
+                      "tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] },
+                      "validated": { "type": "boolean" }
+                    },
+                    "required": ["id", "text", "tag"]
+                  }
+                },
+                "queued_tasks": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "checkpoint": {
+                  "type": "string",
+                  "description": "Last saved state for context switch recovery"
+                }
+              }
+            }
+          },
+          "required": ["energy_level", "active_mode"]
+        },
+        "security_input": {
+          "type": "object",
+          "description": "Security engineering inputs",
+          "properties": {
+            "target_system": {
+              "type": "string",
+              "description": "System or component under analysis"
+            },
+            "scope": {
+              "type": "object",
+              "properties": {
+                "boundaries": { "type": "array", "items": { "type": "string" } },
+                "trust_boundaries": { "type": "array", "items": { "type": "string" } },
+                "data_flows": { "type": "array", "items": { "type": "string" } },
+                "exclusions": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "code": {
+              "type": "object",
+              "properties": {
+                "language": { "type": "string" },
+                "framework": { "type": "string" },
+                "snippet": { "type": "string" },
+                "file_path": { "type": "string" },
+                "commit_sha": { "type": "string" }
+              }
+            },
+            "compliance_targets": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["SOC2", "ISO27001", "NIST_CSF", "FedRAMP", "HIPAA", "PCI_DSS", "GDPR", "CCPA"]
+              }
+            },
+            "existing_controls": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "control_id": { "type": "string" },
+                  "description": { "type": "string" },
+                  "effectiveness": { "type": "string", "enum": ["effective", "partial", "ineffective", "unknown"] }
+                }
+              }
+            }
+          }
+        },
+        "incident_input": {
+          "type": "object",
+          "description": "Incident response inputs",
+          "properties": {
+            "incident_id": { "type": "string" },
+            "severity": {
+              "type": "string",
+              "enum": ["SEV1", "SEV2", "SEV3", "SEV4"]
+            },
+            "status": {
+              "type": "string",
+              "enum": ["detecting", "triaging", "containing", "eradicating", "recovering", "closed", "post_mortem"]
+            },
+            "indicators": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": { "type": "string", "enum": ["ip", "domain", "hash", "email", "url", "cve", "behavior", "log_entry"] },
+                  "value": { "type": "string" },
+                  "source": { "type": "string" },
+                  "timestamp": { "type": "string", "format": "date-time" },
+                  "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+                },
+                "required": ["type", "value"]
+              }
+            },
+            "affected_systems": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "timeline_events": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "timestamp": { "type": "string", "format": "date-time" },
+                  "event": { "type": "string" },
+                  "source": { "type": "string" },
+                  "actor": { "type": "string" }
+                },
+                "required": ["timestamp", "event"]
+              }
+            },
+            "communication_log": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "timestamp": { "type": "string", "format": "date-time" },
+                  "channel": { "type": "string" },
+                  "audience": { "type": "string" },
+                  "message_summary": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "tool_eval_input": {
+          "type": "object",
+          "description": "Tool evaluation inputs",
+          "properties": {
+            "decision_context": { "type": "string" },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "vendor": { "type": "string" },
+                  "category": { "type": "string" },
+                  "cost": { "type": "string" },
+                  "url": { "type": "string" }
+                },
+                "required": ["name"]
+              }
+            },
+            "criteria": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "must_have": { "type": "boolean" }
+                },
+                "required": ["name", "weight"]
+              }
+            },
+            "constraints": {
+              "type": "object",
+              "properties": {
+                "budget": { "type": "string" },
+                "timeline": { "type": "string" },
+                "team_size": { "type": "integer" },
+                "integration_requirements": { "type": "array", "items": { "type": "string" } },
+                "compliance_requirements": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "reality_check": {
+          "type": "object",
+          "description": "Reality checking state (always-on)",
+          "properties": {
+            "claims": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "claim": { "type": "string" },
+                  "tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC", "STALE", "UNVERIFIED", "CONFLICT"] },
+                  "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+                  "sources": { "type": "array", "items": { "type": "string" } },
+                  "verified": { "type": "boolean" },
+                  "conflicts": { "type": "array", "items": { "type": "string" } }
+                },
+                "required": ["claim", "tag", "confidence"]
+              }
+            },
+            "drift_detected": { "type": "boolean", "default": false },
+            "drift_description": { "type": "string" },
+            "gated_claims": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Claims that could not be verified and were gated from output"
+            },
+            "hallucination_flags": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "content": { "type": "string" },
+                  "reason": { "type": "string" },
+                  "model": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "stride_threat": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "category": { "type": "string", "enum": ["Spoofing", "Tampering", "Repudiation", "Information_Disclosure", "Denial_of_Service", "Elevation_of_Privilege"] },
+        "description": { "type": "string" },
+        "likelihood": { "type": "string", "enum": ["high", "medium", "low"] },
+        "impact": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+        "risk_score": { "type": "number" },
+        "mitigation": { "type": "string" },
+        "status": { "type": "string", "enum": ["open", "mitigated", "accepted", "transferred"] },
+        "confidence_tag": { "type": "string", "enum": ["OBS", "DRV", "SPEC"] }
+      },
+      "required": ["id", "category", "description", "likelihood", "impact"]
+    },
+    "finding": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "severity": { "type": "string", "enum": ["critical", "high", "medium", "low", "info"] },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "cwe": { "type": "string" },
+        "cvss": { "type": "number" },
+        "evidence": { "type": "string" },
+        "remediation": { "type": "string" },
+        "confidence_tag": { "type": "string" },
+        "references": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["id", "severity", "title", "description"]
+    }
+  }
+}

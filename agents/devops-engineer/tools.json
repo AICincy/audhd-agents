@@ -1,0 +1,116 @@
+{
+  "agent": "devops-engineer",
+  "tools": {
+    "infrastructure": [
+      {
+        "id": "TL-IACGEN",
+        "name": "iac_generator",
+        "description": "Generate Infrastructure as Code modules (Terraform, Pulumi, CloudFormation).",
+        "input_schema": {
+          "provider": "string (aws|gcp|azure|kubernetes)",
+          "resources": "array<{type, config}>",
+          "iac_tool": "string (terraform|pulumi|cloudformation|ansible)"
+        },
+        "output_schema": {
+          "configs": "array<InfraConfig>",
+          "resource_graph": "string (mermaid)"
+        }
+      },
+      {
+        "id": "TL-CONTAINER",
+        "name": "container_config_generator",
+        "description": "Generate Dockerfiles, K8s manifests, Helm charts.",
+        "input_schema": {
+          "application": "string",
+          "base_image": "string (optional)",
+          "orchestrator": "string (kubernetes|ecs|docker-compose)",
+          "scaling": "object (optional)"
+        },
+        "output_schema": {
+          "configs": "array<InfraConfig>",
+          "service_table": "array<{service, image, replicas, resources}>"
+        }
+      },
+      {
+        "id": "TL-PIPELINE",
+        "name": "pipeline_generator",
+        "description": "Generate CI/CD pipeline configurations.",
+        "input_schema": {
+          "platform": "string (github_actions|gitlab_ci|jenkins|circleci)",
+          "stages": "array<string>",
+          "language": "string",
+          "deploy_target": "string (optional)"
+        },
+        "output_schema": {
+          "config": "InfraConfig",
+          "stages": "array<PipelineStage>"
+        }
+      }
+    ],
+    "monitoring": [
+      {
+        "id": "TL-MONITOR",
+        "name": "monitoring_config_generator",
+        "description": "Generate monitoring, alerting, and dashboard configs.",
+        "input_schema": {
+          "platform": "string (prometheus|datadog|cloudwatch|grafana)",
+          "services": "array<string>",
+          "slo_targets": "array<{metric, target}>"
+        },
+        "output_schema": {
+          "alert_rules": "array<InfraConfig>",
+          "dashboard": "InfraConfig",
+          "slo_specs": "array<object>"
+        }
+      }
+    ],
+    "analysis": [
+      {
+        "id": "TL-COSTOPT",
+        "name": "cost_analyzer",
+        "description": "Analyze cloud costs and generate optimization recommendations.",
+        "input_schema": {
+          "provider": "string",
+          "current_resources": "array<ResourceEntry>",
+          "usage_data": "string (optional)"
+        },
+        "output_schema": {
+          "optimizations": "array<{resource, action, savings, risk}>",
+          "total_savings": "string"
+        }
+      },
+      {
+        "id": "TL-DRASSESS",
+        "name": "dr_assessment",
+        "description": "Assess disaster recovery readiness and generate DR plans.",
+        "input_schema": {
+          "architecture": "string",
+          "rto_target": "string",
+          "rpo_target": "string"
+        },
+        "output_schema": {
+          "dr_plan": "object",
+          "gaps": "array<{component, gap, remediation}>",
+          "test_schedule": "array<object>"
+        }
+      }
+    ],
+    "integration": [
+      {
+        "id": "TL-HANDOFF",
+        "name": "agent_handoff",
+        "description": "Prepare structured handoff payload for specialist agent.",
+        "input_schema": {
+          "target_agent": "string",
+          "task": "string",
+          "context": "string",
+          "infra_context": "array<InfraConfig> (optional)"
+        },
+        "output_schema": {
+          "handoff_payload": "object",
+          "format": "HANDOFF"
+        }
+      }
+    ]
+  }
+}

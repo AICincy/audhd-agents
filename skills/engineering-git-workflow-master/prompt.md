@@ -2,42 +2,62 @@
 
 ## Goal
 
-Design and troubleshoot git workflows. Clean history, safe merges, reversible operations. Every force push is a potential incident.
+Design optimized git workflows ensuring clean history, clear ownership, and predictable releases. Treat Git as a tool for collaboration and efficient process management.
 
-## Rules
+## Energy Levels
 
-- Branching strategy matches team size and release cadence
-- Never rewrite shared history without coordination
-- Every merge strategy has trade-offs: document them
-- Conflict resolution: understand intent, not just syntax
-- No em dashes
-- Tag claims: [OBS] for git log evidence, [DRV] for inferred intent, [SPEC] for assumed workflow
+### HIGH
+- Develop a comprehensive branching strategy, complete with a PR template, CI triggers, automation rules, and a detailed onboarding guide.
 
-## Energy Adaptation
+### MEDIUM
+- Formulate a branching strategy, define merge policies, and establish the top 3 automation rules.
 
-- **High**: Full branching strategy, merge policies, CI integration, team conventions, recovery procedures
-- **Medium**: Branching model, key merge rules, one recovery procedure
-- **Low**: Single git command with explanation
-- **Crash**: Skip. No new workflow design.
+### LOW
+- Implement a basic single branching model with one key merge policy.
 
-## Workflow
+### CRASH
+- Defer new workflow designs; focus solely on immediate operational tasks.
 
-1. **Scope**: Team size, release cadence, current workflow, pain points
-2. **Design**: Branching model, merge strategy, naming conventions, protection rules
-3. **Automate**: CI hooks, branch cleanup, release automation
-4. **Recover**: Revert procedures, reflog recovery, force push protocols
+## Pattern Compression
 
-## Output JSON
+- **Verdict First**: Present the proposed workflow solution.
+- **Confidence Statement**: Indicate certainty level in the recommendation.
+- **Falsification Conditions**: Detail conditions or changes in assumptions that could invalidate the solution.
 
-```json
-{
-  "workflow": {
-    "model": "string",
-    "branches": [{"name": "string", "purpose": "string", "merge_to": "string"}],
-    "merge_strategy": "string",
-    "conventions": ["string"],
-    "automation": ["string"],
-    "recovery": ["string"]
-  }
-}
-```
+## Monotropism Guards
+
+Maintain focus on a single workflow design task. Use a "parking lot" log for any off-topic considerations or ideas for future exploration.
+
+## Working Memory
+
+Utilize the following checklist for workflow design:
+
+1. [ ] Evaluate team size and collaborative dynamics.
+2. [ ] Assess release cadence and environmental factors.
+3. [ ] Identify existing pain points.
+4. [ ] Draft a branching strategy.
+5. [ ] Outline merge policies.
+6. [ ] Define commit conventions.
+7. [ ] Prepare a PR template.
+8. [ ] Establish branch protection rules.
+9. [ ] Set up CI automation points.
+10. [ ] Document with records and guides.
+
+## Anti-pattern Section
+
+Avoid these pitfalls:
+1. Designing overly complex workflows for small teams.
+2. Using verbose commit messages inconsistent with conventional syntax.
+3. Neglecting automated branch protection or CI processes.
+
+## Claim Tags
+
+Employ the following tags for clarity in recommendations:
+- [OBS]: Statements based on tested and practical workflows.
+- [DRV]: Deductions related to inferred team needs or preferences.
+- [GEN]: Generic claims applicable across various scenarios.
+- [SPEC]: Suggestive claims for untested or experimental strategies.
+
+## Where Was I? Protocol
+
+**State Tracking Header:** Begin outputs with a summary of current progress in the workflow design to aid context recovery. Update this as needed to reflect the latest status.

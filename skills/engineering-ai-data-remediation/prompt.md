@@ -2,31 +2,61 @@
 
 ## Goal
 
-Triage data quality issues in AI/ML pipelines. Bad data in, bad model out. Find it before training, not after deployment.
+Triage data quality issues in AI/ML pipelines to ensure optimal model performance by preemptively identifying and addressing problematic data before model training.
 
-## Rules
+## Energy Levels
 
-- Classify issues: drift, bias, corruption, schema violation, staleness, leakage
-- Severity by downstream impact on model performance
-- Every remediation has a rollback path
-- No em dashes
-- Tag findings: [OBS] for measured data quality, [DRV] for inferred impact, [SPEC] for predicted degradation
+### HIGH
+Conduct a comprehensive audit covering drift, bias, corruption, schema violations, and other issues. Provide a detailed remediation plan with complete rollback paths.
 
-## Energy Adaptation
+### MEDIUM
+Focus on the top three data quality issues that have the most significant impact. Perform an impact assessment and propose high-priority fixes.
 
-- **High**: Full audit across all issue types, distribution analysis, remediation plan with rollbacks
-- **Medium**: Top 3 data quality issues, impact assessment, priority fixes
-- **Low**: Single most critical data issue, one fix
-- **Crash**: Skip. No new data work.
+### LOW
+Identify and address the single most critical data issue. Implement one high-impact fix.
+
+### CRASH
+Suspend operations. No analysis or remediation should be performed at this energy level.
+
+## Pattern Compression
+
+- **Verdict**: Summarize findings clearly and concisely.
+- **Confidence**: State confidence level in findings.
+- **Falsification Conditions**: List conditions under which findings may be reevaluated or proven wrong.
+
+## Monotropism Guards
+
+Maintain focus on the current data quality triage task. Use a parking lot to note any extraneous or distracting thoughts for later review.
+
+## Working Memory
+
+Utilize tables or checklists to externalize working memory, maintaining an organized approach through structured documentation of findings and remediations.
+
+## Anti-patterns
+
+- Avoid drawing conclusions without clear evidence or data backing.
+- Refrain from tangential explorations outside the current data remediation context.
+- Do not propose changes lacking a clear rollback path.
+
+## Claim Tags
+
+Use the following tags when documenting findings or claims:
+- [OBS]: Observations of measured data quality
+- [DRV]: Derived conclusions on potential impacts
+- [SPEC]: Speculative predictions on data degradation
+
+## Where Was I?
+
+Begin each output with a state tracking header to aid in context recovery, ensuring continuity in assessing data quality and remediation steps. 
 
 ## Workflow
 
-1. **Scope**: Data source, schema, pipeline stage, model type, known issues
-2. **Audit**: Schema validation, distribution analysis, null/missing patterns, class imbalance, temporal drift, label quality
-3. **Classify**: Issue type, severity (Critical/High/Medium/Low), affected rows/features, downstream impact
-4. **Remediate**: Fix per issue, validation query, rollback procedure
+1. **Scope**: Capture data source, schema, pipeline stage, model type, and any known issues or constraints.
+2. **Audit**: Carry out validations including schema checks, distribution assessments, and analysis of null/missing data patterns, class imbalances, and temporal drifts.
+3. **Classify**: Document issue type, severity, affected areas, and anticipated downstream impact.
+4. **Remediate**: Propose solutions for each issue, include a validation query and specify a rollback procedure for each proposed fix. 
 
-## Output JSON
+## Output JSON Structure
 
 ```json
 {
@@ -47,4 +77,3 @@ Triage data quality issues in AI/ML pipelines. Bad data in, bad model out. Find 
     "pipeline_recommendation": "proceed|remediate-first|block"
   }
 }
-```

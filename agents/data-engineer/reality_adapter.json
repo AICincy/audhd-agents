@@ -1,0 +1,48 @@
+{
+  "agent": "data-engineer",
+  "domain": "data_engineering",
+  "reality_skill_version": "1.0.0",
+  "claim_tags": ["OBS", "DRV", "GEN", "SPEC"],
+  "validation_rules": {
+    "schema": [
+      { "rule": "engine_type_verification", "description": "Verify data types are valid for the specified engine. Do not use BigQuery types in Postgres DDL or vice versa.", "severity": "critical" },
+      { "rule": "no_fabricated_schemas", "description": "Never invent table schemas or column types. If schema is not provided, tag [SPEC].", "severity": "critical" },
+      { "rule": "partition_key_validation", "description": "Partition keys must be validated against query patterns. Incorrect partitioning wastes cost.", "severity": "error" }
+    ],
+    "data_integrity": [
+      { "rule": "lineage_required", "description": "Every output field must be traceable to its source system and column. Unmapped fields flagged.", "severity": "critical" },
+      { "rule": "pii_detection", "description": "Flag any column that may contain PII (names, emails, phone numbers, SSNs, addresses).", "severity": "error" },
+      { "rule": "quality_checks_at_boundaries", "description": "Data quality checks mandatory at every pipeline stage boundary.", "severity": "error" }
+    ],
+    "code": [
+      { "rule": "sql_engine_compatibility", "description": "SQL must be valid for the specified engine. No cross-engine syntax.", "severity": "critical" },
+      { "rule": "idempotency_required", "description": "All pipeline stages must be idempotent unless explicitly marked otherwise.", "severity": "error" },
+      { "rule": "library_version_pinning", "description": "Pin library versions when known [OBS]. Tag [SPEC] when guessing.", "severity": "error" }
+    ],
+    "performance": [
+      { "rule": "no_fabricated_metrics", "description": "Never invent pipeline throughput, query latency, or storage size numbers.", "severity": "critical" },
+      { "rule": "cost_estimates_tagged", "description": "All cost estimates must be tagged [SPEC] unless from actual billing data [OBS].", "severity": "error" }
+    ],
+    "general": [
+      { "rule": "no_untagged_claims", "description": "Every factual assertion must have a claim tag.", "severity": "error" },
+      { "rule": "spec_gating", "description": "[SPEC] claims must never be presented as [OBS] or [DRV].", "severity": "critical" }
+    ]
+  },
+  "output_gating": {
+    "pre_output_checks": ["All claims tagged", "No [SPEC] presented as [OBS]", "Lineage audit present on pipeline outputs", "PII fields flagged", "SQL engine compatibility verified", "Quality checks at stage boundaries"],
+    "block_on_failure": ["no_untagged_claims", "spec_gating", "engine_type_verification", "no_fabricated_schemas", "lineage_required"],
+    "warn_on_failure": ["library_version_pinning", "cost_estimates_tagged", "partition_key_validation"]
+  },
+  "model_profiles": {
+    "gemini-3.1-pro-preview": { "hallucination_risk": "low", "strengths": ["Strong schema design", "Good governance reasoning"], "known_drift_patterns": [{ "pattern": "engine_feature_assumption", "description": "May assume engine features from one platform exist on another (e.g., BigQuery MERGE syntax in Redshift)", "frequency": "occasional", "mitigation": "Always specify target engine. Verify syntax against docs." }] },
+    "gpt-5.3-codex": { "hallucination_risk": "low", "strengths": ["Strong SQL", "Good Airflow DAGs", "Reliable dbt models"], "known_drift_patterns": [{ "pattern": "cross_engine_syntax", "description": "May mix BigQuery and Postgres SQL syntax", "frequency": "occasional", "mitigation": "Always specify engine in prompt. Validate syntax." }] },
+    "gpt-5.4": { "hallucination_risk": "medium", "strengths": ["Creative modeling approaches", "Good cost optimization"], "known_drift_patterns": [{ "pattern": "performance_fabrication", "description": "May cite specific query performance numbers without benchmarks", "frequency": "frequent", "mitigation": "Tag all performance claims [SPEC]." }] },
+    "o4-mini": { "hallucination_risk": "medium", "strengths": ["Fast schema checks"], "known_drift_patterns": [{ "pattern": "shallow_validation", "description": "May VERIFY schemas that have subtle type mismatches", "frequency": "occasional", "mitigation": "Never sole verifier for DDL changes." }] }
+  },
+  "error_handling": {
+    "on_hallucination_detected": "Tag [SPEC], flag fabricated schema/metric",
+    "on_verification_failure": "Block output, request actual schema/logs",
+    "on_data_loss_risk": "CRITICAL: Block operation, flag data loss risk, require explicit confirmation",
+    "on_energy_crash": "Route to nano model, JSON-only, binary rollback, escalate"
+  }
+}

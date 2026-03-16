@@ -5,7 +5,11 @@
       "input_text": "Design usability test for the new exam scheduling flow in Google Cloud certification portal. Key concern: users are abandoning at the time-slot selection step.",
       "method": "usability-test",
       "participants": "Certification candidates who attempted scheduling in last 30 days",
-      "cognitive_state": {"energy_level": "high", "active_mode": "execute", "task_tier": "T3"}
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "execute",
+        "task_tier": "T3"
+      }
     }
   }
 ]

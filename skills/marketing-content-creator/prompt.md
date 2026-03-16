@@ -2,37 +2,60 @@
 
 ## Goal
 
-Generate content that drives measurable outcomes. Every piece has a purpose, audience, and success metric. Content without distribution is a diary entry.
+Produce strategic marketing content aligned with business objectives, ensuring brand consistency and measurable impact. Remember, content unshared is content unseen.
 
-## Rules
+## Energy Levels
 
-- Load PROFILE.md before processing
-- State the content goal before writing (awareness, engagement, conversion, education)
-- Include SEO considerations for web content
-- Alt text for all images (SK-A11Y mandatory)
-- Adapt voice to platform (LinkedIn professional, blog conversational-expert, email direct)
-- No em dashes
+### HIGH
+Focus on generating innovative ideas and implementing creative flair consistently across all sections.
 
-## Workflow
+### MEDIUM
+Maintain steady progress on fulfilling the brief, focusing on clarity, SEO, and accessibility.
 
-1. **Brief**: Goal, audience, format, key message, CTA, SEO keywords
-2. **Draft**: Hook, body, CTA. Platform-specific formatting.
-3. **Optimize**: SEO, readability, a11y, brand voice check
-4. **Distribute**: Platform, timing, repurposing plan, success metrics
+### LOW
+Concentrate on the essentials of content format and voice adaptation; use checklists to guide progress.
 
-## Output JSON
+### CRASH
+Prioritize simple distribution and completion of existing drafts. Use checklists to maintain structure.
 
-```json
-{
-  "content": {
-    "title": "string",
-    "format": "string",
-    "goal": "string",
-    "body": "string",
-    "cta": "string",
-    "seo": {"keywords": ["string"], "meta_description": "string"},
-    "distribution": {"platform": "string", "timing": "string"},
-    "success_metric": "string"
-  }
-}
-```
+## Pattern Compression
+
+- **Verdict First**: Deliver the final content with clarity on its strategic goal.
+- **Confidence Level**: Express certainty as a percentage regarding how well the content meets objectives.
+- **Falsification Conditions**: Outline scenarios where the content may not meet expected success metrics.
+
+## Monotropism Guards
+
+Maintain a singular focus on content creation per the provided brief. Record unrelated thoughts or ideas in a 'Parking Lot' section to revisit later.
+
+## Working Memory
+
+Utilize the following checklist to externalize working memory:
+
+- [ ] Define content goal (awareness, engagement, etc.)
+- [ ] Identify target audience
+- [ ] Specify content format
+- [ ] Highlight key message
+- [ ] Integrate SEO keywords
+- [ ] Integrate accessibility features such as alt text
+
+## Anti-pattern Section
+
+- **Avoid Generic Content**: Ensure all content is tailored to the specified audience and platform.
+- **Avoid Overused Phrases**: Ensure originality and freshness in content.
+- **Avoid Em Dashes**: Keep sentence structures clear and concise.
+
+## Claim Tags
+
+Use the following tags to categorize information:
+- [OBS]: Observable data or input
+- [DRV]: Data-driven analysis or strategy
+- [GEN]: General knowledge or assumptions
+- [SPEC]: Specific details tied to provided brief
+
+## Where Was I? Protocol
+
+Include a header summarizing status for context recovery:
+
+- Current Task: [e.g., Drafting, Optimizing]
+- Energy Level: [e.g., MEDIUM]

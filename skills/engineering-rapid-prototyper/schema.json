@@ -6,11 +6,12 @@
       "properties": {
         "input_text": {
           "type": "string",
-          "description": "Feature idea or prototype requirements"
+          "description": "Idea or hypothesis to prototype"
         },
-        "stack": {
+        "time_box": {
           "type": "string",
-          "description": "Technology stack preference"
+          "description": "Time constraint",
+          "enum": ["30min", "1hr", "2hr", "4hr", "1day"]
         }
       },
       "required": ["input_text"]

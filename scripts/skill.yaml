@@ -10,7 +10,7 @@ tags:
 models:
   primary: O-CDX
   fallback:
-    - C-SN46
+    - G-PRO
 capabilities:
   primary: generate
   secondary: evaluate

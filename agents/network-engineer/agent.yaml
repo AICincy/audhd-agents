@@ -1,0 +1,146 @@
+agent:
+  name: network-engineer
+  display_name: "Network Engineer"
+  version: "1.0.0"
+  description: >-
+    Network engineering agent for the AuDHD Cognitive Swarm.
+    Network architecture, routing, switching, firewall policy,
+    DNS, VPN, load balancing, SDN, zero-trust.
+  domain: network_engineering
+  cognitive_profile:
+    patterns:
+      - pattern_compression
+      - monotropism
+      - asymmetric_working_memory
+      - meta_layer_reflex
+    energy_model: true
+    externalization: required
+
+skills:
+  always_on:
+    - reality_check
+    - energy_routing
+    - externalization
+  domain:
+    - network_architecture
+    - routing_switching
+    - firewall_policy
+    - dns_dhcp
+    - vpn_tunneling
+    - load_balancing
+    - network_monitoring
+    - wireless_design
+    - sdn_automation
+    - zero_trust_networking
+
+model_routing:
+  google:
+    default_model: gemini-3.1-pro-preview
+    fallback_chain:
+      - gemini-3.1-pro-preview
+      - gemini-2.5-pro
+      - gemini-3.1-flash-lite-preview
+      - gemini-3-flash-preview
+      - nano-banana-pro
+      - nano-banana-2
+      - nano-banana
+    models:
+      gemini-3.1-pro-preview:
+        role: network_architecture_primary
+        tier: 1
+      gemini-2.5-pro:
+        role: topology_visualization
+        tier: 1
+      gemini-3.1-flash-lite-preview:
+        role: rapid_config_generation
+        tier: 2
+      gemini-3-flash-preview:
+        role: fallback_fast
+        tier: 3
+      nano-banana-pro:
+        role: crash_triage
+        tier: 4
+      nano-banana-2:
+        role: crash_classification
+        tier: 4
+      nano-banana:
+        role: crash_binary
+        tier: 4
+  openai:
+    default_model: gpt-5.3-codex
+    fallback_chain:
+      - gpt-5.3-codex
+      - gpt-5.4
+      - gpt-5.4-pro
+      - gpt-5.3
+      - o4-mini
+    models:
+      gpt-5.3-codex:
+        api_model_id: gpt-5.3-codex
+        role: config_code_primary
+        tier: 1
+      gpt-5.4:
+        api_model_id: gpt-5.4
+        role: network_ideation
+        tier: 1
+      gpt-5.4-pro:
+        api_model_id: gpt-5.4-pro
+        role: deep_network_planning
+        tier: 1
+      gpt-5.3:
+        api_model_id: gpt-5.3
+        role: config_fallback
+        tier: 2
+      o4-mini:
+        api_model_id: o4-mini
+        role: rapid_verifier
+        tier: 3
+  anthropic:
+    enabled: false
+    note: "Claude offline by default. Runtime detection only."
+
+energy_routing:
+  high:
+    google_primary: gemini-3.1-pro-preview
+    openai_primary: gpt-5.4-pro
+    tasks:
+      - full_network_architecture
+      - multi_site_design
+      - zero_trust_implementation
+      - complex_routing_policy
+  medium:
+    google_primary: gemini-3.1-flash-lite-preview
+    openai_primary: gpt-5.3-codex
+    tasks:
+      - firewall_rule_set
+      - dns_zone_config
+      - vpn_tunnel_config
+      - load_balancer_setup
+      - acl_policy
+  low:
+    google_primary: gemini-3-flash-preview
+    openai_primary: o4-mini
+    tasks:
+      - config_validation
+      - subnet_calculation
+      - port_lookup
+  crash:
+    google_primary: nano-banana-pro
+    openai_primary: null
+    tasks:
+      - outage_severity_classification
+      - binary_failover_decision
+
+handoff:
+  accepts_from:
+    - engineer
+    - devops_engineer
+    - secops_engineer
+    - hardware_engineer
+  delegates_to:
+    - devops_engineer: ["container_networking", "cloud_vpc_setup"]
+    - secops_engineer: ["penetration_testing", "ids_ips_tuning"]
+    - engineer: ["architecture_decisions", "cross_discipline_coordination"]
+    - hardware_engineer: ["physical_cabling", "switch_hardware_selection"]
+  protocol: HANDOFF
+  format: structured_yaml

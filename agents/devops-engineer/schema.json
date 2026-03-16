@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DevOpsEngineerAgentSchema",
+  "description": "Domain-specific I/O schema for the DevOps Engineer agent.",
+  "type": "object",
+  "extends": "../../_base/schema_base.json",
+  "definitions": {
+    "InfraConfig": {
+      "type": "object",
+      "required": ["file_path", "language", "content"],
+      "properties": {
+        "file_path": { "type": "string" },
+        "language": { "type": "string", "enum": ["hcl", "yaml", "dockerfile", "bash", "json", "toml", "ini"] },
+        "content": { "type": "string" },
+        "is_diff": { "type": "boolean", "default": false },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "PipelineStage": {
+      "type": "object",
+      "required": ["name", "trigger", "steps", "timeout"],
+      "properties": {
+        "name": { "type": "string" },
+        "trigger": { "type": "string" },
+        "steps": { "type": "array", "items": { "type": "string" } },
+        "timeout": { "type": "string" },
+        "failure_action": { "type": "string", "enum": ["stop", "continue", "rollback", "notify"] },
+        "depends_on": { "type": "array", "items": { "type": "string" } },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "ResourceEntry": {
+      "type": "object",
+      "required": ["name", "type", "provider", "state"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "provider": { "type": "string", "enum": ["aws", "gcp", "azure", "kubernetes", "docker", "github", "other"] },
+        "state": { "type": "string", "enum": ["exists", "planned", "to_destroy", "unknown"] },
+        "dependencies": { "type": "array", "items": { "type": "string" } },
+        "cost_estimate": { "type": "string" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "DeploymentStrategy": {
+      "type": "object",
+      "required": ["type", "rollback_plan", "health_check"],
+      "properties": {
+        "type": { "type": "string", "enum": ["rolling", "blue_green", "canary", "recreate", "a_b", "shadow"] },
+        "rollback_plan": { "type": "string" },
+        "health_check": { "type": "string" },
+        "traffic_shift": { "type": "string" },
+        "monitoring_criteria": { "type": "array", "items": { "type": "string" } },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "DevOpsInput": {
+      "type": "object",
+      "required": ["task_type", "context"],
+      "properties": {
+        "task_type": {
+          "type": "string",
+          "enum": [
+            "pipeline_design",
+            "iac_module",
+            "container_config",
+            "monitoring_setup",
+            "deployment_strategy",
+            "cloud_architecture",
+            "incident_response",
+            "cost_optimization",
+            "secret_management",
+            "disaster_recovery"
+          ]
+        },
+        "context": { "type": "string" },
+        "cloud_provider": { "type": "string" },
+        "existing_infra": { "type": "array", "items": { "$ref": "#/definitions/InfraConfig" } },
+        "energy_level": { "type": "string", "enum": ["high", "medium", "low", "crash"] }
+      }
+    },
+    "DevOpsOutput": {
+      "type": "object",
+      "required": ["task_type", "result", "claim_summary"],
+      "properties": {
+        "task_type": { "type": "string" },
+        "result": {
+          "type": "object",
+          "properties": {
+            "configs": { "type": "array", "items": { "$ref": "#/definitions/InfraConfig" } },
+            "pipeline_stages": { "type": "array", "items": { "$ref": "#/definitions/PipelineStage" } },
+            "resources": { "type": "array", "items": { "$ref": "#/definitions/ResourceEntry" } },
+            "deployment": { "$ref": "#/definitions/DeploymentStrategy" },
+            "mermaid_diagram": { "type": "string" }
+          }
+        },
+        "claim_summary": {
+          "type": "object",
+          "properties": {
+            "obs_count": { "type": "integer" },
+            "drv_count": { "type": "integer" },
+            "gen_count": { "type": "integer" },
+            "spec_count": { "type": "integer" }
+          }
+        },
+        "energy_used": { "type": "string" },
+        "handoff": { "type": "object" }
+      }
+    }
+  }
+}

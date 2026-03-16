@@ -6,11 +6,11 @@
       "properties": {
         "input_text": {
           "type": "string",
-          "description": "Brand asset, copy, or design to review for brand compliance"
+          "description": "Asset or communication to review"
         },
-        "brand_context": {
+        "brand_guidelines": {
           "type": "string",
-          "description": "Brand guidelines or context"
+          "description": "Brand guide reference or key constraints"
         }
       },
       "required": ["input_text"]

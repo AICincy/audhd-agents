@@ -6,12 +6,12 @@
       "properties": {
         "input_text": {
           "type": "string",
-          "description": "Data pipeline requirements or data architecture challenge"
+          "description": "Data requirements or pipeline to improve"
         },
-        "pipeline_type": {
+        "platform": {
           "type": "string",
-          "description": "Pipeline type",
-          "enum": ["batch", "streaming", "hybrid", "ETL", "ELT"]
+          "description": "Data platform",
+          "enum": ["bigquery", "snowflake", "databricks", "redshift", "postgres", "custom"]
         }
       },
       "required": ["input_text"]

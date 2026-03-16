@@ -9,7 +9,7 @@ from pathlib import Path
 
 VALID_APP_ENVS = {"staging", "production"}
 VALID_LOG_LEVELS = {"DEBUG", "INFO", "WARNING", "ERROR"}
-DEFAULT_REQUIRED_PROVIDERS = ("openai", "anthropic", "google")
+DEFAULT_REQUIRED_PROVIDERS = ("openai", "google")
 
 
 @dataclass(frozen=True)

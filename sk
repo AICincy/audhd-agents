@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# sk — AuDHD Skill CLI wrapper
+# Usage: ./sk <skill-name> "input text" [options]
+#
+# Requires: python 3.11+, GOOGLE_API_KEY or OPENAI_API_KEY
+# Optional: pip install pyyaml jsonschema google-generativeai openai
+
+set -euo pipefail
+DIR="$(cd "$(dirname "$0")" && pwd)"
+PYTHONPATH="$DIR${PYTHONPATH:+:$PYTHONPATH}" exec python3 -m cli.sk "$@"

@@ -1,0 +1,120 @@
+{
+  "agent": "devops-engineer",
+  "skills": {
+    "always_on": [
+      {
+        "id": "SK-REALITY",
+        "name": "reality_check",
+        "description": "Tag all claims [OBS/DRV/GEN/SPEC]. Gate output. Verify before asserting.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-ENERGY",
+        "name": "energy_routing",
+        "description": "Route tasks to appropriate model tier based on current energy level.",
+        "trigger": "every_input",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-EXTERN",
+        "name": "externalization",
+        "description": "Externalize all state to config files, manifests, runbooks. Never hold infra state in prose.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      }
+    ],
+    "domain": [
+      {
+        "id": "SK-CICD",
+        "name": "ci_cd_design",
+        "description": "Design and implement CI/CD pipelines. GitHub Actions, GitLab CI, Jenkins, CircleCI.",
+        "input": "pipeline requirements, target platform",
+        "output": "stage table, pipeline config files, test configs",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Stage table first: Stage | Trigger | Steps | Timeout | Failure Action. Config follows."
+      },
+      {
+        "id": "SK-IAC",
+        "name": "infrastructure_as_code",
+        "description": "Write Terraform, Pulumi, CloudFormation, Ansible. Modular, reusable, tested.",
+        "input": "infra requirements, cloud provider, existing state",
+        "output": "IaC modules with variables, outputs, documentation",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Resource table: Resource | Provider | Type | Dependencies | Cost. HCL/YAML follows."
+      },
+      {
+        "id": "SK-CONTAINER",
+        "name": "container_orchestration",
+        "description": "Docker, Kubernetes, Helm, ECS. Container builds, orchestration, scaling.",
+        "input": "application requirements, scaling needs",
+        "output": "Dockerfiles, K8s manifests, Helm charts, scaling configs",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Service table: Service | Image | Replicas | Resources | Ports. Manifests follow."
+      },
+      {
+        "id": "SK-MONITOR",
+        "name": "monitoring_observability",
+        "description": "Prometheus, Grafana, Datadog, CloudWatch, ELK. Alerts, dashboards, SLOs.",
+        "input": "services to monitor, SLO targets",
+        "output": "monitoring config, alert rules, dashboard definitions, SLO specs",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "SLO table: Service | Metric | Target | Window | Alert Threshold. Config follows."
+      },
+      {
+        "id": "SK-DEPLOY",
+        "name": "deployment_strategy",
+        "description": "Rolling, blue-green, canary, A/B, shadow deployments. Rollback planning.",
+        "input": "deployment requirements, risk tolerance",
+        "output": "strategy comparison table, chosen strategy config, rollback plan",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Strategy table: Type | Downtime | Risk | Complexity | Rollback Speed. Config follows."
+      },
+      {
+        "id": "SK-CLOUD",
+        "name": "cloud_architecture",
+        "description": "AWS, GCP, Azure architecture. VPC, IAM, storage, compute, networking.",
+        "input": "requirements, cloud provider, constraints",
+        "output": "architecture diagram (mermaid), resource list, cost estimate",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Resource table + mermaid diagram. Cost estimate table: Service | Config | Monthly Cost."
+      },
+      {
+        "id": "SK-INCIDENT",
+        "name": "incident_response_infra",
+        "description": "Infrastructure incident triage, root cause analysis, remediation.",
+        "input": "incident description, metrics, logs",
+        "output": "triage table, root cause analysis, remediation steps, post-mortem template",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Triage table: Symptom | Hypothesis | Evidence | Confidence | Tag. Steps numbered."
+      },
+      {
+        "id": "SK-COSTOPT",
+        "name": "cost_optimization",
+        "description": "Cloud cost analysis, right-sizing, reserved instances, spot strategies.",
+        "input": "current spending, usage patterns",
+        "output": "optimization table, savings estimates, implementation plan",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Savings table: Resource | Current Cost | Optimized Cost | Savings | Action | Risk."
+      },
+      {
+        "id": "SK-SECRETS",
+        "name": "secret_management",
+        "description": "Vault, AWS Secrets Manager, GCP Secret Manager. Rotation, access control.",
+        "input": "secret requirements, compliance constraints",
+        "output": "secret management config, rotation policy, access matrix",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Access matrix: Secret | Owner | Readers | Rotation | Storage. Config follows."
+      },
+      {
+        "id": "SK-DR",
+        "name": "disaster_recovery",
+        "description": "DR planning, RTO/RPO analysis, backup strategies, failover testing.",
+        "input": "system architecture, RTO/RPO targets",
+        "output": "DR plan, backup config, failover runbook, test schedule",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "DR matrix: Component | RTO | RPO | Backup Method | Failover Type | Test Frequency."
+      }
+    ]
+  }
+}

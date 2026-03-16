@@ -1,0 +1,203 @@
+{
+  "$schema": "agents/secops-engineer/reality_adapter.json",
+  "agent": "secops-engineer",
+  "version": "1.0.0",
+  "description": "Per-model hallucination and drift patterns with security-domain-specific mitigations. Dual-provider: Gemini + OpenAI.",
+  "global_rules": {
+    "claim_tagging": {
+      "required": true,
+      "tags": {
+        "OBS": "Direct retrieval from verified source (NVD, MITRE, vendor docs)",
+        "DRV": "Inferred from observed data using documented methodology",
+        "GEN": "Widely known security principle or standard",
+        "SPEC": "Unverified, single source, or model-generated",
+        "STALE": "Data older than 90 days without revalidation",
+        "UNVERIFIED": "Single source, not cross-referenced",
+        "CONFLICT": "Multiple sources disagree, both values listed"
+      }
+    },
+    "security_validation_rules": [
+      {
+        "type": "cve_format",
+        "pattern": "^CVE-\\d{4}-\\d{4,}$",
+        "on_fail": "gate_claim",
+        "message": "CVE number does not match expected format. Gated."
+      },
+      {
+        "type": "cvss_range",
+        "min": 0.0,
+        "max": 10.0,
+        "on_fail": "gate_claim",
+        "message": "CVSS score outside valid range. Gated."
+      },
+      {
+        "type": "cwe_format",
+        "pattern": "^CWE-\\d+$",
+        "on_fail": "tag_spec",
+        "message": "CWE ID format unverified. Tagged [SPEC]."
+      },
+      {
+        "type": "severity_enum",
+        "values": ["critical", "high", "medium", "low", "info"],
+        "on_fail": "normalize",
+        "message": "Non-standard severity. Normalized to closest match."
+      },
+      {
+        "type": "compliance_control_id",
+        "patterns": {
+          "SOC2": "^CC\\d+\\.\\d+$|^TSC \\w+$",
+          "ISO27001": "^A\\.\\d+\\.\\d+(\\.\\d+)?$",
+          "NIST_CSF": "^(ID|PR|DE|RS|RC)\\.\\w+(-\\d+)?$",
+          "PCI_DSS": "^\\d+\\.\\d+(\\.\\d+)?$"
+        },
+        "on_fail": "tag_spec",
+        "message": "Compliance control ID format not validated. Tagged [SPEC]."
+      }
+    ],
+    "drift_detection": {
+      "enabled": true,
+      "check_frequency": "every_output",
+      "scope_anchors": ["original_request", "active_mode", "target_system"],
+      "on_drift": "announce_and_correct"
+    },
+    "gate_protocol": {
+      "threshold": 0.7,
+      "on_gate": {
+        "action": "withhold_claim",
+        "report": "GATED: [claim]. Reason: [reason]. Verification needed: [steps].",
+        "offer_alternatives": true
+      }
+    }
+  },
+  "model_profiles": {
+    "gemini-3.1-pro-preview": {
+      "alias": "G-PRO31",
+      "hallucination_risk": "low",
+      "strengths": ["Strong at structured security analysis", "Good at maintaining logical consistency across long outputs", "Reliable compliance framework knowledge", "Accurate STRIDE categorization"],
+      "known_drift_patterns": [
+        { "pattern": "scope_creep_in_threat_models", "description": "May expand threat model scope beyond defined boundaries when finding interesting attack paths", "frequency": "occasional", "mitigation": "Enforce scope boundary check after each STRIDE category completion" },
+        { "pattern": "cve_confabulation", "description": "Generates plausible CVE numbers that may not exist in NVD", "frequency": "rare", "mitigation": "Tag all CVE references as [SPEC] unless directly retrieved from NVD API" },
+        { "pattern": "cvss_precision_overclaim", "description": "Reports specific CVSS scores (e.g., 7.8) for vulnerabilities without citing source", "frequency": "occasional", "mitigation": "Tag CVSS as [SPEC] unless source URL provided. Use ranges instead (high: 7.0-8.9)" }
+      ],
+      "audhd_considerations": { "context_window_usage": "Excellent for map-over-steps. Can hold full system architecture.", "externalization_support": "Generates well-structured tables consistently.", "monotropism_alignment": "Good at deep single-thread analysis. May need explicit scope reminders." }
+    },
+    "gemini-2.5-pro": {
+      "alias": "G-PRO25",
+      "hallucination_risk": "low",
+      "strengths": ["Multimodal architecture diagram understanding", "Strong at cross-referencing visual and text evidence", "Good structured output for decision matrices"],
+      "known_drift_patterns": [
+        { "pattern": "visual_over_interpretation", "description": "May identify security issues in diagram elements that are ambiguous or decorative", "frequency": "occasional", "mitigation": "Require explicit 'I see [element]' before 'This is vulnerable to [threat]'" },
+        { "pattern": "diagram_label_assumption", "description": "May assume component functionality from label text that could be misleading", "frequency": "occasional", "mitigation": "Tag diagram-derived findings as [DRV] and request confirmation" }
+      ],
+      "audhd_considerations": { "context_window_usage": "Good for visual analysis but may require separate text follow-up.", "externalization_support": "Generates tables from visual input effectively.", "monotropism_alignment": "Use for visual-first tasks only. Don't mix visual and text-only analysis." }
+    },
+    "gemini-3.1-flash-lite-preview": {
+      "alias": "G-FLA31",
+      "hallucination_risk": "medium",
+      "strengths": ["Fast triage decisions", "Good severity classification", "Reliable structured output at speed"],
+      "known_drift_patterns": [
+        { "pattern": "severity_compression", "description": "Under speed pressure, may compress SEV2 to SEV3 or miss escalation criteria", "frequency": "occasional", "mitigation": "Include explicit escalation checklist in every triage output" },
+        { "pattern": "generic_remediation", "description": "May default to generic 'patch and monitor' advice instead of specific actions", "frequency": "frequent", "mitigation": "Require specific remediation: tool, command, config change, or link" },
+        { "pattern": "missing_nuance", "description": "May miss threat interactions or chained vulnerabilities in rapid analysis", "frequency": "occasional", "mitigation": "Auto-escalate to G-PRO31 if finding count > 5 or chains detected" }
+      ],
+      "audhd_considerations": { "context_window_usage": "Good for focused, single-task triage. Keep context minimal.", "externalization_support": "Forced structured format helps maintain consistency.", "monotropism_alignment": "Perfect for medium-energy focused triage. One incident at a time." }
+    },
+    "gemini-3-flash-preview": {
+      "alias": "G-FLA30",
+      "hallucination_risk": "medium-high",
+      "strengths": ["Available when newer models are down", "Reliable for simple binary decisions", "Low resource consumption"],
+      "known_drift_patterns": [
+        { "pattern": "technical_confabulation", "description": "Higher rate of generating plausible but incorrect technical details", "frequency": "frequent", "mitigation": "Constrain to binary/ternary outputs. No free-form analysis." },
+        { "pattern": "outdated_knowledge", "description": "May reference outdated CVEs or deprecated tools as current", "frequency": "occasional", "mitigation": "Tag all specific references as [STALE] by default. Require revalidation." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Minimal context only. Use for low-energy checklist tasks.", "externalization_support": "Keep outputs to Yes/No/Escalate format.", "monotropism_alignment": "Single-step tasks only. Never multi-step analysis." }
+    },
+    "gemini-2.5-tts": {
+      "alias": "G-TTS25",
+      "hallucination_risk": "low (content from upstream)",
+      "strengths": ["Natural speech generation", "Severity-appropriate tone modulation", "Accessibility support"],
+      "known_drift_patterns": [
+        { "pattern": "acronym_mispronunciation", "description": "May mispronounce security acronyms (SIEM, SOAR, CVE)", "frequency": "occasional", "mitigation": "Include phonetic hints: SIEM (seem), SOAR (soar), CVE (see-vee-ee)" }
+      ],
+      "audhd_considerations": { "context_window_usage": "Receives pre-validated text only. No analysis.", "externalization_support": "Voice output supports auditory processing preference.", "monotropism_alignment": "Output-only. No cognitive load." }
+    },
+    "nano-banana": {
+      "alias": "G-NANO",
+      "hallucination_risk": "high",
+      "strengths": ["Ultra-fast classification", "On-device execution", "Minimal resource consumption"],
+      "known_drift_patterns": [
+        { "pattern": "classification_collapse", "description": "Ambiguous inputs may all collapse to the same classification", "frequency": "frequent", "mitigation": "Hard ESCALATE on any input ambiguity. JSON-only output." },
+        { "pattern": "false_confidence", "description": "May return high-confidence classification on insufficient data", "frequency": "occasional", "mitigation": "Ignore model confidence score. Apply external confidence based on input quality." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Single question, single answer. Maximum 256 tokens.", "externalization_support": "JSON schema enforces structure.", "monotropism_alignment": "Ideal for crash-energy: zero cognitive overhead." }
+    },
+    "nano-banana-2": {
+      "alias": "G-NANO2",
+      "hallucination_risk": "high",
+      "strengths": ["Classification with brief rationale", "Checklist verification", "On-device execution"],
+      "known_drift_patterns": [
+        { "pattern": "circular_rationale", "description": "Rationale may restate the classification rather than explain it", "frequency": "frequent", "mitigation": "Validate rationale contains at least one specific indicator reference" }
+      ],
+      "audhd_considerations": { "context_window_usage": "Slightly more than nano-banana. 512 tokens max.", "externalization_support": "JSON with rationale field.", "monotropism_alignment": "Crash-energy: minimal decisions with brief justification." }
+    },
+    "nano-banana-pro": {
+      "alias": "G-NANOP",
+      "hallucination_risk": "medium",
+      "strengths": ["Best edge model quality", "Multi-step triage capability", "Reasonable structured output"],
+      "known_drift_patterns": [
+        { "pattern": "oversimplification", "description": "May reduce multi-factor risk to single dominant factor", "frequency": "occasional", "mitigation": "Require at least 2 factors in any risk assessment. Escalate if more than 3 needed." }
+      ],
+      "audhd_considerations": { "context_window_usage": "1024 tokens. Good for low-energy meaningful work.", "externalization_support": "Structured output with confidence tags.", "monotropism_alignment": "Low-energy single-thread tasks. 2-option comparisons max." }
+    },
+    "gpt-5.4": {
+      "alias": "O-54",
+      "hallucination_risk": "medium",
+      "strengths": ["Strong creative threat scenario generation", "Good at identifying non-obvious attack vectors", "Effective incident communication drafting", "Structured divergent thinking within constraints"],
+      "known_drift_patterns": [
+        { "pattern": "confident_confabulation", "description": "Generates plausible but fabricated security details with high confidence", "frequency": "occasional", "mitigation": "Cross-reference all factual claims against known sources. Entity tracking against seed list." },
+        { "pattern": "creative_overreach", "description": "Creative mode may produce tool capabilities or attack scenarios that aren't technically feasible", "frequency": "occasional", "mitigation": "Tag all creative output as [DRV] or [SPEC]. Require feasibility check via G-PRO31 for T4-T5." },
+        { "pattern": "novel_entity_injection", "description": "Introduces entities not present in prompt or context during ideation", "frequency": "rare", "mitigation": "Entity tracking against seed list. Flag new entities for operator review." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Good for bounded ideation. Keep scope constraints tight.", "externalization_support": "Generates structured option lists well.", "monotropism_alignment": "Use for divergent phase only. Switch to G-PRO31 for convergent analysis." }
+    },
+    "gpt-5.4-pro": {
+      "alias": "O-54P",
+      "hallucination_risk": "low",
+      "strengths": ["Deep multi-step security reasoning", "Strong compliance framework knowledge", "Good at dependency mapping and contingency planning", "Effective consensus partner for G-PRO31"],
+      "known_drift_patterns": [
+        { "pattern": "reasoning_chain_lock_in", "description": "May commit to a reasoning chain even when early assumptions are incorrect", "frequency": "rare", "mitigation": "Require explicit assumption list at chain start. Validate assumptions before proceeding." },
+        { "pattern": "compliance_id_fabrication", "description": "May generate plausible compliance control IDs that don't match actual frameworks", "frequency": "occasional", "mitigation": "Validate all control IDs against framework-specific regex patterns in security_validation_rules." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Excellent for map-over-steps. Full system architecture fits.", "externalization_support": "Generates detailed structured plans consistently.", "monotropism_alignment": "Good for deep single-thread planning. Explicit scope needed." }
+    },
+    "gpt-5.3": {
+      "alias": "O-53",
+      "hallucination_risk": "medium",
+      "strengths": ["Reliable fallback for O-54", "Consistent structured output", "Good at maintaining format under fallback pressure"],
+      "known_drift_patterns": [
+        { "pattern": "quality_degradation_under_fallback", "description": "May produce less nuanced output when acting as explicit fallback", "frequency": "occasional", "mitigation": "Same validation pipeline as O-54. Escalate to O-54P if quality drops." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Same as O-54.", "externalization_support": "Maintains structured output.", "monotropism_alignment": "Use for medium-energy focused tasks." }
+    },
+    "gpt-5.3-codex": {
+      "alias": "O-CDX",
+      "hallucination_risk": "low",
+      "strengths": ["Strong secure code generation", "Good at vulnerability fix implementation", "Reliable test generation", "Diff-format output for targeted changes"],
+      "known_drift_patterns": [
+        { "pattern": "phantom_imports", "description": "May import libraries that don't exist or use deprecated security APIs", "frequency": "rare", "mitigation": "SK-CODEREVIEW validates all imports. Cross-check against requirements.txt/pyproject.toml." },
+        { "pattern": "shallow_test_assertions", "description": "Generated tests may assert surface behavior without testing actual security fix", "frequency": "occasional", "mitigation": "Require negative test cases (attack still blocked) alongside positive cases." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Good for focused code tasks. One file/function at a time.", "externalization_support": "Code is inherently structured. Pair with finding table.", "monotropism_alignment": "Perfect for medium-energy code sprints. Single-file focus." }
+    },
+    "o4-mini": {
+      "alias": "O-O4M",
+      "hallucination_risk": "medium",
+      "strengths": ["Ultra-fast verification", "Good binary decision quality", "Low resource consumption"],
+      "known_drift_patterns": [
+        { "pattern": "confirmation_bias", "description": "May VERIFY claims that match common security patterns even if specific claim is wrong", "frequency": "occasional", "mitigation": "Never use as sole verifier for T4-T5. Cross-validate critical claims." },
+        { "pattern": "depth_limitation", "description": "Cannot handle multi-step verification. May return VERIFIED on surface match.", "frequency": "frequent", "mitigation": "Hard ESCALATE if verification requires more than 1 reasoning step." }
+      ],
+      "audhd_considerations": { "context_window_usage": "Minimal context. Single claim, single check.", "externalization_support": "Structured JSON output.", "monotropism_alignment": "Low-energy verification. No cognitive overhead." }
+    }
+  }
+}

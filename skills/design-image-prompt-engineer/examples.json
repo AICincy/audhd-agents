@@ -1,11 +1,15 @@
 [
   {
-    "description": "Hero image for cloud certification platform",
+    "description": "Hero image for cloud certification landing page",
     "input": {
-      "input_text": "Hero image: person studying at desk with holographic cloud architecture floating above laptop. Professional, diverse, futuristic but grounded. For landing page.",
+      "input_text": "Professional hero image for Google Cloud AI certification page. Diverse group of engineers collaborating around holographic data visualizations.",
       "model": "dall-e-3",
-      "style": "clean corporate illustration, muted blue palette",
-      "cognitive_state": {"energy_level": "high", "active_mode": "draft", "task_tier": "T2"}
+      "style": "clean corporate, warm lighting, photorealistic",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "draft",
+        "task_tier": "T2"
+      }
     }
   }
 ]

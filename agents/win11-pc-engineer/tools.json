@@ -1,0 +1,138 @@
+{
+  "agent": "win11_pc_engineer",
+  "tools": {
+    "diagnostics": [
+      {
+        "id": "TL-SYSHEALTH",
+        "name": "system_health_check",
+        "description": "Run comprehensive system health diagnostic. Analyze event logs, performance counters, disk, memory, CPU.",
+        "input_schema": {
+          "system_info": "string (systeminfo output)",
+          "event_logs": "string (optional)",
+          "focus_area": "string (optional: cpu|memory|disk|network|all)"
+        },
+        "output_schema": {
+          "diagnostics": "array<DiagnosticEntry>",
+          "performance": "array<PerformanceMetric>",
+          "critical_issues": "integer",
+          "recommendations": "array<string>"
+        }
+      },
+      {
+        "id": "TL-BSODANAL",
+        "name": "bsod_analyzer",
+        "description": "Analyze BSOD stop codes, minidump references, and system context to determine root cause.",
+        "input_schema": {
+          "stop_code": "string",
+          "parameters": "array<string> (optional)",
+          "recent_changes": "string (optional)",
+          "minidump_info": "string (optional)"
+        },
+        "output_schema": {
+          "stop_code_meaning": "string",
+          "probable_cause": "string",
+          "confidence": "number",
+          "remediation_steps": "array<string>",
+          "claim_tag": "string"
+        }
+      },
+      {
+        "id": "TL-EVENTPARSE",
+        "name": "event_log_parser",
+        "description": "Parse and analyze Windows Event Log entries for patterns and root causes.",
+        "input_schema": {
+          "log_source": "string (System|Application|Security|Setup)",
+          "entries": "string",
+          "time_range": "string (optional)"
+        },
+        "output_schema": {
+          "patterns": "array<{event_id, source, frequency, severity, interpretation}>",
+          "root_cause_candidates": "array<string>",
+          "timeline": "string"
+        }
+      }
+    ],
+    "automation": [
+      {
+        "id": "TL-PSGEN",
+        "name": "powershell_generator",
+        "description": "Generate production-grade PowerShell scripts with error handling, -WhatIf, and Pester tests.",
+        "input_schema": {
+          "task": "string",
+          "target": "string (local|remote|multiple)",
+          "parameters": "object (optional)",
+          "safety_level": "string (readonly|cautious|destructive)"
+        },
+        "output_schema": {
+          "script": "string",
+          "pester_test": "string",
+          "rollback_script": "string (if destructive)",
+          "execution_notes": "string"
+        }
+      },
+      {
+        "id": "TL-REGEDIT",
+        "name": "registry_editor",
+        "description": "Generate safe registry modification commands with mandatory backup and rollback.",
+        "input_schema": {
+          "operations": "array<RegistryOperation>"
+        },
+        "output_schema": {
+          "backup_script": "string",
+          "modification_script": "string",
+          "verification_script": "string",
+          "rollback_script": "string"
+        }
+      }
+    ],
+    "security": [
+      {
+        "id": "TL-SECAUDIT",
+        "name": "security_auditor",
+        "description": "Audit Windows 11 security configuration against CIS benchmarks.",
+        "input_schema": {
+          "scope": "string (full|authentication|firewall|encryption|updates|permissions)",
+          "current_config": "string (optional)"
+        },
+        "output_schema": {
+          "findings": "array<SecurityFinding>",
+          "compliance_score": "number",
+          "critical_count": "integer",
+          "remediation_scripts": "array<string>"
+        }
+      },
+      {
+        "id": "TL-FWRULE",
+        "name": "firewall_analyzer",
+        "description": "Analyze Windows Firewall rules for conflicts, gaps, and security issues.",
+        "input_schema": {
+          "rules": "string (Get-NetFirewallRule output)",
+          "focus": "string (optional: inbound|outbound|all)"
+        },
+        "output_schema": {
+          "rule_summary": "object",
+          "conflicts": "array<string>",
+          "security_gaps": "array<string>",
+          "recommendations": "array<string>"
+        }
+      }
+    ],
+    "integration": [
+      {
+        "id": "TL-HANDOFF",
+        "name": "agent_handoff",
+        "description": "Prepare structured handoff payload for specialist agent.",
+        "input_schema": {
+          "target_agent": "string",
+          "task": "string",
+          "context": "string",
+          "constraints": "array<string>"
+        },
+        "output_schema": {
+          "handoff_payload": "object",
+          "format": "HANDOFF"
+        }
+      }
+    ]
+  }
+}

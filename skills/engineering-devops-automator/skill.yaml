@@ -6,16 +6,10 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - ci-cd-design
-  - infrastructure-as-code
-  - deployment-automation
-  - container-orchestration
+  - generate
 models:
-  primary: C-OP46
-  fallback: [C-SN46, G-PRO]
-  openai: gpt-5.3-codex
-  anthropic: claude-opus-4-6
-  gemini: gemini-2.5-pro
+  primary: G-PRO31
+  fallback: [G-PRO, O-54P]
 sk_hooks:
   - SK-GATE
   - SK-VERIFY

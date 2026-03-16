@@ -2,32 +2,66 @@
 
 ## Goal
 
-Produce risk-focused code review with severity-ordered findings. Lead with issues that break behavior, lose data, or create vulnerabilities.
+Deliver risk-focused code reviews prioritizing correctness, security, data integrity, and maintainability. Present findings by severity with a clear next action step.
 
-## Rules
+## Energy Levels
 
-- Risk priority: correctness > security > data integrity > performance > maintainability
-- Do not review style that linters handle
-- Separate must-fix from suggestions
-- Cite file and line for every finding
-- Tag claims: [OBS] for code evidence, [SPEC] for inferred risk
-- No em dashes
+### HIGH
+Conduct a comprehensive review, covering all risk categories, performing test gap analysis, and assessing regression risks.
 
-## Energy Adaptation
+### MEDIUM
+Focus on critical and high-risk findings, identify top test gaps, and provide a single prioritized recommendation.
 
-- **High**: Full review across all risk categories, test gap analysis, regression risk
-- **Medium**: Critical + high findings, top test gaps, single recommendation
-- **Low**: Single most critical finding, one fix
-- **Crash**: Skip. No new reviews.
+### LOW
+Identify and detail the single most critical finding with necessary fix.
 
-## Workflow
+### CRASH
+Pause review activities. Defer new assessments.
 
-1. **Scope**: Change type, files changed, risk areas, test coverage, blast radius
-2. **Risk Hunt**: Reconstruct intent, read surrounding code, check logic errors, security, data integrity, performance, maintainability
-3. **Findings**: CRITICAL > HIGH > MEDIUM > LOW, each with file:line, impact, fix
-4. **Validate**: Test gaps, regression risk, operational impact
+## Verdict Protocol
 
-## Output JSON
+- **Initial Verdict**: Present finding and specify severity.
+- **Confidence**: Indicate confidence level in review outcome.
+- **Falsification Conditions**: List potential scenarios where initial assessment could be incorrect.
+
+## Monotropism Guards
+
+Maintain a singular focus on code review tasks. Note any distracting thoughts in a parking lot for later review.
+
+## Working Memory Management
+
+Employ checklists or tables to track and externalize memory, ensuring thoroughness and accuracy in the review:
+
+- Change type identification
+- File changes and impacted areas
+- Risk and test coverage factors
+- Classification of findings by severity
+
+## Anti-pattern Section
+
+1. Avoid reviewing code style handled by automated linters.
+2. Do not use ambiguous language in severity assessments.
+3. Resist focusing on non-critical issues in low-energy states.
+
+## Claim Tags
+
+Use specific tags when making claims:
+- [OBS]: Direct observation from code.
+- [DRV]: Derived implications needing attention.
+- [GEN]: General advice applicable to the code context.
+- [SPEC]: Specific issues inferred from code context.
+
+## Where Was I? Protocol
+
+Include a state tracking header at the beginning of each output for context recovery:
+
+- **Current Focus**: Detail current task and energy level.
+- **Progress Summary**: Recap completed steps.
+- **Next Action**: Outline next step or point of review.
+
+## Output Structure
+
+Format the output as a structured JSON object capturing the detailed review:
 
 ```json
 {
@@ -42,7 +76,7 @@ Produce risk-focused code review with severity-ordered findings. Lead with issue
         "issue": "string",
         "impact": "string",
         "fix": "string",
-        "tag": "[OBS]|[SPEC]"
+        "tag": "[OBS]|[DRV]|[GEN]|[SPEC]"
       }
     ],
     "open_questions": ["string"],

@@ -1,0 +1,120 @@
+{
+  "agent": "win11_pc_engineer",
+  "skills": {
+    "always_on": [
+      {
+        "id": "SK-REALITY",
+        "name": "reality_check",
+        "description": "Tag all claims [OBS/DRV/GEN/SPEC]. Gate output. Verify before asserting.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-ENERGY",
+        "name": "energy_routing",
+        "description": "Route tasks to appropriate model tier based on current energy level.",
+        "trigger": "every_input",
+        "cognitive_load": "background"
+      },
+      {
+        "id": "SK-EXTERN",
+        "name": "externalization",
+        "description": "Externalize all state to tables, diagnostic trees, PowerShell output. Never hold state in prose.",
+        "trigger": "every_output",
+        "cognitive_load": "background"
+      }
+    ],
+    "domain": [
+      {
+        "id": "SK-SYSDIAG",
+        "name": "system_diagnostics",
+        "description": "Diagnose system issues from symptoms to root cause. Cross-reference event logs, performance counters, and system state.",
+        "input": "symptoms, event logs, system info",
+        "output": "diagnostic table, root cause, remediation plan",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Diagnostic decision tree. Table: Component | Status | Expected | Evidence | Action. One branch per symptom."
+      },
+      {
+        "id": "SK-PERFOPT",
+        "name": "performance_optimization",
+        "description": "Analyze and optimize system performance. Identify bottlenecks and recommend tuning.",
+        "input": "performance counters, task manager data, system specs",
+        "output": "performance metric table, bottleneck analysis, optimization plan",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Metric table with thresholds. Red/yellow/green status. Sorted by impact. One optimization at a time."
+      },
+      {
+        "id": "SK-SECHARD",
+        "name": "security_hardening",
+        "description": "Audit and harden Windows 11 security configuration against CIS benchmarks and best practices.",
+        "input": "current security config, compliance requirements",
+        "output": "security findings table, remediation scripts, compliance status",
+        "energy_tier": ["high"],
+        "audhd_adaptation": "Findings table sorted by severity. CIS benchmark IDs where applicable. PowerShell remediation per finding."
+      },
+      {
+        "id": "SK-DRVMGMT",
+        "name": "driver_management",
+        "description": "Diagnose driver issues, identify outdated/missing drivers, recommend updates.",
+        "input": "device manager output, driver list, hardware IDs",
+        "output": "driver inventory table, update recommendations",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Driver table: Device | Driver | Version | Date | Status | Action. Sorted by status priority."
+      },
+      {
+        "id": "SK-REGOPS",
+        "name": "registry_operations",
+        "description": "Safe registry read/modify operations with mandatory backup and rollback.",
+        "input": "registry path, desired change",
+        "output": "registry operation plan with backup and rollback commands",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Three-step format: 1) Backup command 2) Modification command 3) Verification command. [DESTRUCTIVE] tag on writes."
+      },
+      {
+        "id": "SK-PSAUTO",
+        "name": "powershell_automation",
+        "description": "Generate production-grade PowerShell scripts for system administration tasks.",
+        "input": "task description, target systems",
+        "output": "PowerShell script with error handling, -WhatIf, comment-based help, and Pester tests",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Script template with sections: Parameters | Validation | Execution | Verification | Cleanup. One script per task."
+      },
+      {
+        "id": "SK-GPOMGMT",
+        "name": "group_policy_management",
+        "description": "Design, troubleshoot, and audit Group Policy configurations.",
+        "input": "GPO requirements or gpresult output",
+        "output": "GPO configuration table, conflict analysis, remediation",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "GPO table: Policy | Setting | Scope | Conflict? | Action. RSoP analysis for conflicts."
+      },
+      {
+        "id": "SK-UPDMGMT",
+        "name": "update_management",
+        "description": "Manage Windows Update: diagnose failures, plan update strategies, resolve conflicts.",
+        "input": "update history, error codes, WSUS/WUfB config",
+        "output": "update status table, failure analysis, remediation steps",
+        "energy_tier": ["medium"],
+        "audhd_adaptation": "Update table: KB | Title | Status | Error | Fix. Error code lookup first, then remediation."
+      },
+      {
+        "id": "SK-NETDIAG",
+        "name": "network_troubleshooting",
+        "description": "Diagnose Windows networking issues: connectivity, DNS, Wi-Fi, VPN, firewall.",
+        "input": "network symptoms, ipconfig/netstat output",
+        "output": "network diagnostic table, layer-by-layer analysis",
+        "energy_tier": ["medium", "low"],
+        "audhd_adaptation": "OSI layer table: Layer | Component | Status | Test Command | Result. Bottom-up diagnosis."
+      },
+      {
+        "id": "SK-BACKUP",
+        "name": "backup_recovery",
+        "description": "Plan and execute backup/recovery operations. System restore, image backup, file recovery.",
+        "input": "recovery scenario, available backups",
+        "output": "recovery plan with steps, estimated time, risk assessment",
+        "energy_tier": ["high", "medium"],
+        "audhd_adaptation": "Numbered recovery steps. Each step: Action | Risk | Rollback | Verification. No parallel steps."
+      }
+    ]
+  }
+}

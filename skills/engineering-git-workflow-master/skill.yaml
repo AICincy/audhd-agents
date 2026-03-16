@@ -6,16 +6,10 @@ description: >
 version: "1.0.0"
 category: engineering
 capabilities:
-  - branching-strategy
-  - merge-policy
-  - release-management
-  - repo-governance
+  - generate
 models:
-  primary: C-SN46
-  fallback: [C-OP46, G-PRO]
-  openai: gpt-5.3-codex
-  anthropic: claude-sonnet-4-6
-  gemini: gemini-2.5-pro
+  primary: G-PRO31
+  fallback: [G-PRO, O-54P]
 sk_hooks:
   - SK-GATE
   - SK-VERIFY

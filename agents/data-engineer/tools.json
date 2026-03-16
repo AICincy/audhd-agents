@@ -1,0 +1,159 @@
+{
+  "agent": "data-engineer",
+  "tools": {
+    "pipeline": [
+      {
+        "id": "TL-PIPELINEGEN",
+        "name": "pipeline_generator",
+        "description": "Generate production-grade data pipeline configurations with orchestration, quality checks, monitoring.",
+        "input_schema": {
+          "source_systems": "array<string>",
+          "target_system": "string",
+          "orchestrator": "string (airflow|dagster|prefect|dbt|other)",
+          "schedule": "string (cron)",
+          "transformations": "array<string>"
+        },
+        "output_schema": {
+          "dag_config": "PipelineConfig",
+          "code_artifacts": "array<object>",
+          "quality_checks": "array<QualityCheck>",
+          "mermaid_diagram": "string"
+        },
+        "reality_checks": [
+          "Verify source system connectivity assumptions are tagged [SPEC]",
+          "All stages must be idempotent or explicitly marked non-idempotent",
+          "Quality checks mandatory at each stage boundary",
+          "SLA estimates tagged [SPEC] unless from actual runs"
+        ]
+      },
+      {
+        "id": "TL-STREAMGEN",
+        "name": "stream_pipeline_generator",
+        "description": "Generate streaming pipeline configurations with consumer groups, schema registry, processing guarantees.",
+        "input_schema": {
+          "platform": "string (kafka|kinesis|pubsub|flink|other)",
+          "topics": "array<string>",
+          "processing": "string",
+          "guarantee": "string (at_least_once|exactly_once)"
+        },
+        "output_schema": {
+          "stream_config": "StreamConfig",
+          "consumer_code": "string",
+          "schema_registry_config": "object"
+        },
+        "reality_checks": [
+          "Verify exactly-once claims match platform capabilities",
+          "Throughput estimates tagged [SPEC] without benchmarks",
+          "Schema evolution compatibility checked"
+        ]
+      }
+    ],
+    "schema": [
+      {
+        "id": "TL-SCHEMAGEN",
+        "name": "schema_generator",
+        "description": "Generate table schemas with DDL, constraints, indexes, partitioning.",
+        "input_schema": {
+          "engine": "string",
+          "table_type": "string (fact|dimension|staging|raw|mart)",
+          "columns": "array<ColumnDef>",
+          "modeling_approach": "string"
+        },
+        "output_schema": {
+          "schema": "TableSchema",
+          "ddl": "string (sql)",
+          "index_recommendations": "array<string>"
+        },
+        "reality_checks": [
+          "Verify engine-specific data types are valid",
+          "Check partition key against query patterns",
+          "Flag PII columns for governance review"
+        ]
+      },
+      {
+        "id": "TL-MIGRATE",
+        "name": "migration_planner",
+        "description": "Generate data migration plans with validation, rollback, and dual-write strategies.",
+        "input_schema": {
+          "source_engine": "string",
+          "target_engine": "string",
+          "table_count": "integer",
+          "data_volume": "string",
+          "downtime_tolerance": "string"
+        },
+        "output_schema": {
+          "migration_plan": "MigrationPlan",
+          "validation_queries": "array<string>",
+          "rollback_plan": "string"
+        },
+        "reality_checks": [
+          "Downtime estimates tagged [SPEC] without actual testing",
+          "Data type mapping verified between engines",
+          "Rollback plan mandatory for every step"
+        ]
+      }
+    ],
+    "quality": [
+      {
+        "id": "TL-QUALITYGEN",
+        "name": "quality_framework_generator",
+        "description": "Generate data quality frameworks with checks, alerting, and dashboards.",
+        "input_schema": {
+          "tables": "array<TableSchema>",
+          "framework": "string (great_expectations|dbt_tests|soda|custom)",
+          "business_rules": "array<string>"
+        },
+        "output_schema": {
+          "quality_config": "object",
+          "test_suite": "array<QualityCheck>",
+          "alerting_config": "object"
+        },
+        "reality_checks": [
+          "All checks must have defined severity and action",
+          "Threshold values tagged [GEN] unless from actual data profiling",
+          "PII checks included when applicable"
+        ]
+      }
+    ],
+    "sql": [
+      {
+        "id": "TL-SQLGEN",
+        "name": "sql_generator",
+        "description": "Generate optimized SQL: complex queries, CTEs, window functions, materialized views.",
+        "input_schema": {
+          "engine": "string",
+          "intent": "string",
+          "tables": "array<string>",
+          "constraints": "string (optional)"
+        },
+        "output_schema": {
+          "sql": "string",
+          "explain_plan_notes": "string",
+          "optimization_suggestions": "array<string>"
+        },
+        "reality_checks": [
+          "Verify SQL functions exist in target engine version",
+          "Performance estimates tagged [SPEC] without EXPLAIN output",
+          "Join strategies validated against table sizes"
+        ]
+      }
+    ],
+    "integration": [
+      {
+        "id": "TL-HANDOFF",
+        "name": "agent_handoff",
+        "description": "Prepare structured handoff payload for specialist agent.",
+        "input_schema": {
+          "target_agent": "string",
+          "task": "string",
+          "context": "string",
+          "data_context": "object (optional)"
+        },
+        "output_schema": {
+          "handoff_payload": "object",
+          "format": "HANDOFF"
+        }
+      }
+    ]
+  }
+}

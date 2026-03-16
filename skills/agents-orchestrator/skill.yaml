@@ -6,17 +6,10 @@ description: >
 version: "1.0.0"
 category: specialized
 capabilities:
-  - agent-coordination
-  - task-routing
-  - state-management
-  - workflow-orchestration
-  - handoff-automation
+  - orchestrate
 models:
-  primary: C-OP46
-  fallback: [O-MAX, C-SN46, G-PRO]
-  openai: gpt-max
-  anthropic: claude-opus-4-6
-  gemini: gemini-2.5-pro
+  primary: G-PRO31
+  fallback: [G-PRO, O-54P]
 sk_hooks:
   - SK-DECOMP
   - SK-BRIDGE

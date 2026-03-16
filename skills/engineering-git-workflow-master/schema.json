@@ -6,7 +6,12 @@
       "properties": {
         "input_text": {
           "type": "string",
-          "description": "Git workflow question, branching strategy, or merge conflict"
+          "description": "Git problem or workflow requirements"
+        },
+        "team_size": {
+          "type": "string",
+          "description": "Team size",
+          "enum": ["solo", "small-2-5", "medium-6-15", "large-15-plus"]
         }
       },
       "required": ["input_text"]

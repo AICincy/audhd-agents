@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UiEngineerAgentSchema",
+  "description": "Domain-specific I/O schema for the UI Engineer agent. Deep schema with component architecture, design system, and accessibility types.",
+  "type": "object",
+  "extends": "../../_base/schema_base.json",
+  "definitions": {
+    "ComponentProp": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "description": "TypeScript type (e.g., 'string', 'React.ReactNode', '() => void')" },
+        "default_value": { "type": "string" },
+        "required": { "type": "boolean" },
+        "description": { "type": "string" },
+        "validation": { "type": "string", "description": "Runtime validation rule if any" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "ComponentSpec": {
+      "type": "object",
+      "required": ["name", "props", "framework"],
+      "properties": {
+        "name": { "type": "string" },
+        "display_name": { "type": "string" },
+        "framework": { "type": "string", "enum": ["react", "vue", "svelte", "angular", "web_components", "solid", "other"] },
+        "props": { "type": "array", "items": { "$ref": "#/definitions/ComponentProp" } },
+        "slots": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "description": { "type": "string" } } } },
+        "events": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "payload": { "type": "string" }, "description": { "type": "string" } } } },
+        "accessibility": {
+          "type": "object",
+          "properties": {
+            "role": { "type": "string" },
+            "aria_attributes": { "type": "array", "items": { "type": "string" } },
+            "keyboard_interactions": { "type": "array", "items": { "type": "object", "properties": { "key": { "type": "string" }, "action": { "type": "string" } } } },
+            "focus_management": { "type": "string" },
+            "screen_reader_text": { "type": "string" },
+            "wcag_level": { "type": "string", "enum": ["A", "AA", "AAA"] }
+          }
+        },
+        "variants": { "type": "array", "items": { "type": "string" } },
+        "sizes": { "type": "array", "items": { "type": "string" } },
+        "dependencies": { "type": "array", "items": { "type": "string" } },
+        "file_path": { "type": "string" },
+        "story_path": { "type": "string" },
+        "test_path": { "type": "string" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "DesignToken": {
+      "type": "object",
+      "required": ["name", "value", "category"],
+      "properties": {
+        "name": { "type": "string", "description": "Token name (e.g., '--color-primary-500', 'spacing.md')" },
+        "value": { "type": "string" },
+        "category": { "type": "string", "enum": ["color", "spacing", "typography", "shadow", "border", "radius", "breakpoint", "z_index", "animation", "opacity"] },
+        "usage": { "type": "string" },
+        "scale_position": { "type": "string", "description": "Position in scale (e.g., '500' in color scale)" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "DesignSystem": {
+      "type": "object",
+      "required": ["name", "tokens", "components"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "framework": { "type": "string" },
+        "tokens": { "type": "array", "items": { "$ref": "#/definitions/DesignToken" } },
+        "components": { "type": "array", "items": { "$ref": "#/definitions/ComponentSpec" } },
+        "breakpoints": { "type": "object", "description": "Responsive breakpoints" },
+        "typography_scale": { "type": "object" },
+        "color_palette": { "type": "object" },
+        "spacing_scale": { "type": "object" },
+        "icon_set": { "type": "string" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "PerformanceBudget": {
+      "type": "object",
+      "required": ["metric", "target"],
+      "properties": {
+        "metric": { "type": "string", "enum": ["lcp", "fid", "cls", "fcp", "ttfb", "tti", "tbt", "bundle_size", "js_size", "css_size", "image_size", "font_size", "request_count"] },
+        "target": { "type": "string" },
+        "current": { "type": "string" },
+        "status": { "type": "string", "enum": ["pass", "warn", "fail", "unknown"] },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "AccessibilityAudit": {
+      "type": "object",
+      "required": ["checked", "level"],
+      "properties": {
+        "checked": { "type": "boolean" },
+        "level": { "type": "string", "enum": ["A", "AA", "AAA"] },
+        "violations": { "type": "array", "items": { "type": "object", "properties": { "rule": { "type": "string" }, "element": { "type": "string" }, "severity": { "type": "string", "enum": ["critical", "serious", "moderate", "minor"] }, "fix": { "type": "string" } } } },
+        "keyboard_tested": { "type": "boolean" },
+        "screen_reader_tested": { "type": "boolean" },
+        "color_contrast_checked": { "type": "boolean" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "StateManagementConfig": {
+      "type": "object",
+      "required": ["library", "pattern"],
+      "properties": {
+        "library": { "type": "string", "enum": ["redux", "zustand", "jotai", "recoil", "mobx", "pinia", "xstate", "context_api", "signals", "none"] },
+        "pattern": { "type": "string", "enum": ["flux", "atomic", "proxy", "state_machine", "signals", "prop_drilling", "custom"] },
+        "stores": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "shape": { "type": "string" }, "selectors": { "type": "array", "items": { "type": "string" } } } } },
+        "side_effects": { "type": "string", "description": "How side effects are handled (e.g., 'redux-saga', 'thunks', 'effects')" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "UiEngineerInput": {
+      "type": "object",
+      "required": ["task_type", "context"],
+      "properties": {
+        "task_type": {
+          "type": "string",
+          "enum": [
+            "component_build", "design_system", "responsive_layout",
+            "state_management", "accessibility_fix", "performance_optimization",
+            "css_styling", "animation", "testing", "build_config",
+            "framework_migration", "pwa_config"
+          ]
+        },
+        "context": { "type": "string" },
+        "existing_component": { "$ref": "#/definitions/ComponentSpec" },
+        "design_tokens": { "type": "array", "items": { "$ref": "#/definitions/DesignToken" } },
+        "constraints": { "type": "object", "properties": { "framework": { "type": "string" }, "browser_support": { "type": "array", "items": { "type": "string" } }, "bundle_budget_kb": { "type": "integer" }, "wcag_level": { "type": "string" } } },
+        "energy_level": { "type": "string", "enum": ["high", "medium", "low", "crash"] }
+      }
+    },
+    "UiEngineerOutput": {
+      "type": "object",
+      "required": ["task_type", "result", "claim_summary"],
+      "properties": {
+        "task_type": { "type": "string" },
+        "result": {
+          "type": "object",
+          "properties": {
+            "components": { "type": "array", "items": { "$ref": "#/definitions/ComponentSpec" } },
+            "design_system": { "$ref": "#/definitions/DesignSystem" },
+            "state_config": { "$ref": "#/definitions/StateManagementConfig" },
+            "performance_budget": { "type": "array", "items": { "$ref": "#/definitions/PerformanceBudget" } },
+            "code_artifacts": { "type": "array", "items": { "type": "object", "properties": { "file_path": { "type": "string" }, "language": { "type": "string" }, "content": { "type": "string" } } } },
+            "mermaid_diagram": { "type": "string" }
+          }
+        },
+        "claim_summary": { "type": "object", "properties": { "obs_count": { "type": "integer" }, "drv_count": { "type": "integer" }, "gen_count": { "type": "integer" }, "spec_count": { "type": "integer" } } },
+        "accessibility_audit": { "$ref": "#/definitions/AccessibilityAudit" },
+        "energy_used": { "type": "string" },
+        "handoff": { "type": "object" }
+      }
+    }
+  }
+}

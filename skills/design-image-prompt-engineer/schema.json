@@ -6,16 +6,16 @@
       "properties": {
         "input_text": {
           "type": "string",
-          "description": "Image concept or visual requirements"
+          "description": "Scene description, concept, or reference"
         },
         "model": {
           "type": "string",
-          "description": "Target image generation model",
-          "enum": ["dall-e-3", "midjourney", "stable-diffusion", "imagen", "flux"]
+          "description": "Target image model",
+          "enum": ["dall-e-3", "midjourney", "stable-diffusion", "flux", "ideogram"]
         },
         "style": {
           "type": "string",
-          "description": "Visual style direction"
+          "description": "Visual style"
         }
       },
       "required": ["input_text"]

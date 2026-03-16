@@ -1,10 +1,12 @@
-"""Google Gemini 2.5 Pro adapter for Gemini Developer API and Vertex AI."""
+"""Google Gemini adapter for Gemini Developer API and Vertex AI."""
 
 import json
 import os
 import time
 from pathlib import Path
 from typing import Optional
+
+from pydantic import SecretStr
 
 try:
     from google import genai
@@ -22,9 +24,9 @@ from .base import BaseAdapter
 
 
 class GoogleAdapter(BaseAdapter):
-    """Adapter for Gemini 2.5 Pro via Gemini Developer API or Vertex AI."""
+    """Adapter for Gemini via Gemini Developer API or Vertex AI."""
 
-    def __init__(self, api_key: Optional[str] = None, config: dict = None):
+    def __init__(self, api_key: Optional[SecretStr] = None, config: dict = None):
         self.config = config or {}
         self.init_error = None
         self.project = None
@@ -32,12 +34,14 @@ class GoogleAdapter(BaseAdapter):
         self.backend = "developer"
         self.auth_mode = "unconfigured"
 
-        developer_api_key = api_key or os.getenv(
+        raw_dev_key = os.getenv(
             self.config.get("env_key", "GOOGLE_API_KEY")
         )
-        self.vertex_api_key = os.getenv(
+        developer_api_key = api_key or (SecretStr(raw_dev_key) if raw_dev_key else None)
+        raw_vertex_key = os.getenv(
             self.config.get("vertex_api_key_env", "VERTEX_API_KEY")
         )
+        self.vertex_api_key = SecretStr(raw_vertex_key) if raw_vertex_key else None
         self.use_vertex = self._should_use_vertex()
 
         selected_key = self.vertex_api_key if self.use_vertex else developer_api_key
@@ -146,7 +150,7 @@ class GoogleAdapter(BaseAdapter):
             )
         )
 
-    def _build_client(self, developer_api_key: Optional[str]):
+    def _build_client(self, developer_api_key: Optional[SecretStr]):
         """Initialize the google-genai client for the selected backend."""
         if not genai or not types:
             raise RuntimeError(
@@ -161,7 +165,7 @@ class GoogleAdapter(BaseAdapter):
 
         self.backend = "developer"
         self.auth_mode = "api_key"
-        return genai.Client(api_key=developer_api_key)
+        return genai.Client(api_key=developer_api_key.get_secret_value())
 
     def _build_vertex_client(self):
         """Initialize Vertex AI client using API key or ADC/service account."""
@@ -173,7 +177,7 @@ class GoogleAdapter(BaseAdapter):
             self.auth_mode = "vertex_api_key"
             return genai.Client(
                 vertexai=True,
-                api_key=self.vertex_api_key,
+                api_key=self.vertex_api_key.get_secret_value(),
                 http_options=http_options,
             )
 
@@ -233,6 +237,7 @@ class GoogleAdapter(BaseAdapter):
         if file_env:
             return service_account.Credentials.from_service_account_file(file_env)
 
+        assert inline_env is not None  # guaranteed by the guard above
         raw_value = inline_env.strip()
         if raw_value.startswith("{"):
             return service_account.Credentials.from_service_account_info(

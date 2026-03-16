@@ -1,0 +1,151 @@
+agent:
+  name: engineer
+  display_name: "Engineer"
+  version: "1.0.0"
+  description: >-
+    General engineering agent for the AuDHD Cognitive Swarm.
+    Systems thinking, architecture, design patterns, technical
+    decision-making, cross-discipline coordination.
+  domain: general_engineering
+  cognitive_profile:
+    patterns:
+      - pattern_compression
+      - monotropism
+      - asymmetric_working_memory
+      - meta_layer_reflex
+    energy_model: true
+    externalization: required
+
+skills:
+  always_on:
+    - reality_check
+    - energy_routing
+    - externalization
+  domain:
+    - systems_analysis
+    - architecture_review
+    - design_pattern_selection
+    - technical_decision_framework
+    - cross_discipline_coordination
+    - requirements_decomposition
+    - failure_mode_analysis
+    - tradeoff_matrix
+    - dependency_mapping
+    - constraint_satisfaction
+
+model_routing:
+  google:
+    default_model: gemini-3.1-pro-preview
+    fallback_chain:
+      - gemini-3.1-pro-preview
+      - gemini-2.5-pro
+      - gemini-3.1-flash-lite-preview
+      - gemini-3-flash-preview
+      - nano-banana-pro
+      - nano-banana-2
+      - nano-banana
+    models:
+      gemini-3.1-pro-preview:
+        alias: G-PRO31
+        role: architecture_primary
+        tier: 1
+      gemini-2.5-pro:
+        alias: G-PRO
+        role: multimodal_analysis
+        tier: 1
+      gemini-3.1-flash-lite-preview:
+        alias: G-FLA31
+        role: rapid_iteration
+        tier: 2
+      gemini-3-flash-preview:
+        alias: G-FLA30
+        role: fallback_fast
+        tier: 3
+      nano-banana-pro:
+        alias: G-NANOP
+        role: crash_triage
+        tier: 4
+      nano-banana-2:
+        alias: G-NANO2
+        role: crash_classification
+        tier: 4
+      nano-banana:
+        alias: G-NANO
+        role: crash_binary
+        tier: 4
+  openai:
+    default_model: gpt-5.4
+    fallback_chain:
+      - gpt-5.4
+      - gpt-5.4-pro
+      - gpt-5.3
+      - gpt-5.3-codex
+      - o4-mini
+    models:
+      gpt-5.4:
+        alias: O-54
+        role: ideation_primary
+        tier: 1
+      gpt-5.4-pro:
+        alias: O-54P
+        role: deep_planner
+        tier: 1
+      gpt-5.3:
+        alias: O-53
+        role: ideation_fallback
+        tier: 2
+      gpt-5.3-codex:
+        alias: O-CDX
+        role: code_automator
+        tier: 1
+      o4-mini:
+        alias: O-O4M
+        role: rapid_verifier
+        tier: 3
+
+energy_routing:
+  high:
+    google_primary: gemini-3.1-pro-preview
+    openai_primary: gpt-5.4-pro
+    tasks:
+      - full_architecture_review
+      - system_design_from_scratch
+      - cross_discipline_integration
+      - failure_mode_deep_analysis
+  medium:
+    google_primary: gemini-3.1-flash-lite-preview
+    openai_primary: gpt-5.4
+    tasks:
+      - design_pattern_selection
+      - requirements_decomposition
+      - tradeoff_evaluation
+      - dependency_mapping
+  low:
+    google_primary: gemini-3-flash-preview
+    openai_primary: o4-mini
+    tasks:
+      - constraint_check
+      - binary_feasibility
+      - status_verification
+  crash:
+    google_primary: nano-banana-pro
+    openai_primary: null
+    tasks:
+      - severity_classification
+      - binary_go_no_go
+
+handoff:
+  accepts_from:
+    - software_engineer
+    - devops_engineer
+    - hardware_engineer
+    - ai_ml_engineer
+    - project_manager
+  delegates_to:
+    - software_engineer: ["implementation_tasks", "code_generation"]
+    - devops_engineer: ["infrastructure_tasks", "deployment_planning"]
+    - hardware_engineer: ["physical_system_constraints"]
+    - data_engineer: ["data_pipeline_architecture"]
+    - secops_engineer: ["security_review", "threat_assessment"]
+  protocol: HANDOFF
+  format: structured_yaml

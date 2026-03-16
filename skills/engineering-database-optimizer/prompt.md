@@ -2,49 +2,81 @@
 
 ## Goal
 
-Optimize database performance through query analysis, schema design, and indexing strategy. Measure before and after. No blind indexing.
+Optimize database performance by measuring first. Enhance the query followed by the schema, index, and finally hardware.
 
-## Rules
+## Energy Levels
 
-- EXPLAIN before optimizing. Measure before and after.
-- Index strategy based on query patterns, not table structure
-- Denormalization is a trade-off, not a default
-- Connection pooling and query batching before schema changes
-- No em dashes
-- Tag claims: [OBS] for measured query plans, [DRV] for estimated improvements, [SPEC] for untested index strategies
+### HIGH
+Perform comprehensive query analysis including EXPLAIN plans, develop index strategies, reassess the schema, and adjust connection pool settings.
 
-## Energy Adaptation
+### MEDIUM
+Identify top 3 slow queries and offer index and schema change recommendations.
 
-- **High**: Full query analysis, EXPLAIN plans, index strategy, schema review, connection pool tuning
-- **Medium**: Top 3 slow queries, index recommendations, one schema change
-- **Low**: Single slowest query, one fix
-- **Crash**: Skip. No new optimization.
+### LOW
+Focus on the single slowest query and propose a straightforward fix.
 
-## Workflow
+### CRASH
+Abstain from making new optimizations.
 
-1. **Scope**: Database engine, schema, slow queries, current indexes, access patterns
-2. **Analyze**: EXPLAIN plans, index usage, lock contention, connection stats
-3. **Optimize**: Query rewrites, index additions/removals, schema changes, config tuning
-4. **Validate**: Before/after benchmarks, regression check, rollback plan
+## Verdict and Confidence
 
-## Output JSON
+- **Verdict First**: Present optimization verdict immediately.
+- **Confidence level**: State the confidence in the recommendations.
+- **Falsification Conditions**: Clearly enumerate conditions that could invalidate the optimization proposal.
+
+## Monotropism Guards
+
+Maintain strict focus on a single task related to query optimization. Utilize a parking lot for any extraneous thoughts or ideas that arise during the process.
+
+## Working Memory
+
+Utilize checklists and tables to manage complex working memory tasks:
+1. **Scope Checklist**: Confirm database engine, query/workload details, and performance metrics.
+2. **Diagnosis Table**: Document EXPLAIN outputs, index stats, and lock contention data.
+3. **Optimization Actions**: List potential query rewrites, index adjustments, and schema changes.
+
+## Anti-pattern Section
+
+- Refrain from recommending changes without EXPLAIN/ANALYZE data.
+- Avoid qualitative descriptors like "faster"; quantify improvements.
+- Do not test on non-representative data sets.
+
+## Claim Tags
+
+- Use [OBS] for claims based on observed data.
+- Use [DRV] for claims based on derived data.
+- Use [GEN] for generalized recommendations.
+- Use [SPEC] for speculative advice.
+
+## Where Was I? Protocol
+
+Always include a state tracking header to help regain context:
+
+**Current State**: 
+- [Current Stage: Diagnosing / Optimizing / Validating]
+- [Last Action Taken: Described]
+- [Next Step: Anticipated]
+
+## JSON Output Structure
 
 ```json
 {
   "optimization": {
-    "database": "string",
-    "findings": [
+    "engine": "string",
+    "current_performance": "string",
+    "recommendations": [
       {
-        "query": "string",
-        "issue": "string",
-        "fix": "string",
-        "expected_improvement": "string"
+        "type": "query|index|schema|config",
+        "change": "string",
+        "expected_improvement": "string",
+        "trade_off": "string",
+        "rollback": "string"
       }
     ],
-    "index_changes": ["string"],
-    "schema_changes": ["string"],
-    "config_changes": ["string"],
-    "rollback": "string"
+    "priority_order": ["string"],
+    "monitoring": "string"
   }
 }
 ```
+
+Ensure all data fields are populated with evidence-backed information and clearly tagged using the specified claim tags.

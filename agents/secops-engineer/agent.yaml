@@ -1,0 +1,225 @@
+# SecOps Engineer Agent Manifest
+# Combines: security-engineer, incident-response-commander, reality-checker, tool-evaluator
+# Runtime: AuDHD cognitive architecture with monotropic task threading
+# Providers: Gemini (8 models) + OpenAI (5 models)
+
+agent:
+  name: secops-engineer
+  version: "1.0.0"
+  display_name: "SecOps Engineer"
+  description: |
+    Unified security operations agent combining threat modeling, incident response,
+    reality-checking, and tool evaluation. Designed for AuDHD cognition with
+    monotropic focus threading, energy-aware routing, and aggressive externalization.
+  author: AICincy
+  license: MIT
+
+cognitive_profile:
+  architecture: audhd
+  monotropism: true
+  energy_tracking: true
+  context_switch_penalty: high
+  externalization: aggressive
+  working_memory_model: map_over_steps
+  pattern_compression: verdict_first
+
+skills:
+  - id: engineering-security-engineer
+    weight: 0.35
+    capabilities:
+      - threat_modeling
+      - vulnerability_assessment
+      - secure_code_review
+      - stride_analysis
+      - attack_surface_mapping
+      - security_architecture_review
+      - compliance_mapping
+      - risk_quantification
+    hooks:
+      - SK-GATE
+      - SK-VERIFY
+      - SK-CODEREVIEW
+
+  - id: engineering-incident-response-commander
+    weight: 0.30
+    capabilities:
+      - incident_triage
+      - severity_classification
+      - communication_management
+      - resolution_coordination
+      - post_mortem_analysis
+      - runbook_execution
+      - escalation_management
+      - timeline_reconstruction
+    hooks:
+      - SK-GATE
+      - SK-DECOMP
+
+  - id: testing-reality-checker
+    weight: 0.20
+    always_on: true
+    capabilities:
+      - assumption_validation
+      - feasibility_assessment
+      - hallucination_gating
+      - claim_verification
+      - confidence_calibration
+      - drift_detection
+      - source_triangulation
+    hooks:
+      - SK-GATE
+      - SK-VERIFY
+
+  - id: testing-tool-evaluator
+    weight: 0.15
+    capabilities:
+      - decision_matrix_construction
+      - poc_assessment
+      - build_vs_buy_analysis
+      - vendor_comparison
+      - integration_risk_assessment
+      - cost_modeling
+      - migration_path_analysis
+    hooks:
+      - SK-GATE
+      - SK-VERIFY
+
+instruction_stack:
+  - PROFILE.md
+  - _base/prompt_base.md
+  - "{model_variant}/prompt.md"
+  - agents/secops-engineer/prompt.md
+  - TOOL.md
+
+model_routing:
+  google:
+    default_model: gemini-3.1-pro-preview
+    fallback_chain:
+      - gemini-3.1-pro-preview
+      - gemini-2.5-pro
+      - gemini-3.1-flash-lite-preview
+      - gemini-3-flash-preview
+    models:
+      gemini-3.1-pro-preview:
+        alias: G-PRO31
+        role: primary_deep_analysis
+        max_tokens: 65536
+        temperature: 0.3
+        tier: 1
+      gemini-2.5-pro:
+        alias: G-PRO25
+        role: secondary_multimodal
+        max_tokens: 32768
+        temperature: 0.3
+        tier: 1
+      gemini-3.1-flash-lite-preview:
+        alias: G-FLA31
+        role: triage_fast
+        max_tokens: 16384
+        temperature: 0.2
+        tier: 2
+      gemini-3-flash-preview:
+        alias: G-FLA30
+        role: fallback_fast
+        max_tokens: 16384
+        temperature: 0.2
+        tier: 3
+      gemini-2.5-tts:
+        alias: G-TTS25
+        role: voice_output
+        max_tokens: 8192
+        temperature: 0.4
+        tier: 2
+      nano-banana:
+        alias: G-NANO
+        role: edge_lightweight
+        max_tokens: 4096
+        temperature: 0.2
+        tier: 3
+      nano-banana-2:
+        alias: G-NANO2
+        role: edge_standard
+        max_tokens: 4096
+        temperature: 0.2
+        tier: 3
+      nano-banana-pro:
+        alias: G-NANOP
+        role: edge_premium
+        max_tokens: 8192
+        temperature: 0.25
+        tier: 2
+  openai:
+    default_model: gpt-5.4
+    fallback_chain:
+      - gpt-5.4
+      - gpt-5.4-pro
+      - gpt-5.3
+      - gpt-5.3-codex
+      - o4-mini
+    models:
+      gpt-5.4:
+        alias: O-54
+        role: ideation_primary
+        max_tokens: 32768
+        temperature: 0.4
+        tier: 1
+      gpt-5.4-pro:
+        alias: O-54P
+        role: deep_planner_analyst
+        max_tokens: 65536
+        temperature: 0.3
+        tier: 1
+      gpt-5.3:
+        alias: O-53
+        role: ideation_fallback
+        max_tokens: 32768
+        temperature: 0.4
+        tier: 2
+      gpt-5.3-codex:
+        alias: O-CDX
+        role: code_automator
+        max_tokens: 32768
+        temperature: 0.2
+        tier: 1
+      o4-mini:
+        alias: O-O4M
+        role: rapid_verifier
+        max_tokens: 8192
+        temperature: 0.2
+        tier: 3
+
+energy_routing:
+  high:
+    google_primary: gemini-3.1-pro-preview
+    openai_primary: gpt-5.4-pro
+    tasks: [threat_model_full, architecture_review, post_mortem_deep, stride_complete]
+    openai_tasks: [threat_model_cross_verify, deep_planning, architecture_consensus]
+  medium:
+    google_primary: gemini-3.1-flash-lite-preview
+    openai_primary: gpt-5.4
+    tasks: [vuln_scan_review, incident_triage, tool_comparison, code_review_targeted]
+    openai_tasks: [incident_ideation, tool_comparison_draft, code_review_second_opinion]
+  low:
+    google_primary: gemini-3-flash-preview
+    openai_primary: o4-mini
+    tasks: [status_check, runbook_step, quick_lookup, checklist_verify]
+    openai_tasks: [quick_verify, binary_check, status_confirm]
+  crash:
+    google_primary: nano-banana-pro
+    openai_primary: null
+    tasks: [binary_decision, severity_classify, single_item_verify]
+    openai_tasks: []
+
+circuit_breaker:
+  failure_threshold: 3
+  recovery_timeout: 60
+  fallback_behavior: degrade_to_lower_tier
+
+reality_check:
+  mode: always_on
+  gate_threshold: 0.7
+  claim_tagging: required
+  tags: [OBS, DRV, GEN, SPEC, STALE, UNVERIFIED, CONFLICT]
+  hallucination_detection: true
+  drift_detection: true
+  source_triangulation: true

@@ -1,13 +1,13 @@
 [
   {
-    "description": "Prototype cognitive state routing",
+    "description": "Prototype skill routing with semantic similarity",
     "input": {
-      "input_text": "Prototype: can we route LLM requests based on operator energy level? Input: energy_level enum. Output: filtered model list. Time box: 2 hours.",
-      "stack": "Python, no frameworks",
+      "input_text": "Test whether cosine similarity on skill descriptions can route user prompts to the correct skill with >80% accuracy across 20 test cases.",
+      "time_box": "2hr",
       "cognitive_state": {
         "energy_level": "high",
         "active_mode": "execute",
-        "task_tier": "T2"
+        "task_tier": "T3"
       }
     }
   }

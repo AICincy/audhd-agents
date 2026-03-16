@@ -6,16 +6,10 @@ description: >
 version: "1.0.0"
 category: support
 capabilities:
-  - data-analysis
-  - trend-identification
-  - anomaly-detection
-  - report-generation
+  - synthesize
 models:
-  primary: G-PRO
-  fallback: [C-OP46, C-SN46]
-  openai: o4-mini
-  anthropic: claude-opus-4-6
-  gemini: gemini-2.5-pro
+  primary: G-PRO31
+  fallback: [G-PRO, O-54P]
 sk_hooks:
   - SK-VERIFY
   - SK-DECOMP

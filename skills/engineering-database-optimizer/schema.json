@@ -6,12 +6,12 @@
       "properties": {
         "input_text": {
           "type": "string",
-          "description": "Query, schema, or performance issue to optimize"
+          "description": "Slow query, EXPLAIN plan, schema, or performance report"
         },
-        "database": {
+        "engine": {
           "type": "string",
           "description": "Database engine",
-          "enum": ["postgresql", "mysql", "bigquery", "firestore", "redis", "mongodb", "spanner"]
+          "enum": ["postgresql", "mysql", "bigquery", "firestore", "mongodb", "redis", "sqlite"]
         }
       },
       "required": ["input_text"]

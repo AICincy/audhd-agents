@@ -6,12 +6,12 @@
       "properties": {
         "input_text": {
           "type": "string",
-          "description": "System to secure, threat model, or security review request"
+          "description": "Code, architecture, or system to assess"
         },
         "scope": {
           "type": "string",
-          "description": "Security review scope",
-          "enum": ["threat-model", "code-review", "infra-audit", "pentest-plan", "compliance"]
+          "description": "Assessment scope",
+          "enum": ["threat-model", "code-review", "config-audit", "penetration-test", "full"]
         }
       },
       "required": ["input_text"]

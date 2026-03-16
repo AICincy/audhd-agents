@@ -33,7 +33,6 @@ This repo ships a private operator runtime in [`runtime/app.py`](../../runtime/a
 The deploy workflow assumes these secret names exist in Secret Manager and are injected into Cloud Run with matching environment variable names:
 
 - `OPENAI_API_KEY`
-- `ANTHROPIC_API_KEY`
 - `VERTEX_API_KEY`
 
 ## Runtime Defaults
@@ -47,7 +46,7 @@ The deploy workflow assumes these secret names exist in Secret Manager and are i
   - `memory=1Gi`
 - Runtime env contract:
   - `APP_ENV=staging|production`
-  - `REQUIRED_PROVIDERS=openai,anthropic,google`
+  - `REQUIRED_PROVIDERS=openai,google`
   - `LOG_LEVEL=INFO|DEBUG|WARNING`
 
 ## Smoke Tests
@@ -63,5 +62,4 @@ That sequence checks:
 - `GET /healthz`
 - `GET /readyz`
 - `POST /execute` through `O-54`
-- `POST /execute` through `C-OP46`
 - `POST /execute` through `G-PRO`

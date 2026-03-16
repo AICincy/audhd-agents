@@ -1,9 +1,9 @@
 [
   {
-    "description": "CI/CD for audhd-agents Python package",
+    "description": "CI/CD for Devvit app with staging and production",
     "input": {
-      "input_text": "GitHub Actions CI/CD for Python package: lint, type check, test (pytest), build, deploy to Cloud Run. Needs staging and prod environments, secrets for 3 LLM API keys.",
-      "platform": "github-actions",
+      "input_text": "Set up CI/CD for Reddit Devvit app: lint, test, build, deploy to staging on PR merge, deploy to production on release tag. Need rollback capability.",
+      "platform": "gcp",
       "cognitive_state": {
         "energy_level": "high",
         "active_mode": "execute",

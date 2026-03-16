@@ -20,16 +20,14 @@ Hub-and-spoke with orchestrator-managed autonomous handoffs. Operator remains th
 
 | ID | Model | Role | Primary Domain |
 | --- | --- | --- | --- |
-| C-OP46 | Claude Opus 4.6 | Deep Analyst (Primary) | Complex analysis, OSINT, legal, architecture, T5 verification |
-| C-OP45 | Claude Opus 4.5 | Deep Analyst (Fallback) | Same scope as C-OP46 |
-| C-SN46 | Claude Sonnet 4.6 | Rapid Executor (Primary) | Structured output, triage, drafts, reformatting |
-| C-SN45 | Claude Sonnet 4.5 | Rapid Executor (Fallback) | Same scope as C-SN46 |
-| G-PRO | Gemini 2.5 Pro | Knowledge Integrator | Research, multimodal, Google ecosystem, search grounding |
+| G-PRO | Gemini 2.5 Pro | Deep Analyst / Integrator | Complex analysis, OSINT, research, multimodal |
+| G-PRO31 | Gemini 3.1 Pro Preview | Deep Analyst / Integrator | Complex analysis, drafting, OSINT, high-tier |
+| G-FLA31 | Gemini 3.1 Flash | Rapid Verifier / Analyst | Fast analysis, triage, quick drafts |
+| O-54P | GPT-5.4 Pro | Deep Planner / Analyst | Architecture, audit synthesis, escalation review |
 | O-54 | GPT-5.4 | Ideation Engine (Primary) | Creative, stakeholder comms, accessibility review |
 | O-53 | GPT-5.3 | Ideation Engine (Fallback) | Same scope as O-54 |
-| O-54P | GPT-5.4 Pro | Deep Planner | Architecture, audit synthesis, escalation review, cross-skill planning |
 | O-CDX | GPT-5.3 Codex | Code Automator | Scripts, pipelines, automation, environment scaffolding |
-| O-O4M | o4-mini | Rapid Verifier | Benchmarks, structured checks, scorecards, numeric sanity checks |
+| O-O4M | o4-mini | Rapid Verifier | Benchmarks, triage, structured checks, numeric sanity checks |
 | O-MAX | GPT Max | Generalist Overflow | Parallel capacity, second opinions, bulk processing |
 
 ---
@@ -38,15 +36,15 @@ Hub-and-spoke with orchestrator-managed autonomous handoffs. Operator remains th
 
 | Domain | T1-T2 | T3 | T4-T5 | Fallback |
 | --- | --- | --- | --- | --- |
-| Analysis | C-SN46 | C-OP46 | C-OP46 | C-OP45 then C-SN45 |
-| Code | O-CDX | O-CDX | O-CDX + C-OP46 review | O-54 |
-| Research | G-PRO | G-PRO | G-PRO + C-OP46 verify | C-OP45 |
-| Drafting (internal) | C-SN46 | C-SN46 | C-OP46 | C-SN45 |
-| Drafting (final) | C-OP46 | C-OP46 | C-OP46 + O-54 review | C-OP45 |
-| OSINT | n/a | C-OP46 | C-OP46 + G-PRO | C-OP45 |
-| Stakeholder comms | O-54 | O-54 | O-54 + C-OP46 verify | O-53 |
-| Creative | O-54 | O-54 | O-54 | O-53 |
-| Triage | C-SN46 | n/a | n/a | C-SN45 |
+| Analysis | G-FLA31 | G-PRO31 | G-PRO31 | G-PRO then O-54P |
+| Code | O-CDX | O-CDX | O-CDX + G-PRO review | O-54 |
+| Research | G-PRO | G-PRO | G-PRO + O-54P verify | O-54 |
+| Drafting (internal) | G-FLA31 | G-PRO31 | G-PRO31 | G-PRO then O-54 |
+| Drafting (final) | G-FLA31 | G-PRO31 | G-PRO31 + O-54 review | G-PRO then O-53 |
+| OSINT | n/a | G-PRO31 | G-PRO31 + O-54P | G-PRO then O-54 |
+| Stakeholder comms | G-PRO | G-PRO | G-PRO + O-54 verify | O-54 |
+| Creative | G-PRO | G-PRO | G-PRO | O-54 |
+| Triage | G-FLA31 | n/a | n/a | G-PRO |
 | Overflow | O-MAX | O-MAX | O-MAX | O-53 |
 
 Fallback activates on: API error, rate limit, confidence below 0.6, or explicit agent deferral.
@@ -72,16 +70,16 @@ Every model interaction should be cost-aware.
 
 | Model | Tier | Relative Cost | When to Prefer |
 | --- | --- | --- | --- |
-| C-SN46 / C-SN45 | Budget | $ | T1-T2, triage, formatting, quick drafts |
-| G-PRO | Mid | $$ | Research, search grounding, multimodal |
 | O-O4M | Budget | $ | Benchmarks, scorecards, structured validation, fast quantitative checks |
+| G-FLA31 | Budget | $ | Triage, fast drafts, standard analysis |
+| G-PRO | Mid | $$ | Research, search grounding, multimodal, deep analysis |
+| G-PRO31 | Mid | $$ | High-tier analysis, drafting, OSINT |
 | O-54 / O-53 | Mid | $$ | Creative, stakeholder comms, ideation, accessibility review |
 | O-CDX | Mid | $$ | Code generation, scripting, automation |
 | O-MAX | Mid | $$ | Broad coordination, overflow, cross-domain synthesis |
-| O-54P | Premium | $$$ | Architecture, audit synthesis, planning, escalations |
-| C-OP46 / C-OP45 | Premium | $$$ | T3+ analysis, OSINT, architecture, verification |
+| O-54P | Premium | $$$ | Architecture, audit synthesis, planning, escalations, T5 verification |
 
-**Rule:** Always prefer the cheapest model that meets the tier requirement. Do not route T1 tasks to Opus.
+**Rule:** Always prefer the cheapest model that meets the tier requirement. Do not route T1 tasks to Premium models.
 
 **Rule:** When proposing multi-model workflows, include estimated relative cost (low/medium/high).
 
@@ -116,7 +114,7 @@ Every model interaction should be cost-aware.
 | --- | --- | --- |
 | 1 | Confidence below 0.6 or transient error | Retry same model, max 3 attempts |
 | 2 | 3 failed retries or capability gap | Route to fallback agent per matrix |
-| 3 | Fallback also fails or conflicting results | Multi-model consensus: C-OP46 + G-PRO + O-54 |
+| 3 | Fallback also fails or conflicting results | Multi-model consensus: G-PRO31 + O-54P |
 | 4 | Consensus unresolved or human judgment required | Queue for Operator review (single-item presentation) |
 
 ---
@@ -125,9 +123,9 @@ Every model interaction should be cost-aware.
 
 | Energy | Max Tier | Model Pool | Behavior |
 | --- | --- | --- | --- |
-| High | T5 | All 11 | Normal operation |
-| Medium | T4 | All 11, prefer fast models for T1-T2 | Standard |
-| Low | T2 | Sonnet + Gemini only | Micro-steps. Single next action. |
+| High | T5 | All 9 | Normal operation |
+| Medium | T4 | All 9, prefer fast models for T1-T2 | Standard |
+| Low | T2 | Gemini + o4-mini only | Micro-steps. Single next action. |
 | Crash | T1 | None new | "Everything is saved. Nothing is urgent. Come back when ready." |
 
 No tasks lost during downgrade. Deferred items queue for next high-energy window.

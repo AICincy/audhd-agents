@@ -1,8 +1,8 @@
 [
   {
-    "description": "API returning 500s after deployment",
+    "description": "Certification exam platform returning 503s",
     "input": {
-      "input_text": "Cloud Run service returning 500 errors after latest deployment. Error rate jumped from 0.1% to 45%. Logs show: RuntimeError: All models failed for skill testing-reality-checker. Started 10 min ago.",
+      "input_text": "Alert: certification exam platform returning 503 for 12 minutes. 340 users affected mid-exam. Database connection pool exhausted. Last deploy: 2 hours ago (config change to connection limits).",
       "severity": "SEV2",
       "cognitive_state": {
         "energy_level": "high",

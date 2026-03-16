@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataEngineerAgentSchema",
+  "description": "Domain-specific I/O schema for the Data Engineer agent. Deep schema with data-engineering-specific types, pipeline validation, and quality guards.",
+  "type": "object",
+  "extends": "../../_base/schema_base.json",
+  "definitions": {
+    "ColumnDef": {
+      "type": "object",
+      "required": ["name", "data_type"],
+      "properties": {
+        "name": { "type": "string" },
+        "data_type": { "type": "string", "description": "e.g., VARCHAR(255), INT64, TIMESTAMP, ARRAY<STRING>, STRUCT<...>" },
+        "nullable": { "type": "boolean", "default": true },
+        "description": { "type": "string" },
+        "source_system": { "type": "string", "description": "Lineage: where this column originates" },
+        "source_column": { "type": "string", "description": "Original column name in source" },
+        "transformation": { "type": "string", "description": "SQL or function applied to derive this column" },
+        "pii": { "type": "boolean", "description": "Contains personally identifiable information" },
+        "partition_key": { "type": "boolean" },
+        "cluster_key": { "type": "boolean" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "TableSchema": {
+      "type": "object",
+      "required": ["table_name", "columns", "engine"],
+      "properties": {
+        "table_name": { "type": "string" },
+        "schema_name": { "type": "string" },
+        "database_name": { "type": "string" },
+        "engine": { "type": "string", "enum": ["bigquery", "snowflake", "redshift", "databricks", "postgres", "mysql", "duckdb", "clickhouse", "trino", "other"] },
+        "columns": { "type": "array", "items": { "$ref": "#/definitions/ColumnDef" } },
+        "primary_key": { "type": "array", "items": { "type": "string" } },
+        "foreign_keys": { "type": "array", "items": { "type": "object", "properties": { "columns": { "type": "array", "items": { "type": "string" } }, "references_table": { "type": "string" }, "references_columns": { "type": "array", "items": { "type": "string" } } } } },
+        "partition_by": { "type": "string" },
+        "cluster_by": { "type": "array", "items": { "type": "string" } },
+        "table_type": { "type": "string", "enum": ["fact", "dimension", "staging", "raw", "mart", "snapshot", "bridge", "aggregate", "view", "materialized_view", "external"] },
+        "modeling_approach": { "type": "string", "enum": ["kimball", "inmon", "data_vault", "one_big_table", "normalized", "denormalized", "other"] },
+        "estimated_row_count": { "type": "string" },
+        "estimated_size": { "type": "string" },
+        "freshness_sla": { "type": "string", "description": "e.g., 'hourly', 'daily by 06:00 UTC'" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "PipelineStage": {
+      "type": "object",
+      "required": ["name", "type", "inputs", "outputs"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["extract", "transform", "load", "validate", "deduplicate", "enrich", "aggregate", "snapshot", "publish", "archive", "monitor"] },
+        "inputs": { "type": "array", "items": { "type": "string" } },
+        "outputs": { "type": "array", "items": { "type": "string" } },
+        "engine": { "type": "string", "description": "e.g., 'spark', 'dbt', 'airflow_operator', 'kafka_consumer'" },
+        "idempotent": { "type": "boolean" },
+        "retry_policy": { "type": "object", "properties": { "max_retries": { "type": "integer" }, "backoff": { "type": "string" } } },
+        "sla_minutes": { "type": "integer" },
+        "dependencies": { "type": "array", "items": { "type": "string" } },
+        "quality_checks": { "type": "array", "items": { "$ref": "#/definitions/QualityCheck" } },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "QualityCheck": {
+      "type": "object",
+      "required": ["name", "rule", "severity"],
+      "properties": {
+        "name": { "type": "string" },
+        "rule": { "type": "string", "description": "e.g., 'NOT NULL', 'UNIQUE', 'row_count > 0', 'freshness < 1h'" },
+        "column": { "type": "string" },
+        "threshold": { "type": "string" },
+        "severity": { "type": "string", "enum": ["critical", "error", "warning", "info"] },
+        "action_on_failure": { "type": "string", "enum": ["block_pipeline", "alert", "log", "quarantine", "fallback"] },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "PipelineConfig": {
+      "type": "object",
+      "required": ["pipeline_name", "orchestrator", "stages"],
+      "properties": {
+        "pipeline_name": { "type": "string" },
+        "orchestrator": { "type": "string", "enum": ["airflow", "dagster", "prefect", "dbt", "spark", "flink", "dataflow", "step_functions", "argo", "other"] },
+        "schedule": { "type": "string", "description": "Cron expression or interval" },
+        "stages": { "type": "array", "items": { "$ref": "#/definitions/PipelineStage" } },
+        "source_systems": { "type": "array", "items": { "type": "string" } },
+        "target_systems": { "type": "array", "items": { "type": "string" } },
+        "backfill_strategy": { "type": "string" },
+        "monitoring": { "type": "object", "properties": { "alerting": { "type": "string" }, "metrics": { "type": "array", "items": { "type": "string" } }, "dashboard_url": { "type": "string" } } },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "StreamConfig": {
+      "type": "object",
+      "required": ["name", "platform", "topic"],
+      "properties": {
+        "name": { "type": "string" },
+        "platform": { "type": "string", "enum": ["kafka", "kinesis", "pubsub", "flink", "spark_streaming", "pulsar", "redpanda", "other"] },
+        "topic": { "type": "string" },
+        "schema_registry": { "type": "string" },
+        "serialization": { "type": "string", "enum": ["avro", "protobuf", "json", "parquet"] },
+        "partitions": { "type": "integer" },
+        "replication_factor": { "type": "integer" },
+        "retention_hours": { "type": "integer" },
+        "consumer_group": { "type": "string" },
+        "processing_guarantee": { "type": "string", "enum": ["at_least_once", "at_most_once", "exactly_once"] },
+        "throughput_estimate": { "type": "string" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "MigrationPlan": {
+      "type": "object",
+      "required": ["source", "target", "strategy", "steps"],
+      "properties": {
+        "source": { "type": "object", "properties": { "engine": { "type": "string" }, "version": { "type": "string" }, "size": { "type": "string" } } },
+        "target": { "type": "object", "properties": { "engine": { "type": "string" }, "version": { "type": "string" } } },
+        "strategy": { "type": "string", "enum": ["big_bang", "trickle", "dual_write", "cdc", "snapshot_and_delta", "blue_green"] },
+        "steps": { "type": "array", "items": { "type": "object", "properties": { "order": { "type": "integer" }, "name": { "type": "string" }, "description": { "type": "string" }, "rollback": { "type": "string" }, "validation": { "type": "string" } } } },
+        "estimated_downtime": { "type": "string" },
+        "data_validation_plan": { "type": "string" },
+        "claim_tag": { "type": "string", "enum": ["OBS", "DRV", "GEN", "SPEC"] }
+      }
+    },
+    "DataEngineerInput": {
+      "type": "object",
+      "required": ["task_type", "context"],
+      "properties": {
+        "task_type": {
+          "type": "string",
+          "enum": [
+            "pipeline_design", "etl_build", "elt_build", "schema_design",
+            "warehouse_modeling", "data_lake_config", "feature_store",
+            "quality_framework", "governance_policy", "stream_processing",
+            "batch_processing", "migration", "sql_optimization",
+            "data_catalog", "cost_optimization"
+          ]
+        },
+        "context": { "type": "string" },
+        "existing_schema": { "$ref": "#/definitions/TableSchema" },
+        "constraints": { "type": "object", "properties": { "latency_sla": { "type": "string" }, "cost_budget": { "type": "string" }, "data_volume": { "type": "string" }, "freshness_sla": { "type": "string" } } },
+        "energy_level": { "type": "string", "enum": ["high", "medium", "low", "crash"] }
+      }
+    },
+    "DataEngineerOutput": {
+      "type": "object",
+      "required": ["task_type", "result", "claim_summary"],
+      "properties": {
+        "task_type": { "type": "string" },
+        "result": {
+          "type": "object",
+          "properties": {
+            "schemas": { "type": "array", "items": { "$ref": "#/definitions/TableSchema" } },
+            "pipeline": { "$ref": "#/definitions/PipelineConfig" },
+            "stream": { "$ref": "#/definitions/StreamConfig" },
+            "migration": { "$ref": "#/definitions/MigrationPlan" },
+            "quality_checks": { "type": "array", "items": { "$ref": "#/definitions/QualityCheck" } },
+            "code_artifacts": { "type": "array", "items": { "type": "object", "properties": { "file_path": { "type": "string" }, "language": { "type": "string" }, "content": { "type": "string" } } } },
+            "mermaid_diagram": { "type": "string" },
+            "cost_estimate": { "type": "object", "properties": { "monthly": { "type": "string" }, "per_query": { "type": "string" }, "storage": { "type": "string" } } }
+          }
+        },
+        "claim_summary": { "type": "object", "properties": { "obs_count": { "type": "integer" }, "drv_count": { "type": "integer" }, "gen_count": { "type": "integer" }, "spec_count": { "type": "integer" } } },
+        "lineage_audit": { "type": "object", "description": "Mandatory lineage check on all outputs", "properties": { "checked": { "type": "boolean" }, "unmapped_fields": { "type": "array", "items": { "type": "string" } }, "pii_fields_flagged": { "type": "array", "items": { "type": "string" } } } },
+        "energy_used": { "type": "string" },
+        "handoff": { "type": "object" }
+      }
+    }
+  }
+}
