@@ -419,7 +419,7 @@ class SkillRouter:
             hex_id = uuid.uuid4().hex
             audit_id = f"audit-{request.skill_id}-{os.getpid()}-{hex_id[0:8]}"
             user_prompt = f"[AUDIT_ID: {audit_id}]\n{request.input_text}"
-            
+
             # Deep copy to prevent state pollution across failovers
             req_options = copy.deepcopy(request.options)
             req_options.setdefault("headers", {}).update({"X-Audit-ID": audit_id})
@@ -542,7 +542,7 @@ class SkillRouter:
             request.options["session_context"] = sc.value if hasattr(sc, "value") else str(sc)
 
         cognitive_state = parse_cognitive_state(request.options)
-        
+
         # Infer mode to help the planner or hooks later
         if not cognitive_state.active_mode or cognitive_state.active_mode == "execute":
             inferred = infer_mode(request.input_text)
@@ -553,42 +553,42 @@ class SkillRouter:
         capabilities = self.planner.plan_execution_chain(request.input_text)
         if not capabilities:
             raise ValueError(f"Planner could not determine a capability chain for the given input.")
-            
+
         logger.info(f"Planned capability chain: {capabilities}")
-        
+
         skills_to_run = []
         for cap in capabilities:
             skill_id = self.planner.resolve_capability_to_skill(cap, self.skill_capabilities)
             if not skill_id:
                 raise ValueError(f"Planner could not resolve capability '{cap}' to a known skill.")
             skills_to_run.append(skill_id)
-            
+
         logger.info(f"Resolved skill chain: {skills_to_run}")
-        
+
         current_input = request.input_text
         last_response = None
-        
+
         for idx, skill_id in enumerate(skills_to_run):
             logger.info(f"Executing step {idx+1}/{len(skills_to_run)}: {skill_id} (Capability: {capabilities[idx]})")
-            
+
             step_request = SkillRequest(
                 skill_id=skill_id,
                 input_text=current_input,
                 options=request.options.copy(),
                 model_override=request.model_override
             )
-            
+
             step_response = await self.execute(step_request, cognitive_state_override)
             last_response = step_response
-            
+
             # Simple state bridge (SK-BRIDGE concept) with JSON safe wrapper
             raw_output = step_response.output.get("raw", "")
             current_input = json.dumps({
                 "previous_step_output": {"skill": skill_id, "output": raw_output},
                 "original_request": request.input_text
             }, ensure_ascii=False)
-            
+
         if last_response is None:
             raise RuntimeError("Execution chain completed but no response was generated.")
-            
+
         return last_response
