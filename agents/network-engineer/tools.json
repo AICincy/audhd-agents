@@ -1,0 +1,18 @@
+{
+  "agent": "network-engineer",
+  "tools": {
+    "config_generation": [
+      { "id": "TL-FWGEN", "name": "firewall_rule_generator", "description": "Generate firewall rule sets for specified vendor platform.", "input_schema": { "vendor": "string (palo_alto|fortinet|cisco|iptables|cloud_sg)", "zones": "array<{name, trust_level}>", "flows": "array<{src, dst, port, proto, action}>" }, "output_schema": { "rules": "array<FirewallRule>", "config": "NetworkConfig" } },
+      { "id": "TL-ROUTEGEN", "name": "routing_config_generator", "description": "Generate routing protocol configurations (OSPF, BGP, EIGRP, static).", "input_schema": { "protocol": "string (ospf|bgp|eigrp|static|is_is)", "vendor": "string", "topology": "array<TopologyNode>", "parameters": "object" }, "output_schema": { "configs": "array<NetworkConfig>", "neighbor_table": "array<object>" } },
+      { "id": "TL-DNSGEN", "name": "dns_zone_generator", "description": "Generate DNS zone files and DHCP scope configurations.", "input_schema": { "domain": "string", "records": "array<{name, type, value, ttl}>", "dhcp_scopes": "array<{subnet, range, gateway, dns}> (optional)" }, "output_schema": { "zone_file": "NetworkConfig", "dhcp_config": "NetworkConfig (optional)" } },
+      { "id": "TL-VPNGEN", "name": "vpn_config_generator", "description": "Generate VPN tunnel configurations (IPsec, WireGuard, SSL).", "input_schema": { "type": "string (ipsec_s2s|ipsec_ra|wireguard|ssl_vpn)", "vendor": "string", "endpoints": "array<{name, public_ip, private_subnet}>" }, "output_schema": { "configs": "array<NetworkConfig>", "tunnel_table": "array<object>" } }
+    ],
+    "analysis": [
+      { "id": "TL-SUBNET", "name": "subnet_calculator", "description": "Calculate subnets, VLSM, summarization.", "input_schema": { "base_network": "string (CIDR)", "requirements": "array<{name, host_count}>" }, "output_schema": { "subnets": "array<SubnetEntry>", "summary_route": "string (optional)" } },
+      { "id": "TL-TSHOOT", "name": "network_troubleshooter", "description": "Structured network troubleshooting with hypothesis testing.", "input_schema": { "symptoms": "array<string>", "affected_devices": "array<string>", "logs": "string (optional)" }, "output_schema": { "hypotheses": "array<{hypothesis, evidence, confidence, tag}>", "diagnostic_commands": "array<string>", "remediation_steps": "array<string>" } }
+    ],
+    "integration": [
+      { "id": "TL-HANDOFF", "name": "agent_handoff", "description": "Prepare structured handoff payload for specialist agent.", "input_schema": { "target_agent": "string", "task": "string", "context": "string", "network_context": "array<NetworkConfig> (optional)" }, "output_schema": { "handoff_payload": "object", "format": "HANDOFF" } }
+    ]
+  }
+}
