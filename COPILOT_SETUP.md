@@ -761,7 +761,7 @@ Every claim in this document was verified against the actual repository on the d
 | 10 capability YAMLs | `ls capabilities/ \| wc -l` returns 10 |
 | 21 hooks implemented | HOOK_REGISTRY in hooks.py has 21 entries, all with function bodies |
 | CognitiveState has 10 fields | runtime/schemas.py and schema_base.json aligned 10/10 |
-| README says 51 skills | [OBS] README.md line 3 says 51; actual count is 52. Minor drift. |
+| README says 52 skills | [OBS] README.md updated to match actual count of 52. |
 
 ---
 

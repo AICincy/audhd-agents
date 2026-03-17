@@ -1,6 +1,6 @@
 # audhd-agents
 
-Multi-agent orchestration designed for AuDHD cognition. Nine LLM instances, 51 skills, 21 runtime hooks, energy-adaptive routing, and a FastAPI service with output validation.
+Multi-agent orchestration designed for AuDHD cognition. Nine LLM instances, 52 skills, 21 runtime hooks, energy-adaptive routing, and a FastAPI service with output validation.
 
 Every design decision maps to a real cognitive pattern: monotropism, pattern compression, asymmetric working memory, interest-based activation, executive function offload. This is cognitive augmentation for a competent adult, not safety scaffolding.
 
@@ -76,7 +76,7 @@ Nine models registered in [`adapters/config.yaml`](adapters/config.yaml). Full r
 
 ## Skills
 
-51 skills across 9 domains, each defined by four files:
+52 skills across 9 domains, each defined by four files:
 
 | Domain | Count | Examples |
 |--------|-------|---------|
@@ -189,7 +189,7 @@ Claim tags enforced on T3+ output: `[observed]`, `[inferred]`, `[general]`, `[un
 ```
 adapters/           Provider layer (router, OpenAI, Google adapters, config)
 runtime/            FastAPI service, hooks, validation, cognitive pipeline, schemas
-skills/             51 skill definitions (skill.yaml, prompt.md, schema.json, examples.json)
+skills/             52 skill definitions (skill.yaml, prompt.md, schema.json, examples.json)
 cli/                sk command-line tool
 scripts/            Diagnostics, smoke tests, provider validation
 tests/              150 tests
