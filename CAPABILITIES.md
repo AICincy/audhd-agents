@@ -6,7 +6,7 @@ Maps all 51 skills to 10 atomic capabilities. Each skill has one primary capabil
 
 | Capability | Description | Primary Skills | Count |
 | --- | --- | --- | --- |
-| research | Gather and trace information | ux-researcher, trend-researcher, evidence-collector | 3 |
+| research | Gather and trace information | ux-researcher, trend-researcher, evidence-collector, github-pr-lister | 4 |
 | analyze | Find patterns, risks, anomalies | code-reviewer, incident-response, nudge-engine, test-results-analyzer | 4 |
 | synthesize | Merge inputs into unified output | feedback-synthesizer, analytics-reporter, exec-summary-generator | 3 |
 | generate | Produce new artifacts | rapid-prototyper, frontend-dev, devops, git-workflow, ai-engineer, technical-writer, training, image-prompt, inclusive-visuals, ui-designer, visual-storyteller, content-creator, linkedin-creator, dev-advocate, doc-generator, mcp-builder | 16 |
@@ -17,7 +17,7 @@ Maps all 51 skills to 10 atomic capabilities. Each skill has one primary capabil
 | audit | Check compliance and security | compliance-auditor, automation-governance, security-engineer, accessibility-auditor, legal-compliance-checker | 5 |
 | optimize | Improve performance and efficiency | autonomous-optimization, database-optimizer, workflow-optimizer | 3 |
 
-**Total: 51 skills across 10 capabilities** (some skills appear as secondary in other capabilities)
+**Total: 52 skills across 10 capabilities** (some skills appear as secondary in other capabilities)
 
 ## Capability Graph Chains
 
