@@ -1442,7 +1442,9 @@ def run_hooks(hook_names: list[str], ctx: HookContext) -> HookResult:
                 "Hook '%s' raised %s: %s", name, type(exc).__name__, exc,
                 exc_info=True,
             )
-            merged.validation_warnings.append(f"Hook '{name}' failed: {exc}")
+            merged.validation_warnings.append(
+                f"Hook '{name}' failed with {type(exc).__name__}; see logs for details."
+            )
             continue
         if result.modified_input:
             merged.modified_input = result.modified_input
