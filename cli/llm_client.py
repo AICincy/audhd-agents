@@ -9,7 +9,7 @@ Configuration:
     Override: SK_MODEL_MAP_FILE env var pointing to a JSON override file.
              The file must be a regular file located within the project root
              directory (parent of cli/). Paths outside the project root are
-             silently ignored to prevent path-traversal attacks.
+             ignored and a warning is emitted to stderr to prevent path-traversal attacks.
 """
 
 from __future__ import annotations
