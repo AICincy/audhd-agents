@@ -22,6 +22,7 @@ import uuid
 from dataclasses import dataclass
 from unittest.mock import patch
 
+import asyncio
 import pytest
 from fastapi.testclient import TestClient
 
@@ -29,6 +30,7 @@ from adapters.base import CircuitBreaker, SkillResponse
 from runtime.app import create_app, RuntimeState
 from runtime.config import RuntimeSettings
 from runtime.monitoring import setup_monitoring
+from runtime.notion_client import _request as notion_request
 from runtime.sanitize import sanitize_input
 
 
@@ -315,21 +317,73 @@ class TestUnicodeNormalization:
 
 
 class TestRetryAfterCap:
-    def test_retry_after_value_capped(self):
-        """Retry-After > 120 should be capped."""
-        raw_retry = "999"
-        retry_after = min(int(raw_retry), 120)
-        assert retry_after == 120
+    @pytest.mark.asyncio
+    async def test_request_retry_after_header_and_fallback(self, monkeypatch):
+        """_request honors Retry-After cap and non-numeric fallback with retries."""
 
-    def test_retry_after_non_numeric_fallback(self):
-        """Non-numeric Retry-After falls back gracefully."""
-        raw_retry = "not-a-number"
-        attempt = 2
-        try:
-            retry_after = min(int(raw_retry), 120)
-        except (ValueError, TypeError):
-            retry_after = min(2 ** attempt, 120)
-        assert retry_after == 4
+        sleep_calls: list[float] = []
+
+        async def fake_sleep(delay: float) -> None:
+            # Record requested sleep durations instead of actually sleeping.
+            sleep_calls.append(delay)
+
+        # Make jitter deterministic so we can assert exact sleep durations.
+        def fake_uniform(a: float, b: float) -> float:
+            # Always choose the lower bound for predictability.
+            return a
+
+        monkeypatch.setattr(asyncio, "sleep", fake_sleep)
+        monkeypatch.setattr("random.uniform", fake_uniform, raising=False)
+
+        class DummyResponse:
+            def __init__(self, status_code: int, headers: dict[str, str] | None = None, json_data: dict | None = None):
+                self.status_code = status_code
+                self.headers = headers or {}
+                self._json_data = json_data or {}
+
+            async def json(self) -> dict:
+                return self._json_data
+
+        class DummyClient:
+            def __init__(self):
+                self.attempt = 0
+
+            async def request(self, method: str, url: str, **kwargs):
+                self.attempt += 1
+                # First attempt: 429 with large numeric Retry-After (should be capped at 120).
+                if self.attempt == 1:
+                    return DummyResponse(
+                        status_code=429,
+                        headers={"Retry-After": "999"},
+                    )
+                # Second attempt: 429 with non-numeric Retry-After (should fall back to backoff).
+                if self.attempt == 2:
+                    return DummyResponse(
+                        status_code=429,
+                        headers={"Retry-After": "not-a-number"},
+                    )
+                # Third attempt: success.
+                return DummyResponse(
+                    status_code=200,
+                    json_data={"ok": True},
+                )
+
+        client = DummyClient()
+
+        # Call the actual retrying request helper; it should:
+        # - Retry on 429 responses,
+        # - Cap numeric Retry-After at 120,
+        # - Fall back to exponential backoff (2**attempt) when Retry-After is non-numeric,
+        # - Eventually return the successful response data.
+        result = await notion_request(client, "GET", "https://example.com/test")
+
+        # Verify that we got the successful JSON payload.
+        assert result == {"ok": True}
+
+        # The retry sequence should have slept twice:
+        # - First for capped Retry-After: min(999, 120) == 120
+        # - Then for exponential backoff on attempt 2: 2**2 == 4
+        assert sleep_calls == [120, 4]
 
 
 # ---------------------------------------------------------------------------
