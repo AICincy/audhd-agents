@@ -33,6 +33,16 @@ from runtime.webhook_schemas import (
 
 logger = logging.getLogger("audhd_agents.webhooks")
 
+# Sensitive header configuration shared across webhook handlers.
+_SENSITIVE_HEADER_NAMES = frozenset(
+    {
+        "authorization",
+        "cookie",
+        "x-api-key",
+    }
+)
+_SENSITIVE_HEADER_SUBSTRINGS = ("secret", "token")
+
 router = APIRouter(prefix="/webhooks", tags=["webhooks"])
 
 
@@ -351,10 +361,6 @@ async def webhook_test(request: Request):
         parsed = {"raw": body.decode("utf-8", errors="replace")}
 
     # AUDIT-FIX: P1-10-early -- strip sensitive headers from echo response
-    _SENSITIVE_HEADER_NAMES = frozenset({
-        "authorization", "cookie", "x-api-key",
-    })
-    _SENSITIVE_HEADER_SUBSTRINGS = ("secret", "token")
 
     safe_headers: dict[str, str] = {}
     for key, value in request.headers.items():
