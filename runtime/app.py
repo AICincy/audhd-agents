@@ -187,7 +187,8 @@ def create_app(
 
         # AUDIT-FIX: P1-1 -- graceful shutdown: drain in-flight requests
         state.draining = True
-        default_grace = 10
+        # Default to 0s grace to avoid slowing down tests/local runs unless explicitly configured
+        default_grace = 0
         raw_grace = os.environ.get("SHUTDOWN_GRACE_SECONDS")
         grace = default_grace
         if raw_grace is not None:
@@ -203,7 +204,8 @@ def create_app(
                     default_seconds=default_grace,
                 )
         emit_log(logger, "shutdown_draining", grace_seconds=grace)
-        await asyncio.sleep(grace)
+        if grace > 0:
+            await asyncio.sleep(grace)
 
     app = FastAPI(
         title=runtime_settings.service_name,
