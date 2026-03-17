@@ -3,7 +3,7 @@ display_name: Compliance Auditor
 description: >
   Regulatory compliance auditing across frameworks (SOC 2, GDPR, HIPAA,
   FedRAMP). Gap assessment with remediation priorities.
-version: "1.0.0"
+version: "1.1.0"
 category: support
 capabilities:
   - audit
@@ -14,6 +14,13 @@ sk_hooks:
   - SK-VERIFY
   - SK-GATE
   - SK-DECOMP
+subskills:
+  - id: legal-review
+    name: Legal Compliance Review
+    description: >
+      Legal document review: contract analysis, terms of service audit,
+      privacy policy compliance, and regulatory alignment check.
+    triggers: ["contract", "legal review", "terms of service", "privacy policy", "nda", "employment agreement"]
 inputs:
   - name: input_text
     type: string
@@ -26,6 +33,10 @@ inputs:
   - name: scope
     type: string
     description: Audit scope
+    required: false
+  - name: check_type
+    type: string
+    description: Type of legal check (for legal-review subskill)
     required: false
 outputs:
   - name: audit

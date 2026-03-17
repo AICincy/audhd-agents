@@ -12,6 +12,12 @@
           "type": "string",
           "description": "Optimization objective",
           "enum": ["cost", "latency", "throughput", "accuracy", "availability", "multi-objective"]
+        },
+        "subskill": {
+          "type": "string",
+          "enum": ["default", "workflow"],
+          "default": "default",
+          "description": "Route to specific subskill focus area"
         }
       },
       "required": ["input_text"]

@@ -3,7 +3,7 @@ display_name: Analytics Reporter
 description: >
   Data analysis and reporting: metrics extraction, trend identification,
   anomaly detection, and automated report generation.
-version: "1.0.0"
+version: "1.1.0"
 category: support
 capabilities:
   - synthesize
@@ -13,6 +13,15 @@ models:
 sk_hooks:
   - SK-VERIFY
   - SK-DECOMP
+  - SK-GATE
+subskills:
+  - id: executive-summary
+    name: Executive Summary
+    description: >
+      Consultant-grade executive summary generation. Transforms complex
+      inputs into concise, decision-ready summaries using SCQA and
+      Pyramid Principle. 500 words max.
+    triggers: ["executive summary", "scqa", "pyramid principle", "decision brief", "leadership summary"]
 inputs:
   - name: input_text
     type: string
@@ -21,6 +30,14 @@ inputs:
   - name: report_type
     type: string
     description: Report format
+    required: false
+  - name: audience
+    type: string
+    description: Target reader and their priorities (for executive-summary subskill)
+    required: false
+  - name: decision
+    type: string
+    description: What the reader needs to decide after reading (for executive-summary subskill)
     required: false
 outputs:
   - name: report

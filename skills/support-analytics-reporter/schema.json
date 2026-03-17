@@ -1,15 +1,39 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Data, metrics, or reporting requirements"
-    },
-    "report_type": {
-      "type": "string",
-      "description": "Report format",
-      "enum": ["dashboard", "weekly", "monthly", "quarterly", "ad-hoc", "anomaly"]
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Data, metrics, or reporting requirements"
+        },
+        "report_type": {
+          "type": "string",
+          "description": "Report format",
+          "enum": ["dashboard", "weekly", "monthly", "quarterly", "ad-hoc", "anomaly"]
+        },
+        "audience": {
+          "type": "string",
+          "description": "Target reader and their priorities (for executive-summary subskill)"
+        },
+        "decision": {
+          "type": "string",
+          "description": "What the reader needs to decide after reading (for executive-summary subskill)"
+        },
+        "framework": {
+          "type": "string",
+          "description": "Summary framework (for executive-summary subskill)",
+          "enum": ["scqa", "pyramid", "situation-brief"]
+        },
+        "subskill": {
+          "type": "string",
+          "enum": ["default", "executive-summary"],
+          "default": "default",
+          "description": "Route to specific subskill focus area"
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

@@ -3,7 +3,7 @@ display_name: Autonomous Optimization
 description: >
   Self-tuning system design: auto-scaling, parameter optimization,
   and adaptive resource allocation with human-in-the-loop guardrails.
-version: "1.0.0"
+version: "1.1.0"
 category: engineering
 capabilities:
   - optimize
@@ -14,6 +14,14 @@ sk_hooks:
   - SK-GATE
   - SK-VERIFY
   - SK-DECOMP
+subskills:
+  - id: workflow
+    name: Workflow Optimization
+    description: >
+      Process and workflow analysis: bottleneck identification, automation
+      opportunities, and efficiency improvements. Measure the current
+      state before redesigning.
+    triggers: ["workflow", "bottleneck", "process improvement", "automation opportunity", "efficiency"]
 inputs:
   - name: input_text
     type: string

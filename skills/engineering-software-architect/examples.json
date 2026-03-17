@@ -10,5 +10,19 @@
         "task_tier": "T4"
       }
     }
+  },
+  {
+    "description": "API backend for certification progress tracker",
+    "input": {
+      "input_text": "REST API for certification progress tracking: user profiles, certification records, learning path recommendations, exam scheduling integration. Need to support 50K concurrent users.",
+      "subskill": "backend",
+      "scale": "50K concurrent users, 500 RPS peak",
+      "stack": "GCP, Python/FastAPI preferred",
+      "cognitive_state": {
+        "energy_level": "high",
+        "active_mode": "design",
+        "task_tier": "T4"
+      }
+    }
   }
 ]

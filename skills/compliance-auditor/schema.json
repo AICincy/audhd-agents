@@ -1,19 +1,35 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Policy, process, or system to audit"
-    },
-    "framework": {
-      "type": "string",
-      "description": "Compliance framework",
-      "enum": ["SOC2", "GDPR", "HIPAA", "FedRAMP", "ISO27001", "NIST-CSF", "PCI-DSS"]
-    },
-    "scope": {
-      "type": "string",
-      "description": "Audit scope"
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Policy, process, system, or legal document to audit"
+        },
+        "framework": {
+          "type": "string",
+          "description": "Compliance framework",
+          "enum": ["SOC2", "GDPR", "HIPAA", "FedRAMP", "ISO27001", "NIST-CSF", "PCI-DSS"]
+        },
+        "scope": {
+          "type": "string",
+          "description": "Audit scope"
+        },
+        "check_type": {
+          "type": "string",
+          "description": "Type of legal check (for legal-review subskill)",
+          "enum": ["contract", "tos", "privacy-policy", "employment", "nda", "sow"]
+        },
+        "subskill": {
+          "type": "string",
+          "enum": ["default", "legal-review"],
+          "default": "default",
+          "description": "Route to specific subskill focus area"
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }
