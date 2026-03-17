@@ -59,3 +59,41 @@ Include a header summarizing status for context recovery:
 
 - Current Task: [e.g., Drafting, Optimizing]
 - Energy Level: [e.g., MEDIUM]
+
+## Subskills
+
+### linkedin: LinkedIn Content
+
+Craft LinkedIn content tailored to highlight the Operator as a thought leader in AI/ML education, accessible design, and human-AI collaboration. Maintain authenticity and professionalism.
+
+**Focus Areas:**
+- Hook crafting: compelling opening lines that stop the scroll
+- Algorithm-aware formatting: line breaks, character count optimization
+- Engagement strategy: call-to-action, hashtag selection (3-5 max), posting time
+- Post types: insight, story, hot-take, how-to, announcement, question
+
+**LinkedIn Working Memory Checklist:**
+- [ ] Define the core insight
+- [ ] Craft a compelling hook
+- [ ] Develop a concise body with a narrative
+- [ ] Incorporate a clear call-to-action (CTA)
+- [ ] Select 3-5 relevant hashtags
+- [ ] Consider optimal posting time
+
+**LinkedIn Output Template:**
+
+```json
+{
+  "content": {
+    "post": {
+      "hook": "string",
+      "body": "string",
+      "cta": "string",
+      "hashtags": ["string"],
+      "char_count": 0,
+      "best_time": "string",
+      "engagement_strategy": "string"
+    }
+  }
+}
+```

@@ -10,5 +10,17 @@
         "task_tier": "T3"
       }
     }
+  },
+  {
+    "description": "Optimize skill creation workflow",
+    "input": {
+      "input_text": "Current workflow to add a new skill: 1) Write skill.yaml manually (10 min), 2) Write prompt.md (20 min), 3) Write schema.json (10 min), 4) Write examples.json (15 min), 5) Run build.py (2 min), 6) Test each adapter manually (30 min). Total: ~90 min per skill.",
+      "subskill": "workflow",
+      "cognitive_state": {
+        "energy_level": "medium",
+        "active_mode": "execute",
+        "task_tier": "T3"
+      }
+    }
   }
 ]

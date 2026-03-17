@@ -80,6 +80,25 @@
       "type": "object",
       "description": "Skill-specific input. Schema defined per skill."
     },
+    "reasoning_mode": {
+      "type": "string",
+      "enum": ["none", "lightweight", "standard", "deep"],
+      "default": "none",
+      "description": "Chain-of-thought reasoning depth. 'none' = direct answer, 'lightweight' = observe-decide-act, 'standard' = decompose-reason-synthesize-verify, 'deep' = full hypothesis-evidence-synthesis. Auto-selected by SK-COT hook based on task_tier when hook is active."
+    },
+    "retrieval_context": {
+      "type": "array",
+      "description": "Retrieved documents for RAG. Each item has source, content, and optional relevance_score. Injected by SK-RAG hook.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string", "description": "Document or chunk source identifier." },
+          "content": { "type": "string", "description": "Retrieved text content." },
+          "relevance_score": { "type": "number", "description": "Retrieval relevance score (0-1)." }
+        },
+        "required": ["source", "content"]
+      }
+    },
     "skill_output": {
       "type": "object",
       "description": "Skill-specific output. Must include cognitive_state echo.",

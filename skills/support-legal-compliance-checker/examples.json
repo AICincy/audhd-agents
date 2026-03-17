@@ -1,9 +1,0 @@
-[
-  {
-    "description": "Review contractor agreement for IP assignment issues",
-    "input": {
-      "input_text": "Contractor agreement: 'All work product created during engagement becomes sole property of Company, including any tools, frameworks, or methodologies developed by Contractor, regardless of whether created on Company time.'",
-      "check_type": "contract"
-    }
-  }
-]

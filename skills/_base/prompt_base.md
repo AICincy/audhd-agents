@@ -45,6 +45,32 @@ Validated by runtime/validation.py post-execution.
 
 Chat mode: Skip tags, flag speculation in natural language.
 
+## Chain of Thought (SK-COT)
+
+When the SK-COT hook is active, structured reasoning is injected before output generation. Reasoning depth adapts to task tier:
+
+| Tier | Reasoning Mode | Steps |
+| --- | --- | --- |
+| T1-T2 | Lightweight | Observe, Decide, Act |
+| T3 | Standard | Decompose, Reason, Synthesize, Verify |
+| T4-T5 | Deep | Hypothesize, Evidence for, Evidence against, Alternative hypotheses, Synthesize, Verify |
+
+Energy gating: LOW and CRASH skip COT entirely (direct answer preferred).
+
+Skills opt in via `SK-COT` in their `sk_hooks` list. Reasoning output appears under a `## Reasoning` section for T4+ tasks.
+
+## Retrieval-Augmented Generation (SK-RAG)
+
+When the SK-RAG hook is active, retrieved context is injected into the prompt. The model must ground its response in the provided sources.
+
+Rules:
+- All claims derived from retrieved sources must be tagged `[observed]`
+- If retrieved context is insufficient, state so explicitly; do not fabricate
+- LOW energy: maximum 3 retrieved chunks processed
+- CRASH energy: no RAG processing
+
+Skills opt in via `SK-RAG` in their `sk_hooks` list. Callers provide `retrieval_context` in the request options as a list of `{source, content, relevance_score}` objects.
+
 ## Output Templates by Mode
 
 | Mode | Template |

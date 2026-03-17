@@ -4,7 +4,7 @@ description: >
   System-level architecture: domain modeling, integration patterns,
   technology selection, and evolutionary architecture. Build for
   change, not for permanence.
-version: "1.0.0"
+version: "1.1.0"
 category: engineering
 capabilities:
   - plan
@@ -14,7 +14,15 @@ models:
 sk_hooks:
   - SK-DECOMP
   - SK-GATE
+  - SK-CODEREVIEW
   - SK-VERIFY
+subskills:
+  - id: backend
+    name: Backend Architecture
+    description: >
+      Backend system architecture: API design, database selection,
+      service decomposition, and scalability planning.
+    triggers: ["backend", "api design", "database", "service decomposition", "scalability"]
 inputs:
   - name: input_text
     type: string
@@ -23,6 +31,14 @@ inputs:
   - name: constraints
     type: string
     description: Technical or organizational constraints
+    required: false
+  - name: scale
+    type: string
+    description: Expected scale (users, RPS, data volume)
+    required: false
+  - name: stack
+    type: string
+    description: Technology constraints
     required: false
 outputs:
   - name: architecture

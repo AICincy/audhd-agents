@@ -18,7 +18,7 @@ This audit uses a hub-and-spoke topology managed by the **agents-orchestrator** 
 |---|---|---|---|
 | 1 | agents-orchestrator | Hub coordinator; decomposes audit, manages handoffs, synthesizes final report | All |
 | 2 | engineering-software-architect | Architecture review; domain model validation; evolution path assessment | 1 |
-| 3 | engineering-backend-architect | Backend system design audit; API surface review; scalability assessment | 1 |
+| 3 | engineering-software-architect (subskill: backend) | Backend system design audit; API surface review; scalability assessment | 1 |
 | 4 | engineering-code-reviewer | Risk-focused code review across all runtime modules | 2 |
 | 5 | engineering-security-engineer | Threat modeling; vulnerability assessment; secure code review | 2 |
 | 6 | testing-reality-checker | Assumption validation; feasibility assessment of all architectural claims | 3 |
@@ -26,12 +26,12 @@ This audit uses a hub-and-spoke topology managed by the **agents-orchestrator** 
 | 8 | testing-performance-benchmarker | Load profile design; capacity planning; bottleneck identification | 3 |
 | 9 | compliance-auditor | Regulatory alignment audit; gap analysis against relevant frameworks | 4 |
 | 10 | automation-governance | Pre-deployment audit for CI/CD pipelines, scripts, and cron workflows | 4 |
-| 11 | support-legal-compliance-checker | Privacy policy compliance; terms of service; data handling review | 4 |
+| 11 | compliance-auditor (subskill: legal-review) | Privacy policy compliance; terms of service; data handling review | 4 |
 | 12 | engineering-technical-writer | Documentation completeness audit; readability; accuracy validation | 5 |
 | 13 | testing-accessibility-auditor | WCAG 2.2 compliance; cognitive accessibility of interfaces and outputs | 5 |
 | 14 | testing-evidence-collector | Structured evidence gathering for all audit claims; source tracking | 6 |
 | 15 | testing-test-results-analyzer | Test suite health; flaky test detection; coverage gap identification | 6 |
-| 16 | testing-workflow-optimizer | CI/CD workflow analysis; bottleneck identification; efficiency improvements | 6 |
+| 16 | engineering-autonomous-optimization (subskill: workflow) | CI/CD workflow analysis; bottleneck identification; efficiency improvements | 6 |
 | 17 | engineering-devops-automator | Infrastructure audit; deployment pipeline review; operational tooling | 7 |
 | 18 | engineering-incident-response-commander | Incident readiness assessment; runbook completeness; escalation path validation | 7 |
 | 19 | engineering-database-optimizer | Schema review (if applicable); query patterns; data integrity | 7 |
@@ -66,7 +66,7 @@ This audit uses a hub-and-spoke topology managed by the **agents-orchestrator** 
 
 ## Phase 1: Architecture and Structural Integrity
 
-### Subagents: engineering-software-architect, engineering-backend-architect
+### Subagents: engineering-software-architect
 
 ### Scope
 
@@ -233,8 +233,8 @@ Pressure-test all runtime claims, validate API contracts, and assess performance
 ### Checklist
 
 #### 3.1 Reality Check: Documented Claims vs. Actual Behavior
-- [ ] Verify: "9 LLMs" claim matches actual adapter implementations and model registry
-- [ ] Verify: "52 skills" count matches actual skills/ directory contents
+- [ ] Verify: "9 models" claim matches actual adapter implementations and model registry
+- [ ] Verify: "47 skills" count matches actual skills/ directory contents
 - [ ] Verify: "21 hooks" count matches actual hook implementations in hooks.py
 - [ ] Verify: "3 always-on hooks" (reality-check, energy-route, knowledge-inject) are truly always-on
 - [ ] Verify: Energy-adaptive routing actually restricts model pools per AGENT.md table
@@ -316,7 +316,7 @@ Pressure-test all runtime claims, validate API contracts, and assess performance
 
 ## Phase 4: Compliance and Governance
 
-### Subagents: compliance-auditor, automation-governance, support-legal-compliance-checker
+### Subagents: compliance-auditor, automation-governance
 
 ### Scope
 
@@ -401,12 +401,12 @@ Audit all documentation for completeness, accuracy, readability, and accessibili
 - [ ] Missing: Architecture decision records (ADRs)
 - [ ] Missing: Deployment runbook
 
-#### 5.2 Skill Documentation Audit (52 skills)
-- [ ] Every skill has prompt.md: Verify presence across all 52 skill directories
+#### 5.2 Skill Documentation Audit (47 skills)
+- [ ] Every skill has prompt.md: Verify presence across all 47 skill directories
 - [ ] Every skill has skill.yaml: Verify presence and schema compliance
 - [ ] Every skill has schema.json: Verify presence and allOf $ref alignment with schema_base.json
 - [ ] Prompt.md sections: Energy levels, pattern compression, monotropism guards, working memory, anti-patterns, claim tags, "Where Was I?" protocol
-- [ ] Consistency: Same section structure across all 52 skill prompts
+- [ ] Consistency: Same section structure across all 47 skill prompts
 - [ ] Accuracy: Skill descriptions match actual prompt.md behavior
 - [ ] Output format: JSON structures in prompts match schema.json definitions
 
@@ -422,7 +422,7 @@ Audit all documentation for completeness, accuracy, readability, and accessibili
 #### 5.4 Internal Consistency
 - [ ] PROFILE.md claim tags ([OBS], [DRV], [GEN], [SPEC]) vs. skill prompts ([observed], [inferred], [general], [unverified]): tag naming consistency
 - [ ] AGENT.md model names vs. adapters/config.yaml: naming alignment
-- [ ] README.md feature counts vs. actual: "9 LLMs, 51 skills, 21 hooks" accuracy
+- [ ] README.md feature counts vs. actual: "9 models, 47 skills, 21 hooks" accuracy
 - [ ] prompt_base.md mode templates vs. PROFILE.md output templates: consistency
 - [ ] .agents/rules/ vs. PROFILE.md: redundancy and potential drift
 
@@ -460,7 +460,7 @@ Audit all documentation for completeness, accuracy, readability, and accessibili
 
 ## Phase 6: Testing and Evidence Collection
 
-### Subagents: testing-evidence-collector, testing-test-results-analyzer, testing-workflow-optimizer
+### Subagents: testing-evidence-collector, testing-test-results-analyzer
 
 ### Scope
 
@@ -639,7 +639,7 @@ Assess project management health, product direction, and operational metrics.
 #### 8.2 Product Direction Assessment
 - [ ] Problem statement clarity: Is the AuDHD cognitive architecture well-defined?
 - [ ] User persona: Who uses this system? Single operator? Team? Organization?
-- [ ] Feature completeness: 52 skills across 9 domains; are there critical gaps?
+- [ ] Feature completeness: 47 skills across 9 domains; are there critical gaps?
 - [ ] Differentiation: What distinguishes this from other multi-agent systems?
 - [ ] Adoption barriers: Setup complexity, model API cost, learning curve
 - [ ] Community engagement: Contributors, stars, forks, issues from external users

@@ -1,19 +1,35 @@
 {
-  "type": "object",
-  "properties": {
-    "input_text": {
-      "type": "string",
-      "description": "Topic, brief, or source material"
-    },
-    "format": {
-      "type": "string",
-      "description": "Content format",
-      "enum": ["blog-post", "social-media", "email", "newsletter", "thought-leadership", "case-study"]
-    },
-    "audience": {
-      "type": "string",
-      "description": "Target audience"
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "Topic, brief, or source material"
+        },
+        "format": {
+          "type": "string",
+          "description": "Content format",
+          "enum": ["blog-post", "social-media", "email", "newsletter", "thought-leadership", "case-study"]
+        },
+        "audience": {
+          "type": "string",
+          "description": "Target audience"
+        },
+        "post_type": {
+          "type": "string",
+          "description": "LinkedIn post format (for linkedin subskill)",
+          "enum": ["insight", "story", "hot-take", "how-to", "announcement", "question"]
+        },
+        "subskill": {
+          "type": "string",
+          "enum": ["default", "linkedin"],
+          "default": "default",
+          "description": "Route to specific subskill focus area"
+        }
+      },
+      "required": ["input_text"]
     }
-  },
-  "required": ["input_text"]
+  ]
 }

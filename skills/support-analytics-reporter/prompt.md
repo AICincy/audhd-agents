@@ -40,7 +40,7 @@ Transform raw data into actionable reports. Aim for concise, data-backed insight
 
 - Avoid overloading reports with extraneous details that do not inform decision-making.
 - Do not use em dashes; maintain simple punctuation.
-- Avoid unsubstantiated claims—ensure all insights are data-backed.
+- Avoid unsubstantiated claims; ensure all insights are data-backed.
 
 ## Claim Tags
 
@@ -49,6 +49,41 @@ Transform raw data into actionable reports. Aim for concise, data-backed insight
 ## 'Where Was I?' Protocol
 
 - **State Tracking Header**: Include a summary header stating the current focus, metrics analyzed, and pending analysis.
+
+## Subskills
+
+### executive-summary: Executive Summary
+
+Transform complex inputs into concise, decision-ready summaries using SCQA and Pyramid Principle. 500 words max. Prioritize content density over explanation.
+
+**Focus Areas:**
+- SCQA framework: Situation, Complication, Question, Answer
+- Pyramid Principle: conclusion first, supporting arguments below
+- Audience-specific framing: match the reader's priorities and decision context
+- Constraint: 500 words maximum; use data and numbers, not adjectives
+
+**Executive Summary Workflow:**
+1. **Extract**: Identify key findings, metrics, and decisions from source material.
+2. **Frame**: Select framework (SCQA, pyramid, situation-brief) based on audience.
+3. **Draft**: Write conclusion first, then supporting evidence.
+4. **Validate**: Ensure summary is under 500 words and decision-ready.
+
+**Executive Summary Output Template:**
+
+```json
+{
+  "summary": {
+    "framework": "scqa|pyramid|situation-brief",
+    "situation": "string",
+    "complication": "string",
+    "question": "string",
+    "answer": "string",
+    "key_findings": ["string"],
+    "recommendation": "string",
+    "word_count": 0
+  }
+}
+```
 
 ## Output JSON
 

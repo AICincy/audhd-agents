@@ -10,7 +10,8 @@ venv/
 .venv/
 .claude/
 *.code-workspace
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 # F7: Repo hygiene — leaked/debug artifacts
 bfg.jar
 passwords.txt

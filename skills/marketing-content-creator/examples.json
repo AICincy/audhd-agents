@@ -6,5 +6,13 @@
       "format": "blog-post",
       "audience": "Cloud engineers considering career pivot to AI"
     }
+  },
+  {
+    "description": "LinkedIn post about AuDHD-informed AI design",
+    "input": {
+      "input_text": "Share insight: designing AI systems for neurodivergent cognition makes them better for everyone. Curb cuts principle applied to AI interfaces.",
+      "subskill": "linkedin",
+      "post_type": "insight"
+    }
   }
 ]

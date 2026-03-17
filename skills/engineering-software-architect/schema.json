@@ -11,6 +11,20 @@
         "constraints": {
           "type": "string",
           "description": "Technical or organizational constraints"
+        },
+        "scale": {
+          "type": "string",
+          "description": "Expected scale (users, RPS, data volume)"
+        },
+        "stack": {
+          "type": "string",
+          "description": "Technology constraints"
+        },
+        "subskill": {
+          "type": "string",
+          "enum": ["default", "backend"],
+          "default": "default",
+          "description": "Route to specific subskill focus area"
         }
       },
       "required": ["input_text"]

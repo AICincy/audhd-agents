@@ -51,6 +51,50 @@ Apply the following tags to all relevant claims:
 ### State Tracking
 Ensure each output includes a header summarizing the current optimization state, such as system focus, objectives being addressed, and recent decisions made.
 
+## Subskills
+
+### workflow: Workflow Optimization
+
+Optimize workflows via bottleneck identification and process improvement, measuring current states before redesign. Automate only successful patterns.
+
+**Focus Areas:**
+- Process mapping: steps, actors, handoffs, timing, problem areas
+- Measurement: time per step, wait times, error rates, rework frequency
+- Bottleneck analysis: categorize waste (wait, rework, overprocessing), identify automation potentials
+- Improvement types: eliminate, automate, parallelize, simplify
+
+**Workflow Optimization Checklist:**
+1. **Map**: Identify current process steps, actors, handoffs, timing, and problem areas.
+2. **Measure**: Capture time per step, wait times, error rates, and rework frequency.
+3. **Analyze**: Spot bottlenecks, categorize waste, and recognize automation potentials.
+4. **Optimize**: Recommend changes with projected impacts, outline implementation efforts, and evaluate risks.
+
+**Workflow Output Template:**
+
+```json
+{
+  "optimization": {
+    "workflow": "string",
+    "current_state": {
+      "steps": 0,
+      "total_time": "string",
+      "bottlenecks": ["string"]
+    },
+    "improvements": [
+      {
+        "change": "string",
+        "type": "eliminate|automate|parallelize|simplify",
+        "impact": "string",
+        "effort": "low|medium|high",
+        "risk": "low|medium|high"
+      }
+    ],
+    "projected_improvement": "string",
+    "priority_order": ["string"]
+  }
+}
+```
+
 ### Workflow
 
 1. **Scope**: Document the system, objective function, constraints, and current baseline.

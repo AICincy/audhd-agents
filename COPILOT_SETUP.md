@@ -1,6 +1,6 @@
 # COPILOT_SETUP.md: System Instructions for Skeletal Repository Scaffold
 
-System instructions for GitHub Copilot (or any AI coding agent) to recreate the skeletal structure of this project. Grounded in verified reality: 184 tests passing, 52 skills building, syntax audit clean. Every claim below maps to existing, functional code.
+System instructions for GitHub Copilot (or any AI coding agent) to recreate the skeletal structure of this project. Grounded in verified reality: 184 tests passing, 47 skills building, syntax audit clean. Every claim below maps to existing, functional code.
 
 ---
 
@@ -170,7 +170,7 @@ audhd-agents/
 │   ├── parallel_audit.py
 │   ├── review_codebase.py
 │   └── validate_providers.py
-├── skills/             # 52 skill definitions
+├── skills/             # 47 skill definitions
 │   ├── _base/
 │   │   ├── schema_base.json  # Shared cognitive state schema (allOf base)
 │   │   └── prompt_base.md
@@ -704,19 +704,19 @@ Jobs: build-image, deploy-staging, smoke-staging, deploy-production (optional).
 
 ## Step 14: Skill Domains
 
-52 skills across 11 domains. Create the skeleton for each:
+47 skills across 9 domains. Create the skeleton for each:
 
 | Domain | Count | Skills |
 |--------|-------|--------|
-| engineering | 16 | code-reviewer, security-engineer, devops-automator, github-pr-lister, software-architect, backend-architect, database-optimizer, frontend-developer, technical-writer, git-workflow-master, incident-response-commander, rapid-prototyper, autonomous-optimization, ai-engineer, data-engineer, ai-data-remediation |
+| engineering | 16 | code-reviewer, security-engineer, devops-automator, github-pr-lister, software-architect, database-optimizer, frontend-developer, technical-writer, git-workflow-master, incident-response-commander, rapid-prototyper, autonomous-optimization, ai-engineer, data-engineer, ai-data-remediation, lsp-index-engineer |
 | design | 7 | ux-architect, ui-designer, brand-guardian, inclusive-visuals-specialist, ux-researcher, visual-storyteller, image-prompt-engineer |
-| testing | 8 | reality-checker, accessibility-auditor, performance-benchmarker, api-tester, evidence-collector, test-results-analyzer, tool-evaluator, workflow-optimizer |
+| testing | 7 | reality-checker, accessibility-auditor, performance-benchmarker, api-tester, evidence-collector, test-results-analyzer, tool-evaluator |
 | product | 4 | sprint-prioritizer, feedback-synthesizer, trend-researcher, behavioral-nudge-engine |
-| support | 3 | analytics-reporter, executive-summary-generator, legal-compliance-checker |
-| marketing | 2 | content-creator, linkedin-content-creator |
+| support | 2 | analytics-reporter, compliance-auditor |
+| marketing | 1 | content-creator |
 | project-management | 3 | experiment-tracker, project-shepherd, project-manager-senior |
-| specialized | 4 | developer-advocate, document-generator, mcp-builder, model-qa |
-| (standalone) | 5 | agents-orchestrator, automation-governance, compliance-auditor, corporate-training, lsp-index-engineer |
+| specialized | 6 | developer-advocate, document-generator, mcp-builder, model-qa, agents-orchestrator, corporate-training |
+| automation | 1 | automation-governance |
 
 ---
 
@@ -738,7 +738,7 @@ Execute in this order. Each step unlocks the next.
 12. **Build system** (build.py): 1 file, manifest generation
 13. **One reference skill** (engineering-code-reviewer): 4 files, validates full pipeline
 14. **Tests** (12 files): validates everything
-15. **Remaining 51 skills**: bulk generation from reference pattern
+15. **Remaining 46 skills**: bulk generation from reference pattern
 16. **9 agent compositions**: bulk generation from data-engineer pattern
 17. **Capabilities + graphs**: 12 files, orchestration layer
 18. **Scripts**: diagnostics and validation tooling
@@ -752,16 +752,16 @@ Every claim in this document was verified against the actual repository on the d
 
 | Claim | Verification |
 |-------|-------------|
-| 52 skills, all with 4 files | `ls skills/ \| grep -v _base \| wc -l` returns 52; zero missing files |
+| 47 skills, all with 4 files | `ls skills/ \| grep -v _base \| wc -l` returns 47; zero missing files |
 | 184 tests passing | `pytest -q` returns "184 passed in 2.38s" |
-| Build produces 52 tools | `python build.py` returns "Built: 52 \| Errors: 0" |
+| Build produces 47 tools | `python build.py` returns "Built: 47 \| Errors: 0" |
 | Syntax audit clean | `python scripts/syntax_audit.py` returns "STATUS: HEALTHY" |
 | 0 stub files in runtime | grep for TODO/FIXME/NotImplementedError/pass-as-body returns 0 matches |
 | 9 agents × 8 files each | `find agents/ -type f \| wc -l` confirms 73 files (72 + 1 README) |
 | 10 capability YAMLs | `ls capabilities/ \| wc -l` returns 10 |
 | 21 hooks implemented | HOOK_REGISTRY in hooks.py has 21 entries, all with function bodies |
 | CognitiveState has 10 fields | runtime/schemas.py and schema_base.json aligned 10/10 |
-| README says 52 skills | [OBS] README.md updated to match actual count of 52. |
+| README says 47 skills | [OBS] README.md updated to match actual count of 47. |
 
 ---
 

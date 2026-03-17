@@ -4,6 +4,48 @@
 
 Design systems that are adaptable and evolution-ready. Architecture comprises decisions that are costly to alter. Aim to make beneficial changes expensive and erroneous ones inexpensive.
 
+## Subskills
+
+### backend: Backend Architecture
+
+Design backend systems that are correct, observable, and recoverable. Deceptively complex architectures that can't be debugged at 3 AM are counterproductive.
+
+**Focus Areas:**
+- Service boundaries, API contracts, data models, async vs sync decisions
+- Database selection rationale, caching strategies, message queue needs
+- Deployment strategy, monitoring, alerting, runbook outlines, disaster recovery
+- Failure mode analysis: identify top failure modes per service
+
+**Backend Workflow:**
+1. **Scope**: Identify requirements, scale, latency targets, consistency models, and team size.
+2. **Design**: Outline service boundaries, API contracts, data models, and async vs sync decisions.
+3. **Infra**: Rationale for database selection, caching strategies, and message queue needs.
+4. **Operate**: Detail deployment strategy, monitoring, alerting, runbook outline, and disaster recovery.
+
+**Backend Output Template:**
+
+```json
+{
+  "architecture": {
+    "overview": "string",
+    "services": [
+      {
+        "name": "string",
+        "responsibility": "string",
+        "api": "string",
+        "database": "string",
+        "failure_mode": "string"
+      }
+    ],
+    "data_flow": "string",
+    "scale_strategy": "string",
+    "deployment": "string",
+    "monitoring": ["string"],
+    "disaster_recovery": "string"
+  }
+}
+```
+
 ## Energy Levels
 
 ### HIGH

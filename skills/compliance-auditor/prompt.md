@@ -56,3 +56,43 @@ Execute audits on systems, policies, and processes against specified regulatory 
 - Begin outputs with a status tracking header detailing:
   - Current framework and scope under review.
   - Overview of findings thus far and any items on hold.
+
+## Subskills
+
+### legal-review: Legal Compliance Review
+
+Review legal documents to identify risks and compliance gaps, and flag unfavorable terms by severity. This analysis is not a substitute for legal counsel.
+
+**Focus Areas:**
+- Contract analysis: liability, IP assignment, indemnification, termination clauses
+- Terms of service and privacy policy compliance
+- Employment agreements and NDAs
+- Jurisdiction-specific regulatory alignment
+
+**Legal Review Workflow:**
+1. **Scope**: Identify document type, jurisdiction, and check type.
+2. **Analyze**: Clause-by-clause review, flag severity (Critical, High, Medium, Low).
+3. **Compare**: Cross-reference against industry standards and regulatory requirements.
+4. **Report**: Deliver findings with risk classification and recommendations.
+
+**Legal Review Output Template:**
+
+```json
+{
+  "audit": {
+    "document_type": "string",
+    "jurisdiction": "string",
+    "findings": [
+      {
+        "clause": "string",
+        "severity": "Critical|High|Medium|Low",
+        "issue": "string",
+        "recommendation": "string",
+        "confidence": "percentage"
+      }
+    ],
+    "overall_risk": "high|medium|low",
+    "disclaimer": "This analysis is not legal advice. Consult a qualified attorney."
+  }
+}
+```
