@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import asyncio
 
+import pytest
+
 from adapters.base import SkillRequest
 from adapters.google_adapter import GoogleAdapter
 from adapters.router import SkillRouter
@@ -223,4 +225,54 @@ def test_json_extraction_garbage_input():
     output.pop("_validation", None)
     assert "raw" in output
     assert "plain text" in output["raw"]
+
+
+# ---------------------------------------------------------------------------
+# Regression: is_crash must be called as a method, not a property
+# ---------------------------------------------------------------------------
+
+def test_empty_model_chain_non_crash_raises_not_returns_crash_response():
+    """Regression: is_crash missing () caused non-crash empty chain to return crash response.
+
+    When a model chain is empty for a non-crash reason (e.g., all aliases
+    broken), the router must raise RuntimeError, NOT return a crash SkillResponse.
+    The bug was `cognitive_state.is_crash` (always truthy) instead of
+    `cognitive_state.is_crash()`.
+    """
+    router = SkillRouter.__new__(SkillRouter)
+    router.alias_map = {"NONEXISTENT": "openai/no-such-model"}
+    router.adapters = {}  # No providers connected
+    router.load_skill = lambda skill_id: {
+        "config": {"models": {"primary": "NONEXISTENT", "fallback": []}},
+        "prompt": "Return JSON.",
+        "schema": {},
+    }
+    router.load_profile_md = lambda: ""
+
+    with pytest.raises(RuntimeError):
+        asyncio.run(router.execute(SkillRequest(skill_id="demo", input_text="hi")))
+
+
+# ---------------------------------------------------------------------------
+# Regression: frozen CognitiveState must not be mutated, use model_copy()
+# ---------------------------------------------------------------------------
+
+def test_mode_inference_does_not_mutate_frozen_cognitive_state():
+    """Regression: router tried to set active_mode on a frozen CognitiveState.
+
+    CognitiveState has ConfigDict(frozen=True), so direct attribute assignment
+    raises ValidationError.  The fix uses model_copy(update={...}) instead.
+    Input that triggers troubleshoot mode inference verifies the code path runs
+    without error.
+    """
+    router = _make_router_with_content('{"status": "ok"}')
+    # Input that infer_mode() resolves to "troubleshoot" (non-execute),
+    # which triggers the mode-inference branch that used to mutate the frozen model.
+    resp = asyncio.run(
+        router.execute(SkillRequest(skill_id="demo", input_text="I got an error running the script"))
+    )
+    output = dict(resp.output)
+    output.pop("_validation", None)
+    assert output["status"] == "ok"
+
 
