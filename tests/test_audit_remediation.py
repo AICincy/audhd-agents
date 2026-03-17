@@ -380,6 +380,12 @@ class TestRetryAfterCap:
         # Verify that we got the successful JSON payload.
         assert result == {"ok": True}
 
+        # The underlying client should have been called three times:
+        # - First 429 with large numeric Retry-After,
+        # - Second 429 with non-numeric Retry-After,
+        # - Final successful 200 response.
+        assert client.call_count == 3
+
         # The retry sequence should have slept twice:
         # - First for capped Retry-After: min(999, 120) == 120
         # - Then for exponential backoff on attempt 2: 2**2 == 4
