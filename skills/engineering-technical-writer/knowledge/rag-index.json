@@ -1,0 +1,237 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Technical Writer Knowledge Base RAG Index",
+  "description": "Metadata index for retrieval-augmented generation. Each entry maps a knowledge document to its RAG-optimized chunks and retrieval metadata.",
+  "version": "1.0.0",
+  "last_updated": "2026-03-17",
+  "documents": [
+    {
+      "id": "kb-tw-001",
+      "file": "api-documentation.md",
+      "title": "API Documentation Patterns",
+      "domain": "technical-writing",
+      "subdomain": "api-reference",
+      "tags": ["api", "reference", "openapi", "rest", "endpoints", "schemas"],
+      "audience": ["developers", "technical-writers", "api-designers"],
+      "chunk_strategy": "section-based",
+      "sections": [
+        "Structure Template",
+        "Endpoint Summary Rules",
+        "Request Documentation",
+        "Response Documentation",
+        "Code Examples",
+        "Authentication Documentation",
+        "OpenAPI/Swagger Integration",
+        "Anti-Patterns",
+        "Grounding Checklist"
+      ],
+      "retrieval_queries": [
+        "How to document an API endpoint",
+        "API reference documentation template",
+        "REST API documentation best practices",
+        "Error response documentation",
+        "Code examples for API docs",
+        "OpenAPI documentation patterns"
+      ]
+    },
+    {
+      "id": "kb-tw-002",
+      "file": "architecture-documentation.md",
+      "title": "Architecture Documentation Patterns",
+      "domain": "technical-writing",
+      "subdomain": "architecture",
+      "tags": ["architecture", "adr", "c4", "system-design", "diagrams", "decisions"],
+      "audience": ["software-architects", "senior-engineers", "technical-writers"],
+      "chunk_strategy": "section-based",
+      "sections": [
+        "Architecture Document Types",
+        "C4 Model Documentation",
+        "Architecture Decision Records (ADR)",
+        "Non-Functional Requirements Documentation",
+        "Diagram Standards",
+        "Documenting System Invariants",
+        "Anti-Patterns",
+        "Grounding Checklist"
+      ],
+      "retrieval_queries": [
+        "How to write an architecture decision record",
+        "C4 model documentation template",
+        "Architecture diagram standards",
+        "Non-functional requirements documentation",
+        "System invariant documentation",
+        "ADR template"
+      ]
+    },
+    {
+      "id": "kb-tw-003",
+      "file": "code-documentation.md",
+      "title": "Code Documentation Patterns",
+      "domain": "technical-writing",
+      "subdomain": "code-level",
+      "tags": ["docstrings", "comments", "inline", "readme", "changelog", "type-hints"],
+      "audience": ["developers", "code-reviewers", "technical-writers"],
+      "chunk_strategy": "section-based",
+      "sections": [
+        "Documentation Layers",
+        "Docstring Patterns",
+        "Inline Comment Rules",
+        "README Structure",
+        "CHANGELOG Patterns",
+        "Type Annotation Patterns",
+        "Anti-Patterns",
+        "Grounding Checklist"
+      ],
+      "retrieval_queries": [
+        "How to write Python docstrings",
+        "Inline comment best practices",
+        "README template for open source projects",
+        "Keep a Changelog format",
+        "Type annotation patterns Python",
+        "When to write code comments"
+      ]
+    },
+    {
+      "id": "kb-tw-004",
+      "file": "runbook-operations.md",
+      "title": "Runbook and Operations Documentation",
+      "domain": "technical-writing",
+      "subdomain": "operations",
+      "tags": ["runbook", "incident", "operations", "playbook", "sre", "monitoring"],
+      "audience": ["sre", "devops", "on-call-engineers", "technical-writers"],
+      "chunk_strategy": "section-based",
+      "sections": [
+        "Runbook Types",
+        "Alert Runbook Template",
+        "Runbook Writing Rules",
+        "Incident Playbook Template",
+        "Deployment Runbook Template",
+        "Monitoring Documentation",
+        "Anti-Patterns",
+        "Grounding Checklist"
+      ],
+      "retrieval_queries": [
+        "How to write a runbook",
+        "Incident playbook template",
+        "Deployment runbook best practices",
+        "Alert documentation template",
+        "On-call runbook format",
+        "SRE documentation patterns"
+      ]
+    },
+    {
+      "id": "kb-tw-005",
+      "file": "tutorial-guide.md",
+      "title": "Tutorial and How-To Guide Patterns",
+      "domain": "technical-writing",
+      "subdomain": "tutorials",
+      "tags": ["tutorial", "how-to", "guide", "learning", "onboarding", "quickstart"],
+      "audience": ["developer-educators", "technical-writers", "documentation-leads"],
+      "chunk_strategy": "section-based",
+      "sections": [
+        "Document Type Distinction",
+        "Tutorial Template",
+        "Tutorial Writing Rules",
+        "How-To Guide Template",
+        "How-To Guide Rules",
+        "Quickstart Patterns",
+        "Progressive Disclosure",
+        "Code Example Standards",
+        "Anti-Patterns",
+        "Grounding Checklist"
+      ],
+      "retrieval_queries": [
+        "How to write a tutorial",
+        "Tutorial vs how-to guide difference",
+        "Quickstart documentation template",
+        "Progressive disclosure in documentation",
+        "Code example standards for tutorials",
+        "Developer onboarding documentation"
+      ]
+    },
+    {
+      "id": "kb-tw-006",
+      "file": "style-guide.md",
+      "title": "Technical Writing Style Guide",
+      "domain": "technical-writing",
+      "subdomain": "style",
+      "tags": ["style", "formatting", "tone", "voice", "grammar", "accessibility"],
+      "audience": ["technical-writers", "developers", "documentation-reviewers"],
+      "chunk_strategy": "section-based",
+      "sections": [
+        "Voice and Tone",
+        "Formatting Standards",
+        "Sentence and Paragraph Rules",
+        "Terminology Consistency",
+        "Accessibility in Documentation",
+        "Documentation Versioning",
+        "Anti-Patterns",
+        "Grounding Checklist"
+      ],
+      "retrieval_queries": [
+        "Technical writing voice and tone",
+        "Documentation formatting standards",
+        "Words to avoid in technical writing",
+        "Inclusive language in documentation",
+        "Accessibility requirements for documentation",
+        "Documentation style guide"
+      ]
+    },
+    {
+      "id": "kb-tw-007",
+      "file": "review-checklist.md",
+      "title": "Documentation Review Checklist",
+      "domain": "technical-writing",
+      "subdomain": "quality-assurance",
+      "tags": ["review", "checklist", "quality", "accuracy", "completeness", "readability"],
+      "audience": ["documentation-reviewers", "technical-writers", "editors"],
+      "chunk_strategy": "section-based",
+      "sections": [
+        "Review Dimensions",
+        "Accuracy Review",
+        "Completeness Review",
+        "Clarity Review",
+        "Structure Review",
+        "Style Review",
+        "Accessibility Review",
+        "Maintainability Review",
+        "Review Severity Scale",
+        "Review Output Template",
+        "Grounding Checklist"
+      ],
+      "retrieval_queries": [
+        "Documentation review checklist",
+        "How to review technical documentation",
+        "Documentation quality criteria",
+        "Code example accuracy review",
+        "Readability metrics for documentation",
+        "Documentation review severity levels"
+      ]
+    },
+    {
+      "id": "kb-tw-008",
+      "file": "grounding-rules.md",
+      "title": "Grounding Rules for Technical Writing Claims",
+      "domain": "technical-writing",
+      "subdomain": "reality-check",
+      "tags": ["grounding", "reality-check", "claims", "verification", "accuracy", "hallucination"],
+      "audience": ["technical-writers", "ai-agents", "documentation-reviewers"],
+      "chunk_strategy": "section-based",
+      "sections": [
+        "Claim Classification",
+        "Grounding Rules",
+        "Reality Check Integration",
+        "RAG-Specific Grounding Rules",
+        "Anti-Patterns",
+        "Grounding Checklist"
+      ],
+      "retrieval_queries": [
+        "How to ground documentation claims",
+        "Claim tagging for technical writing",
+        "Reality check for documentation",
+        "Preventing hallucination in AI documentation",
+        "RAG grounding rules",
+        "Documentation accuracy verification"
+      ]
+    }
+  ]
+}
