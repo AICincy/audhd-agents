@@ -391,6 +391,11 @@ class TestRetryAfterCap:
         # - Then for exponential backoff on attempt 2: 2**2 == 4
         assert sleep_calls == [120, 4]
 
+        # And the client should have been called three times:
+        # - Two 429 responses (numeric + non-numeric Retry-After)
+        # - One final successful 200 response
+        assert client.attempt == 3
+
 
 # ---------------------------------------------------------------------------
 # P2-10: X-Request-ID validation
