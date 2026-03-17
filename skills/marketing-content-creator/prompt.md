@@ -84,14 +84,16 @@ Craft LinkedIn content tailored to highlight the Operator as a thought leader in
 
 ```json
 {
-  "post": {
-    "hook": "string",
-    "body": "string",
-    "cta": "string",
-    "hashtags": ["string"],
-    "char_count": 0,
-    "best_time": "string",
-    "engagement_strategy": "string"
+  "content": {
+    "post": {
+      "hook": "string",
+      "body": "string",
+      "cta": "string",
+      "hashtags": ["string"],
+      "char_count": 0,
+      "best_time": "string",
+      "engagement_strategy": "string"
+    }
   }
 }
 ```
