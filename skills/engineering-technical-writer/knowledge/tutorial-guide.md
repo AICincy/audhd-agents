@@ -46,8 +46,10 @@ Provide reusable patterns for writing tutorials and how-to guides. Tutorials tea
 
 [Brief explanation of what this step accomplishes.]
 
+    ```bash
     mkdir my-project && cd my-project
     npm init -y
+    ```
 
 You should see a `package.json` file in your directory.
 
@@ -55,12 +57,15 @@ You should see a `package.json` file in your directory.
 
 [Brief explanation of why these dependencies are needed.]
 
+    ```bash
     npm install express
+    ```
 
 ## Step 3: [Create the Main File]
 
 Create `index.js` with the following content:
 
+    ```js
     const express = require("express");
     const app = express();
 
@@ -71,6 +76,7 @@ Create `index.js` with the following content:
     app.listen(3000, () => {
       console.log("Server running on port 3000");
     });
+    ```
 
 ## Step 4: [Run and Verify]
 
