@@ -23,7 +23,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable
 from uuid import uuid4
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 
 from adapters.base import SkillRequest
 from adapters.router import SkillRouter
@@ -45,6 +45,9 @@ from runtime.middleware import register_middleware
 
 # P2-2: Pipeline bridge
 from runtime.pipeline_bridge import init_bridge
+
+# P2-3: Bearer token auth for API endpoints
+from runtime.auth import verify_api_key
 
 # Fix-C: Wire knowledge-inject (P2.7) + P2.5 context monitors into HOOK_REGISTRY
 # and ALWAYS_ON_HOOKS at import time. Must precede any SkillRouter instantiation.
@@ -221,7 +224,7 @@ def create_app(
             )
         return payload
 
-    @app.post("/execute", response_model=ExecuteResponse)
+    @app.post("/execute", response_model=ExecuteResponse, dependencies=[Depends(verify_api_key)])
     async def execute(request: Request, payload: ExecuteRequest):
         state = get_state(request)
         logger = request.app.state.logger
@@ -309,9 +312,10 @@ def create_app(
                 failure_class=exc.__class__.__name__,
                 error=str(exc),
             )
+            detail = str(exc) if runtime_settings.app_env != "production" else "Skill execution failed"
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail=str(exc),
+                detail=detail,
             ) from exc
 
         emit_log(

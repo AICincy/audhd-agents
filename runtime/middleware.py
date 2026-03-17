@@ -110,13 +110,24 @@ def register_middleware(app: FastAPI, *, cors_origins: list[str] | None = None) 
         "http://127.0.0.1:8000",
     ]
 
+    # Only allow ngrok origins in non-production environments
+    import os
+    app_env = os.getenv("APP_ENV", "development")
+    origin_regex = r"https://.*\.ngrok-free\.app" if app_env != "production" else None
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
-        allow_origin_regex=r"https://.*\.ngrok-free\.app",
+        allow_origin_regex=origin_regex,
         allow_credentials=True,
         allow_methods=["GET", "POST", "OPTIONS"],
-        allow_headers=["*"],
+        allow_headers=[
+            "Authorization",
+            "Content-Type",
+            "X-Request-ID",
+            "X-Notion-Signature",
+            "X-Notion-Timestamp",
+        ],
         expose_headers=[
             "X-Request-ID",
             "X-Response-Time-Ms",

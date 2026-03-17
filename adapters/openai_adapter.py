@@ -22,7 +22,7 @@ class OpenAIAdapter(BaseAdapter):
         key = api_key or (SecretStr(raw) if raw else None)
         super().__init__(api_key=key, config=config or {})
         if AsyncOpenAI and self.api_key:
-            self.client = AsyncOpenAI(api_key=self.api_key)
+            self.client = AsyncOpenAI(api_key=self.api_key, timeout=120.0)
         else:
             self.client = None
 

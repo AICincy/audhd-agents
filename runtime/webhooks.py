@@ -327,8 +327,15 @@ async def webhook_health():
 async def webhook_test(request: Request):
     """Dev-only echo endpoint. Returns parsed body without processing.
 
-    Only available in staging. Returns 404 in production.
+    Only available outside production. Returns 404 in production.
     """
+    import os
+    if os.getenv("APP_ENV", "development") == "production":
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Not found",
+        )
+
     app_env = getattr(request.app.state, "runtime", None)
     if app_env and hasattr(app_env, "settings"):
         if app_env.settings.app_env == "production":
