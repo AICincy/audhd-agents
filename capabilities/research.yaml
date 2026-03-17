@@ -9,6 +9,7 @@ outputs:
 skills:
   primary:
     - design-ux-researcher
+    - engineering-github-pr-lister
     - product-trend-researcher
     - testing-evidence-collector
   secondary:

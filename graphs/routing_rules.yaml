@@ -6,6 +6,10 @@ rules:
     start_capability: research
     default_chain: research_to_report
 
+  - trigger: ["list", "show", "fetch", "get", "pull request", "pull requests", "PR", "PRs", "open pr", "open prs", "github"]
+    start_capability: research
+    default_chain: null
+
   - trigger: ["review", "check", "audit", "inspect"]
     start_capability: analyze
     default_chain: code_review_pipeline

@@ -1,0 +1,35 @@
+name: engineering-github-pr-lister
+display_name: GitHub PR Lister
+description: >
+  List latest open pull requests for a GitHub repository with title, author,
+  labels, and URL. Supports filtering by author or label.
+version: "1.0.0"
+category: engineering
+capabilities:
+  - research
+models:
+  primary: G-FLA31
+  fallback: [G-PRO, O-O4M]
+sk_hooks:
+  - SK-VERIFY
+inputs:
+  - name: input_text
+    type: string
+    description: "GitHub repository (e.g. 'owner/repo' or full URL) and optional filters"
+    required: true
+  - name: author
+    type: string
+    description: Filter pull requests by author username
+    required: false
+  - name: label
+    type: string
+    description: Filter pull requests by label name
+    required: false
+  - name: limit
+    type: string
+    description: Maximum number of pull requests to return (default 10)
+    required: false
+outputs:
+  - name: pull_requests
+    type: object
+    description: List of open pull requests with metadata

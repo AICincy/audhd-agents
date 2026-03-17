@@ -1,0 +1,41 @@
+[
+  {
+    "description": "List latest open PRs for audhd-agents repo",
+    "input": {
+      "input_text": "List my latest open pull requests for AICincy/audhd-agents",
+      "cognitive_state": {
+        "energy_level": "medium",
+        "attention_state": "focused",
+        "active_mode": "execute",
+        "task_tier": "T1"
+      }
+    }
+  },
+  {
+    "description": "List open PRs filtered by author",
+    "input": {
+      "input_text": "Show open pull requests I authored in AICincy/audhd-agents",
+      "author": "octocat",
+      "limit": "5",
+      "cognitive_state": {
+        "energy_level": "high",
+        "attention_state": "focused",
+        "active_mode": "review",
+        "task_tier": "T2"
+      }
+    }
+  },
+  {
+    "description": "List open PRs with a specific label",
+    "input": {
+      "input_text": "Find open PRs labelled bug in https://github.com/AICincy/audhd-agents",
+      "label": "bug",
+      "cognitive_state": {
+        "energy_level": "low",
+        "attention_state": "diffuse",
+        "active_mode": "summarize",
+        "task_tier": "T1"
+      }
+    }
+  }
+]
