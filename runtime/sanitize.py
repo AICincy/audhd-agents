@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import re
 import logging
+import unicodedata
 
 logger = logging.getLogger("audhd_agents.sanitize")
 
@@ -57,11 +58,21 @@ def sanitize_input(text: str) -> tuple[str, list[str]]:
     if len(text) > limit:
         text = text[0:limit]  # Pyre2 workaround: explicit 0 start
 
+    # AUDIT-FIX: P2-1 -- Unicode normalization (NFKC) before pattern matching
+    text = unicodedata.normalize("NFKC", text)
+
+    # AUDIT-FIX: P2-1 -- Strip zero-width characters
+    text = re.sub(r"[\u200b\u200c\u200d\ufeff\u00ad]", "", text)
+
     # Strip null bytes and non-printable control characters (keep \n, \r, \t)
     text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", text)
 
     # Collapse excessive blank lines (3+ newlines -> 2)
     text = re.sub(r"\n{3,}", "\n\n", text)
+
+    # Re-apply truncation after normalization/stripping to enforce final cap
+    if len(text) > limit:
+        text = text[0:limit]
 
     # Detect patterns for logging
     detected = detect_injection(text)

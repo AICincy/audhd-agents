@@ -1,7 +1,17 @@
 # AuDHD Agents Runtime: Production Container
 # Optimized for Cloud Run single-container deployment.
+# AUDIT-FIX: P2-5 -- multi-stage build; P3-7 -- pin to patch version
 
-FROM python:3.12-slim AS base
+FROM python:3.12.10-slim AS builder
+
+WORKDIR /build
+
+COPY . .
+RUN pip install --no-cache-dir --prefix=/install .
+
+
+
+FROM python:3.12.10-slim
 
 WORKDIR /app
 
@@ -10,15 +20,8 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
 
-# Python deps first (cache layer)
-COPY pyproject.toml .
-RUN pip install --no-cache-dir . 2>/dev/null || true
-
-# Application code
+COPY --from=builder /install /usr/local
 COPY . .
-
-# Install with full context
-RUN pip install --no-cache-dir .
 
 # Non-root user
 RUN useradd -r -s /bin/false appuser && chown -R appuser:appuser /app

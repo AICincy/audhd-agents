@@ -28,7 +28,6 @@ Hub-and-spoke with orchestrator-managed autonomous handoffs. Operator remains th
 | O-53 | GPT-5.3 | Ideation Engine (Fallback) | Same scope as O-54 |
 | O-CDX | GPT-5.3 Codex | Code Automator | Scripts, pipelines, automation, environment scaffolding |
 | O-O4M | o4-mini | Rapid Verifier | Benchmarks, triage, structured checks, numeric sanity checks |
-| O-MAX | GPT Max | Generalist Overflow | Parallel capacity, second opinions, bulk processing |
 
 ---
 
@@ -45,22 +44,20 @@ Hub-and-spoke with orchestrator-managed autonomous handoffs. Operator remains th
 | Stakeholder comms | G-PRO | G-PRO | G-PRO + O-54 verify | O-54 |
 | Creative | G-PRO | G-PRO | G-PRO | O-54 |
 | Triage | G-FLA31 | n/a | n/a | G-PRO |
-| Overflow | O-MAX | O-MAX | O-MAX | O-53 |
 
-Fallback activates on: API error, rate limit, confidence below 0.6, or explicit agent deferral.
+Fallback activates on: API error, rate limit, or explicit agent deferral.
 
 ---
 
 ## Circuit Breakers
 
-Automatic protection against runaway costs, cascading failures, and degraded service.
+Automatic protection against cascading failures and degraded service.
 
 | Breaker | Trigger | Action | Reset Condition |
 | --- | --- | --- | --- |
-| Cost ceiling | Estimated session cost exceeds threshold (set per task) | Halt new API calls. Present cost report to Operator. | Operator approves budget increase |
-| Error spike | 3+ consecutive failures from same model in 5 min | Route all traffic to fallback. Log failure pattern. | Primary model returns 3 consecutive successes |
-| Rate limit cascade | 2+ models rate-limited simultaneously | Queue non-urgent tasks. Process only T4-T5. | Any 2 models return to normal availability |
-| Anomaly detector | 500% traffic spike or repeated HTTP 402/429 | Immediately halt all automated calls. Alert Operator. | Manual Operator review |
+| Error spike | 3+ consecutive failures from same adapter | Route all traffic to fallback. Log failure pattern. | Primary model returns 3 consecutive successes |
+
+One circuit breaker instance exists per adapter (see `adapters/base.py`).
 
 ---
 
@@ -76,12 +73,13 @@ Every model interaction should be cost-aware.
 | G-PRO31 | Mid | $$ | High-tier analysis, drafting, OSINT |
 | O-54 / O-53 | Mid | $$ | Creative, stakeholder comms, ideation, accessibility review |
 | O-CDX | Mid | $$ | Code generation, scripting, automation |
-| O-MAX | Mid | $$ | Broad coordination, overflow, cross-domain synthesis |
 | O-54P | Premium | $$$ | Architecture, audit synthesis, planning, escalations, T5 verification |
 
 **Rule:** Always prefer the cheapest model that meets the tier requirement. Do not route T1 tasks to Premium models.
 
 **Rule:** When proposing multi-model workflows, include estimated relative cost (low/medium/high).
+
+> CostRecord exists in `adapters/base.py` but is not yet wired to routing decisions.
 
 ---
 
@@ -108,14 +106,9 @@ Every model interaction should be cost-aware.
 
 ---
 
-## Escalation Protocol
+## Authentication
 
-| Level | Trigger | Action |
-| --- | --- | --- |
-| 1 | Confidence below 0.6 or transient error | Retry same model, max 3 attempts |
-| 2 | 3 failed retries or capability gap | Route to fallback agent per matrix |
-| 3 | Fallback also fails or conflicting results | Multi-model consensus: G-PRO31 + O-54P |
-| 4 | Consensus unresolved or human judgment required | Queue for Operator review (single-item presentation) |
+API endpoints (`/execute`) are protected by Bearer token auth via `Depends(verify_api_key)`. Tokens are configured through the `AUDHD_API_KEYS` environment variable. When no keys are configured, the service returns 503 (fail-secure).
 
 ---
 
@@ -123,8 +116,8 @@ Every model interaction should be cost-aware.
 
 | Energy | Max Tier | Model Pool | Behavior |
 | --- | --- | --- | --- |
-| High | T5 | All 9 | Normal operation |
-| Medium | T4 | All 9, prefer fast models for T1-T2 | Standard |
+| High | T5 | All 8 | Normal operation |
+| Medium | T4 | All 8, prefer fast models for T1-T2 | Standard |
 | Low | T2 | Gemini + o4-mini only | Micro-steps. Single next action. |
 | Crash | T1 | None new | "Everything is saved. Nothing is urgent. Come back when ready." |
 
@@ -153,6 +146,8 @@ HANDOFF
 4. No agent modifies another agent's artifacts without approval
 5. State externalized in artifacts, never assumed from memory
 
+> Handoff format is defined but not code-enforced at runtime.
+
 ---
 
 ## Inter-Agent Contracts (AuDHD Architectural Constraints)
@@ -164,3 +159,14 @@ HANDOFF
 | Predictable structure | Every result follows same template: summary, details, next step. |
 | Where Was I? | On return after 30+ min absence, auto-present last context with single-action resume. |
 | Crash mode protection | During crash energy: confirm state is saved, do nothing else. |
+
+---
+
+## Planned / Not Yet Implemented
+
+The following features are defined in contracts or documentation but are not yet code-enforced:
+
+- [planned] **Cost-aware routing**: CostRecord exists but is not wired to model selection logic.
+- [planned] **Confidence thresholds**: No confidence scoring exists in the router.
+- [planned] **Escalation protocol**: No human-escalation path is implemented.
+- [planned] **Multi-circuit-breaker topology**: Only a single error-spike breaker per adapter exists. Cost ceiling, rate-limit-cascade, and anomaly detector breakers are aspirational.
