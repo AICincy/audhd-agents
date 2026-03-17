@@ -47,7 +47,9 @@ def make_client(status_payload, skill_index=None, response_payload=None, require
         router_factory=lambda _: fake_router,
         inventory_factory=lambda _: skill_index or {"demo-skill": {"config": {}, "schema": {}}},
     )
-    return TestClient(app)
+    client = TestClient(app)
+    client.headers["Authorization"] = "Bearer test-key-1"
+    return client
 
 
 def test_healthz_returns_process_status():

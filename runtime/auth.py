@@ -135,12 +135,12 @@ async def verify_api_key(
     """
     api_keys = get_api_keys()
 
-    # If no API keys configured, auth is disabled (dev mode)
+    # AUDIT-FIX: A-1 -- Fail-secure when no API keys configured
     if not api_keys:
-        logger.warning(
-            "AUDHD_API_KEYS not set. API auth disabled. DO NOT RUN IN PRODUCTION."
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="API keys not configured",
         )
-        return "auth_disabled"
 
     if not credentials:
         raise HTTPException(

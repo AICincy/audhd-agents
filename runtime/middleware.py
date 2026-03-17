@@ -29,7 +29,12 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
     """Inject X-Request-ID into every request/response for tracing."""
 
     async def dispatch(self, request: Request, call_next):
-        request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
+        # AUDIT-FIX: P2-10 -- validate X-Request-ID as UUID format
+        raw_id = request.headers.get("X-Request-ID", "")
+        try:
+            request_id = str(uuid.UUID(raw_id))
+        except (ValueError, AttributeError):
+            request_id = str(uuid.uuid4())
         request.state.request_id = request_id
 
         response = await call_next(request)
@@ -103,22 +108,26 @@ def register_middleware(app: FastAPI, *, cors_origins: list[str] | None = None) 
     4. Server timing
     """
     # CORS
-    origins = cors_origins or [
-        "http://localhost:3000",
-        "http://localhost:8000",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:8000",
-    ]
+    if cors_origins is not None:
+        origins: list[str] = cors_origins
+    else:
+        # Default to an empty allowlist; rely on CORS_ALLOWED_ORIGINS or
+        # explicit cors_origins to configure allowed origins.
+        origins = []
 
-    # Only allow ngrok origins in non-production environments
+    # AUDIT-FIX: P1-5 -- replace ngrok regex with env-based allowlist
     import os
-    app_env = os.getenv("APP_ENV", "development")
-    origin_regex = r"https://.*\.ngrok-free\.app" if app_env != "production" else None
+    cors_env = os.environ.get("CORS_ALLOWED_ORIGINS", "")
+    if cors_env:
+        extra_origins = [o.strip() for o in cors_env.split(",") if o.strip()]
+        if origins:
+            origins = origins + extra_origins
+        else:
+            origins = extra_origins
 
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
-        allow_origin_regex=origin_regex,
         allow_credentials=True,
         allow_methods=["GET", "POST", "OPTIONS"],
         allow_headers=[
