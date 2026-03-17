@@ -124,6 +124,8 @@ class NotionClient:
                         retry_after = min(int(raw_retry), 120)
                     except (ValueError, TypeError):
                         retry_after = min(2 ** attempt, 120)
+                    # Clamp to non-negative to avoid negative sleep durations
+                    retry_after = max(retry_after, 0)
                     # AUDIT-FIX: P2-9 -- add jitter to prevent thundering herd
                     sleep_seconds = min(
                         retry_after + random.uniform(0, 0.5 * retry_after), 120
