@@ -7,6 +7,10 @@ import time
 
 from pydantic import SecretStr
 
+# Shared LLM request timeout in seconds. Adapters convert to milliseconds
+# where required by their SDK (e.g. Google GenAI HttpOptions.timeout).
+LLM_TIMEOUT_SECONDS: int = 120
+
 
 @dataclass
 class SkillRequest:
