@@ -187,7 +187,21 @@ def create_app(
 
         # AUDIT-FIX: P1-1 -- graceful shutdown: drain in-flight requests
         state.draining = True
-        grace = int(os.environ.get("SHUTDOWN_GRACE_SECONDS", "10"))
+        default_grace = 10
+        raw_grace = os.environ.get("SHUTDOWN_GRACE_SECONDS")
+        grace = default_grace
+        if raw_grace is not None:
+            try:
+                parsed = int(raw_grace)
+                # Clamp to a sane range: no negative sleep
+                grace = max(parsed, 0)
+            except (TypeError, ValueError):
+                emit_log(
+                    logger,
+                    "shutdown_grace_seconds_invalid",
+                    value=raw_grace,
+                    default_seconds=default_grace,
+                )
         emit_log(logger, "shutdown_draining", grace_seconds=grace)
         await asyncio.sleep(grace)
 
