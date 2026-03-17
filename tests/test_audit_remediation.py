@@ -30,7 +30,7 @@ from adapters.base import CircuitBreaker, SkillResponse
 from runtime.app import create_app
 from runtime.config import RuntimeSettings
 from runtime.monitoring import setup_monitoring
-from runtime.notion_client import _request as notion_request
+from runtime.notion_client import NotionClient
 from runtime.sanitize import sanitize_input
 
 
@@ -341,10 +341,11 @@ class TestRetryAfterCap:
                 self.headers = headers or {}
                 self._json_data = json_data or {}
 
-            async def json(self) -> dict:
+            def json(self) -> dict:
                 return self._json_data
 
-        class DummyClient:
+        class _DummyHttpClient:
+            """Simulates httpx.AsyncClient.request() interface."""
             def __init__(self):
                 self.attempt = 0
 
@@ -368,6 +369,16 @@ class TestRetryAfterCap:
                     json_data={"ok": True},
                 )
 
+        class DummyClient:
+            """Mimics NotionClient with _client and _max_retries attributes."""
+            def __init__(self):
+                self._client = _DummyHttpClient()
+                self._max_retries = 5
+
+            @property
+            def attempt(self):
+                return self._client.attempt
+
         client = DummyClient()
 
         # Call the actual retrying request helper; it should:
@@ -375,7 +386,7 @@ class TestRetryAfterCap:
         # - Cap numeric Retry-After at 120,
         # - Fall back to exponential backoff (2**attempt) when Retry-After is non-numeric,
         # - Eventually return the successful response data.
-        result = await notion_request(client, "GET", "https://example.com/test")
+        result = await NotionClient._request(client, "GET", "https://example.com/test")
 
         # Verify that we got the successful JSON payload.
         assert result == {"ok": True}
@@ -384,17 +395,12 @@ class TestRetryAfterCap:
         # - First 429 with large numeric Retry-After,
         # - Second 429 with non-numeric Retry-After,
         # - Final successful 200 response.
-        assert client.call_count == 3
+        assert client.attempt == 3
 
         # The retry sequence should have slept twice:
-        # - First for capped Retry-After: min(999, 120) == 120
-        # - Then for exponential backoff on attempt 2: 2**2 == 4
-        assert sleep_calls == [120, 4]
-
-        # And the client should have been called three times:
-        # - Two 429 responses (numeric + non-numeric Retry-After)
-        # - One final successful 200 response
-        assert client.attempt == 3
+        # - First: cap Retry-After min(999,120)=120, jitter 120+uniform(0,60)=120
+        # - Second: non-numeric fallback min(2**1,120)=2, jitter 2+uniform(0,1)=2
+        assert sleep_calls == [120, 2]
 
 
 # ---------------------------------------------------------------------------
