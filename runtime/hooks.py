@@ -1385,17 +1385,47 @@ HOOK_REGISTRY: dict[str, Callable[[HookContext], HookResult]] = {
 }
 
 
+def _build_sk_alias_map() -> dict[str, str]:
+    """Build reverse map from SK-* YAML aliases to HOOK_REGISTRY keys.
+
+    Skill YAMLs declare hooks as SK-GATE, SK-VERIFY, etc.  The registry
+    keys are descriptive (quality-gate, verify, ...).  This map lets
+    run_hooks() accept either format.
+    """
+    alias_map: dict[str, str] = {}
+    for registry_key, fn in HOOK_REGISTRY.items():
+        # fn.__name__ is e.g. "sk_gate" -> SK alias is "SK-GATE"
+        sk_alias = "SK-" + fn.__name__.removeprefix("sk_").upper()
+        alias_map[sk_alias] = registry_key
+    return alias_map
+
+
+_SK_ALIAS_MAP: dict[str, str] = {}  # populated lazily after registry is patched
+
+
+def _resolve_hook_name(name: str) -> str:
+    """Normalise a hook name: accept SK-* aliases or registry keys."""
+    global _SK_ALIAS_MAP
+    if not _SK_ALIAS_MAP:
+        _SK_ALIAS_MAP = _build_sk_alias_map()
+    return _SK_ALIAS_MAP.get(name, name)
+
+
 def run_hooks(hook_names: list[str], ctx: HookContext) -> HookResult:
     """Execute hook chain in declared order, merging results.
 
     Always-on hooks (reality-check, energy-route) run first regardless of
     whether they appear in hook_names.
+
+    Hook names may be registry keys (``quality-gate``) or SK-* aliases
+    from skill YAML (``SK-GATE``).  Both are accepted.
     """
     # Prepend always-on hooks (deduplicate if already in list)
     effective_hooks = list(ALWAYS_ON_HOOKS)
     for name in hook_names:
-        if name not in effective_hooks:
-            effective_hooks.append(name)
+        resolved = _resolve_hook_name(name)
+        if resolved not in effective_hooks:
+            effective_hooks.append(resolved)
 
     merged = HookResult()
     for name in effective_hooks:
