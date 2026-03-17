@@ -123,6 +123,14 @@ class CognitiveState(BaseModel):
         ge=0,
         description="Number of context switches in session. Triggers monotropism guard at >2.",
     )
+    request_id: Optional[str] = Field(
+        default=None,
+        description="Unique request identifier for tracing and resume context.",
+    )
+    resume_context: Optional[dict[str, Any]] = Field(
+        default=None,
+        description="Optional. State from previous execution for continuity.",
+    )
 
     @field_validator("active_mode")
     @classmethod
