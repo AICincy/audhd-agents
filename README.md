@@ -1,8 +1,8 @@
 # audhd-agents
 
-Multi-agent orchestration designed for AuDHD cognition. Nine LLM instances, 52 skills, 21 runtime hooks, energy-adaptive routing, and a FastAPI service with output validation.
+Multi-agent orchestration designed for AuDHD cognition. Nine models across two providers, 47 skills (with subskill routing), 23 runtime hooks, energy-adaptive routing, chain-of-thought reasoning, retrieval-augmented generation, and a FastAPI service with output validation.
 
-Every design decision maps to a real cognitive pattern: monotropism, pattern compression, asymmetric working memory, interest-based activation, executive function offload. This is cognitive augmentation for a competent adult, not safety scaffolding.
+Every design decision maps to a real cognitive pattern: monotropism, pattern compression, asymmetric working memory, interest-based activation, executive function offload. Cognitive augmentation for a competent adult, not safety scaffolding.
 
 MIT License
 
@@ -11,11 +11,12 @@ MIT License
 ```
 Operator input + cognitive_state
         |
-   [ Router ]  reads energy/mode/tier, selects model chain
+   [ Router ]     reads energy/mode/tier, selects model chain
         |
-   [ Hooks ]   21 hooks (3 always-on: reality-check, energy-route, knowledge-inject)
+   [ Hooks ]      23 hooks (3 always-on: reality-check, energy-route, knowledge-inject)
+        |                   COT reasoning + RAG context injected here
         |
-   [ Provider ] OpenAI or Google adapter executes against chosen model
+   [ Provider ]   OpenAI or Google adapter executes against chosen model
         |
    [ Validation ] checks output against PROFILE.md contracts
         |
@@ -33,7 +34,7 @@ pip install -e ".[dev]"
 cp .env.example .env
 ```
 
-Add your API keys to `.env`:
+Add API keys to `.env`:
 
 ```bash
 OPENAI_API_KEY=sk-...           # required
@@ -45,13 +46,13 @@ Verify:
 ```bash
 python scripts/check_connections.py --mode config   # config check, no API calls
 python scripts/check_connections.py --mode live      # live connection test
-pytest -q                                            # 150 tests
+pytest -q                                            # 184 tests
 python build.py                                      # generate dist/ manifests
 ```
 
 ## Models
 
-Nine models registered in [`adapters/config.yaml`](adapters/config.yaml). Full routing matrix and circuit breakers in [AGENT.md](AGENT.md).
+Nine models in [`adapters/config.yaml`](adapters/config.yaml). Full routing matrix and circuit breakers in [AGENT.md](AGENT.md).
 
 | Alias | Model | Provider | Tier | Role |
 |-------|-------|----------|------|------|
@@ -76,25 +77,33 @@ Nine models registered in [`adapters/config.yaml`](adapters/config.yaml). Full r
 
 ## Skills
 
-52 skills across 9 domains, each defined by four files:
+47 skills across 9 domains. Each skill has four files: `skill.yaml` (config), `prompt.md` (prompt), `schema.json` (validation), `examples.json` (test cases).
 
 | Domain | Count | Examples |
 |--------|-------|---------|
-| Engineering | 17 | code-reviewer, software-architect, security-engineer, devops-automator, github-pr-lister |
-| Testing | 8 | reality-checker, accessibility-auditor, performance-benchmarker |
-| Design | 7 | ux-architect, ui-designer, brand-guardian, inclusive-visuals |
-| Specialized | 6 | agents-orchestrator, mcp-builder, model-qa |
+| Engineering | 16 | code-reviewer, software-architect, security-engineer, devops-automator, github-pr-lister |
+| Design | 7 | ux-architect, ui-designer, brand-guardian, inclusive-visuals-specialist |
+| Testing | 7 | reality-checker, accessibility-auditor, performance-benchmarker, evidence-collector |
+| Specialized | 6 | agents-orchestrator, mcp-builder, model-qa, corporate-training |
 | Product | 4 | sprint-prioritizer, feedback-synthesizer, trend-researcher |
-| Support | 4 | compliance-auditor, legal-compliance-checker, analytics-reporter |
-| Project Mgmt | 3 | project-shepherd, experiment-tracker |
-| Marketing | 2 | content-creator, linkedin-content-creator |
+| Project Mgmt | 3 | project-shepherd, experiment-tracker, project-manager-senior |
+| Support | 2 | compliance-auditor, analytics-reporter |
+| Marketing | 1 | content-creator (with linkedin subskill) |
 | Automation | 1 | automation-governance |
 
-Each skill has: `skill.yaml` (definition), `prompt.md` (prompt logic), `schema.json` (validation), `examples.json` (test cases).
+### Subskill routing
+
+Dominant skills absorb related skills as subskills, reducing redundancy while preserving specialized behavior. Subskills are declared in `skill.yaml` and routed via the `subskill` field in `schema.json`.
+
+| Dominant Skill | Subskill | Absorbed From |
+|---------------|----------|---------------|
+| engineering-software-architect | backend | engineering-backend-architect |
+| compliance-auditor | legal-review | support-legal-compliance-checker |
+| marketing-content-creator | linkedin | marketing-linkedin-content-creator |
+| engineering-autonomous-optimization | workflow | testing-workflow-optimizer |
+| support-analytics-reporter | executive-summary | support-executive-summary-generator |
 
 All skills reference `G-PRO31` as primary model with `[G-PRO, O-54P]` fallback chain.
-
-Build manifests for OpenAI and Gemini formats:
 
 ```bash
 python build.py    # outputs to dist/
@@ -102,33 +111,64 @@ python build.py    # outputs to dist/
 
 ## Hooks
 
-21 runtime hooks executed via `run_hooks()` in the router pipeline. Three are always-on and fire on every execution regardless of skill configuration.
+23 runtime hooks executed via `run_hooks()` in the router pipeline. Three always-on hooks fire on every execution regardless of skill configuration.
 
-| Hook | Phase | Always-on |
-|------|-------|-----------|
-| reality-check | prompt_injection | Yes |
-| energy-route | prompt_injection | Yes |
-| knowledge-inject | pre_execute | Yes |
-| decompose | pre_execute | |
-| bridge | pre_execute | |
-| speech-input | pre_execute | |
-| quality-gate | prompt_injection | |
-| verify | prompt_injection | |
-| focus | prompt_injection | |
-| format | prompt_injection | |
-| load-skill | prompt_injection | |
-| micro-step | prompt_injection | |
-| anchor | prompt_injection | |
-| code-review | prompt_injection | |
-| refocus | prompt_injection | |
-| accessibility | prompt_injection | |
-| system-audit | prompt_injection | |
-| tone | prompt_injection | |
-| resume | on_resume | |
-| recover | on_error | |
-| speech-output | post_execute | |
+| Hook | Type | Always-on | Description |
+|------|------|-----------|-------------|
+| reality-check | prompt | Yes | Validates claims, flags drift/hallucination (RC-001 through RC-005) |
+| energy-route | prompt | Yes | Enforces energy-appropriate output density |
+| knowledge-inject | pre-execute | Yes | Injects domain knowledge context |
+| chain-of-thought | prompt | | Structured reasoning: lightweight/standard/deep by tier |
+| retrieval-context | prompt | | RAG: grounds responses in retrieved documents |
+| decompose | pre-execute | | Breaks T4+ tasks into parallel sub-tasks |
+| bridge | pre-execute | | Cross-skill context relay |
+| quality-gate | prompt | | Blocks output below quality threshold |
+| verify | prompt | | Post-generation claim verification |
+| focus | prompt | | Monotropism guard (context switch detection) |
+| format | prompt | | Output structure enforcement |
+| code-review | prompt | | Code-specific review scaffolding |
+| accessibility | prompt | | WCAG/a11y compliance checking |
+| system-audit | prompt | | System-wide audit protocol |
+| speech-input | pre-execute | | STT preprocessing |
+| speech-output | post-execute | | TTS postprocessing |
+| tone | prompt | | Register/formality adaptation |
+| load-skill | prompt | | External VoltAgent skill bridge |
+| resume | on-resume | | Where Was I? protocol |
+| micro-step | prompt | | Low-interest task decomposition |
+| anchor | prompt | | Thread anchoring for monotropism |
+| refocus | prompt | | Attention redirection nudge |
+| recover | on-error | | Error recovery and state save |
 
-Output validation (`runtime/validation.py`) runs after every model call and checks: no em dashes, no filler phrases, no unsolicited motivation, claim tags present for T3+ output, energy-appropriate length.
+Skills opt into hooks via `sk_hooks` in their `skill.yaml` using SK-* aliases (e.g., `SK-COT`, `SK-RAG`, `SK-GATE`).
+
+### Chain of Thought (SK-COT)
+
+Injects structured reasoning scaffolding adapted to task complexity:
+
+| Tier | Mode | Steps |
+|------|------|-------|
+| T1-T2 | Lightweight | Observe, Decide, Act |
+| T3 | Standard | Decompose, Reason, Synthesize, Verify |
+| T4-T5 | Deep | Hypothesize, Evidence for/against, Alternatives, Synthesize, Verify |
+
+Energy gating: LOW and CRASH skip COT (direct answer preferred).
+
+### Retrieval-Augmented Generation (SK-RAG)
+
+Injects retrieved documents into the prompt as grounded context. All RAG-sourced claims must be tagged `[observed]`.
+
+```json
+{
+  "retrieval_context": [
+    {"source": "architecture.md", "content": "...", "relevance_score": 0.95},
+    {"source": "api-spec.yaml", "content": "..."}
+  ]
+}
+```
+
+Energy gating: LOW limits to 3 chunks. CRASH skips RAG entirely.
+
+Output validation (`runtime/validation.py`) runs after every model call: no em dashes, no filler, no unsolicited motivation, claim tags present for T3+, energy-appropriate length.
 
 ## Runtime API
 
@@ -169,8 +209,7 @@ The CLI calls `validate_output()` on every response and prints violations to std
 | Mode | Required variables |
 |------|--------------------|
 | Gemini Developer API | `GOOGLE_API_KEY` |
-| Vertex Express | `GOOGLE_GENAI_USE_VERTEXAI=true`, `VERTEX_API_KEY` |
-| Vertex Standard (ADC) | `GOOGLE_GENAI_USE_VERTEXAI=true`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, `GOOGLE_APPLICATION_CREDENTIALS` |
+| Vertex AI (ADC) | `GOOGLE_GENAI_USE_VERTEXAI=true`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, `GOOGLE_APPLICATION_CREDENTIALS` |
 
 ## Cognitive architecture
 
@@ -189,20 +228,21 @@ Claim tags enforced on T3+ output: `[observed]`, `[inferred]`, `[general]`, `[un
 ```
 adapters/           Provider layer (router, OpenAI, Google adapters, config)
 runtime/            FastAPI service, hooks, validation, cognitive pipeline, schemas
-skills/             52 skill definitions (skill.yaml, prompt.md, schema.json, examples.json)
+skills/             47 skill definitions (skill.yaml, prompt.md, schema.json, examples.json)
+  _base/            Shared schema and prompt base (COT, RAG, cognitive state)
 cli/                sk command-line tool
 scripts/            Diagnostics, smoke tests, provider validation
-tests/              150 tests
+tests/              184 tests
 models/             LLM-specific instruction files (GEMINI.md, OPENAI.md)
-capabilities/       Capability definitions (YAML)
-graphs/             Capability chaining
+capabilities/       Capability definitions (10 capabilities across 47 skills)
+graphs/             Capability chaining and routing rules
 infra/cloudrun/     Cloud Run deployment config
 build.py            Manifest generator (outputs to dist/)
 ```
 
 ## Deployment
 
-Dockerfile and GitHub Actions workflows exist. Cloud Run deployment scaffolding in `infra/cloudrun/`.
+Dockerfile and GitHub Actions workflows provided. Cloud Run deployment scaffolding in `infra/cloudrun/`.
 
 ```bash
 docker build -t audhd-agents .
@@ -212,10 +252,10 @@ See [infra/cloudrun/README.md](infra/cloudrun/README.md) for secrets, variables,
 
 ## Related
 
-- [AICincy/audhd-skills](https://github.com/AICincy/audhd-skills) — skill prompt templates and cognitive augmentation layer
-- [AGENT.md](AGENT.md) — routing matrix, circuit breakers, escalation protocol, cost tracking
-- [PROFILE.md](PROFILE.md) — cognitive profile and output constraints
-- [GROUNDING.md](https://github.com/AICincy/audhd-skills/blob/main/GROUNDING.md) — what every component actually does vs. aspirational
+- [AICincy/audhd-skills](https://github.com/AICincy/audhd-skills): skill prompt templates and cognitive augmentation layer
+- [AGENT.md](AGENT.md): routing matrix, circuit breakers, escalation protocol, cost tracking
+- [PROFILE.md](PROFILE.md): cognitive profile and output constraints
+- [SUGGESTIONS.md](SUGGESTIONS.md): improvement proposals ranked by effort and impact
 
 ## Contributing
 

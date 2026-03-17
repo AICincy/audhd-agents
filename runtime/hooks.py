@@ -1,6 +1,6 @@
 """Skill hooks (sk_hooks) runtime implementation. Resolves A-4.
 
-Hook registry (20 hooks):
+Hook registry (22 hooks):
   Original 6:
     decompose, bridge, quality-gate, verify, focus, format
   F2 additions (11):
@@ -9,6 +9,8 @@ Hook registry (20 hooks):
     code-review, refocus, accessibility, system-audit, recover
   Enhancement additions (3):
     speech-input, speech-output, tone
+  COT + RAG additions (2):
+    chain-of-thought, retrieval-context
 """
 
 from __future__ import annotations
@@ -1355,6 +1357,127 @@ def sk_tone(ctx: HookContext) -> HookResult:
 
 
 # ---------------------------------------------------------------------------
+# COT + RAG hooks (v3: VoltAgent-inspired reasoning and retrieval)
+# ---------------------------------------------------------------------------
+
+def sk_cot(ctx: HookContext) -> HookResult:
+    """chain-of-thought: Inject structured reasoning scaffolding into prompt.
+
+    Adapts reasoning depth to energy level and task tier:
+    - T1/T2: lightweight (observe-decide-act)
+    - T3: standard (decompose-reason-synthesize-verify)
+    - T4/T5: deep (hypothesis-evidence-counterevidence-synthesis-verify)
+
+    Energy gating: LOW = skip COT (direct answer). CRASH = no processing.
+    """
+    result = HookResult()
+    energy = ctx.cognitive_state.energy_level
+    e_key = energy.value if hasattr(energy, "value") else str(energy)
+
+    if e_key in ("crash", "low"):
+        return result
+
+    tier_num = ctx.cognitive_state.task_tier_num
+
+    if tier_num >= 4:
+        cot_block = (
+            "\n\n## Chain of Thought (SK-COT: deep reasoning, T4+)\n"
+            "Before producing output, reason through these steps internally:\n"
+            "1. **Hypothesize**: State the most likely answer or approach\n"
+            "2. **Evidence for**: List supporting facts from the input [observed]\n"
+            "3. **Evidence against**: List contradicting facts or risks [observed]\n"
+            "4. **Alternative hypotheses**: Consider at least one competing approach\n"
+            "5. **Synthesize**: Reconcile evidence into a grounded conclusion\n"
+            "6. **Verify**: Cross-check conclusion against input constraints\n"
+            "Show your reasoning chain in the output under a '## Reasoning' section.\n"
+        )
+    elif tier_num >= 3:
+        cot_block = (
+            "\n\n## Chain of Thought (SK-COT: standard reasoning, T3)\n"
+            "Before producing output, reason through these steps internally:\n"
+            "1. **Decompose**: Break the task into sub-problems\n"
+            "2. **Reason**: Address each sub-problem with evidence from input\n"
+            "3. **Synthesize**: Combine sub-answers into a coherent response\n"
+            "4. **Verify**: Check for contradictions or unsupported claims\n"
+        )
+    else:
+        cot_block = (
+            "\n\n## Chain of Thought (SK-COT: lightweight reasoning, T1-T2)\n"
+            "Before producing output:\n"
+            "1. **Observe**: Key facts from input\n"
+            "2. **Decide**: Best action given constraints\n"
+            "3. **Act**: Produce the output\n"
+        )
+
+    result.modified_prompt = (ctx.prompt or "") + cot_block
+    return result
+
+
+def sk_rag(ctx: HookContext) -> HookResult:
+    """retrieval-context: Inject retrieval-augmented generation context into prompt.
+
+    Reads retrieval_context from options and formats it as grounded context
+    the model must reference. All RAG-sourced claims must be tagged [observed].
+
+    Options:
+        retrieval_context (list[dict]): Retrieved documents/chunks.
+            Each dict should have: source, content, relevance_score (optional).
+        rag_instruction (str): Override default RAG instruction.
+
+    Energy gating: CRASH = no processing. LOW = max 3 chunks.
+    """
+    result = HookResult()
+    energy = ctx.cognitive_state.energy_level
+    e_key = energy.value if hasattr(energy, "value") else str(energy)
+
+    if e_key == "crash":
+        return result
+
+    retrieval_context = ctx.options.get("retrieval_context")
+    if not retrieval_context:
+        return result
+
+    if not isinstance(retrieval_context, list):
+        result.validation_warnings.append(
+            "retrieval_context must be a list of {source, content} dicts"
+        )
+        return result
+
+    # Energy gating: limit chunks in low energy
+    if e_key == "low":
+        retrieval_context = retrieval_context[:3]
+
+    # Format retrieved chunks
+    chunks = []
+    for i, doc in enumerate(retrieval_context, 1):
+        source = doc.get("source", f"document-{i}")
+        content = doc.get("content", "")
+        score = doc.get("relevance_score")
+        score_label = f" (relevance: {score})" if score is not None else ""
+        chunks.append(f"### Source {i}: {source}{score_label}\n{content}")
+
+    custom_instruction = ctx.options.get("rag_instruction", "")
+    default_instruction = (
+        "Use ONLY the retrieved context below to support your response. "
+        "Tag all claims derived from these sources as [observed]. "
+        "If the retrieved context does not contain sufficient information, "
+        "state so explicitly rather than fabricating an answer."
+    )
+    instruction = custom_instruction or default_instruction
+
+    rag_block = (
+        "\n\n## Retrieved Context (SK-RAG: retrieval-augmented generation)\n"
+        f"{instruction}\n\n"
+        + "\n\n".join(chunks)
+        + "\n\n---\nEnd of retrieved context. "
+        "Base your response on the above sources.\n"
+    )
+
+    result.modified_prompt = (ctx.prompt or "") + rag_block
+    return result
+
+
+# ---------------------------------------------------------------------------
 # Hook Registry
 # ---------------------------------------------------------------------------
 
@@ -1382,6 +1505,9 @@ HOOK_REGISTRY: dict[str, Callable[[HookContext], HookResult]] = {
     "speech-input": sk_stt,
     "speech-output": sk_tts,
     "tone": sk_tone,
+    # COT + RAG (v3: VoltAgent-inspired)
+    "chain-of-thought": sk_cot,
+    "retrieval-context": sk_rag,
 }
 
 
