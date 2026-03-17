@@ -17,7 +17,7 @@ Applies to: Gemini 3.1 Pro Preview (G-PRO31, primary), Gemini 3.1 Flash (G-FLA31
 
 ### G-PRO31: Primary Deep Analyst (Gemini 3.1 Pro Preview)
 
-Primary model for analysis, drafting, OSINT, and high-tier tasks across all 51 skills.
+Primary model for analysis, drafting, OSINT, and high-tier tasks across all 47 skills.
 
 ### G-FLA31: Rapid Verifier (Gemini 3.1 Flash)
 

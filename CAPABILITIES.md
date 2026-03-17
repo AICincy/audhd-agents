@@ -1,6 +1,6 @@
 # Capability Map
 
-Maps all 51 skills to 10 atomic capabilities. Each skill has one primary capability and zero or one secondary.
+Maps all 47 skills to 10 atomic capabilities. Each skill has one primary capability and zero or one secondary.
 
 ## Capabilities
 
@@ -8,16 +8,16 @@ Maps all 51 skills to 10 atomic capabilities. Each skill has one primary capabil
 | --- | --- | --- | --- |
 | research | Gather and trace information | ux-researcher, trend-researcher, evidence-collector, github-pr-lister | 4 |
 | analyze | Find patterns, risks, anomalies | code-reviewer, incident-response, nudge-engine, test-results-analyzer | 4 |
-| synthesize | Merge inputs into unified output | feedback-synthesizer, analytics-reporter, exec-summary-generator | 3 |
-| generate | Produce new artifacts | rapid-prototyper, frontend-dev, devops, git-workflow, ai-engineer, technical-writer, training, image-prompt, inclusive-visuals, ui-designer, visual-storyteller, content-creator, linkedin-creator, dev-advocate, doc-generator, mcp-builder | 16 |
+| synthesize | Merge inputs into unified output | feedback-synthesizer, analytics-reporter | 2 |
+| generate | Produce new artifacts | rapid-prototyper, frontend-dev, devops, git-workflow, ai-engineer, technical-writer, training, image-prompt, inclusive-visuals, ui-designer, visual-storyteller, content-creator, dev-advocate, doc-generator, mcp-builder | 15 |
 | transform | Convert formats and structures | ai-data-remediation, data-engineer, lsp-index-engineer | 3 |
 | evaluate | Assess quality and performance | api-tester, perf-benchmarker, reality-checker, tool-evaluator, model-qa, experiment-tracker, brand-guardian | 7 |
-| plan | Create architectures and roadmaps | software-architect, backend-architect, sprint-prioritizer, project-shepherd, project-manager, ux-architect | 6 |
+| plan | Create architectures and roadmaps | software-architect, sprint-prioritizer, project-shepherd, project-manager, ux-architect | 5 |
 | orchestrate | Coordinate skills and agents | agents-orchestrator | 1 |
-| audit | Check compliance and security | compliance-auditor, automation-governance, security-engineer, accessibility-auditor, legal-compliance-checker | 5 |
-| optimize | Improve performance and efficiency | autonomous-optimization, database-optimizer, workflow-optimizer | 3 |
+| audit | Check compliance and security | compliance-auditor, automation-governance, security-engineer, accessibility-auditor | 4 |
+| optimize | Improve performance and efficiency | autonomous-optimization, database-optimizer | 2 |
 
-**Total: 52 skills across 10 capabilities** (some skills appear as secondary in other capabilities)
+**Total: 47 skills across 10 capabilities** (some skills appear as secondary in other capabilities)
 
 ## Capability Graph Chains
 
@@ -36,8 +36,8 @@ Maps all 51 skills to 10 atomic capabilities. Each skill has one primary capabil
 | --- | --- | --- |
 | Capability definitions | Done | 10 capabilities defined in `capabilities/` |
 | Graph and routing rules | Done | `graphs/capability_graph.yaml`, `graphs/routing_rules.yaml` |
-| Skill mapping (51 skills) | Done | All skills have `skill.yaml`, `prompt.md`, `schema.json`, `examples.json` |
-| Skill-level capability tags | Done | All 51 `skill.yaml` files have `capabilities:` field |
+| Skill mapping (47 skills) | Done | All skills have `skill.yaml`, `prompt.md`, `schema.json`, `examples.json` |
+| Skill-level capability tags | Done | All 47 `skill.yaml` files have `capabilities:` field |
 | Runtime planner | Done | `runtime/planner.py` with trigger matching and chain resolution |
 | Capability-aware routing | Done | `adapters/router.py` supports `execute_chain` for capability chains |
 | API validation (live calls) | Partial | Config validation passes; full live skill validation in progress |
