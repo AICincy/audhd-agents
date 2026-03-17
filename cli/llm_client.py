@@ -53,8 +53,11 @@ def _load_model_map() -> dict[str, tuple[str, str]]:
         try:
             resolved.relative_to(project_root)
         except ValueError:
+            safe_override = repr(override_path)
+            if len(safe_override) > 200:
+                safe_override = safe_override[:197] + "..."
             print(
-                f"Warning: SK_MODEL_MAP_FILE path '{override_path}' is outside project root, ignoring",
+                f"Warning: SK_MODEL_MAP_FILE path {safe_override} is outside project root, ignoring",
                 file=sys.stderr,
             )
             return MODEL_MAP
