@@ -316,7 +316,7 @@ class SkillRouter:
         if not cognitive_state.active_mode or cognitive_state.active_mode == "execute":
             inferred = infer_mode(request.input_text)
             if inferred != "execute":
-                cognitive_state.active_mode = inferred
+                cognitive_state = cognitive_state.model_copy(update={"active_mode": inferred})
 
         # Step 3: Load skill (offload blocking I/O)
         loop = asyncio.get_running_loop()
@@ -337,7 +337,7 @@ class SkillRouter:
         model_chain = filter_model_chain(model_chain, cognitive_state, self.alias_map)
 
         # Crash mode: no new tasks
-        if not model_chain and cognitive_state.is_crash:
+        if not model_chain and cognitive_state.is_crash():
             return SkillResponse(
                 output={
                     "raw": (
@@ -549,7 +549,7 @@ class SkillRouter:
         if not cognitive_state.active_mode or cognitive_state.active_mode == "execute":
             inferred = infer_mode(request.input_text)
             if inferred != "execute":
-                cognitive_state.active_mode = inferred
+                cognitive_state = cognitive_state.model_copy(update={"active_mode": inferred})
 
         # Use planner to parse intentions and determine capability chain
         capabilities = self.planner.plan_execution_chain(request.input_text)
