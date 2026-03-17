@@ -108,19 +108,22 @@ def register_middleware(app: FastAPI, *, cors_origins: list[str] | None = None) 
     4. Server timing
     """
     # CORS
-    origins = cors_origins or [
-        "http://localhost:3000",
-        "http://localhost:8000",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:8000",
-    ]
+    if cors_origins is not None:
+        origins: list[str] = cors_origins
+    else:
+        # Default to an empty allowlist; rely on CORS_ALLOWED_ORIGINS or
+        # explicit cors_origins to configure allowed origins.
+        origins = []
 
     # AUDIT-FIX: P1-5 -- replace ngrok regex with env-based allowlist
     import os
     cors_env = os.environ.get("CORS_ALLOWED_ORIGINS", "")
     if cors_env:
         extra_origins = [o.strip() for o in cors_env.split(",") if o.strip()]
-        origins = origins + extra_origins
+        if origins:
+            origins = origins + extra_origins
+        else:
+            origins = extra_origins
 
     app.add_middleware(
         CORSMiddleware,
