@@ -909,12 +909,95 @@ This audit prompt enforces all cognitive contracts from PROFILE.md and AGENT.md:
 
 ---
 
-## Execution Notes
+## Appendix A: Verified Audit Findings
 
-- **Do NOT execute this prompt.** This document defines the audit protocol.
-- To execute: Route to agents-orchestrator with energy_level=HIGH, task_tier=T5.
-- Estimated token budget: ~200K tokens across all phases (varies by finding density).
-- Estimated cost tier: $$$ (T5 with dual-model verification across 10 phases).
-- Recommended execution: Phase-by-phase with Operator review between phases.
-- All 26 subagents are drawn from the repository's existing 52-skill catalog.
-- No external tools or skills are required; the audit is self-contained within the system.
+> This appendix documents findings from a third-party audit that were verified using the project's reality-checker protocol. Each finding was validated against the actual codebase with evidence tagged per the claim tagging standard.
+
+### Verification Summary
+
+| Finding | Verdict | Severity | Status | CWE Reference |
+|---|---|---|---|---|
+| S1: .env secrets exposure | [observed] Properly .gitignored; not in version control | N/A | SECURE | N/A |
+| S2: Path traversal via SK_MODEL_MAP_FILE | [observed] cli/llm_client.py:39-46 | MEDIUM | FIXED | CWE-22 |
+| S3: Exception details in HTTP responses | [observed] runtime/app.py:312-315 | HIGH | FIXED | CWE-209 |
+| S4: No auth on /execute endpoint | [observed] runtime/app.py:224 | CRITICAL | FIXED | CWE-306 |
+| S5: Overpermissive CORS | [observed] runtime/middleware.py:113-119 | MEDIUM | FIXED | CWE-942 |
+| S6: No rate limiting | [observed] Absent from codebase | HIGH | DEFERRED | CWE-770 |
+| S7: Dev /webhooks/test guarded at runtime only | [inferred] runtime/webhooks.py:326-338 | MEDIUM | FIXED | CWE-749 |
+| S8: Unvalidated model_override | [observed] runtime/schemas.py:196-199 | MEDIUM | FIXED | CWE-20 |
+| P1: Eager skill loading at startup | [observed] runtime/app.py:114-127 | PERF | DEFERRED | N/A |
+| P2: Sync I/O on event loop | [observed] adapters/router.py, runtime/planner.py | PERF | DEFERRED | N/A |
+| P3: No synchronization in EventDeduplicator | [inferred] runtime/webhooks.py:43-80 | PERF | DEFERRED | N/A |
+| P4: No explicit LLM client timeouts | [observed] adapters/openai_adapter.py, google_adapter.py | RELIABILITY | FIXED | CWE-400 |
+
+### Grounding: Security Standards Alignment
+
+| Finding | OWASP Category | Industry Standard |
+|---|---|---|
+| S2: Path traversal | A01:2021 Broken Access Control | Path canonicalization with resolve() + relative_to() is the Python standard mitigation per CWE-22 |
+| S3: Error info leak | A09:2021 Security Logging and Monitoring Failures | Generic error messages in production; detailed logging server-side per CWE-209 |
+| S4: Missing auth | A07:2021 Identification and Authentication Failures | Bearer token auth via FastAPI Depends() with constant-time comparison per CWE-306 |
+| S5: CORS misconfiguration | A05:2021 Security Misconfiguration | Environment-conditional origin regex; explicit header allowlist per CWE-942 |
+| S8: Input validation | A03:2021 Injection | Pydantic pattern + max_length constraints on all user-supplied strings per CWE-20 |
+| P4: Resource exhaustion | A04:2021 Insecure Design | Explicit 120s timeout on all external HTTP clients per CWE-400 |
+
+### Dependency Security Verification
+
+All production dependencies checked against GitHub Advisory Database (2026-03-17):
+
+| Package | Version | Vulnerabilities |
+|---|---|---|
+| pyyaml | >=6.0 | None found |
+| fastapi | >=0.115 | None found |
+| uvicorn | >=0.30 | None found |
+| openai | >=1.0 | None found |
+| google-genai | >=1.67.0 | None found |
+| python-dotenv | >=1.0 | None found |
+
+### Positive Controls (No Action Needed)
+
+| Control | Evidence | Tag |
+|---|---|---|
+| HMAC-SHA256 webhook verification | runtime/auth.py:53-115 with constant-time comparison | [observed] |
+| Replay protection | runtime/auth.py:83-93 with 5-min timestamp window | [observed] |
+| Cloud Run IAM perimeter | deploy-cloud-run.yml: --no-allow-unauthenticated | [observed] |
+| Safe YAML parsing | yaml.safe_load() used everywhere | [observed] |
+| Non-root Docker container | Dockerfile: USER nonroot | [observed] |
+| Deterministic CI builds | python-package.yml: git diff --exit-code -- dist | [observed] |
+| GCP Secret Manager | deploy-cloud-run.yml: --set-secrets from GCP | [observed] |
+| Immutable deploy by digest | deploy-cloud-run.yml: image deployed by SHA digest | [observed] |
+| Auto-rollback on smoke failure | deploy-cloud-run.yml: rollback-staging/production jobs | [observed] |
+| Input sanitization | runtime/sanitize.py: injection pattern detection | [observed] |
+
+### Remediation Applied
+
+| Step | Finding | Change | File(s) |
+|---|---|---|---|
+| 1 | S2 | Path.resolve() + relative_to(project_root) validation | cli/llm_client.py |
+| 2 | S3 | Generic error detail in production; full detail in dev | runtime/app.py |
+| 3 | S4 | Added dependencies=[Depends(verify_api_key)] to /execute | runtime/app.py |
+| 4 | S5 | Conditional ngrok regex (dev only); explicit header allowlist | runtime/middleware.py |
+| 5 | S7 | Added APP_ENV env var check as first guard | runtime/webhooks.py |
+| 6 | S8 | Added pattern=r"^[a-zA-Z0-9._-]+$", max_length=100 | runtime/schemas.py |
+| 7 | P4 | Added timeout=120.0 to OpenAI client; timeout=120000 to Google HttpOptions | adapters/openai_adapter.py, adapters/google_adapter.py |
+
+### Deferred Items (Future Sprint)
+
+| Finding | Rationale for Deferral | Recommended Timeline |
+|---|---|---|
+| S6: Rate limiting | Requires adding slowapi dependency; Cloud Run IAM provides perimeter protection | Next sprint |
+| P1: Eager skill loading | Current ~2s startup within Cloud Run tolerance; refactor scope is large | Next quarter |
+| P2: Sync I/O on event loop | Startup-only impact; does not affect request latency | Next quarter |
+| P3: EventDeduplicator synchronization | Single-worker uvicorn means no actual race condition currently | When scaling to multiple workers |
+
+### Obsolete Files Removed
+
+| File | Reason | Impact |
+|---|---|---|
+| node_modules/ (2286 files, 30MB) | Tracked in git despite .gitignore entry; Google Cloud SDK node deps | Reduced repo size significantly |
+| scripts/test_reality_check.py | Unreferenced ad-hoc test script; not in CI or docs | None |
+| scripts/update_primary_gemini.py | One-time migration script; job complete | None |
+| scripts/update_capabilities.py | One-time migration script; job complete | None |
+| pyrightconfig.json | Pyright type checker not integrated in CI/CD | None |
+| .pyre_configuration | Pyre type checker not integrated in CI/CD | None |
+| .gitignore: package.json/package-lock.json lines | Files do not exist; entries were unnecessary | None |
