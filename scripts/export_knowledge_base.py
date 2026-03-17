@@ -13,6 +13,7 @@ import sys
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 KNOWLEDGE_DIR = Path("skills/engineering-technical-writer/knowledge")
 DEFAULT_OUTPUT = Path("dist/knowledge-base.zip")
@@ -87,7 +88,7 @@ def validate_knowledge_base(kb_dir: Path) -> list[str]:
     return errors
 
 
-def build_manifest(kb_dir: Path) -> dict:
+def build_manifest(kb_dir: Path) -> dict[str, Any]:
     """Build an export manifest with metadata about the knowledge base."""
     index_path = kb_dir / "rag-index.json"
     with open(index_path) as f:

@@ -44,7 +44,7 @@ Define consistent voice, tone, formatting, and language rules for technical docu
 
 | Rule | Guideline |
 | --- | --- |
-| Em dashes | Never use em dashes or en dashes. Use colons, semicolons, or parentheses. [observed] |
+| Em dashes | Never use em dashes or en dashes (enforced by PROFILE.md cognitive contract and runtime validation). Use colons, semicolons, or parentheses. [observed] |
 | Oxford comma | Always use the Oxford comma in lists. [general] |
 | Periods in lists | Use periods for complete sentences. Omit for fragments. [general] |
 | Exclamation marks | Never in technical documentation. [general] |
