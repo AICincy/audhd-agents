@@ -54,7 +54,7 @@ def _load_model_map() -> dict[str, tuple[str, str]]:
                 file=sys.stderr,
             )
             return MODEL_MAP
-        with open(resolved) as f:
+        with open(resolved, encoding="utf-8") as f:
             raw = json.load(f)
         merged = dict(MODEL_MAP)
         for alias, pair in raw.items():
