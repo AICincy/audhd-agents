@@ -40,7 +40,7 @@
 
 ## Claim Tags
 
-- Use [OBS] for observations from data, [DRV] for derived conclusions, [SPEC] for specific projections.
+- Use [observed] for observations from data, [inferred] for derived conclusions, [unverified] for specific projections.
 
 ## Where Was I? Protocol
 

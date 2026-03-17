@@ -46,10 +46,10 @@ Audit proposed automations before deployment, focusing on value, risk, maintaina
 ## Claim Tags
 
 - Label information clearly: 
-  - [OBS] Observations about the automation
-  - [DRV] Derived conclusions from data
-  - [GEN] General insights about automation
-  - [SPEC] Specific details about the case
+  - [observed] Observations about the automation
+  - [inferred] Derived conclusions from data
+  - [general] General insights about automation
+  - [unverified] Specific details about the case
 
 ## Where Was I?
 

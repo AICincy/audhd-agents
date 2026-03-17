@@ -38,7 +38,7 @@ Ensure consistent brand enforcement across all assets, communications, and inter
 
 ## Claim Tags
 
-- Apply [OBS] for observed violations, [DRV] for inferred risks, [GEN] for general observations, and [SPEC] for subjective assessments.
+- Apply [observed] for observed violations, [inferred] for inferred risks, [general] for general observations, and [unverified] for subjective assessments.
 
 ## Where Was I? Protocol
 

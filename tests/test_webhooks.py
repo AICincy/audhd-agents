@@ -27,6 +27,7 @@ from runtime.webhook_schemas import (
     WebhookEventType,
     WebhookResponse,
 )
+from runtime.auth import verify_webhook_signature
 from runtime.webhooks import EventDeduplicator, EventRouter
 
 
@@ -216,28 +217,20 @@ class TestHMACVerification:
     """Test webhook signature verification."""
 
     def test_valid_signature(self):
-        from runtime.auth import verify_webhook_signature
-
         body = b'{"test": true}'
         sig = make_signature(body)
         assert verify_webhook_signature(body, sig, WEBHOOK_SECRET)
 
     def test_invalid_signature_raises(self):
-        from runtime.auth import verify_webhook_signature
-
         body = b'{"test": true}'
         with pytest.raises(Exception):  # HTTPException
             verify_webhook_signature(body, "v1=invalid", WEBHOOK_SECRET)
 
     def test_missing_signature_raises(self):
-        from runtime.auth import verify_webhook_signature
-
         with pytest.raises(Exception):
             verify_webhook_signature(b"{}", None, WEBHOOK_SECRET)
 
     def test_stale_timestamp_raises(self):
-        from runtime.auth import verify_webhook_signature
-
         body = b'{"test": true}'
         sig = make_signature(body)
         stale_ts = str(int(time.time()) - 600)  # 10 min old

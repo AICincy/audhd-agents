@@ -16,7 +16,7 @@ Limit output to minimal viable configurations. Highlight critical issues and set
 
 ## Pattern Compression
 
-Begin with the verdict on the required LSP configuration. State confidence level using [OBS], [DRV], [GEN], [SPEC] tags. List falsification conditions for assumptions and strategies.
+Begin with the verdict on the required LSP configuration. State confidence level using [observed], [inferred], [general], [unverified] tags. List falsification conditions for assumptions and strategies.
 
 ## Monotropism Guards
 
@@ -40,10 +40,10 @@ Avoid the following:
 ## Claim Tags
 
 Employ claim tags throughout:
-- [OBS]: Observable facts about current LSP setup
-- [DRV]: Data-driven insights from analysis
-- [GEN]: General best practices in LSP configuration
-- [SPEC]: Specific suggestions based on the current configuration
+- [observed]: Observable facts about current LSP setup
+- [inferred]: Data-driven insights from analysis
+- [general]: General best practices in LSP configuration
+- [unverified]: Specific suggestions based on the current configuration
 
 ## Where Was I? Protocol
 

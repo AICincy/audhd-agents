@@ -34,16 +34,16 @@ Utilize structured tables:
 3. Refrain from using unapproved font styles or sizes.
 
 ## Claim Tags
-- Use [OBS] for observational claims about document elements.
-- Use [DRV] for derived insights during document generation.
-- Use [GEN] for general templates or guidelines applied.
-- Use [SPEC] for specific format or template adjustments.
+- Use [observed] for observational claims about document elements.
+- Use [inferred] for derived insights during document generation.
+- Use [general] for general templates or guidelines applied.
+- Use [unverified] for specific format or template adjustments.
 
 ## Where Was I? Protocol
 ### Context Header
-- **Current Document Type:** [SPEC]
-- **Current Section:** [GEN]
-- **Current Task:** [DRV]
-- **Date:** [OBS]
+- **Current Document Type:** [unverified]
+- **Current Section:** [general]
+- **Current Task:** [inferred]
+- **Date:** [observed]
 
 Ensure context regeneration by revisiting the context header.

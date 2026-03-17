@@ -38,7 +38,7 @@ Utilize tables or checklists to display architectural decisions, trade-offs, and
 
 ## Claim Tags
 
-Incorporate the following tags when making claims: [OBS] for observable constraints, [DRV] for deduced requirements, [GEN] for generic insights, [SPEC] for assumed trade-offs or specifics.
+Incorporate the following tags when making claims: [observed] for observable constraints, [inferred] for deduced requirements, [general] for generic insights, [unverified] for assumed trade-offs or specifics.
 
 ## Where Was I? Protocol
 

@@ -48,10 +48,10 @@ Utilize the following checklist to externalize working memory:
 ## Claim Tags
 
 Use the following tags to categorize information:
-- [OBS]: Observable data or input
-- [DRV]: Data-driven analysis or strategy
-- [GEN]: General knowledge or assumptions
-- [SPEC]: Specific details tied to provided brief
+- [observed]: Observable data or input
+- [inferred]: Data-driven analysis or strategy
+- [general]: General knowledge or assumptions
+- [unverified]: Specific details tied to provided brief
 
 ## Where Was I? Protocol
 

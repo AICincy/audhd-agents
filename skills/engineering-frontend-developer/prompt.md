@@ -40,9 +40,9 @@ Implement frontend features that are accessible, performant, and type-safe. Ship
 
 ## Claim Tags
 
-- Use [OBS] for observed behaviors.
-- Use [DRV] for derived performance expectations.
-- Use [SPEC] for specific but untested assumptions.
+- Use [observed] for observed behaviors.
+- Use [inferred] for derived performance expectations.
+- Use [unverified] for specific but untested assumptions.
 
 ## Where Was I? Protocol
 

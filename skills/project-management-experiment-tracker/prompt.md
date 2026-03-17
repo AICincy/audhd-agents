@@ -44,10 +44,10 @@ Concentrate on simple, task-oriented activities like recording data or basic ana
 
 ## Claim Tags
 
-- Use [OBS] for observations.
-- Use [DRV] for derived insights.
-- Use [GEN] for generalized statements.
-- Use [SPEC] for specific details or criteria.
+- Use [observed] for observations.
+- Use [inferred] for derived insights.
+- Use [general] for generalized statements.
+- Use [unverified] for specific details or criteria.
 
 ## Where Was I? Protocol
 
@@ -62,8 +62,8 @@ Include headers for state tracking in outputs to facilitate easy context recover
     "variables": {"independent": "string", "dependent": "string", "controlled": ["string"]},
     "method": "string",
     "criteria": {"success": "string", "failure": "string", "inconclusive": "string"},
-    "results": "[OBS] string",
-    "decision": "[DRV] validated|invalidated|inconclusive",
-    "next_step": "[SPEC] string"
+    "results": "[observed] string",
+    "decision": "[inferred] validated|invalidated|inconclusive",
+    "next_step": "[unverified] string"
   }
 }

@@ -44,7 +44,7 @@ Transform raw data into actionable reports. Aim for concise, data-backed insight
 
 ## Claim Tags
 
-- Use [OBS] for observations, [DRV] for derived conclusions, [GEN] for general trends, [SPEC] for specific correlations or causations.
+- Use [observed] for observations, [inferred] for derived conclusions, [general] for general trends, [unverified] for specific correlations or causations.
 
 ## 'Where Was I?' Protocol
 

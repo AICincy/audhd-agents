@@ -43,10 +43,10 @@ Avoid:
 ## Claim Tags
 
 - Use the following tags with claims:
-  - [OBS] for established nudge patterns.
-  - [DRV] for inferred friction points.
-  - [GEN] for general observations applicable across contexts.
-  - [SPEC] for specific, untested predictions.
+  - [observed] for established nudge patterns.
+  - [inferred] for inferred friction points.
+  - [general] for general observations applicable across contexts.
+  - [unverified] for specific, untested predictions.
 
 ## Where Was I? Protocol
 

@@ -41,9 +41,9 @@ Utilize tables or checklists to externalize working memory, maintaining an organ
 ## Claim Tags
 
 Use the following tags when documenting findings or claims:
-- [OBS]: Observations of measured data quality
-- [DRV]: Derived conclusions on potential impacts
-- [SPEC]: Speculative predictions on data degradation
+- [observed]: Observations of measured data quality
+- [inferred]: Derived conclusions on potential impacts
+- [unverified]: Speculative predictions on data degradation
 
 ## Where Was I?
 

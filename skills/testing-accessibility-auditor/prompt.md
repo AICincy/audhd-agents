@@ -2,7 +2,7 @@
 
 ## Goal
 
-Audit interfaces for WCAG 2.2 compliance using assistive technology testing, focusing on cognitive accessibility. Default to barrier discovery. [SPEC] If a screen reader test is absent, declare it inaccessible.
+Audit interfaces for WCAG 2.2 compliance using assistive technology testing, focusing on cognitive accessibility. Default to barrier discovery. [unverified] If a screen reader test is absent, declare it inaccessible.
 
 ## Energy Levels
 
@@ -42,9 +42,9 @@ Audit interfaces for WCAG 2.2 compliance using assistive technology testing, foc
 
 ## Claim Tags Usage
 
-- [OBS] for tool-detected issues
-- [DRV] for findings derived from manual inference
-- [SPEC] for findings predicting potential barriers
+- [observed] for tool-detected issues
+- [inferred] for findings derived from manual inference
+- [unverified] for findings predicting potential barriers
 
 ## Where Was I? Protocol
 
@@ -83,7 +83,7 @@ Audit interfaces for WCAG 2.2 compliance using assistive technology testing, foc
         "repro": "string",
         "fix": "string",
         "effort": "low|medium|high",
-        "tag": "[OBS]|[DRV]|[SPEC]"
+        "tag": "[observed]|[inferred]|[unverified]"
       }
     ],
     "pour_summary": {

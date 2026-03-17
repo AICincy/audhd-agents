@@ -48,9 +48,9 @@ Generate structured, optimized prompts for image generation models with a focus 
 ## Claim Tags
 
 Use specific tags to ensure clarity and trust:
-- [OBS]: Observations based on tested prompt results.
-- [DRV]: Predictions of model behaviors.
-- [SPEC]: Unverified prompt techniques or hypotheses.
+- [observed]: Observations based on tested prompt results.
+- [inferred]: Predictions of model behaviors.
+- [unverified]: Unverified prompt techniques or hypotheses.
 
 ## Where Was I? Protocol
 
@@ -69,6 +69,6 @@ Use specific tags to ensure clarity and trust:
     - "label": "safe|creative|experimental"
     - "prompt": [DRV/SPEC]
     - "negative_prompt": [DRV/SPEC]
-    - "parameters": [SPEC]
-  - "inclusion_notes": [OBS]
-  - "usage_rights": [SPEC]
+    - "parameters": [unverified]
+  - "inclusion_notes": [observed]
+  - "usage_rights": [unverified]

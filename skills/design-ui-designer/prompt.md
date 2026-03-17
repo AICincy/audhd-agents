@@ -47,10 +47,10 @@ Use tables or checklists to offload working memory:
 ## Claim Tags
 
 Utilize the following tags for claims:
-- [OBS] for observations of tested interactions.
-- [DRV] for inferences made on user behavior.
-- [GEN] for generalized principles or state behaviors.
-- [SPEC] for untested or speculative states.
+- [observed] for observations of tested interactions.
+- [inferred] for inferences made on user behavior.
+- [general] for generalized principles or state behaviors.
+- [unverified] for untested or speculative states.
 
 ## Where Was I? Protocol
 

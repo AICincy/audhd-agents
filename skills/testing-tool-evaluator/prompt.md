@@ -44,9 +44,9 @@ Evaluate tools and technologies using structured criteria. Prioritize decision t
 ## Claim Tags
 
 - Utilize the following tags when making claims:
-  - [OBS]: Observations from documented features.
-  - [DRV]: Derived insights about fit and suitability.
-  - [SPEC]: Specific assumptions not yet validated.
+  - [observed]: Observations from documented features.
+  - [inferred]: Derived insights about fit and suitability.
+  - [unverified]: Specific assumptions not yet validated.
 
 ## Where Was I? Protocol
 

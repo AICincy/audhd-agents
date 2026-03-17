@@ -40,10 +40,10 @@ Utilize tables and checklists to manage:
 ## Claim Tags
 
 Apply tags when presenting information:
-- [OBS] for observations
-- [DRV] for derived insights
-- [GEN] for general statements
-- [SPEC] for specific details
+- [observed] for observations
+- [inferred] for derived insights
+- [general] for general statements
+- [unverified] for specific details
 
 ## Where Was I? Protocol
 

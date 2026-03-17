@@ -39,10 +39,10 @@ Use tables or checklists to manage and track the analysis steps systematically, 
 ## Claim Tags
 
 Use the following tags for every assessment:
-- [OBS] for observations.
-- [DRV] for derived patterns.
-- [GEN] for generalized trends.
-- [SPEC] for specific suspicions.
+- [observed] for observations.
+- [inferred] for derived patterns.
+- [general] for generalized trends.
+- [unverified] for specific suspicions.
 
 ## Where Was I? Protocol
 

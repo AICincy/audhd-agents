@@ -21,6 +21,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from runtime.auth import verify_webhook
+from runtime.pipeline_bridge import dispatch_event, is_ready as bridge_ready
 from runtime.webhook_schemas import (
     EventCategory,
     ProcessedEvent,
@@ -159,8 +160,6 @@ async def log_event(event: WebhookEvent) -> None:
 
 async def handle_page_event(event: WebhookEvent) -> None:
     """Process page lifecycle events through the cognitive pipeline."""
-    from runtime.pipeline_bridge import dispatch_event
-
     entity = event.data.entity
 
     logger.info(
@@ -188,8 +187,6 @@ async def handle_page_event(event: WebhookEvent) -> None:
 
 async def handle_database_event(event: WebhookEvent) -> None:
     """Process database lifecycle events through the cognitive pipeline."""
-    from runtime.pipeline_bridge import dispatch_event
-
     logger.info(
         json.dumps({
             "event": "database_event_routing",
@@ -203,8 +200,6 @@ async def handle_database_event(event: WebhookEvent) -> None:
 
 async def handle_data_source_event(event: WebhookEvent) -> None:
     """Process data source events through the cognitive pipeline."""
-    from runtime.pipeline_bridge import dispatch_event
-
     logger.info(
         json.dumps({
             "event": "data_source_event_routing",
@@ -319,8 +314,6 @@ async def receive_webhook(request: Request, body: bytes = Depends(verify_webhook
 @router.get("/notion")
 async def webhook_health():
     """Health check for webhook subsystem."""
-    from runtime.pipeline_bridge import is_ready as bridge_ready
-
     return {
         "status": "ok",
         "pipeline_bridge": "ready" if bridge_ready() else "not_initialized",

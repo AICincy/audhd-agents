@@ -40,10 +40,10 @@ Use structured tables or checklists to manage prototype elements:
 
 ## Claim Tags
 Tag all assertions with appropriate labels:
-- [OBS] for observations in tested prototypes.
-- [DRV] for derived or projected feasibility insights.
-- [GEN] for general statements applicable broadly.
-- [SPEC] for specific untested hypotheses or assumptions.
+- [observed] for observations in tested prototypes.
+- [inferred] for derived or projected feasibility insights.
+- [general] for general statements applicable broadly.
+- [unverified] for specific untested hypotheses or assumptions.
 
 ## Where Was I? Protocol
 Include a state-tracking header in every output:

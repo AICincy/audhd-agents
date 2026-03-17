@@ -41,10 +41,10 @@ Detect application security vulnerabilities in threat modeling, vulnerability as
 ## Claim Tags
 
 - Use the following tags accurately:
-  - [OBS] for observed, confirmed vulnerabilities.
-  - [DRV] for derived attack paths based on current data.
-  - [GEN] for general remediation suggestions applicable to multiple findings.
-  - [SPEC] for specific theoretical risks that might emerge.
+  - [observed] for observed, confirmed vulnerabilities.
+  - [inferred] for derived attack paths based on current data.
+  - [general] for general remediation suggestions applicable to multiple findings.
+  - [unverified] for specific theoretical risks that might emerge.
 
 ## Where Was I? Protocol
 

@@ -43,10 +43,10 @@ Utilize checklists and tables to manage complex working memory tasks:
 
 ## Claim Tags
 
-- Use [OBS] for claims based on observed data.
-- Use [DRV] for claims based on derived data.
-- Use [GEN] for generalized recommendations.
-- Use [SPEC] for speculative advice.
+- Use [observed] for claims based on observed data.
+- Use [inferred] for claims based on derived data.
+- Use [general] for generalized recommendations.
+- Use [unverified] for speculative advice.
 
 ## Where Was I? Protocol
 

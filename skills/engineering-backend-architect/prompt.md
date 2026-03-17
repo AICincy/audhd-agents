@@ -40,7 +40,7 @@ Design backend systems that are correct, observable, and recoverable. Deceptivel
 
 ## Claim Tags
 
-- Use [OBS] for observations on measured requirements, [DRV] for deductions from inferred load patterns, [GEN] for generalized principles, and [SPEC] for specific assumptions regarding scale or technology.
+- Use [observed] for observations on measured requirements, [inferred] for deductions from inferred load patterns, [general] for generalized principles, and [unverified] for specific assumptions regarding scale or technology.
 
 ## Where Was I?
 

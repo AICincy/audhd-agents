@@ -40,10 +40,10 @@ Utilize checklists or tables to externalize and simplify consideration of requir
 
 ## Claim Tags
 When making claims, use the appropriate tags:
-- [OBS] Observations from raw data
-- [DRV] Derived or calculated metrics
-- [GEN] General insights applicable across contexts
-- [SPEC] Specific projections or scenarios
+- [observed] Observations from raw data
+- [inferred] Derived or calculated metrics
+- [general] General insights applicable across contexts
+- [unverified] Specific projections or scenarios
 
 ## Where Was I? Protocol
 Include a section header at the beginning of each output to assist in context recovery:

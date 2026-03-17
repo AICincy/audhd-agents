@@ -46,10 +46,10 @@ Employ checklists or tables to track and externalize memory, ensuring thoroughne
 ## Claim Tags
 
 Use specific tags when making claims:
-- [OBS]: Direct observation from code.
-- [DRV]: Derived implications needing attention.
-- [GEN]: General advice applicable to the code context.
-- [SPEC]: Specific issues inferred from code context.
+- [observed]: Direct observation from code.
+- [inferred]: Derived implications needing attention.
+- [general]: General advice applicable to the code context.
+- [unverified]: Specific issues inferred from code context.
 
 ## Where Was I? Protocol
 
@@ -76,7 +76,7 @@ Format the output as a structured JSON object capturing the detailed review:
         "issue": "string",
         "impact": "string",
         "fix": "string",
-        "tag": "[OBS]|[DRV]|[GEN]|[SPEC]"
+        "tag": "[observed]|[inferred]|[general]|[unverified]"
       }
     ],
     "open_questions": ["string"],

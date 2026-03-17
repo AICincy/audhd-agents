@@ -39,15 +39,15 @@ Externalize all working memory using structured tables or checklists to track:
 
 1. Commencing tests without pre-determined acceptance criteria.
 2. Using unrealistic load profiles that do not align with actual traffic patterns.
-3. Overcomplicating scenarios with untested predictions [SPEC] that have no data backing.
+3. Overcomplicating scenarios with untested predictions [unverified] that have no data backing.
 
 ## Claim Tags
 
 Apply appropriate tags in reports:
-- [OBS] Observations: for all measured data.
-- [DRV] Derivations: for data-dependent extrapolations.
-- [GEN] Generalizations: for broad, experience-based insights.
-- [SPEC] Speculations: for untested, forward-looking predictions.
+- [observed] Observations: for all measured data.
+- [inferred] Derivations: for data-dependent extrapolations.
+- [general] Generalizations: for broad, experience-based insights.
+- [unverified] Speculations: for untested, forward-looking predictions.
 
 ## Where Was I? Protocol
 

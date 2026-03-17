@@ -41,10 +41,10 @@ Utilize checklists and tables to keep track of scope, design elements, guard mec
 ## Claim Tags
 
 Apply the following tags to all relevant claims:
-- [OBS] for observed outcomes or baselines
-- [DRV] for derived or projected improvements
-- [GEN] for general insights or principles
-- [SPEC] for specific, untested strategies
+- [observed] for observed outcomes or baselines
+- [inferred] for derived or projected improvements
+- [general] for general insights or principles
+- [unverified] for specific, untested strategies
 
 ## Where Was I?
 

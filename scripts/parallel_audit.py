@@ -27,7 +27,7 @@ except ImportError:
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 # Build a compact project context summary for the audit prompts
-PROJECT_CONTEXT = f"""
+PROJECT_CONTEXT = """
 Project: AuDHD Cognitive Swarm (audhd-agents)
 Stack: Python 3.11+, FastAPI, Pydantic v2, 3 LLM providers (OpenAI, Google, Anthropic removed)
 Skills: 51 skills across 10 capabilities (research, analyze, synthesize, generate, transform, evaluate, plan, orchestrate, audit, optimize)
