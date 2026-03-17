@@ -44,6 +44,10 @@ def _load_model_map() -> dict[str, tuple[str, str]]:
         from pathlib import Path
         resolved = Path(override_path).resolve()
         if not resolved.is_file():
+            print(
+                f"Warning: SK_MODEL_MAP_FILE path '{override_path}' is not a regular file, ignoring",
+                file=sys.stderr,
+            )
             return MODEL_MAP
         project_root = Path(__file__).resolve().parent.parent
         try:
