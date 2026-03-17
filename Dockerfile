@@ -6,6 +6,12 @@ FROM python:3.12.10-slim AS builder
 
 WORKDIR /build
 
+# Install Python dependencies in a cache-friendly layer
+COPY pyproject.toml .
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# Copy the rest of the source and install the package itself
 COPY . .
 RUN pip install --no-cache-dir --prefix=/install .
 
