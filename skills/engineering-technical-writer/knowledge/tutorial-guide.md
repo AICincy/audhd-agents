@@ -212,7 +212,7 @@ Structure content so readers encounter complexity only when they need it. [gener
 
 When modifying existing code, make the change obvious: [general]
 
-```python
+```javascript
 # Before
 app.get("/", (req, res) => {
     res.send("Hello");
