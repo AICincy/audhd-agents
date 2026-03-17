@@ -75,7 +75,9 @@ def make_client(router):
             "project-manager-senior": {"config": {}, "schema": {}},
         },
     )
-    return TestClient(app)
+    client = TestClient(app)
+    client.headers["Authorization"] = "Bearer test-key-1"
+    return client
 
 
 def default_router(**kwargs):

@@ -350,9 +350,24 @@ async def webhook_test(request: Request):
     except json.JSONDecodeError:
         parsed = {"raw": body.decode("utf-8", errors="replace")}
 
+    # AUDIT-FIX: P1-10-early -- strip sensitive headers from echo response
+    _SENSITIVE_HEADER_NAMES = frozenset({
+        "authorization", "cookie", "x-api-key",
+    })
+    _SENSITIVE_HEADER_SUBSTRINGS = ("secret", "token")
+
+    safe_headers: dict[str, str] = {}
+    for key, value in request.headers.items():
+        lower_key = key.lower()
+        if lower_key in _SENSITIVE_HEADER_NAMES:
+            continue
+        if any(s in lower_key for s in _SENSITIVE_HEADER_SUBSTRINGS):
+            continue
+        safe_headers[key] = value
+
     return {
         "echo": parsed,
-        "headers": dict(request.headers),
+        "headers": safe_headers,
         "method": request.method,
         "received_at": datetime.now(timezone.utc).isoformat(),
     }

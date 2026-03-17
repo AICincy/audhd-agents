@@ -1432,7 +1432,15 @@ def run_hooks(hook_names: list[str], ctx: HookContext) -> HookResult:
         if not hook_fn:
             merged.validation_warnings.append(f"Unknown hook: {name}")
             continue
-        result = hook_fn(ctx)
+        try:  # AUDIT-FIX: P1-3 -- isolate hook failures
+            result = hook_fn(ctx)
+        except Exception as exc:
+            logger.error(
+                "Hook '%s' raised %s: %s", name, type(exc).__name__, exc,
+                exc_info=True,
+            )
+            merged.validation_warnings.append(f"Hook '{name}' failed: {exc}")
+            continue
         if result.modified_input:
             merged.modified_input = result.modified_input
             ctx.input_text = result.modified_input

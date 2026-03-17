@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Optional
+import threading
 import time
 
 from pydantic import SecretStr
@@ -58,26 +59,30 @@ class CircuitBreaker:
         self.failure_count = 0
         self.last_failure_time: float = 0.0
         self.state = "closed"  # closed, open, half-open
+        self._lock = threading.Lock()  # AUDIT-FIX: A-2
 
-    def record_failure(self):
-        self.failure_count += 1
-        self.last_failure_time = time.time()
-        if self.failure_count >= self.failure_threshold:
-            self.state = "open"
+    def record_failure(self) -> None:
+        with self._lock:  # AUDIT-FIX: A-2
+            self.failure_count += 1
+            self.last_failure_time = time.time()
+            if self.failure_count >= self.failure_threshold:
+                self.state = "open"
 
-    def record_success(self):
-        self.failure_count = 0
-        self.state = "closed"
+    def record_success(self) -> None:
+        with self._lock:  # AUDIT-FIX: A-2
+            self.failure_count = 0
+            self.state = "closed"
 
     def can_execute(self) -> bool:
-        if self.state == "closed":
-            return True
-        if self.state == "open":
-            if time.time() - self.last_failure_time > self.recovery_timeout:
-                self.state = "half-open"
+        with self._lock:  # AUDIT-FIX: A-2
+            if self.state == "closed":
                 return True
-            return False
-        return True  # half-open: allow one request
+            if self.state == "open":
+                if time.time() - self.last_failure_time > self.recovery_timeout:
+                    self.state = "half-open"
+                    return True
+                return False
+            return True  # half-open: allow one request
 
 
 class BaseAdapter(ABC):

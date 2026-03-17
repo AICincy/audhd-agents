@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import random
 from typing import Any, Optional
 
 try:
@@ -115,21 +116,32 @@ class NotionClient:
 
                 # Rate limited: backoff and retry
                 if response.status_code == 429:
-                    retry_after = int(
-                        response.headers.get("Retry-After", 2 ** attempt)
+                    # AUDIT-FIX: P2-2 -- cap Retry-After, handle non-numeric
+                    raw_retry = response.headers.get(
+                        "Retry-After", str(2 ** attempt)
                     )
+                    try:
+                        retry_after = min(int(raw_retry), 120)
+                    except (ValueError, TypeError):
+                        retry_after = min(2 ** attempt, 120)
                     logger.warning(
                         "Notion rate limited. Retry in %ds (attempt %d/%d)",
                         retry_after,
                         attempt + 1,
                         self._max_retries,
                     )
-                    await asyncio.sleep(retry_after)
+                    # AUDIT-FIX: P2-9 -- add jitter to prevent thundering herd
+                    await asyncio.sleep(
+                        retry_after + random.uniform(0, 0.5 * retry_after)
+                    )
                     continue
 
                 # Server error: retry with backoff
                 if response.status_code >= 500:
-                    await asyncio.sleep(2 ** attempt)
+                    backoff = min(2 ** attempt, 120)
+                    await asyncio.sleep(
+                        backoff + random.uniform(0, 0.5 * backoff)
+                    )
                     continue
 
                 # Client error: don't retry

@@ -23,6 +23,9 @@ from dataclasses import dataclass, field
 from typing import Any, Callable
 from uuid import uuid4
 
+import asyncio
+import os
+
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 
 from adapters.base import SkillRequest
@@ -80,6 +83,7 @@ class RuntimeState:
     router: SkillRouter | None = None
     skill_index: dict[str, dict[str, Any]] = field(default_factory=dict)
     startup_error: str | None = None
+    draining: bool = False  # AUDIT-FIX: P1-1 -- graceful shutdown flag
 
     def provider_status(self) -> dict[str, dict[str, Any]]:
         if not self.router:
@@ -98,15 +102,13 @@ class RuntimeState:
     def readiness_payload(self) -> dict[str, Any]:
         missing = self.missing_required_providers()
         ready = not self.startup_error and not missing and bool(self.skill_index)
+        # AUDIT-FIX: P1-11 -- return minimal info on 200; full detail on 503
+        if ready:
+            return {"status": "ready"}
         return {
-            "service": self.settings.service_name,
-            "app_env": self.settings.app_env,
-            "status": "ready" if ready else "not_ready",
-            "required_providers": list(self.settings.required_providers),
+            "status": "not_ready",
             "missing_required_providers": missing,
-            "skill_count": len(self.skill_index),
             "startup_error": self.startup_error,
-            "providers": self.provider_status(),
         }
 
     def is_ready(self) -> bool:
@@ -183,6 +185,12 @@ def create_app(
         app.state.logger = logger
         yield
 
+        # AUDIT-FIX: P1-1 -- graceful shutdown: drain in-flight requests
+        state.draining = True
+        grace = int(os.environ.get("SHUTDOWN_GRACE_SECONDS", "10"))
+        emit_log(logger, "shutdown_draining", grace_seconds=grace)
+        await asyncio.sleep(grace)
+
     app = FastAPI(
         title=runtime_settings.service_name,
         version="2.1.0",
@@ -228,6 +236,13 @@ def create_app(
     async def execute(request: Request, payload: ExecuteRequest):
         state = get_state(request)
         logger = request.app.state.logger
+
+        # AUDIT-FIX: P1-1 -- reject new requests during graceful shutdown
+        if state.draining:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Service shutting down",
+            )
 
         # P1-1: Crash mode short-circuit
         # PROFILE.md contract: crash = save state, stop. No model call.
@@ -312,10 +327,11 @@ def create_app(
                 failure_class=exc.__class__.__name__,
                 error=str(exc),
             )
-            detail = str(exc) if runtime_settings.app_env != "production" else "Skill execution failed"
+            # AUDIT-FIX: P1-4-early -- never leak internal details to client
+            logger.exception("Skill execution failed", exc_info=exc)
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail=detail,
+                detail="Skill execution failed",
             ) from exc
 
         emit_log(
