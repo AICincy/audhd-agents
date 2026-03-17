@@ -11,7 +11,7 @@ try:
 except ImportError:
     AsyncOpenAI = None
 
-from .base import BaseAdapter
+from .base import BaseAdapter, LLM_TIMEOUT_SECONDS
 
 
 class OpenAIAdapter(BaseAdapter):
@@ -22,7 +22,7 @@ class OpenAIAdapter(BaseAdapter):
         key = api_key or (SecretStr(raw) if raw else None)
         super().__init__(api_key=key, config=config or {})
         if AsyncOpenAI and self.api_key:
-            self.client = AsyncOpenAI(api_key=self.api_key)
+            self.client = AsyncOpenAI(api_key=self.api_key, timeout=float(LLM_TIMEOUT_SECONDS))
         else:
             self.client = None
 

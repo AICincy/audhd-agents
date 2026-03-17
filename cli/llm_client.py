@@ -6,7 +6,10 @@ API provider (Google Generative AI, OpenAI) and model name.
 Configuration:
     MODEL_MAP: alias -> (provider, api_model_name)
     Env vars: GOOGLE_API_KEY, OPENAI_API_KEY
-    Override: SK_MODEL_MAP_FILE env var pointing to JSON override file.
+    Override: SK_MODEL_MAP_FILE env var pointing to a JSON override file.
+             The file must be a regular file located within the project root
+             directory (parent of cli/). Paths outside the project root are
+             ignored and a warning is emitted to stderr to prevent path-traversal attacks.
 """
 
 from __future__ import annotations
@@ -37,8 +40,28 @@ MODEL_MAP: dict[str, tuple[str, str]] = {
 def _load_model_map() -> dict[str, tuple[str, str]]:
     """Load MODEL_MAP with optional override from SK_MODEL_MAP_FILE."""
     override_path = os.environ.get("SK_MODEL_MAP_FILE")
-    if override_path and os.path.exists(override_path):
-        with open(override_path) as f:
+    if override_path:
+        from pathlib import Path
+        resolved = Path(override_path).resolve()
+        if not resolved.is_file():
+            print(
+                f"Warning: SK_MODEL_MAP_FILE path '{override_path}' is not a regular file, ignoring",
+                file=sys.stderr,
+            )
+            return MODEL_MAP
+        project_root = Path(__file__).resolve().parent.parent
+        try:
+            resolved.relative_to(project_root)
+        except ValueError:
+            safe_override = repr(override_path)
+            if len(safe_override) > 200:
+                safe_override = safe_override[:197] + "..."
+            print(
+                f"Warning: SK_MODEL_MAP_FILE path {safe_override} is outside project root, ignoring",
+                file=sys.stderr,
+            )
+            return MODEL_MAP
+        with open(resolved, encoding="utf-8") as f:
             raw = json.load(f)
         merged = dict(MODEL_MAP)
         for alias, pair in raw.items():

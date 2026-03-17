@@ -196,6 +196,8 @@ class ExecuteRequest(BaseModel):
     model_override: Optional[str] = Field(
         default=None,
         description="Force a specific model ID. Bypasses energy routing.",
+        max_length=100,
+        pattern=r"^[a-zA-Z0-9._-]+$",
     )
     request_id: str = Field(
         default_factory=lambda: str(uuid.uuid4()),

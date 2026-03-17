@@ -20,7 +20,10 @@ try:
 except ImportError:
     service_account = None
 
-from .base import BaseAdapter
+from .base import BaseAdapter, LLM_TIMEOUT_SECONDS
+
+# Google GenAI HttpOptions.timeout expects milliseconds.
+_TIMEOUT_MS = LLM_TIMEOUT_SECONDS * 1000
 
 
 class GoogleAdapter(BaseAdapter):
@@ -165,13 +168,17 @@ class GoogleAdapter(BaseAdapter):
 
         self.backend = "developer"
         self.auth_mode = "api_key"
-        return genai.Client(api_key=developer_api_key.get_secret_value())
+        http_options = types.HttpOptions(api_version="v1beta", timeout=_TIMEOUT_MS)
+        return genai.Client(
+            api_key=developer_api_key.get_secret_value(),
+            http_options=http_options,
+        )
 
     def _build_vertex_client(self):
         """Initialize Vertex AI client using API key or ADC/service account."""
         self.backend = "vertex"
 
-        http_options = types.HttpOptions(api_version="v1")
+        http_options = types.HttpOptions(api_version="v1", timeout=_TIMEOUT_MS)
 
         if self.vertex_api_key:
             self.auth_mode = "vertex_api_key"

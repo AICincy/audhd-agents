@@ -11,9 +11,6 @@ venv/
 .claude/
 *.code-workspace
 .vscode/
-package.json
-package-lock.json
-
 # F7: Repo hygiene — leaked/debug artifacts
 bfg.jar
 passwords.txt
