@@ -32,6 +32,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 # Directories to skip during traversal
 SKIP_DIRS = {".git", "node_modules", "dist", "__pycache__", ".agents"}
 
+# Ensure project root is importable for cross-reference checks
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -232,9 +236,8 @@ def check_aliases(root: Path) -> dict:
 # ---------------------------------------------------------------------------
 
 def check_hooks(root: Path) -> dict:
-    sys.path.insert(0, str(root))
-    from runtime.init_hooks import HOOK_REGISTRY, ALWAYS_ON_HOOKS  # noqa: E402
-    from runtime.hooks import _resolve_hook_name  # noqa: E402
+    from runtime.init_hooks import HOOK_REGISTRY, ALWAYS_ON_HOOKS
+    from runtime.hooks import _resolve_hook_name
 
     always_on = list(ALWAYS_ON_HOOKS)
 
@@ -338,8 +341,7 @@ def check_imports(root: Path) -> dict:
 # ---------------------------------------------------------------------------
 
 def check_schema_alignment(root: Path) -> dict:
-    sys.path.insert(0, str(root))
-    from runtime.schemas import CognitiveState  # noqa: E402
+    from runtime.schemas import CognitiveState
 
     agents_fields = sorted(CognitiveState.model_fields.keys())
 
@@ -582,7 +584,10 @@ def main() -> int:
             all_ok = False
         print(f"  {s['name']:<48s} {y:>6s} {h:>7s} {p:>14s} {sc:>8s} {ex:>10s}")
     print()
-    print(f"  {'ALL' if all_ok else 'NOT ALL'} {skill_count} SKILLS VALIDATED SUCCESSFULLY" if all_ok else "")
+    if all_ok:
+        print(f"  ALL {skill_count} SKILLS VALIDATED SUCCESSFULLY")
+    else:
+        print(f"  VALIDATION ISSUES in {skill_count} skills")
     print()
 
     # Summary

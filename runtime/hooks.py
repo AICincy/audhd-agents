@@ -1400,14 +1400,13 @@ def _build_sk_alias_map() -> dict[str, str]:
     return alias_map
 
 
-_SK_ALIAS_MAP: dict[str, str] = {}  # populated lazily after registry is patched
+_SK_ALIAS_MAP: dict[str, str] = {}  # lazily built on first _resolve_hook_name call
 
 
 def _resolve_hook_name(name: str) -> str:
     """Normalise a hook name: accept SK-* aliases or registry keys."""
-    global _SK_ALIAS_MAP
     if not _SK_ALIAS_MAP:
-        _SK_ALIAS_MAP = _build_sk_alias_map()
+        _SK_ALIAS_MAP.update(_build_sk_alias_map())
     return _SK_ALIAS_MAP.get(name, name)
 
 
