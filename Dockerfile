@@ -6,11 +6,10 @@ FROM python:3.12.10-slim AS builder
 
 WORKDIR /build
 
-COPY pyproject.toml .
-RUN pip install --no-cache-dir --prefix=/install . 2>/dev/null || true
-
 COPY . .
 RUN pip install --no-cache-dir --prefix=/install .
+
+
 
 FROM python:3.12.10-slim
 
