@@ -134,7 +134,6 @@ We are aware of an issue affecting [service].
 Our team is actively investigating.
 Next update at [time].
 ```
-```
 
 ## Deployment Runbook Template
 
