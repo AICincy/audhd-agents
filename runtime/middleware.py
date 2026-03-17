@@ -117,7 +117,6 @@ def register_middleware(app: FastAPI, *, cors_origins: list[str] | None = None) 
 
     # AUDIT-FIX: P1-5 -- replace ngrok regex with env-based allowlist
     import os
-    app_env = os.getenv("APP_ENV", "development")
     cors_env = os.environ.get("CORS_ALLOWED_ORIGINS", "")
     if cors_env:
         extra_origins = [o.strip() for o in cors_env.split(",") if o.strip()]
