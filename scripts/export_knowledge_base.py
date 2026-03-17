@@ -42,8 +42,21 @@ def validate_knowledge_base(kb_dir: Path) -> list[str]:
 
     # Validate each indexed document
     for doc in documents:
+        # Determine a safe identifier for error messages before accessing any required fields.
+        doc_id = doc.get("id") or doc.get("file") or "<unknown>"
+
+        # Required index fields
+        required_fields = ["id", "file", "title", "domain", "tags", "sections", "retrieval_queries"]
+        missing_fields = [field for field in required_fields if field not in doc]
+        if missing_fields:
+            for field in missing_fields:
+                errors.append(f"[{doc_id}] Missing index field: {field}")
+
+        # If there is no file field, we cannot perform any file- or content-based checks.
+        if "file" not in doc:
+            continue
+
         doc_file = kb_dir / doc["file"]
-        doc_id = doc.get("id", doc["file"])
 
         # File exists
         if not doc_file.exists():
@@ -72,14 +85,9 @@ def validate_knowledge_base(kb_dir: Path) -> list[str]:
         if "Anti-Pattern" not in content:
             errors.append(f"[{doc_id}] Missing Anti-Patterns section")
 
-        # Required index fields
-        for field in ["id", "file", "title", "domain", "tags", "sections", "retrieval_queries"]:
-            if field not in doc:
-                errors.append(f"[{doc_id}] Missing index field: {field}")
-
     # Check for files not in index
     md_files = {f.name for f in kb_dir.glob("*.md")}
-    indexed_files = {doc["file"] for doc in documents}
+    indexed_files = {doc["file"] for doc in documents if "file" in doc}
     unindexed = md_files - indexed_files
     if unindexed:
         for f in sorted(unindexed):
