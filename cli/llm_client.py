@@ -37,9 +37,11 @@ MODEL_MAP: dict[str, tuple[str, str]] = {
 def _load_model_map() -> dict[str, tuple[str, str]]:
     """Load MODEL_MAP with optional override from SK_MODEL_MAP_FILE."""
     override_path = os.environ.get("SK_MODEL_MAP_FILE")
-    if override_path and os.path.exists(override_path):
+    if override_path:
         from pathlib import Path
         resolved = Path(override_path).resolve()
+        if not resolved.is_file():
+            return MODEL_MAP
         project_root = Path(__file__).resolve().parent.parent
         try:
             resolved.relative_to(project_root)
