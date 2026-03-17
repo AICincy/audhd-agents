@@ -79,7 +79,7 @@ Review legal documents to identify risks and compliance gaps, and flag unfavorab
 
 ```json
 {
-  "review": {
+  "audit": {
     "document_type": "string",
     "jurisdiction": "string",
     "findings": [
