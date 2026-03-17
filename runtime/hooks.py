@@ -14,6 +14,7 @@ Hook registry (20 hooks):
 from __future__ import annotations
 
 import json
+import logging
 import math
 import re
 import time
@@ -21,6 +22,8 @@ from dataclasses import dataclass, field
 from typing import Any, Callable
 
 from runtime.cognitive import CognitiveState
+
+logger = logging.getLogger("audhd_agents.hooks")
 
 
 # Hooks that run on EVERY execution regardless of skill config
