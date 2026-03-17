@@ -70,6 +70,10 @@ def sanitize_input(text: str) -> tuple[str, list[str]]:
     # Collapse excessive blank lines (3+ newlines -> 2)
     text = re.sub(r"\n{3,}", "\n\n", text)
 
+    # Re-apply truncation after normalization/stripping to enforce final cap
+    if len(text) > limit:
+        text = text[0:limit]
+
     # Detect patterns for logging
     detected = detect_injection(text)
 
