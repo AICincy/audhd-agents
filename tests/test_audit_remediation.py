@@ -27,7 +27,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from adapters.base import CircuitBreaker, SkillResponse
-from runtime.app import create_app, RuntimeState
+from runtime.app import create_app
 from runtime.config import RuntimeSettings
 from runtime.monitoring import setup_monitoring
 from runtime.notion_client import _request as notion_request
