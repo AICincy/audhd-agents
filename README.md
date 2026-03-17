@@ -80,7 +80,7 @@ Nine models registered in [`adapters/config.yaml`](adapters/config.yaml). Full r
 
 | Domain | Count | Examples |
 |--------|-------|---------|
-| Engineering | 16 | code-reviewer, software-architect, security-engineer, devops-automator |
+| Engineering | 17 | code-reviewer, software-architect, security-engineer, devops-automator, github-pr-lister |
 | Testing | 8 | reality-checker, accessibility-auditor, performance-benchmarker |
 | Design | 7 | ux-architect, ui-designer, brand-guardian, inclusive-visuals |
 | Specialized | 6 | agents-orchestrator, mcp-builder, model-qa |

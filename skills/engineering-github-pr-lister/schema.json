@@ -1,0 +1,29 @@
+{
+  "allOf": [
+    {"$ref": "../_base/schema_base.json"},
+    {
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "description": "GitHub repository as 'owner/repo' or full URL, with optional natural-language filters"
+        },
+        "author": {
+          "type": "string",
+          "description": "Filter by PR author GitHub username"
+        },
+        "label": {
+          "type": "string",
+          "description": "Filter by label name"
+        },
+        "limit": {
+          "type": "string",
+          "description": "Maximum number of PRs to return",
+          "enum": ["5", "10", "20", "50"],
+          "default": "10"
+        }
+      },
+      "required": ["input_text"]
+    }
+  ]
+}
