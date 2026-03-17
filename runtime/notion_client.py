@@ -124,24 +124,26 @@ class NotionClient:
                         retry_after = min(int(raw_retry), 120)
                     except (ValueError, TypeError):
                         retry_after = min(2 ** attempt, 120)
+                    # AUDIT-FIX: P2-9 -- add jitter to prevent thundering herd
+                    sleep_seconds = min(
+                        retry_after + random.uniform(0, 0.5 * retry_after), 120
+                    )
                     logger.warning(
                         "Notion rate limited. Retry in %ds (attempt %d/%d)",
-                        retry_after,
+                        sleep_seconds,
                         attempt + 1,
                         self._max_retries,
                     )
-                    # AUDIT-FIX: P2-9 -- add jitter to prevent thundering herd
-                    await asyncio.sleep(
-                        retry_after + random.uniform(0, 0.5 * retry_after)
-                    )
+                    await asyncio.sleep(sleep_seconds)
                     continue
 
                 # Server error: retry with backoff
                 if response.status_code >= 500:
                     backoff = min(2 ** attempt, 120)
-                    await asyncio.sleep(
-                        backoff + random.uniform(0, 0.5 * backoff)
+                    sleep_seconds = min(
+                        backoff + random.uniform(0, 0.5 * backoff), 120
                     )
+                    await asyncio.sleep(sleep_seconds)
                     continue
 
                 # Client error: don't retry
