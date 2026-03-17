@@ -22,6 +22,11 @@ except ImportError:
 
 from .base import BaseAdapter
 
+# Shared timeout configuration for Google GenAI.
+# google-genai HttpOptions.timeout expects milliseconds.
+TIMEOUT_SECONDS = 120
+TIMEOUT_MS = TIMEOUT_SECONDS * 1000
+
 
 class GoogleAdapter(BaseAdapter):
     """Adapter for Gemini via Gemini Developer API or Vertex AI."""
@@ -165,7 +170,7 @@ class GoogleAdapter(BaseAdapter):
 
         self.backend = "developer"
         self.auth_mode = "api_key"
-        http_options = types.HttpOptions(api_version="v1beta", timeout=120_000)
+        http_options = types.HttpOptions(api_version="v1beta", timeout=TIMEOUT_MS)
         return genai.Client(
             api_key=developer_api_key.get_secret_value(),
             http_options=http_options,
@@ -175,7 +180,7 @@ class GoogleAdapter(BaseAdapter):
         """Initialize Vertex AI client using API key or ADC/service account."""
         self.backend = "vertex"
 
-        http_options = types.HttpOptions(api_version="v1", timeout=120_000)
+        http_options = types.HttpOptions(api_version="v1", timeout=TIMEOUT_MS)
 
         if self.vertex_api_key:
             self.auth_mode = "vertex_api_key"
