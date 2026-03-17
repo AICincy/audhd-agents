@@ -99,6 +99,17 @@ def build_manifest(kb_dir: Path) -> dict[str, Any]:
     file_details = []
 
     for doc in documents:
+        # Ensure required fields are present to avoid KeyError on malformed indexes
+        required_fields = ("id", "file", "title")
+        missing_fields = [field for field in required_fields if field not in doc]
+        if missing_fields:
+            doc_id = doc.get("id", "<unknown>")
+            sys.stderr.write(
+                f"Warning: skipping document in rag-index.json with missing fields "
+                f"{missing_fields} (id={doc_id})\n"
+            )
+            continue
+
         doc_path = kb_dir / doc["file"]
         if doc_path.exists():
             size = doc_path.stat().st_size
